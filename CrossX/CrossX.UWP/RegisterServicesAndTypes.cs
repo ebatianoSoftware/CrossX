@@ -9,7 +9,7 @@ namespace CrossX.UWP
         public static ScopeBuilder RegisterUwpServices(this ScopeBuilder builder)
         {
             return builder
-                    .WithType<DxGraphicsDevice>().As<GraphicsDevice>().AsSingleton();
+                    .WithType<DxGraphicsDevice>().As<IGraphicsDevice>().AsSingleton();
         }
 
         public static ScopeBuilder RegisterUwpTypes(this ScopeBuilder builder)

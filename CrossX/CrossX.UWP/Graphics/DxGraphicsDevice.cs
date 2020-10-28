@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CrossX.UWP.Graphics
 {
-    internal class DxGraphicsDevice: GraphicsDevice
+    internal class DxGraphicsDevice: IGraphicsDevice
     {
     }
 }

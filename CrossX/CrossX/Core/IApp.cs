@@ -1,7 +1,4 @@
-﻿using CrossX.IoC;
-using System.Threading.Tasks;
-
-namespace CrossX.Core
+﻿namespace CrossX.Core
 {
     public interface IApp
     {
