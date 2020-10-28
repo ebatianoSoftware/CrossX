@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,5 +7,9 @@
     <Version>0.1.0</Version>
     <Company>Sebastian Sejud IT</Company>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StbSharp" Version="0.7.2.38" />
+  </ItemGroup>
 
 </Project>
