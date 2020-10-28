@@ -5,7 +5,7 @@ using SdxDevice1 = SharpDX.Direct3D11.Device1;
 
 namespace CrossX.DxCommon.Graphics
 {
-    public interface ITargetWindow
+    internal interface ITargetWindow
     {
         bool IsFullscreen { get; }
 

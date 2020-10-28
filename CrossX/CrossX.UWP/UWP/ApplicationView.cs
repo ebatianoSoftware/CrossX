@@ -1,5 +1,9 @@
 ﻿using CrossX.Core;
+using CrossX.DxCommon.Graphics;
+using CrossX.Graphics;
 using CrossX.IoC;
+using CrossX.UWP.Graphics;
+using System.Drawing;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
@@ -32,6 +36,15 @@ namespace CrossX.UWP.UWP
 
         public void SetWindow(CoreWindow window)
         {
+            var graphicsDevice = new DxGraphicsDevice();
+            graphicsDevice.Initialize(new UwpWindow(window), false);
+
+            scopeBuilder
+                .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>();
+                
+            //scopeBuilder
+              //  .RegisterUwpTypes();
+
             serviceProvider = scopeBuilder.Build();
             
             app = serviceProvider.GetService<IObjectFactory>().Create<TApp>(appParameters);
@@ -47,9 +60,13 @@ namespace CrossX.UWP.UWP
             while (true)
             {
                 CoreWindow.GetForCurrentThread().Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+                
                 // Rendering i inne gówna
+
                 app.Update(0);
                 app.Draw(0);
+                serviceProvider.GetService<DxGraphicsDevice>().Clear(Color.Red);
+                serviceProvider.GetService<DxGraphicsDevice>().Present();
             }
         }
 

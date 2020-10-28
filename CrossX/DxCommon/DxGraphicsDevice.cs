@@ -148,6 +148,8 @@ namespace CrossX.DxCommon.Graphics
             backBuffer = SdxResource.FromSwapChain<Texture2D>(swapChain, 0);
             mainRenderTarget = new DxRenderTarget(backBuffer, width, height);
 
+            SetRenderTarget(mainRenderTarget);
+
             // Create a viewport descriptor of the full window size.
             var viewport = new RawViewportF
             {
