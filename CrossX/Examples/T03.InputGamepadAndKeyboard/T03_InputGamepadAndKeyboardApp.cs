@@ -18,6 +18,7 @@ namespace T03.InputGamepadAndKeyboard
         private BasicShader basicShader;
 
         private Vector2 offset = Vector2.Zero;
+        private float rotation = 0;
 
         public T03_InputGamepadAndKeyboardApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, 
                 IGamePads gamePads, IKeyboard keyboard)
@@ -43,22 +44,22 @@ namespace T03.InputGamepadAndKeyboard
             {
                 new VertexPC
                 {
-                    Position = new Vector4(-100, -100, 0.5f, 1),
+                    Position = new Vector4(-100, -100, 0.0f, 1),
                     Color = Color4.White
                 },
                 new VertexPC
                 {
-                    Position = new Vector4(-100, 100, 0.5f, 1),
+                    Position = new Vector4(-100, 100, 0.0f, 1),
                     Color = Color4.White
                 },
                 new VertexPC
                 {
-                    Position = new Vector4(100, -100, 0.5f, 1),
+                    Position = new Vector4(100, -100, 0.0f, 1),
                     Color = Color4.White
                 },
                 new VertexPC
                 {
-                    Position = new Vector4(100, 100, 0.5f, 1),
+                    Position = new Vector4(100, 100, 0.0f, 1),
                     Color = Color4.White
                 },
             };
@@ -69,7 +70,9 @@ namespace T03.InputGamepadAndKeyboard
         {
             graphicsDevice.Clear(Color4.Black);
             
-            var worldMatrix = Matrix.CreateTranslation(graphicsDevice.Size.Width / 2 + offset.X, graphicsDevice.Size.Height / 2 + offset.Y, 0);
+            var worldMatrix = 
+                Matrix.CreateRotationY(rotation) *
+                Matrix.CreateTranslation(graphicsDevice.Size.Width / 2 + offset.X, graphicsDevice.Size.Height / 2 + offset.Y, 0);
             basicShader.SetWorldTransform(worldMatrix);
 
             var viewProjMatrix = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Size.Width, graphicsDevice.Size.Height, 0, 0.1f, 10);
@@ -88,6 +91,7 @@ namespace T03.InputGamepadAndKeyboard
         public void Update(TimeSpan frameTime)
         {
             var moveSpeed = (float)frameTime.TotalSeconds * 200;
+            var rotSpeed = (float)frameTime.TotalSeconds * (float)Math.PI;
             var state = gamePads.GetState(0);
 
             if (keyboard.GetKeyState(Key.Right).HasFlag(KeyBtnState.Down) || state.LeftThumbStick.X > 0.25f)
@@ -108,6 +112,16 @@ namespace T03.InputGamepadAndKeyboard
             if (keyboard.GetKeyState(Key.Up).HasFlag(KeyBtnState.Down) ||  state.LeftThumbStick.Y > 0.25f)
             {
                 offset.Y -= moveSpeed;
+            }
+
+            if(keyboard.GetKeyState(Key.A).HasFlag(KeyBtnState.Down) || state.GetButtonState(GamePadButton.X).HasFlag(KeyBtnState.Down))
+            {
+                rotation += rotSpeed;
+            }
+
+            if (keyboard.GetKeyState(Key.D).HasFlag(KeyBtnState.Down) || state.GetButtonState(GamePadButton.B).HasFlag(KeyBtnState.Down))
+            {
+                rotation -= rotSpeed;
             }
 
             offset.X = Math.Min(200, Math.Max(-200, offset.X));
