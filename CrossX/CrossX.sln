@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "T01.SimpleTriangle", "Examp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T03.InputGamepadAndKeyboard", "Examples\T03.InputGamepadAndKeyboard\T03.InputGamepadAndKeyboard.csproj", "{51FA940E-1121-44D8-829D-7857344103D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossX.Async", "CrossX.Async\CrossX.Async.csproj", "{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -223,6 +225,26 @@ Global
 		{51FA940E-1121-44D8-829D-7857344103D0}.Release|x64.Build.0 = Release|Any CPU
 		{51FA940E-1121-44D8-829D-7857344103D0}.Release|x86.ActiveCfg = Release|Any CPU
 		{51FA940E-1121-44D8-829D-7857344103D0}.Release|x86.Build.0 = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|ARM.Build.0 = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|x64.Build.0 = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|ARM.Build.0 = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|ARM64.Build.0 = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|x64.ActiveCfg = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|x64.Build.0 = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E0BC817-99D8-4EC5-AD35-4CD7A841BFD5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

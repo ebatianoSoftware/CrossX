@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CrossX.Core
+namespace CrossX.Async
 {
     public interface IDispatcher
     {

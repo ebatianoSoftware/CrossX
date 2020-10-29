@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CrossX.Core
+namespace CrossX.Async
 {
     public class Dispatcher : IDispatcher
     {
