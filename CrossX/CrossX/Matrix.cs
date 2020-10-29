@@ -343,23 +343,23 @@ namespace CrossX
             Matrix m = identity;
 
             m.M11 = 2.0f / (right - left);
-            m.M12 = 0;
-            m.M13 = 0;
-            m.M14 = tx;
-
             m.M21 = 0;
-            m.M22 = 2.0f / (top - bottom);
-            m.M23 = 0;
-            m.M24 = ty;
-
             m.M31 = 0;
-            m.M32 = 0;
-            m.M33 = -2.0f / (zFarPlane - zNearPlane);
-            m.M34 = tz;
+            m.M41 = tx;
 
-            m.M41 = 0;
-            m.M42 = 0;
-            m.M43 = 0;
+            m.M12 = 0;
+            m.M22 = 2.0f / (top - bottom);
+            m.M32 = 0;
+            m.M42 = ty;
+
+            m.M13 = 0;
+            m.M23 = 0;
+            m.M33 = -2.0f / (zFarPlane - zNearPlane);
+            m.M43 = tz;
+
+            m.M14 = 0;
+            m.M24 = 0;
+            m.M34 = 0;
             m.M44 = 1;
 
             return m;

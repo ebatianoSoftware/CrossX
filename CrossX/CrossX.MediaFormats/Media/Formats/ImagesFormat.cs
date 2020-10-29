@@ -1,32 +1,20 @@
 ﻿using System.IO;
+using CrossX.Data;
 using StbSharp;
 
-namespace CrossX.Data
+namespace CrossX.Media.Formats
 {
-    public class ImagesFormat: IRawLoader<RawImage>
+    public class ImagesFormat : IRawLoader<RawImage>
     {
         public static readonly IRawLoader<RawImage> Instance = new ImagesFormat();
 
         public RawImage FromStream(Stream stream)
         {
-            byte[] bytes = null;
+            var reader = new ImageReader();
+            var image = reader.Read(stream);
 
-            // Rewind stream if it is at end
-            if (stream.CanSeek && stream.Length == stream.Position)
-            {
-                stream.Seek(0, SeekOrigin.Begin);
-            }
-
-            using (var ms = new MemoryStream())
-            {
-                stream.CopyTo(ms);
-                bytes = ms.ToArray();
-            }
-            
-            var image = StbImage.LoadFromMemory(bytes);
-            
             PixelDataFormat format = 0;
-            switch(image.Comp)
+            switch (image.Comp)
             {
                 case 1: format = PixelDataFormat.Format8bppR; break;
                 case 2: format = PixelDataFormat.Format16bppRA; break;

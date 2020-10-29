@@ -50,8 +50,6 @@ namespace CrossX.Graphics
 
             vertexBuffer.SetData(buffer);
 
-            basicShader.TextureEnabled = false;
-            basicShader.VertexColorEnabled = true;
             basicShader.DiffuseColor = Color4.White;
             basicShader.Alpha = 1.0f;
             basicShader.Apply();

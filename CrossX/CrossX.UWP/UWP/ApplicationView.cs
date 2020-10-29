@@ -22,6 +22,7 @@ namespace CrossX.UWP.UWP
         private TApp app;
         private UwpGamePads gamePads;
         private UwpKeyboard keyboard;
+        private DxGraphicsDevice graphicsDevice;
 
         public ApplicationView(ScopeBuilder scopeBuilder, object appParameters)
         {
@@ -43,7 +44,7 @@ namespace CrossX.UWP.UWP
 
         public void SetWindow(CoreWindow window)
         {
-            var graphicsDevice = new DxGraphicsDevice();
+            graphicsDevice = new DxGraphicsDevice();
             graphicsDevice.Initialize(new UwpWindow(window), false);
 
             gamePads = new UwpGamePads();
@@ -80,6 +81,8 @@ namespace CrossX.UWP.UWP
                 gamePads.Update();
 
                 app.Update(ellapsed);
+
+                graphicsDevice.BeginRender();
                 app.Draw(ellapsed);
 
                 keyboard.Update();

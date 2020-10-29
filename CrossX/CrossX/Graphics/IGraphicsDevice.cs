@@ -13,7 +13,6 @@ namespace CrossX.Graphics
         TextureFilter TextureFilter { get; set; }
         RenderTarget RenderTarget { get; }
         Rectangle? ScissorsRect { get; set; }
-        void BeginRender();
         void Present();
         void Clear(Color4 color);
         void SetRenderTarget(RenderTarget renderTarget);

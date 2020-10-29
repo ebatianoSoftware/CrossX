@@ -68,7 +68,7 @@ namespace CrossX.DxCommon.Graphics.Shaders
             
             var consts = new ConstBuffer
             {
-                Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix).ToRawMatrix(),
+                Matrix = Matrix.Transpose(Matrix.Multiply(worldMatrix, viewProjectionMatrix)).ToRawMatrix(),
                 Color = new RawColor4(color.Rf, color.Gf, color.Bf, color.Af)
             };
 

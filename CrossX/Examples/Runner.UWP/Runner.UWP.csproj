@@ -133,7 +133,6 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <EmbeddedResource Include="Resources\Texture.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
@@ -163,6 +162,18 @@
     <ProjectReference Include="..\..\CrossX\CrossX.csproj">
       <Project>{7b1c3193-96dc-44c1-b232-2e8a7bd8080a}</Project>
       <Name>CrossX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\T01.SimpleTriangle\T01.SimpleTriangle.csproj">
+      <Project>{7c9b0874-d132-41dd-8ac6-97071020500a}</Project>
+      <Name>T01.SimpleTriangle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\T02.Textures\T02.Textures.csproj">
+      <Project>{f1d6c6d5-f3af-4393-b7c1-2b1e9045c046}</Project>
+      <Name>T02.Textures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\T03.InputGamepadAndKeyboard\T03.InputGamepadAndKeyboard.csproj">
+      <Project>{51fa940e-1121-44d8-829d-7857344103d0}</Project>
+      <Name>T03.InputGamepadAndKeyboard</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
