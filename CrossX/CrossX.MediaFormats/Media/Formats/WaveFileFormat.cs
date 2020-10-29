@@ -2,10 +2,11 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
+using CrossX.Data;
 using System;
 using System.IO;
 
-namespace CrossX.Data
+namespace CrossX.Media.Formats
 {
     /// <summary>
     /// Loads PCM Wave file format.

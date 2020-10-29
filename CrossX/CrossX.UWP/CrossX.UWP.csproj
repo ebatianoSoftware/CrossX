@@ -121,32 +121,37 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\DxCommon\DxEffect.cs">
+    <Compile Include="..\DxCommon\Graphics\DxEffect.cs">
       <Link>Graphics\DxCommon\DxEffect.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\DxGraphicsDevice.cs">
+    <Compile Include="..\DxCommon\Graphics\DxGraphicsDevice.cs">
       <Link>Graphics\DxCommon\DxGraphicsDevice.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\DxRenderTarget.cs">
+    <Compile Include="..\DxCommon\Graphics\DxRenderTarget.cs">
       <Link>Graphics\DxCommon\DxRenderTarget.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\DxTexture.cs">
+    <Compile Include="..\DxCommon\Graphics\DxTexture.cs">
       <Link>Graphics\DxCommon\DxTexture.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\DxVertexBuffer.cs">
+    <Compile Include="..\DxCommon\Graphics\DxVertexBuffer.cs">
       <Link>Graphics\DxCommon\DxVertexBuffer.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\GeometryExtensions.cs">
+    <Compile Include="..\DxCommon\Graphics\GeometryExtensions.cs">
       <Link>Graphics\DxCommon\GeometryExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\ITargetWindow.cs">
+    <Compile Include="..\DxCommon\Graphics\ITargetWindow.cs">
       <Link>Graphics\DxCommon\ITargetWindow.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\RenderStates.cs">
+    <Compile Include="..\DxCommon\Graphics\RenderStates.cs">
       <Link>Graphics\DxCommon\RenderStates.cs</Link>
     </Compile>
+    <Compile Include="..\DxCommon\Graphics\Shaders\DxBasicShader.cs">
+      <Link>Graphics\DxCommon\Shaders\DxBasicShader.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\Shaders\IDxShader.cs">
+      <Link>Graphics\DxCommon\Shaders\IDxShader.cs</Link>
+    </Compile>
     <Compile Include="AppRunner.cs" />
-    <Compile Include="Graphics\DxTexture2D.cs" />
     <Compile Include="Graphics\UwpWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterServicesAndTypes.cs" />
@@ -170,6 +175,9 @@
     <PackageReference Include="SharpDX.DXGI">
       <Version>4.2.0</Version>
     </PackageReference>
+    <PackageReference Include="SharpDX.Mathematics">
+      <Version>4.2.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrossX\CrossX.csproj">
@@ -179,6 +187,26 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Audio\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.psbc">
+      <Link>FX\DefaultPC.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.vsbc">
+      <Link>FX\DefaultPC.vsbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPCT.psbc">
+      <Link>FX\DefaultPCT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPCT.vsbc">
+      <Link>FX\DefaultPCT.vsbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPT.psbc">
+      <Link>FX\DefaultPT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPT.vsbc">
+      <Link>FX\DefaultPT.vsbc</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

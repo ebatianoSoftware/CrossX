@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>CrossX</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StbSharp" Version="0.7.2.38" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrossX\CrossX.csproj" />
+  </ItemGroup>
+
+</Project>

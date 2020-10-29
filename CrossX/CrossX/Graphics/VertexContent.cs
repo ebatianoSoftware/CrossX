@@ -23,6 +23,10 @@ namespace CrossX.Graphics
         /// <summary>
         /// Vertex contains texture coordinates.
         /// </summary>
-        TextureCoordinates = 4
+        TextureCoordinates = 4,
+        /// <summary>
+        /// Vertex contains normal vector.
+        /// </summary>
+        Normal = 8,
     }
 }

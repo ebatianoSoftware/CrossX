@@ -3,7 +3,9 @@ using CrossX.DxCommon.Graphics;
 using CrossX.Graphics;
 using CrossX.IoC;
 using CrossX.UWP.Graphics;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
@@ -13,7 +15,7 @@ namespace CrossX.UWP.UWP
     {
         private readonly ScopeBuilder scopeBuilder;
         private readonly object appParameters;
-        private IServiceProvider serviceProvider;
+        private IServicesProvider serviceProvider;
         private TApp app;
 
         public ApplicationView(ScopeBuilder scopeBuilder, object appParameters)
@@ -41,9 +43,6 @@ namespace CrossX.UWP.UWP
 
             scopeBuilder
                 .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>();
-                
-            //scopeBuilder
-              //  .RegisterUwpTypes();
 
             serviceProvider = scopeBuilder.Build();
             
@@ -57,17 +56,24 @@ namespace CrossX.UWP.UWP
 
         public void Run()
         {
+            var stopWatch = Stopwatch.StartNew();
+            var lastTime = stopWatch.Elapsed;
+
             while (true)
             {
                 CoreWindow.GetForCurrentThread().Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
-                
-                // Rendering i inne gówna
 
-                app.Update(0);
-                app.Draw(0);
-                serviceProvider.GetService<DxGraphicsDevice>().Clear(Color.Red);
-                serviceProvider.GetService<DxGraphicsDevice>().Present();
+                var current = stopWatch.Elapsed;
+                var ellapsed = current - lastTime;
+                lastTime = current;
+
+                app.Update(ellapsed);
+                app.Draw(ellapsed);
+
+                Task.Delay(1).Wait();
             }
+
+            //stopWatch.Stop();
         }
 
         public void Uninitialize()

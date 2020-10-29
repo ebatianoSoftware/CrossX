@@ -2,7 +2,7 @@
 
 namespace CrossX.IoC
 {
-    public interface IServiceProvider
+    public interface IServicesProvider
     {
         object GetService(Type serviceType);
         TService GetService<TService>();

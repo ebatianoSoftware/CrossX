@@ -13,9 +13,10 @@ namespace CrossX.DxCommon.Helpers
 {
     public static class GeometryExtensions
     {
-        public static DxMatrix ToMatrix(this Matrix matrix)
+        public static DxMatrix ToRawMatrix(this Matrix matrix)
         {
             var mat = new DxMatrix();
+            matrix = Matrix.Transpose(matrix);
 
             mat.M11 = matrix.M11;
             mat.M12 = matrix.M12;
@@ -61,6 +62,7 @@ namespace CrossX.DxCommon.Helpers
             int stride = 0;
 
             if (vertexContent.HasFlag(VertexContent.Position)) stride += 4 * sizeof(float);
+            if (vertexContent.HasFlag(VertexContent.Normal)) stride += 4 * sizeof(float);
             if (vertexContent.HasFlag(VertexContent.Color)) stride += 4 * sizeof(byte);
             if (vertexContent.HasFlag(VertexContent.TextureCoordinates)) stride += 2 * sizeof(float);
 

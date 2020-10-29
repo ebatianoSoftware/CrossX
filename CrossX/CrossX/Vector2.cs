@@ -110,6 +110,24 @@ namespace CrossX
             result.Y = value1.Y + value2.Y;
         }
 
+        public static Vector2 Rotate(Vector2 vector, float angle)
+        {
+            float sin = (float)Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+
+            return new Vector2(vector.X * cos - vector.Y * sin, vector.X * sin + vector.Y * cos);
+        }
+
+        public static Vector2 RotateAround(Vector2 vector, Vector2 origin, float angle)
+        {
+            float sin = (float)Math.Sin(angle);
+            float cos = (float)Math.Cos(angle);
+
+            vector = vector - origin;
+
+            return new Vector2(vector.X * cos - vector.Y * sin, vector.X * sin + vector.Y * cos) + origin;
+        }
+
         public static Vector2 Barycentric(Vector2 value1, Vector2 value2, Vector2 value3, float amount1, float amount2)
         {
             return new Vector2(

@@ -14,8 +14,8 @@ namespace CrossX.DxCommon.Graphics
 {
     internal class DxTexture : CrossX.Graphics.Texture2D
     {
-        private readonly Texture2D texture;
-        private readonly ShaderResourceView view;
+        public readonly Texture2D Texture;
+        public readonly ShaderResourceView View;
 
         public bool IsDisposed { get; private set; }
 
@@ -44,7 +44,7 @@ namespace CrossX.DxCommon.Graphics
                     var ptr = (IntPtr)p;
 
                     var data = new DataBox(ptr, img.Stride, 0);
-                    texture = new Texture2D(graphicsDevice.D3dDevice, desc, new[] { data });
+                    Texture = new Texture2D(graphicsDevice.D3dDevice, desc, new[] { data });
 
                     Width = img.Width;
                     Height = img.Height;
@@ -53,17 +53,17 @@ namespace CrossX.DxCommon.Graphics
 
             try
             {
-                view = new ShaderResourceView(texture.Device, texture);
+                View = new ShaderResourceView(Texture.Device, Texture);
             }
             catch
             {
-                view = null;
-                this.texture = null;
+                View = null;
+                this.Texture = null;
             }
 
             if (generateMipMaps)
             {
-                texture.Device.ImmediateContext.GenerateMips(view);
+                Texture.Device.ImmediateContext.GenerateMips(View);
             }
         }
 
@@ -101,18 +101,18 @@ namespace CrossX.DxCommon.Graphics
                 }
             }
 
-            texture = new Texture2D(graphicsDevice.D3dDevice, desc, data);
+            Texture = new Texture2D(graphicsDevice.D3dDevice, desc, data);
             Width = img[0].Width;
             Height = img[0].Height;
 
             try
             {
-                view = new ShaderResourceView(texture.Device, texture);
+                View = new ShaderResourceView(Texture.Device, Texture);
             }
             catch
             {
-                view = null;
-                this.texture = null;
+                View = null;
+                this.Texture = null;
             }
         }
 
@@ -126,37 +126,37 @@ namespace CrossX.DxCommon.Graphics
 
         public DxTexture(Texture2D texture, int width, int height, bool generateMipMaps)
         {
-            this.texture = texture;
+            this.Texture = texture;
 
             Width = width;
             Height = height;
 
             try
             { 
-                view = new ShaderResourceView(texture.Device, texture);
+                View = new ShaderResourceView(texture.Device, texture);
             }
             catch
             {
-                view = null;
-                this.texture = null;
+                View = null;
+                this.Texture = null;
             }
 
             if (generateMipMaps)
             {
-                texture.Device.ImmediateContext.GenerateMips(view);
+                texture.Device.ImmediateContext.GenerateMips(View);
             }
         }
         
         public virtual T UnderlyingObject<T>() where T: class
         {
-            if(typeof(T) == typeof(Texture2D) && texture != null)
+            if(typeof(T) == typeof(Texture2D) && Texture != null)
             {
-                return (T)(object)texture;
+                return (T)(object)Texture;
             }
 
-            if(typeof(T) == typeof(ShaderResourceView) && view != null)
+            if(typeof(T) == typeof(ShaderResourceView) && View != null)
             {
-                return (T)(object)view;
+                return (T)(object)View;
             }
 
             throw new InvalidCastException();
@@ -181,7 +181,7 @@ namespace CrossX.DxCommon.Graphics
             {
                 if (disposing)
                 {
-                    texture?.Dispose();
+                    Texture?.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

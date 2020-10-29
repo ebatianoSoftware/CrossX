@@ -17,7 +17,7 @@ namespace CrossX.IoC
             return (TObject)New(typeof(TObject), null, parameters);
         }
 
-        internal static object New(Type type, IServiceProvider serviceProvider, params object[] parameters)
+        internal static object New(Type type, IServicesProvider serviceProvider, params object[] parameters)
         {
             IEnumerable<ConstructorInfo> constructors = null;
             try

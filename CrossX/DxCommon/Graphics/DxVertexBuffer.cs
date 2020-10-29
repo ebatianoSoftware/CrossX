@@ -2,6 +2,7 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
+using CrossX.DxCommon.Helpers;
 using CrossX.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
@@ -15,50 +16,24 @@ namespace CrossX.DxCommon.Graphics
         private readonly SdxDevice1 device;
         public Buffer Buffer { get; private set; }
 
-        public int Count { get; }
+        public override int Count { get; }
         public int Stride { get; }
 
-        public VertexContent VertexContent { get; }
+        public override VertexContent VertexContent { get; }
 
         public bool IsDisposed { get; private set; }
 
         public T UnderlyingObject<T>() where T: class => (T)(object)Buffer;
 
-        private static int StrideFromVertexContent(VertexContent content)
-        {
-            int stride = 0;
-
-            if (content.HasFlag(VertexContent.Position))
-            {
-                stride += sizeof(float) * 4;
-            }
-
-            if (content.HasFlag(VertexContent.Color))
-            {
-                stride += 4 * sizeof(byte);
-            }
-
-            if (content.HasFlag(VertexContent.TextureCoordinates))
-            {
-                stride += sizeof(float) * 2;
-            }
-
-            return stride;
-        }
-
+        
         public DxVertexBuffer(VertexBufferCreationOptions creationOptions, DxGraphicsDevice graphicsDevice)
         {
             var device = graphicsDevice.D3dDevice;
 
-            Stride = StrideFromVertexContent(creationOptions.VertexContent);
+            Stride = GeometryExtensions.StrideFromVertexContent(creationOptions.VertexContent);
             Count = creationOptions.Count;
             VertexContent = creationOptions.VertexContent;
             this.device = device;
-        }
-
-        public void Dispose()
-        {
-            
         }
 
         private void CreateBufferIfRequired()
@@ -70,7 +45,7 @@ namespace CrossX.DxCommon.Graphics
                 CpuAccessFlags.Write, ResourceOptionFlags.None, Stride);
         }
 
-        public void SetData<T>(T[] data) where T: struct
+        public override void SetData<T>(T[] data)
         {
             CreateBufferIfRequired();
 
@@ -92,6 +67,12 @@ namespace CrossX.DxCommon.Graphics
         public void Reset()
         {
             
+        }
+
+        public override void Dispose()
+        {
+            Buffer?.Dispose();
+            Buffer = null;
         }
     }
 }

@@ -7,21 +7,19 @@ namespace CrossX.UWP
 {
     public class AppRunner<TApp> where TApp: class, IApp
     {
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServicesProvider serviceProvider;
 
-        public AppRunner(IServiceProvider serviceProvider = null)
+        public AppRunner(IServicesProvider serviceProvider = null)
         {
             this.serviceProvider = serviceProvider;
         }
 
         public void Run<TAppParameters>(TAppParameters appParameters)
         {
-            var builder = new ScopeBuilder();
-
-            var services = builder
-                        .WithParent(serviceProvider)
-                        .RegisterUwpTypes();
-
+            var builder = new ScopeBuilder()
+                .WithParent(serviceProvider)
+                .RegisterUwpTypes();
+            
             CoreApplication.Run(new ViewSource<TApp>(builder, appParameters));
         }
     }

@@ -1,78 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
+using System.Linq;
 
 namespace CrossX.IoC
 {
-    public class ScopeBuilder: IServiceProvider
+    public class ScopeBuilder: IServicesProvider
     {
         public class Registration
         {
-            private readonly ScopeBuilder scopeBuilder;
             private HashSet<Type> asTypes = new HashSet<Type>();
             public readonly object Instance;
             public readonly Type Type;
             public bool Singleton { get; private set; }
 
-            public Registration(ScopeBuilder scopeBuilder, object instance, Type type)
+            public Registration(object instance, Type type)
             {
-                this.scopeBuilder = scopeBuilder;
-                this.Instance = instance;
-                this.Type = type;
+                Instance = instance;
+                Type = type;
                 Singleton = instance != null;
             }
 
-            public Registration As<TType>()
-            {
-                asTypes.Add(typeof(TType));
-                return this;
-            }
-
-            public Registration AsSingleton()
-            {
-                Singleton = true;
-                return this;
-            }
+            public void As<TType>() => asTypes.Add(typeof(TType));
+            public void AsSingleton() => Singleton = true;
+            public void AsSelf() => asTypes.Add(Type);
 
             public IEnumerable<Type> ResolutionTypes => asTypes;
 
             public bool Resolves(Type type) => asTypes.Contains(type);
-
-            public Registration WithInstance(object instance) => scopeBuilder.WithInstance(instance);
-            public Registration WithType<TType>() => scopeBuilder.WithType<TType>();
-
-            public static implicit operator ScopeBuilder(Registration reg) => reg.scopeBuilder;
         }
 
         private readonly List<Registration> registrations = new List<Registration>();
         private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
-        private IServiceProvider parentServiceProvider;
+        private IServicesProvider parentServiceProvider;
 
         private bool builded = false;
-
-        public ScopeBuilder WithParent(IServiceProvider serviceProvider)
+        
+        public ScopeBuilder WithParent(IServicesProvider serviceProvider)
         {
             parentServiceProvider = serviceProvider;
             return this;
         }
 
-        public Registration WithType<TType>()
+        public ScopeBuilder WithType<TType>()
         {
-            var registration = new Registration(this, null, typeof(TType));
+            var registration = new Registration(null, typeof(TType));
             registrations.Add(registration);
-            return registration;
-        }
-        
-
-        public Registration WithInstance(object instance)
-        {
-            var registration = new Registration(this, instance, null);
-            registrations.Add(registration);
-            return registration;
+            return this;
         }
 
-        public IServiceProvider Build()
+        public ScopeBuilder As<TType>()
+        {
+            registrations.Last().As<TType>();
+            return this;
+        }
+
+        public ScopeBuilder AsSingleton()
+        {
+            registrations.Last().AsSingleton();
+            return this;
+        }
+
+        public ScopeBuilder AsSelf()
+        {
+            registrations.Last().AsSelf();
+            return this;
+        }
+
+        public ScopeBuilder WithInstance(object instance)
+        {
+            var registration = new Registration(instance, null);
+            registrations.Add(registration);
+            return this;
+        }
+
+        public IServicesProvider Build()
         {
             var typesMapping = new Dictionary<Type, Type>();
 
@@ -102,7 +104,7 @@ namespace CrossX.IoC
         {
             if (builded) throw new InvalidOperationException();
 
-            if (serviceType == typeof(IServiceProvider)) return this;
+            if (serviceType == typeof(IServicesProvider)) return this;
 
             if (services.TryGetValue(serviceType, out var service) && service != null) return service;
 
@@ -121,6 +123,7 @@ namespace CrossX.IoC
                         services.Add(serviceType, null);
                         service = DynamicActivator.New(reg.Type, this);
                         services[serviceType] = service;
+                        return service;
                     }
                 }
             }

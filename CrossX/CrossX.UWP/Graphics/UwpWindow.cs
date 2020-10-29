@@ -55,14 +55,12 @@ namespace CrossX.UWP.Graphics
             // SwapChain description
             var desc = new SwapChainDescription1
             {
-                // Automatic sizing
                 Width = width,
                 Height = height,
                 Format = Format.B8G8R8A8_UNorm,
                 Stereo = false,
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = Usage.BackBuffer | Usage.RenderTargetOutput,
-                // Use two buffers to enable flip effect.
                 BufferCount = 2,
                 Scaling = Scaling.None,
                 Flags = SwapChainFlags.AllowModeSwitch,

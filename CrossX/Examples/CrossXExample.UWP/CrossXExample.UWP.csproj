@@ -133,13 +133,29 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <EmbeddedResource Include="Resources\Texture.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
+    <PackageReference Include="System.Drawing.Common">
+      <Version>4.7.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CrossX.2D\CrossX.2D.csproj">
+      <Project>{df6c8561-5aff-4ad9-a0fa-196c31b14301}</Project>
+      <Name>CrossX.2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CrossX.ExIO\CrossX.ExIO.csproj">
+      <Project>{57a4a8e9-cdd5-405c-90f2-5f310430b214}</Project>
+      <Name>CrossX.ExIO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CrossX.MediaFormats\CrossX.MediaFormats.csproj">
+      <Project>{e58e5fc4-da8b-42d7-bf97-24032b069282}</Project>
+      <Name>CrossX.MediaFormats</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CrossX.UWP\CrossX.UWP.csproj">
       <Project>{fe2b9b44-385e-4217-acdd-1a7191ad6a05}</Project>
       <Name>CrossX.UWP</Name>

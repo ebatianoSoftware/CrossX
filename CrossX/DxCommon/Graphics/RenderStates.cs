@@ -91,15 +91,16 @@ namespace CrossX.DxCommon.Graphics
 
         private void InitRasterizerStates()
         {
+            // TODO: Rasterizer state as CrossX class to pass to renderer
             var rasterizerDesc = new RasterizerStateDescription1
             {
                 CullMode = CullMode.None,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
                 FillMode = FillMode.Solid,
-                IsAntialiasedLineEnabled = false,
+                IsAntialiasedLineEnabled = true,
                 IsDepthClipEnabled = false,
-                IsFrontCounterClockwise = false,
+                IsFrontCounterClockwise = true,
                 IsMultisampleEnabled = true,
                 IsScissorEnabled = false,
                 SlopeScaledDepthBias = 0,

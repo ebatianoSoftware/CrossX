@@ -6,13 +6,14 @@ using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using System;
 using SharpDX.Mathematics.Interop;
-using EbatianoSoftware.CrossX.Graphics;
 
 using SdxDevice1 = SharpDX.Direct3D11.Device1;
 using SdxResource = SharpDX.Direct3D11.Resource;
 using CrossX.Graphics;
 using System.Drawing;
 using Texture2D = SharpDX.Direct3D11.Texture2D;
+using CrossX.DxCommon.Helpers;
+using CrossX.DxCommon.Graphics.Shaders;
 
 namespace CrossX.DxCommon.Graphics
 {
@@ -40,13 +41,12 @@ namespace CrossX.DxCommon.Graphics
         public Size Size => new Size(width, height);
 
         public event Action<Size> SizeChanged;
+        public event EventHandler FlushRequest;
 
         private RenderStates renderStates;
         private SamplerState samplerState;
 
         public Size CurrentTargetSize => new Size(RenderTarget?.Width ?? width, RenderTarget?.Height ?? height);
-
-        //public IRenderTarget RenderTarget { get; private set; }
 
         private BlendState1 blendState;
         private BlendMode blendMode;
@@ -80,9 +80,9 @@ namespace CrossX.DxCommon.Graphics
             }
         }
 
-        //public Rect? ScissorsRect { get; set; }
+        public Rectangle? ScissorsRect { get; set; }
 
-        //public IDxShader CurrentShader { get; internal set; }
+        public IDxShader CurrentShader { get; internal set; }
 
         private TextureFilter textureFilter;
         public TextureFilter TextureFilter
@@ -148,8 +148,6 @@ namespace CrossX.DxCommon.Graphics
             backBuffer = SdxResource.FromSwapChain<Texture2D>(swapChain, 0);
             mainRenderTarget = new DxRenderTarget(backBuffer, width, height);
 
-            SetRenderTarget(mainRenderTarget);
-
             // Create a viewport descriptor of the full window size.
             var viewport = new RawViewportF
             {
@@ -172,16 +170,17 @@ namespace CrossX.DxCommon.Graphics
 
         public void Present()
         {
+            Flush(this);
             D3dContext.Flush();
             swapChain.Present(1, PresentFlags.None);
         }
 
-        public void Clear(Color color)
+        public void Clear(Color4 color)
         {
             var rt = (DxRenderTarget)RenderTarget;
 
             D3dContext.ClearRenderTargetView(rt.RenderTargetView,
-                new RawColor4(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f));
+                new RawColor4(color.Rf, color.Gf, color.Bf, color.Af));
         }
 
         public void SetRenderTarget(RenderTarget renderTarget)
@@ -206,42 +205,46 @@ namespace CrossX.DxCommon.Graphics
             D3dContext.Rasterizer.SetViewport(viewport);
         }
 
-        //public void SetVertexBuffer(IVertexBuffer vertexBuffer)
-        //{
-        //    var buffer = vertexBuffer.UnderlyingObject<SharpDX.Direct3D11.Buffer>();
-        //    var context = D3dDevice.ImmediateContext1;
-        //    var effect = CurrentShader.EffectForContent(vertexBuffer.VertexContent);
+        public void SetVertexBuffer(VertexBuffer vertexBuffer)
+        {
+            var buffer = ((DxVertexBuffer)vertexBuffer).Buffer;
+            var context = D3dDevice.ImmediateContext1;
+            var effect = CurrentShader.EffectForContent(vertexBuffer.VertexContent);
 
-        //    context.InputAssembler.InputLayout = effect.InputLayout;
-        //    context.VertexShader.Set(effect.VertexShader);
-        //    context.PixelShader.Set(effect.PixelShader);
+            context.InputAssembler.InputLayout = effect.InputLayout;
+            context.VertexShader.Set(effect.VertexShader);
+            context.PixelShader.Set(effect.PixelShader);
 
-        //    context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(buffer, GeometryExtensions.StrideFromVertexContent(vertexBuffer.VertexContent), 0));
-        //}
+            context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(buffer, GeometryExtensions.StrideFromVertexContent(vertexBuffer.VertexContent), 0));
+        }
 
-        //public void DrawPrimitives(PrimitiveType primitiveType, int vertexStart, int vertexCount)
-        //{
-        //    var context = D3dDevice.ImmediateContext1;
-        //    context.InputAssembler.PrimitiveTopology = GeometryExtensions.PrimitiveTopologyFromPrimitiveType(primitiveType);
+        public void DrawPrimitives(PrimitiveType primitiveType, int vertexStart, int vertexCount)
+        {
+            var context = D3dDevice.ImmediateContext1;
+            context.InputAssembler.PrimitiveTopology = GeometryExtensions.PrimitiveTopologyFromPrimitiveType(primitiveType);
 
-        //    CurrentShader.ApplyShaderParameters();
-        //    context.PixelShader.SetSampler(0, samplerState);
+            CurrentShader.ApplyShaderParameters();
+            context.PixelShader.SetSampler(0, samplerState);
 
-        //    if (ScissorsRect.HasValue)
-        //    {
-        //        var rect = ScissorsRect.Value;
-        //        context.Rasterizer.SetScissorRectangle(rect.X, rect.Y, rect.Right, rect.Bottom);
-        //        context.Rasterizer.State = renderStates.ClipRasterizerState;
-        //    }
-        //    else
-        //    {
-        //        context.Rasterizer.State = renderStates.RasterizerState;
+            if (ScissorsRect.HasValue)
+            {
+                var rect = ScissorsRect.Value;
+                context.Rasterizer.SetScissorRectangle(rect.X, rect.Y, rect.Right, rect.Bottom);
+                context.Rasterizer.State = renderStates.ClipRasterizerState;
+            }
+            else
+            {
+                context.Rasterizer.State = renderStates.RasterizerState;
+            }
 
-        //    }
+            context.OutputMerger.BlendState = blendState;
+            context.Draw(vertexCount, vertexStart);
+        }
 
-        //    context.OutputMerger.BlendState = blendState;
-        //    context.Draw(vertexCount, vertexStart);
-        //}
+        public void Flush(object sender)
+        {
+            FlushRequest?.Invoke(sender, EventArgs.Empty);
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

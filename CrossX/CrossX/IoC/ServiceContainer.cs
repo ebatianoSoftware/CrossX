@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace CrossX.IoC
 {
-    internal class ServiceContainer : IServiceProvider, IObjectFactory, IAbstractTypeMapping
+    internal class ServiceContainer : IServicesProvider, IObjectFactory, IAbstractTypeMapping
     {
         private readonly Dictionary<Type, Type> typesMapping;
         private readonly Dictionary<Type, object> instances;
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServicesProvider serviceProvider;
 
-        public ServiceContainer(Dictionary<Type, Type> typesMapping, Dictionary<Type, object> instances, IServiceProvider serviceProvider)
+        public ServiceContainer(Dictionary<Type, Type> typesMapping, Dictionary<Type, object> instances, IServicesProvider serviceProvider)
         {
             this.typesMapping = typesMapping;
             this.instances = instances;
@@ -26,7 +26,7 @@ namespace CrossX.IoC
         
         public object GetService(Type serviceType)
         {
-            if (serviceType == typeof(IServiceProvider)) return this;
+            if (serviceType == typeof(IServicesProvider)) return this;
             if (serviceType == typeof(IObjectFactory)) return this;
             if (serviceType == typeof(IAbstractTypeMapping)) return this;
 
@@ -34,10 +34,11 @@ namespace CrossX.IoC
 
             if( serviceProvider != null )
             {
-                if (serviceProvider.TryResolveInstance(serviceType, out var instance)) return instances;
+                if (serviceProvider.TryResolveInstance(serviceType, out service)) return service;
             }
 
-            return Create(serviceType);
+            if (!FindMapping(serviceType, out var implType)) throw new KeyNotFoundException();
+            return DynamicActivator.New(implType, this);
         }
 
         public TService GetService<TService>() => (TService)GetService(typeof(TService));
