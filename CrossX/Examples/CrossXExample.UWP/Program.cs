@@ -7,6 +7,7 @@ using CrossX.IoC;
 using CrossX.Data;
 using CrossX.IO;
 using CrossX.Media.Formats;
+using CrossX.Input;
 
 namespace CrossXExample.UWP
 {
@@ -18,13 +19,14 @@ namespace CrossXExample.UWP
         private readonly IFilesRepository filesRepository;
         private readonly SpriteBatch spriteBatch;
         private readonly PrimitiveBatch primitiveBatch;
+        private readonly IGamePads gamePads;
 
         private float rotation = 0;
 
-        public App(IGraphicsDevice graphicsDevice, IServicesProvider serviceProvider)
+        public App(IGraphicsDevice graphicsDevice, IServicesProvider serviceProvider, IGamePads gamePads)
         {
             this.graphicsDevice = graphicsDevice;
-
+            this.gamePads = gamePads;
             var filesRepository = new MultiSourceFilesRepository();
             filesRepository.DefaultSource = new EmbededResourceFileSource(GetType().Assembly, "CrossXExample.UWP.Resources");
 
@@ -43,7 +45,7 @@ namespace CrossXExample.UWP
 
         public void Draw(TimeSpan frameTime)
         {
-            rotation += (float)frameTime.TotalSeconds * 4;
+            
 
             graphicsDevice.BeginRender();
             graphicsDevice.Clear(Color4.Orange);
@@ -68,7 +70,8 @@ namespace CrossXExample.UWP
 
         public void Update(TimeSpan frameTime)
         {
-            
+
+            rotation += (float)frameTime.TotalSeconds * 4 * gamePads.GetState(0).LeftThumbStick.X;
         }
     }
     public class Program

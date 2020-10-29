@@ -1,8 +1,11 @@
 ﻿using CrossX.Core;
 using CrossX.DxCommon.Graphics;
 using CrossX.Graphics;
+using CrossX.Input;
 using CrossX.IoC;
 using CrossX.UWP.Graphics;
+using CrossX.WindowsUniversal.Input;
+using EbatianoSoftware.CrossX.WindowsUniversal.Input;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -17,6 +20,8 @@ namespace CrossX.UWP.UWP
         private readonly object appParameters;
         private IServicesProvider serviceProvider;
         private TApp app;
+        private UwpGamePads gamePads;
+        private UwpKeyboard keyboard;
 
         public ApplicationView(ScopeBuilder scopeBuilder, object appParameters)
         {
@@ -41,8 +46,13 @@ namespace CrossX.UWP.UWP
             var graphicsDevice = new DxGraphicsDevice();
             graphicsDevice.Initialize(new UwpWindow(window), false);
 
+            gamePads = new UwpGamePads();
+            keyboard = new UwpKeyboard(window);
+
             scopeBuilder
-                .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>();
+                .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
+                .WithInstance(gamePads).As<IGamePads>()
+                .WithInstance(keyboard).As<IKeyboard>();
 
             serviceProvider = scopeBuilder.Build();
             
@@ -67,8 +77,12 @@ namespace CrossX.UWP.UWP
                 var ellapsed = current - lastTime;
                 lastTime = current;
 
+                gamePads.Update();
+
                 app.Update(ellapsed);
                 app.Draw(ellapsed);
+
+                keyboard.Update();
 
                 Task.Delay(1).Wait();
             }
