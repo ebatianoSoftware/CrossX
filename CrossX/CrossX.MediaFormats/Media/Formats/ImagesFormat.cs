@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using CrossX.Data;
-using StbSharp;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace CrossX.Media.Formats
 {
@@ -10,19 +11,26 @@ namespace CrossX.Media.Formats
 
         public RawImage FromStream(Stream stream)
         {
-            var reader = new ImageReader();
-            var image = reader.Read(stream);
+            var image = Image.Load<Rgba32>(stream);
+            var data = new byte[image.Width * image.Height * 4];
+            var stride = 4 * image.Width;
 
-            PixelDataFormat format = 0;
-            switch (image.Comp)
+            for (int y = 0; y < image.Height; y++)
             {
-                case 1: format = PixelDataFormat.Format8bppR; break;
-                case 2: format = PixelDataFormat.Format16bppRA; break;
-                case 3: format = PixelDataFormat.Format24bppRGB; break;
-                case 4: format = PixelDataFormat.Format32bppRGBA; break;
-            }
+                var pixelRowSpan = image.GetPixelRowSpan(y);
+                var position = y * stride;
+                for (int x = 0; x < image.Width; x++)
+                {
+                    var pixel = pixelRowSpan[x];
 
-            return new RawImage(image.Width, image.Height, image.Data, format);
+                    data[position++] = pixel.R;
+                    data[position++] = pixel.G;
+                    data[position++] = pixel.B;
+                    data[position++] = pixel.A;
+                    
+                }
+            }
+            return new RawImage(image.Width, image.Height, data, PixelDataFormat.Format32bppRGBA);
         }
     }
 }

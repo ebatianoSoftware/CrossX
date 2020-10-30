@@ -3,12 +3,12 @@ using System.Reflection;
 
 namespace CrossX.IO
 {
-    public class EmbededResourceFileSource : IFileSource
+    public class EmbededResourceRepository : IFilesRepository
     {
         private readonly Assembly assembly;
         private readonly string workingPath;
 
-        public EmbededResourceFileSource(Assembly assembly, string workingPath)
+        public EmbededResourceRepository(Assembly assembly, string workingPath)
         {
             this.assembly = assembly;
             this.workingPath = workingPath;

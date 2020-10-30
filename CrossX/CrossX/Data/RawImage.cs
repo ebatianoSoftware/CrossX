@@ -62,6 +62,16 @@ namespace CrossX.Data
             Stride = width * ((int)_pixelDataFormat & 0x7);
         }
 
+        public RawImage(int width, int height, byte[] data, int stride, PixelDataFormat format)
+        {
+            Width = width;
+            Height = height;
+            Data = data;
+            _pixelDataFormat = format;
+
+            Stride = stride;
+        }
+
         /// <summary>
         /// Clone this instance.
         /// </summary>
