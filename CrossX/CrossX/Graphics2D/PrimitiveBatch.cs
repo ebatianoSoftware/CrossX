@@ -134,8 +134,8 @@ namespace CrossX.Graphics2D
                 var pos2 = new Vector2(radX * (float)Math.Cos(angle2), radY * (float)Math.Sin(angle2)) + center;
 
                 AddVertex(center, color);
-                AddVertex(pos1, color);
                 AddVertex(pos2, color);
+                AddVertex(pos1, color);
             }
         }
 

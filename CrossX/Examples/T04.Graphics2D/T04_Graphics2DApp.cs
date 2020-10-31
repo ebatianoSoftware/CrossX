@@ -40,9 +40,14 @@ namespace T04.Graphics2D
             graphicsDevice.Clear(Color4.Black);
             
             spriteBatch.DrawImage(texture, Vector2.Zero, null, Color4.White, 1);
-            
-            primitiveBatch.DrawRect(new RectangleF(500, 500, 200, 200), Color4.Red);
+
+            primitiveBatch.BlendMode = BlendMode.Add;
+
+            primitiveBatch.DrawRect(new RectangleF(300, 300, 200, 200), Color4.Green);
+
             primitiveBatch.DrawOval(new RectangleF(700, 700, 200, 100), Color4.Orange);
+
+            primitiveBatch.BlendMode = BlendMode.AlphaBlend;
 
             transform2D.Push(Matrix.CreateTranslation(new Vector3(800, 400, 0)));
             transform2D.Push(Matrix.CreateRotationZ(rotation));
