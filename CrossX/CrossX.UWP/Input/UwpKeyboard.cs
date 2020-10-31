@@ -6,7 +6,7 @@ using CrossX.Input;
 using CrossX.Input.Abstractions;
 using Windows.UI.Core;
 
-namespace EbatianoSoftware.CrossX.WindowsUniversal.Input
+namespace CrossX.WindowsUniversal.Input
 {
     internal class UwpKeyboard : KeyboardBase
     {

@@ -1,151 +1,156 @@
-﻿//// MIT License - Copyright © ebatianoSoftware
-//// This file is subject to the terms and conditions defined in
-//// file 'LICENSE.txt', which is part of this source code package.
+﻿// MIT License - Copyright © ebatianoSoftware
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE.txt', which is part of this source code package.
 
-//using EbatianoSoftware.CrossX.Input;
-//using EbatianoSoftware.CrossX.Input.Mouse;
-//using EbatianoSoftware.CrossX.Primitives;
-//using System;
-//using Windows.Graphics.Display;
-//using Windows.UI.Core;
+using CrossX.Input;
+using System;
+using Windows.Graphics.Display;
+using Windows.UI.Core;
 
-//namespace EbatianoSoftware.CrossX.WindowsUniversal.Input
-//{
-//    internal class UwpMouse : IMouse
-//    {
-//        const uint MousePointerId = 1;
-//        private readonly CoreWindow _window;
+namespace CrossX.WindowsUniversal.Input
+{
+    internal class UwpMouse : IMouse
+    {
+        const uint MousePointerId = 1;
+        private readonly CoreWindow coreWindow;
 
-//        public MouseCaps Caps => MouseCaps.LButton | MouseCaps.RButton | MouseCaps.MButton;
+        public MouseCaps Caps => MouseCaps.LButton | MouseCaps.RButton | MouseCaps.MButton;
 
-//        private MouseButtons _previousButtons = 0;
-//        private MouseButtons _currentButtons = 0;
+        private MouseButtons previousButtons = 0;
+        private MouseButtons currentButtons = 0;
 
-//        public event MouseEvent ButtonDown;
-//        public event MouseEvent ButtonUp;
-//        public event MouseEvent MouseMove;
-//        public event MouseEvent MouseEnter;
-//        public event Action MouseLeave;
+        public event MouseEvent ButtonDown;
+        public event MouseEvent ButtonUp;
+        public event MouseEvent MouseMove;
+        public event MouseEvent MouseEnter;
+        public event Action MouseLeave;
 
-//        private double RawPixelsPerViewPixel => DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+        private double RawPixelsPerViewPixel => DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 
-//        public PointF Position
-//        {
-//            get
-//            {
-//                return PositionFromWindowPos(_window.PointerPosition);
-//            }
+        public Vector2 Position
+        {
+            get
+            {
+                return PositionFromWindowPos(coreWindow.PointerPosition);
+            }
 
-//            set
-//            {
-//                var displayInformation = DisplayInformation.GetForCurrentView();
+            set
+            {
+                var displayInformation = DisplayInformation.GetForCurrentView();
 
-//                var pos = new Windows.Foundation.Point(value.X / displayInformation.RawPixelsPerViewPixel,
-//                    value.Y / displayInformation.RawPixelsPerViewPixel);
+                var pos = new Windows.Foundation.Point(value.X / displayInformation.RawPixelsPerViewPixel,
+                    value.Y / displayInformation.RawPixelsPerViewPixel);
 
-//                _window.PointerPosition = pos;
-//            }
-//        }
+                coreWindow.PointerPosition = pos;
+            }
+        }
 
-//        private PointF PositionFromWindowPos(Windows.Foundation.Point pt)
-//        {
-//            return new PointF(pt.X- _window.Bounds.Left, pt.Y- _window.Bounds.Top) * RawPixelsPerViewPixel;   
-//        }
+        private Vector2 PositionFromWindowPos(Windows.Foundation.Point pt)
+        {
+            return new Vector2((float)(pt.X - coreWindow.Bounds.Left), (float)(pt.Y - coreWindow.Bounds.Top)) * (float)RawPixelsPerViewPixel;
+        }
 
-//        public float WheelDelta => throw new NotImplementedException();
+        public float WheelDelta { get; private set; }
 
-//        private MouseButtons _lastButton;
+        private MouseButtons lastButton;
 
-//        public UwpMouse(CoreWindow window)
-//        {
-//            _window = window;
-//            _window.PointerEntered += OnPointerEntered;
-//            _window.PointerExited += OnPointerExited;
-//            _window.PointerMoved += OnPointerMoved;
-//            _window.PointerPressed += OnPointerPressed;
-//            _window.PointerReleased += OnPointerReleased;
-//        }
+        public UwpMouse(CoreWindow window)
+        {
+            coreWindow = window;
+            coreWindow.PointerEntered += OnPointerEntered;
+            coreWindow.PointerExited += OnPointerExited;
+            coreWindow.PointerMoved += OnPointerMoved;
+            coreWindow.PointerPressed += OnPointerPressed;
+            coreWindow.PointerReleased += OnPointerReleased;
+            coreWindow.PointerWheelChanged += CoreWindow_PointerWheelChanged;
+        }
 
-//        private MouseButtons ButtonFromPointerArgs(PointerEventArgs args)
-//        {
-//            MouseButtons button = 0;
-            
-//            if (args.CurrentPoint.Properties.IsLeftButtonPressed)
-//            {
-//                button = MouseButtons.Left;
-//            }
-//            else if (args.CurrentPoint.Properties.IsRightButtonPressed)
-//            {
-//                button = MouseButtons.Right;
-//            }
-//            else if (args.CurrentPoint.Properties.IsMiddleButtonPressed)
-//            {
-//                button = MouseButtons.Middle;
-//            }
-//            return button;
-//        }
+        private void CoreWindow_PointerWheelChanged(CoreWindow sender, PointerEventArgs args)
+        {
+            WheelDelta += args.CurrentPoint.Properties.MouseWheelDelta;
+        }
 
-//        private void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
-//        {
-//            if (args.CurrentPoint.PointerId != MousePointerId) return;
-            
-//            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
-//            var button = _lastButton;
-//            _currentButtons &= ~button;
+        private MouseButtons ButtonFromPointerArgs(PointerEventArgs args)
+        {
+            MouseButtons button = 0;
 
-//            ButtonUp?.Invoke(pos, button);
-//            _lastButton = MouseButtons.None;
-//        }
+            if (args.CurrentPoint.Properties.IsLeftButtonPressed)
+            {
+                button = MouseButtons.Left;
+            }
+            else if (args.CurrentPoint.Properties.IsRightButtonPressed)
+            {
+                button = MouseButtons.Right;
+            }
+            else if (args.CurrentPoint.Properties.IsMiddleButtonPressed)
+            {
+                button = MouseButtons.Middle;
+            }
+            return button;
+        }
 
-//        private void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
-//        {
-//            if (args.CurrentPoint.PointerId != MousePointerId) return;
+        private void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
+        {
+            if (args.CurrentPoint.PointerId != MousePointerId) return;
 
-//            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
-//            var button = ButtonFromPointerArgs(args);
+            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
+            var button = lastButton;
+            currentButtons &= ~button;
 
-//            _lastButton = button;
+            ButtonUp?.Invoke(pos, button);
+            lastButton = MouseButtons.None;
+        }
 
-//            _currentButtons |= button;
-//            ButtonDown?.Invoke(pos, button);
-//        }
+        private void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
+        {
+            if (args.CurrentPoint.PointerId != MousePointerId) return;
 
-//        private void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
-//        {
-//            if (args.CurrentPoint.PointerId != MousePointerId) return;
+            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
+            var button = ButtonFromPointerArgs(args);
 
-//            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
-//            MouseMove?.Invoke(pos, _currentButtons);
-//        }
+            lastButton = button;
 
-//        private void OnPointerExited(CoreWindow sender, PointerEventArgs args)
-//        {
-//            if (args.CurrentPoint.PointerId != MousePointerId) return;
+            currentButtons |= button;
+            ButtonDown?.Invoke(pos, button);
+        }
 
-//            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
-//            _lastButton = MouseButtons.None;
-//            MouseLeave?.Invoke();
-//        }
+        private void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
+        {
+            if (args.CurrentPoint.PointerId != MousePointerId) return;
 
-//        private void OnPointerEntered(CoreWindow sender, PointerEventArgs args)
-//        {
-//            if (args.CurrentPoint.PointerId != MousePointerId) return;
+            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
+            MouseMove?.Invoke(pos, currentButtons);
+        }
 
-//            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
-//            _lastButton = MouseButtons.None;
-//            MouseEnter?.Invoke(pos, MouseButtons.None);
-//        }
+        private void OnPointerExited(CoreWindow sender, PointerEventArgs args)
+        {
+            if (args.CurrentPoint.PointerId != MousePointerId) return;
 
-//        public void Update()
-//        {
-//            _previousButtons = _currentButtons;
-//        }
+            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
+            lastButton = MouseButtons.None;
+            MouseLeave?.Invoke();
+        }
 
-//        public KeyBtnState GetButtonState(MouseButtons button)
-//        {
-//            var state = _currentButtons.HasFlag(button) ? KeyBtnState.Down : KeyBtnState.Up;
-//            state |= (_currentButtons & button) != (_previousButtons & button) ? KeyBtnState.JustSwitched : 0;
-//            return state;
-//        }
-//    }
-//}
+        private void OnPointerEntered(CoreWindow sender, PointerEventArgs args)
+        {
+            if (args.CurrentPoint.PointerId != MousePointerId) return;
+
+            var pos = PositionFromWindowPos(args.CurrentPoint.Position);
+            lastButton = MouseButtons.None;
+            MouseEnter?.Invoke(pos, MouseButtons.None);
+        }
+
+        public void Update()
+        {
+            previousButtons = currentButtons;
+            WheelDelta = 0;
+        }
+
+        public KeyBtnState GetButtonState(MouseButtons button)
+        {
+            var state = currentButtons.HasFlag(button) ? KeyBtnState.Down : KeyBtnState.Up;
+            state |= (currentButtons & button) != (previousButtons & button) ? KeyBtnState.JustSwitched : 0;
+            return state;
+        }
+    }
+}

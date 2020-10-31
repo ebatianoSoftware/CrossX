@@ -6,7 +6,6 @@ using CrossX.Input;
 using CrossX.IoC;
 using CrossX.UWP.Graphics;
 using CrossX.WindowsUniversal.Input;
-using EbatianoSoftware.CrossX.WindowsUniversal.Input;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -22,6 +21,7 @@ namespace CrossX.UWP.UWP
         private TApp app;
         private UwpGamePads gamePads;
         private UwpKeyboard keyboard;
+        private UwpMouse mouse;
         private DxGraphicsDevice graphicsDevice;
         private Dispatcher dispatcher = new Dispatcher();
 
@@ -50,11 +50,13 @@ namespace CrossX.UWP.UWP
 
             gamePads = new UwpGamePads();
             keyboard = new UwpKeyboard(window);
+            mouse = new UwpMouse(window);
 
             scopeBuilder
                 .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
                 .WithInstance(gamePads).As<IGamePads>()
                 .WithInstance(keyboard).As<IKeyboard>()
+                .WithInstance(mouse).As<IMouse>()
                 .WithInstance(dispatcher).As<IDispatcher>();
 
             serviceProvider = scopeBuilder.Build();
@@ -90,6 +92,7 @@ namespace CrossX.UWP.UWP
                 app.Draw(ellapsed);
 
                 keyboard.Update();
+                mouse.Update();
 
                 Task.Delay(1).Wait();
             }
