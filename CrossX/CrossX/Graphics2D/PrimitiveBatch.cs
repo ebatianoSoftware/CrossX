@@ -15,6 +15,17 @@ namespace CrossX.Graphics2D
         private VertexBuffer vertexBuffer;
 
         private int currentIndex = 0;
+        private BlendMode blendMode = BlendMode.AlphaBlend;
+
+        public BlendMode BlendMode
+        {
+            get => blendMode;
+            set
+            {
+                if (blendMode != value) Flush();
+                blendMode = value;
+            }
+        }
 
         public PrimitiveBatch(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, ITransform2D transform2D = null)
         {
@@ -61,10 +72,18 @@ namespace CrossX.Graphics2D
             basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix.Identity);
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
+            
             var dc = graphicsDevice.DepthClip;
+            var bm = graphicsDevice.BlendMode;
+            
+            graphicsDevice.BlendMode = BlendMode;
             graphicsDevice.DepthClip = false;
+            
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, currentIndex);
+            
             graphicsDevice.DepthClip = dc;
+            graphicsDevice.BlendMode = bm;
+
             currentIndex = 0;
         }
 

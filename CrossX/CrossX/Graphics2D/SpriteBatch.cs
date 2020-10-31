@@ -21,9 +21,10 @@ namespace CrossX.Graphics2D
         private int currentIndex = 0;
         private TextureFilter textureFilter = TextureFilter.Linear;
         private TextureMode textureMode = TextureMode.WrapU | TextureMode.WrapV;
+        private BlendMode blendMode = BlendMode.AlphaBlend;
 
-        public TextureFilter TextureFilter 
-        { 
+        public TextureFilter TextureFilter
+        {
             get => textureFilter;
             set
             {
@@ -31,13 +32,23 @@ namespace CrossX.Graphics2D
                 textureFilter = value;
             }
         }
-        public TextureMode TextureMode 
-        { 
+        public TextureMode TextureMode
+        {
             get => textureMode;
             set
             {
                 if (textureMode != value) Flush();
                 textureMode = value;
+            }
+        }
+
+        public BlendMode BlendMode 
+        { 
+            get => blendMode;
+            set
+            {
+                if (blendMode != value) Flush();
+                blendMode = value;
             }
         }
 
@@ -93,10 +104,15 @@ namespace CrossX.Graphics2D
             graphicsDevice.SetVertexBuffer(vertexBuffer);
 
             var dc = graphicsDevice.DepthClip;
+            var bm = graphicsDevice.BlendMode;
 
+            graphicsDevice.BlendMode = BlendMode;
             graphicsDevice.DepthClip = false;
+
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, currentIndex);
+
             graphicsDevice.DepthClip = dc;
+            graphicsDevice.BlendMode = bm;
 
             currentIndex = 0;
         }
