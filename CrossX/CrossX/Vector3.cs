@@ -431,6 +431,12 @@ namespace CrossX
             Normalize(ref this, out this);
         }
 
+        public Vector3 Normalized()
+        {
+            Normalize(ref this, out var vector);
+            return vector;
+        }
+
         public static Vector3 Normalize(Vector3 vector)
         {
             Normalize(ref vector, out vector);

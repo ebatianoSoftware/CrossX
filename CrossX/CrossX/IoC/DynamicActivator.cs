@@ -51,17 +51,12 @@ namespace CrossX.IoC
 
                         if (shouldResolveService)
                         {
-                            try
-                            {
-                                arguments[idx] = serviceProvider?.GetService(param.ParameterType);
-                            }
-                            catch (KeyNotFoundException)
-                            {
-                                arguments[idx] = null;
-                                Console.WriteLine($"Couldn't resolve service {param.ParameterType.Name}");
-                            }
+                            object instance = null;
+                            serviceProvider?.TryResolveInstance(param.ParameterType, out instance);
+                            
+                            arguments[idx] = instance;
 
-                            if (arguments[idx] == null)
+                            if (arguments[idx] == null && !param.IsOptional)
                             {
                                 hasAllParams = false;
                                 break;

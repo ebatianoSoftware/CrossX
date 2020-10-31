@@ -1,4 +1,5 @@
-﻿using CrossX.Core;
+﻿using CrossX.Async;
+using CrossX.Core;
 using CrossX.DxCommon.Graphics;
 using CrossX.Graphics;
 using CrossX.Input;
@@ -7,7 +8,6 @@ using CrossX.UWP.Graphics;
 using CrossX.WindowsUniversal.Input;
 using EbatianoSoftware.CrossX.WindowsUniversal.Input;
 using System.Diagnostics;
-using System.Drawing;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -23,6 +23,7 @@ namespace CrossX.UWP.UWP
         private UwpGamePads gamePads;
         private UwpKeyboard keyboard;
         private DxGraphicsDevice graphicsDevice;
+        private Dispatcher dispatcher = new Dispatcher();
 
         public ApplicationView(ScopeBuilder scopeBuilder, object appParameters)
         {
@@ -53,7 +54,8 @@ namespace CrossX.UWP.UWP
             scopeBuilder
                 .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
                 .WithInstance(gamePads).As<IGamePads>()
-                .WithInstance(keyboard).As<IKeyboard>();
+                .WithInstance(keyboard).As<IKeyboard>()
+                .WithInstance(dispatcher).As<IDispatcher>();
 
             serviceProvider = scopeBuilder.Build();
             
@@ -73,6 +75,8 @@ namespace CrossX.UWP.UWP
             while (true)
             {
                 CoreWindow.GetForCurrentThread().Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+
+                dispatcher.Process();
 
                 var current = stopWatch.Elapsed;
                 var ellapsed = current - lastTime;

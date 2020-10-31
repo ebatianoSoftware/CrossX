@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace CrossX.Audio
-{
+{    
     internal class SoundSettings : ISoundSettings
     {
         private double volume = 1;

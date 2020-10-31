@@ -5,10 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Font.fnt" />
+    <None Remove="Font_0.png" />
     <None Remove="Texture.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Font.fnt" />
+    <EmbeddedResource Include="Font_0.png" />
     <EmbeddedResource Include="Texture.png" />
   </ItemGroup>
 

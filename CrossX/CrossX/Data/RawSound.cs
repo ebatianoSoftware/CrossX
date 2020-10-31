@@ -7,7 +7,7 @@ namespace CrossX.Data
     /// <summary>
     /// Raw sound class.
     /// </summary>
-    public class RawSound
+    public sealed class RawSound
     {
         /// <summary>
         /// Number of bits per sample.

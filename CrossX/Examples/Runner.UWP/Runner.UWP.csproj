@@ -143,18 +143,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CrossX.2D\CrossX.2D.csproj">
-      <Project>{df6c8561-5aff-4ad9-a0fa-196c31b14301}</Project>
-      <Name>CrossX.2D</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CrossX.ExIO\CrossX.ExIO.csproj">
-      <Project>{57a4a8e9-cdd5-405c-90f2-5f310430b214}</Project>
-      <Name>CrossX.ExIO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CrossX.MediaFormats\CrossX.MediaFormats.csproj">
-      <Project>{e58e5fc4-da8b-42d7-bf97-24032b069282}</Project>
-      <Name>CrossX.MediaFormats</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\CrossX.UWP\CrossX.UWP.csproj">
       <Project>{fe2b9b44-385e-4217-acdd-1a7191ad6a05}</Project>
       <Name>CrossX.UWP</Name>
@@ -174,6 +162,14 @@
     <ProjectReference Include="..\T03.InputGamepadAndKeyboard\T03.InputGamepadAndKeyboard.csproj">
       <Project>{51fa940e-1121-44d8-829d-7857344103d0}</Project>
       <Name>T03.InputGamepadAndKeyboard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\T04.Graphics2D\T04.Graphics2D.csproj">
+      <Project>{3124d1c7-1fff-4457-ba41-76fd884be3c1}</Project>
+      <Name>T04.Graphics2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\T05.Audio\T05.Audio.csproj">
+      <Project>{4f261d84-c030-4fe6-bb73-7c78b7d43505}</Project>
+      <Name>T05.Audio</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

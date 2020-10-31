@@ -18,6 +18,7 @@ namespace CrossX.UWP
         {
             var builder = new ScopeBuilder()
                 .WithParent(serviceProvider)
+                .RegisterUwpServices()
                 .RegisterUwpTypes();
             
             CoreApplication.Run(new ViewSource<TApp>(builder, appParameters));

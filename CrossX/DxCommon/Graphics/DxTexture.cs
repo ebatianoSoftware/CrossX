@@ -3,6 +3,7 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using CrossX.Data;
+using CrossX.Media.Formats;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System;
@@ -116,11 +117,13 @@ namespace CrossX.DxCommon.Graphics
             }
         }
 
-        public DxTexture(DxGraphicsDevice graphicsDevice, IRawLoader<RawImage> loader, Stream stream, bool generateMipMaps): this(graphicsDevice, loader.FromStream(stream), generateMipMaps)
+        public DxTexture(DxGraphicsDevice graphicsDevice, Stream stream, bool generateMipMaps, IRawLoader<RawImage> loader = null) 
+            : this(graphicsDevice, loader?.FromStream(stream) ?? ImagesFormat.Instance.FromStream(null), generateMipMaps)
         {
         }
 
-        public DxTexture(DxGraphicsDevice graphicsDevice, IRawLoader<RawImage> loader, Stream stream) : this(graphicsDevice, loader.FromStream(stream), false)
+        public DxTexture(DxGraphicsDevice graphicsDevice, Stream stream, IRawLoader<RawImage> loader = null) 
+            : this(graphicsDevice, loader?.FromStream(stream) ?? ImagesFormat.Instance.FromStream(stream), false)
         {
         }
 

@@ -9,7 +9,7 @@ namespace CrossX.Data
     /// <summary>
     /// Raw image class.
     /// </summary>
-    public class RawImage
+    public sealed class RawImage
     {
         /// <summary>
         /// Width of the image in pixels.

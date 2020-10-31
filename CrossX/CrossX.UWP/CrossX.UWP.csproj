@@ -121,6 +121,24 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\DxCommon\Audio\DxAudioEmitter.cs">
+      <Link>Audio\DxAudioEmitter.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxAudioListener.cs">
+      <Link>Audio\DxAudioListener.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxAudioManager.cs">
+      <Link>Audio\DxAudioManager.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxSound.cs">
+      <Link>Audio\DxSound.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxSoundInstance.cs">
+      <Link>Audio\DxSoundInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\XAudio2Model.cs">
+      <Link>Audio\XAudio2Model.cs</Link>
+    </Compile>
     <Compile Include="..\DxCommon\Graphics\DxEffect.cs">
       <Link>Graphics\DxCommon\DxEffect.cs</Link>
     </Compile>
@@ -183,6 +201,9 @@
     <PackageReference Include="SharpDX.Mathematics">
       <Version>4.2.0</Version>
     </PackageReference>
+    <PackageReference Include="SharpDX.XAudio2">
+      <Version>4.2.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrossX\CrossX.csproj">
@@ -190,9 +211,7 @@
       <Name>CrossX</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Audio\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.psbc">
       <Link>FX\DefaultPC.psbc</Link>

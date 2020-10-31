@@ -15,6 +15,7 @@ namespace T02.Textures
         private VertexBuffer vertexBuffer;
         private BasicShader basicShader;
         private Texture2D texture = null;
+
         public T02_TexturesApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
         {
             this.graphicsDevice = graphicsDevice;
@@ -57,7 +58,7 @@ namespace T02.Textures
 
             using(var stream = typeof(T02_TexturesApp).Assembly.GetManifestResourceStream("T02.Textures.Texture.png"))
             {
-                texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
+                texture = objectFactory.Create<Texture2D>(stream);
             }
         }
 

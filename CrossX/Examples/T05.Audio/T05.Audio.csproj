@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Texture.png" />
+    <None Remove="Sound.wav" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Texture.png" />
+    <EmbeddedResource Include="Sound.wav" />
   </ItemGroup>
 
   <ItemGroup>

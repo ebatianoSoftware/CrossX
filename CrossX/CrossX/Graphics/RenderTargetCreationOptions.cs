@@ -1,7 +1,6 @@
-﻿using System;
-namespace CrossX.Graphics
+﻿namespace CrossX.Graphics
 {
-    public class RenderTargetCreationOptions
+    public sealed class RenderTargetCreationOptions
     {
         public int Width { get; set; }
         public int Height { get; set; }

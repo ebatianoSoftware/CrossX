@@ -45,6 +45,12 @@ namespace CrossX.IoC
 
         public bool TryResolveInstance(Type type, out object instance)
         {
+            if (type == typeof(IServicesProvider) || type == typeof(IObjectFactory) || type == typeof(IAbstractTypeMapping))
+            {
+                instance = this;
+                return true;
+            }
+
             if (instances.TryGetValue(type, out instance)) return true;
 
             if (serviceProvider != null && serviceProvider.TryResolveInstance(type, out instance)) return true;
