@@ -66,7 +66,11 @@ namespace CrossX.Graphics2D
             basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix.Identity);
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
+
+            var dc = graphicsDevice.DepthClip;
+            graphicsDevice.DepthClip = false;
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, currentIndex);
+            graphicsDevice.DepthClip = dc;
 
             currentIndex = 0;
         }

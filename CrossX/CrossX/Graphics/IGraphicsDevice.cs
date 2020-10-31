@@ -11,7 +11,8 @@ namespace CrossX.Graphics
         Size CurrentTargetSize { get; }
         BlendMode BlendMode { get; set; }
         RenderTarget RenderTarget { get; }
-        Rectangle ScissorsRect { get; set; }
+        Rectangle? ScissorsRect { get; set; }
+        bool DepthClip { get; set; }
         void Present();
         void Clear(Color4 color);
         void SetRenderTarget(RenderTarget renderTarget);

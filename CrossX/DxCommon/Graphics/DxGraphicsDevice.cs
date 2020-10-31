@@ -50,13 +50,15 @@ namespace CrossX.DxCommon.Graphics
         private BlendState1 blendState;
         private BlendMode blendMode;
 
+        public bool DepthClip { get; set; }
+
         public BlendMode BlendMode
         {
             get => blendMode;
             set
             {
                 if (blendMode == value) return;
-                Flush(this);
+
                 blendMode = value;
                 switch (value)
                 {
@@ -79,7 +81,17 @@ namespace CrossX.DxCommon.Graphics
             }
         }
 
-        public Rectangle ScissorsRect { get; set; }
+        public Rectangle? ScissorsRect
+        {
+            get => scissorsRect;
+            set
+            {
+                if (scissorsRect == value) return;
+                Flush(this);
+                scissorsRect = value;
+            }
+        }
+
         public IDxShader CurrentShader { get; internal set; }
 
         public void Initialize(ITargetWindow window, bool fullscreen)
@@ -197,8 +209,17 @@ namespace CrossX.DxCommon.Graphics
 
             CurrentShader.ApplyShaderParameters();
 
-            var rect = ScissorsRect;
-            context.Rasterizer.SetScissorRectangle(rect.X, rect.Y, rect.Right, rect.Bottom);
+            if (ScissorsRect.HasValue)
+            {
+                var rect = ScissorsRect.Value;
+                context.Rasterizer.State = DepthClip ? RenderStates.DepthClipRasterizerState : RenderStates.ClipRasterizerState;
+                context.Rasterizer.SetScissorRectangle(rect.X, rect.Y, rect.Width, rect.Height);
+            }
+            else
+            {
+                context.Rasterizer.State = DepthClip ? RenderStates.DepthRasterizerState : RenderStates.RasterizerState;
+            }
+
             context.OutputMerger.BlendState = blendState;
             context.Draw(vertexCount, vertexStart);
         }
@@ -210,6 +231,7 @@ namespace CrossX.DxCommon.Graphics
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
+        private Rectangle? scissorsRect;
 
         protected virtual void Dispose(bool disposing)
         {

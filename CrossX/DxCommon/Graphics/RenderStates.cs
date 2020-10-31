@@ -14,6 +14,9 @@ namespace CrossX.DxCommon.Graphics
         public RasterizerState1 RasterizerState { get; private set; }
         public RasterizerState1 ClipRasterizerState { get; private set; }
 
+        public RasterizerState1 DepthRasterizerState { get; private set; }
+        public RasterizerState1 DepthClipRasterizerState { get; private set; }
+
         public BlendState1 NoBlendState { get; private set; }
         public BlendState1 AlphaBlendState { get; private set; }
         public BlendState1 AddBlendState { get; private set; }
@@ -109,6 +112,13 @@ namespace CrossX.DxCommon.Graphics
 
             rasterizerDesc.IsScissorEnabled = true;
             ClipRasterizerState = new RasterizerState1(d3dDevice, rasterizerDesc);
+
+            rasterizerDesc.IsDepthClipEnabled = true;
+            rasterizerDesc.IsScissorEnabled = false;
+            DepthRasterizerState = new RasterizerState1(d3dDevice, rasterizerDesc);
+
+            rasterizerDesc.IsScissorEnabled = true;
+            DepthClipRasterizerState = new RasterizerState1(d3dDevice, rasterizerDesc);
         }
 
     }

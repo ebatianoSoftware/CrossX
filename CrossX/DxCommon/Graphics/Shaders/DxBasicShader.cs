@@ -23,17 +23,13 @@ namespace CrossX.DxCommon.Graphics.Shaders
 
         private readonly Dictionary<VertexContent, DxEffect> Effects = new Dictionary<VertexContent, DxEffect>();
         public override CrossX.Graphics.SamplerState SamplerState { get; set; }
-        public override CrossX.Graphics.RasterizerState RasterizerState { get; set; }
 
-        public DxBasicShader(DxGraphicsDevice graphicsDevice, CrossX.Graphics.SamplerState samplerState = null, CrossX.Graphics.RasterizerState rasterizerState = null)
+        public DxBasicShader(DxGraphicsDevice graphicsDevice, CrossX.Graphics.SamplerState samplerState = null)
         {
             this.graphicsDevice = graphicsDevice;
-
             SamplerState = samplerState;
-            RasterizerState = rasterizerState;
 
             RegisterDefaultEffects();
-
             constBuffer = new SharpDX.Direct3D11.Buffer(graphicsDevice.D3dDevice, Utilities.SizeOf<ConstBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
         }
 
@@ -77,14 +73,7 @@ namespace CrossX.DxCommon.Graphics.Shaders
 
             context.PixelShader.SetSampler(0, sampler);
 
-            var rasterizer = (RasterizerState as DxRasterizerState)?.State;
-            
-            if(rasterizer == null)
-            {
-                rasterizer = graphicsDevice.RenderStates.RasterizerState;
-            }
 
-            context.Rasterizer.State = rasterizer;
             var color = DiffuseColor * Alpha;
             
             var consts = new ConstBuffer

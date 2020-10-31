@@ -52,5 +52,10 @@ namespace CrossX.DxCommon.Graphics
             }
             return TextureAddressMode.Wrap;
         }
+
+        public override void Dispose()
+        {
+            State.Dispose();
+        }
     }
 }

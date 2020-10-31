@@ -1,8 +1,11 @@
-﻿namespace CrossX.Graphics
+﻿using System;
+
+namespace CrossX.Graphics
 {
-    public abstract class SamplerState
+    public abstract class SamplerState: IDisposable
     {
         public abstract SamplerStateDesc Desc { get; }
+        public abstract void Dispose();
     }
 
     public struct SamplerStateDesc
