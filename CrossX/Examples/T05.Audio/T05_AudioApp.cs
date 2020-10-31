@@ -1,5 +1,6 @@
 ﻿using CrossX;
 using CrossX.Audio;
+using CrossX.Audio.Decoders;
 using CrossX.Core;
 using CrossX.Graphics;
 using CrossX.Graphics2D;
@@ -20,6 +21,9 @@ namespace T05.Audio
         private PrimitiveBatch primitiveBatch;
         private readonly IGraphicsDevice graphicsDevice;
 
+        private IAudioStream audioStream;
+        private AudioStreamPlayer streamPlayer;
+
         public T05_AudioApp(IObjectFactory objectFactory, IGraphicsDevice graphicsDevice)
         {
             this.objectFactory = objectFactory;
@@ -34,6 +38,13 @@ namespace T05.Audio
             {
                 sound = objectFactory.Create<Sound>(stream);
             }
+
+            var mediaStream = typeof(T05_AudioApp).Assembly.GetManifestResourceStream("T05.Audio.Music.ogg");
+            audioStream = new OggAudioStream(mediaStream);
+            
+
+            streamPlayer = objectFactory.Create<AudioStreamPlayer>(audioStream);
+            streamPlayer.Play(true);
 
             emitter = objectFactory.Create<AudioEmitter>();
             listener = objectFactory.Create<AudioListener>();

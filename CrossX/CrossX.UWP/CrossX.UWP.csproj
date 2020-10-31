@@ -130,6 +130,9 @@
     <Compile Include="..\DxCommon\Audio\DxAudioManager.cs">
       <Link>Audio\DxAudioManager.cs</Link>
     </Compile>
+    <Compile Include="..\DxCommon\Audio\DxAudioStreamPlayer.cs">
+      <Link>Audio\DxAudioStreamPlayer.cs</Link>
+    </Compile>
     <Compile Include="..\DxCommon\Audio\DxSound.cs">
       <Link>Audio\DxSound.cs</Link>
     </Compile>

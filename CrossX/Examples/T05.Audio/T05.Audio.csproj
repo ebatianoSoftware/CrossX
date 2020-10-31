@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Music.ogg" />
     <None Remove="Sound.wav" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Music.ogg" />
     <EmbeddedResource Include="Sound.wav" />
   </ItemGroup>
 

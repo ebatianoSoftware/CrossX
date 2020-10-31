@@ -26,7 +26,8 @@ namespace CrossX.UWP
                     .WithType<DxRenderTarget>().As<RenderTarget>()
                     .WithType<DxSound>().As<Sound>()
                     .WithType<DxAudioEmitter>().As<AudioEmitter>()
-                    .WithType<DxAudioListener>().As<AudioListener>();
+                    .WithType<DxAudioListener>().As<AudioListener>()
+                    .WithType<DxAudioStreamPlayer>().As<AudioStreamPlayer>();
         }
     }
 }
