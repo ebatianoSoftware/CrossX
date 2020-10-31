@@ -17,7 +17,7 @@ using CrossX.DxCommon.Graphics.Shaders;
 
 namespace CrossX.DxCommon.Graphics
 {
-    internal class DxGraphicsDevice: IGraphicsDevice, IDisposable
+    internal class DxGraphicsDevice : IGraphicsDevice, IDisposable
     {
         private ITargetWindow window;
 
@@ -43,8 +43,7 @@ namespace CrossX.DxCommon.Graphics
         public event Action<Size> SizeChanged;
         public event EventHandler FlushRequest;
 
-        private RenderStates renderStates;
-        private SamplerState samplerState;
+        public RenderStates RenderStates { get; private set; }
 
         public Size CurrentTargetSize => new Size(RenderTarget?.Width ?? width, RenderTarget?.Height ?? height);
 
@@ -57,57 +56,31 @@ namespace CrossX.DxCommon.Graphics
             set
             {
                 if (blendMode == value) return;
-
+                Flush(this);
                 blendMode = value;
                 switch (value)
                 {
                     case BlendMode.Add:
-                        blendState = renderStates.AddBlendState;
+                        blendState = RenderStates.AddBlendState;
                         break;
 
                     case BlendMode.AlphaBlend:
-                        blendState = renderStates.AlphaBlendState;
+                        blendState = RenderStates.AlphaBlendState;
                         break;
 
                     case BlendMode.Multiply:
-                        blendState = renderStates.MultiplyBlendState;
+                        blendState = RenderStates.MultiplyBlendState;
                         break;
 
                     default:
-                        blendState = renderStates.NoBlendState;
+                        blendState = RenderStates.NoBlendState;
                         break;
                 }
             }
         }
 
-        public Rectangle? ScissorsRect { get; set; }
-
+        public Rectangle ScissorsRect { get; set; }
         public IDxShader CurrentShader { get; internal set; }
-
-        private TextureFilter textureFilter;
-        public TextureFilter TextureFilter
-        {
-            get => textureFilter;
-            set
-            {
-                if (value == textureFilter) return;
-                textureFilter = value;
-                switch (value)
-                {
-                    case TextureFilter.Nearest:
-                        samplerState = renderStates.NearestSamplerState;
-                        break;
-
-                    case TextureFilter.Linear:
-                        samplerState = renderStates.LinearSamplerState;
-                        break;
-
-                    case TextureFilter.Anisotropic:
-                        samplerState = renderStates.AnisotropicSamplerState;
-                        break;
-                }
-            }
-        }
 
         public void Initialize(ITargetWindow window, bool fullscreen)
         {
@@ -117,10 +90,9 @@ namespace CrossX.DxCommon.Graphics
             SetupScreenBuffers();
             this.window.SizeChanged += (s, a) => SetupScreenBuffers();
 
-            renderStates = new RenderStates(this);
-            renderStates.Initialize();
+            RenderStates = new RenderStates(this);
+            RenderStates.Initialize();
 
-            TextureFilter = TextureFilter.Nearest;
             BlendMode = BlendMode.AlphaBlend;
         }
 
@@ -224,19 +196,9 @@ namespace CrossX.DxCommon.Graphics
             context.InputAssembler.PrimitiveTopology = GeometryExtensions.PrimitiveTopologyFromPrimitiveType(primitiveType);
 
             CurrentShader.ApplyShaderParameters();
-            context.PixelShader.SetSampler(0, samplerState);
 
-            if (ScissorsRect.HasValue)
-            {
-                var rect = ScissorsRect.Value;
-                context.Rasterizer.SetScissorRectangle(rect.X, rect.Y, rect.Right, rect.Bottom);
-                context.Rasterizer.State = renderStates.ClipRasterizerState;
-            }
-            else
-            {
-                context.Rasterizer.State = renderStates.RasterizerState;
-            }
-
+            var rect = ScissorsRect;
+            context.Rasterizer.SetScissorRectangle(rect.X, rect.Y, rect.Right, rect.Bottom);
             context.OutputMerger.BlendState = blendState;
             context.Draw(vertexCount, vertexStart);
         }
@@ -248,7 +210,6 @@ namespace CrossX.DxCommon.Graphics
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
-        
 
         protected virtual void Dispose(bool disposing)
         {

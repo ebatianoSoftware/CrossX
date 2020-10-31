@@ -20,6 +20,8 @@ namespace CrossX.UWP
         public static ScopeBuilder RegisterUwpTypes(this ScopeBuilder builder)
         {
             return builder
+                    .WithType<DxRasterizerState>().As<RasterizerState>()
+                    .WithType<DxSamplerState>().As<SamplerState>()
                     .WithType<DxTexture>().As<Texture2D>()
                     .WithType<DxVertexBuffer>().As<VertexBuffer>()
                     .WithType<DxBasicShader>().As<BasicShader>()

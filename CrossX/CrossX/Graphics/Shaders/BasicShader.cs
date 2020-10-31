@@ -10,6 +10,8 @@
         public Texture2D Texture { get; set; }
         public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
         public void SetViewProjectionTransform(Matrix transform) => viewProjectionMatrix = transform;
+        public abstract SamplerState SamplerState { get; set; }
+        public abstract RasterizerState RasterizerState { get; set; }
 
         protected BasicShader()
         {

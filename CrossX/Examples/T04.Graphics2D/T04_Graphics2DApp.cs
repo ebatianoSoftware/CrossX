@@ -26,7 +26,6 @@ namespace T04.Graphics2D
         public T04_Graphics2DApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
         {
             this.graphicsDevice = graphicsDevice;
-            graphicsDevice.TextureFilter = TextureFilter.Anisotropic;
             this.objectFactory = objectFactory;
 
             transform2D = objectFactory.Create<Transform2D>();

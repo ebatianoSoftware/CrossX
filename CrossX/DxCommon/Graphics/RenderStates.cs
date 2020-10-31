@@ -9,7 +9,7 @@ namespace CrossX.DxCommon.Graphics
 {
     internal class RenderStates
     {
-        private readonly Device1 _d3dDevice;
+        private readonly Device1 d3dDevice;
 
         public RasterizerState1 RasterizerState { get; private set; }
         public RasterizerState1 ClipRasterizerState { get; private set; }
@@ -25,7 +25,7 @@ namespace CrossX.DxCommon.Graphics
 
         public RenderStates(DxGraphicsDevice device)
         {
-            _d3dDevice = device.D3dDevice;
+            d3dDevice = device.D3dDevice;
         }
 
         public void Initialize()
@@ -39,7 +39,7 @@ namespace CrossX.DxCommon.Graphics
         {
             var blendStateDesc = BlendStateDescription1.Default();
             blendStateDesc.RenderTarget[0].IsBlendEnabled = false;
-            NoBlendState = new BlendState1(_d3dDevice, blendStateDesc);
+            NoBlendState = new BlendState1(d3dDevice, blendStateDesc);
 
             blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
 
@@ -53,15 +53,15 @@ namespace CrossX.DxCommon.Graphics
 
             blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
 
-            AlphaBlendState = new BlendState1(_d3dDevice, blendStateDesc);
+            AlphaBlendState = new BlendState1(d3dDevice, blendStateDesc);
 
             blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.One;
-            AddBlendState = new BlendState1(_d3dDevice, blendStateDesc);
+            AddBlendState = new BlendState1(d3dDevice, blendStateDesc);
 
             blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.Zero;
             blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.SourceColor;
 
-            MultiplyBlendState = new BlendState1(_d3dDevice, blendStateDesc);
+            MultiplyBlendState = new BlendState1(d3dDevice, blendStateDesc);
         }
 
         private void InitSamplerStates()
@@ -80,21 +80,20 @@ namespace CrossX.DxCommon.Graphics
                 MaximumLod = float.MaxValue
             };
 
-            NearestSamplerState = new SamplerState(_d3dDevice, samplerDesc);
+            NearestSamplerState = new SamplerState(d3dDevice, samplerDesc);
 
             samplerDesc.Filter = Filter.MinMagMipLinear;
-            LinearSamplerState = new SamplerState(_d3dDevice, samplerDesc);
+            LinearSamplerState = new SamplerState(d3dDevice, samplerDesc);
 
             samplerDesc.Filter = Filter.Anisotropic;
-            AnisotropicSamplerState = new SamplerState(_d3dDevice, samplerDesc);
+            AnisotropicSamplerState = new SamplerState(d3dDevice, samplerDesc);
         }
 
         private void InitRasterizerStates()
         {
-            // TODO: Rasterizer state as CrossX class to pass to renderer
             var rasterizerDesc = new RasterizerStateDescription1
             {
-                CullMode = CullMode.None,
+                CullMode = CullMode.Back,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
                 FillMode = FillMode.Solid,
@@ -106,10 +105,10 @@ namespace CrossX.DxCommon.Graphics
                 SlopeScaledDepthBias = 0,
             };
 
-            RasterizerState = new RasterizerState1(_d3dDevice, rasterizerDesc);
+            RasterizerState = new RasterizerState1(d3dDevice, rasterizerDesc);
 
             rasterizerDesc.IsScissorEnabled = true;
-            ClipRasterizerState = new RasterizerState1(_d3dDevice, rasterizerDesc);
+            ClipRasterizerState = new RasterizerState1(d3dDevice, rasterizerDesc);
         }
 
     }

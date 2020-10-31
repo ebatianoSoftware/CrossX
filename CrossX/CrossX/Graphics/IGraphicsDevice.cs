@@ -10,9 +10,8 @@ namespace CrossX.Graphics
         Size Size { get; }
         Size CurrentTargetSize { get; }
         BlendMode BlendMode { get; set; }
-        TextureFilter TextureFilter { get; set; }
         RenderTarget RenderTarget { get; }
-        Rectangle? ScissorsRect { get; set; }
+        Rectangle ScissorsRect { get; set; }
         void Present();
         void Clear(Color4 color);
         void SetRenderTarget(RenderTarget renderTarget);

@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using CrossX.Graphics.Shaders;
-using SharpDX.Mathematics.Interop;
-using CrossX.DxCommon.Helpers;
 
 namespace CrossX.DxCommon.Graphics.Shaders
 {
@@ -16,18 +14,24 @@ namespace CrossX.DxCommon.Graphics.Shaders
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         struct ConstBuffer
         {
-            public RawMatrix Matrix;
-            public RawColor4 Color;
+            public Matrix Matrix;
+            public Vector4 Color;
         }
 
         private SharpDX.Direct3D11.Buffer constBuffer;
         public DxGraphicsDevice graphicsDevice;
 
         private readonly Dictionary<VertexContent, DxEffect> Effects = new Dictionary<VertexContent, DxEffect>();
+        public override CrossX.Graphics.SamplerState SamplerState { get; set; }
+        public override CrossX.Graphics.RasterizerState RasterizerState { get; set; }
 
-        public DxBasicShader(DxGraphicsDevice graphicsDevice)
+        public DxBasicShader(DxGraphicsDevice graphicsDevice, CrossX.Graphics.SamplerState samplerState = null, CrossX.Graphics.RasterizerState rasterizerState = null)
         {
             this.graphicsDevice = graphicsDevice;
+
+            SamplerState = samplerState;
+            RasterizerState = rasterizerState;
+
             RegisterDefaultEffects();
 
             constBuffer = new SharpDX.Direct3D11.Buffer(graphicsDevice.D3dDevice, Utilities.SizeOf<ConstBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
@@ -62,14 +66,31 @@ namespace CrossX.DxCommon.Graphics.Shaders
         {
             var dxTexture = Texture as DxTexture;
             var context = graphicsDevice.D3dDevice.ImmediateContext1;
+            
             context.PixelShader.SetShaderResource(0, dxTexture?.View);
 
+            var sampler = (SamplerState as DxSamplerState)?.State;
+            if(sampler == null)
+            {
+                sampler = graphicsDevice.RenderStates.LinearSamplerState;
+            }
+
+            context.PixelShader.SetSampler(0, sampler);
+
+            var rasterizer = (RasterizerState as DxRasterizerState)?.State;
+            
+            if(rasterizer == null)
+            {
+                rasterizer = graphicsDevice.RenderStates.RasterizerState;
+            }
+
+            context.Rasterizer.State = rasterizer;
             var color = DiffuseColor * Alpha;
             
             var consts = new ConstBuffer
             {
-                Matrix = Matrix.Transpose(Matrix.Multiply(worldMatrix, viewProjectionMatrix)).ToRawMatrix(),
-                Color = new RawColor4(color.Rf, color.Gf, color.Bf, color.Af)
+                Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
+                Color = new Vector4(color.Rf, color.Gf, color.Bf, color.Af)
             };
 
             context.UpdateSubresource(ref consts, constBuffer);

@@ -148,8 +148,14 @@
     <Compile Include="..\DxCommon\Graphics\DxGraphicsDevice.cs">
       <Link>Graphics\DxCommon\DxGraphicsDevice.cs</Link>
     </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxRasterizerState.cs">
+      <Link>Graphics\DxCommon\DxRasterizerState.cs</Link>
+    </Compile>
     <Compile Include="..\DxCommon\Graphics\DxRenderTarget.cs">
       <Link>Graphics\DxCommon\DxRenderTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxSamplerState.cs">
+      <Link>Graphics\DxCommon\DxSamplerState.cs</Link>
     </Compile>
     <Compile Include="..\DxCommon\Graphics\DxTexture.cs">
       <Link>Graphics\DxCommon\DxTexture.cs</Link>
