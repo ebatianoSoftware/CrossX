@@ -20,14 +20,13 @@ namespace CrossX.DxCommon.Graphics.Shaders
 
         private SharpDX.Direct3D11.Buffer constBuffer;
         public DxGraphicsDevice graphicsDevice;
-
         private readonly Dictionary<VertexContent, DxEffect> Effects = new Dictionary<VertexContent, DxEffect>();
-        public override CrossX.Graphics.SamplerState SamplerState { get; set; }
+        public override TextureSamplerDesc Sampler { get; set; }
 
-        public DxBasicShader(DxGraphicsDevice graphicsDevice, CrossX.Graphics.SamplerState samplerState = null)
+        public DxBasicShader(DxGraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            SamplerState = samplerState;
+            Sampler = TextureSamplerDesc.Linear;
 
             RegisterDefaultEffects();
             constBuffer = new SharpDX.Direct3D11.Buffer(graphicsDevice.D3dDevice, Utilities.SizeOf<ConstBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
@@ -62,20 +61,14 @@ namespace CrossX.DxCommon.Graphics.Shaders
         {
             var dxTexture = Texture as DxTexture;
             var context = graphicsDevice.D3dDevice.ImmediateContext1;
-            
-            context.PixelShader.SetShaderResource(0, dxTexture?.View);
 
-            var sampler = (SamplerState as DxSamplerState)?.State;
-            if(sampler == null)
-            {
-                sampler = graphicsDevice.RenderStates.LinearSamplerState;
-            }
-
+            var sampler = graphicsDevice.RenderStates.GetSampler(Sampler);
             context.PixelShader.SetSampler(0, sampler);
 
+            context.PixelShader.SetShaderResource(0, dxTexture?.View);
 
             var color = DiffuseColor * Alpha;
-            
+
             var consts = new ConstBuffer
             {
                 Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),

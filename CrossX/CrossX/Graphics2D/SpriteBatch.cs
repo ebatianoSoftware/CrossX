@@ -19,6 +19,27 @@ namespace CrossX.Graphics2D
         private VertexBuffer vertexBuffer;
 
         private int currentIndex = 0;
+        private TextureFilter textureFilter = TextureFilter.Linear;
+        private TextureMode textureMode = TextureMode.WrapU | TextureMode.WrapV;
+
+        public TextureFilter TextureFilter 
+        { 
+            get => textureFilter;
+            set
+            {
+                if (textureFilter != value) Flush();
+                textureFilter = value;
+            }
+        }
+        public TextureMode TextureMode 
+        { 
+            get => textureMode;
+            set
+            {
+                if (textureMode != value) Flush();
+                textureMode = value;
+            }
+        }
 
         protected SpriteBatch(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, VertexContent vertexContent, ITransform2D transform2D)
         {
@@ -59,15 +80,20 @@ namespace CrossX.Graphics2D
             basicShader.Texture = currentTexture;
             basicShader.DiffuseColor = Color4.White;
             basicShader.Alpha = 1.0f;
-            basicShader.Apply();
+
+            basicShader.Sampler = (TextureSamplerDesc)((int)TextureFilter | (int)TextureMode);
 
             var vpm = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);
+
             basicShader.SetViewProjectionTransform(vpm);
             basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix.Identity);
+
+            basicShader.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
 
             var dc = graphicsDevice.DepthClip;
+
             graphicsDevice.DepthClip = false;
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, currentIndex);
             graphicsDevice.DepthClip = dc;

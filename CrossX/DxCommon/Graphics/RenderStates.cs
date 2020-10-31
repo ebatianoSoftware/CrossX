@@ -2,8 +2,11 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
+using CrossX.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
 
 namespace CrossX.DxCommon.Graphics
 {
@@ -22,9 +25,7 @@ namespace CrossX.DxCommon.Graphics
         public BlendState1 AddBlendState { get; private set; }
         public BlendState1 MultiplyBlendState { get; internal set; }
 
-        public SamplerState NearestSamplerState { get; private set; }
-        public SamplerState LinearSamplerState { get; private set; }
-        public SamplerState AnisotropicSamplerState { get; internal set; }
+        private Dictionary<TextureSamplerDesc, SamplerState> samplerStates = new Dictionary<TextureSamplerDesc, SamplerState>();
 
         public RenderStates(DxGraphicsDevice device)
         {
@@ -35,7 +36,6 @@ namespace CrossX.DxCommon.Graphics
         {
             InitBlendStates();
             InitRasterizerStates();
-            InitSamplerStates();
         }
 
         private void InitBlendStates()
@@ -67,13 +67,37 @@ namespace CrossX.DxCommon.Graphics
             MultiplyBlendState = new BlendState1(d3dDevice, blendStateDesc);
         }
 
-        private void InitSamplerStates()
+        public SamplerState GetSampler(TextureSamplerDesc sampler)
         {
+            if (samplerStates.TryGetValue(sampler, out var samplerState)) return samplerState;
+
+            var filter = Filter.MinMagMipPoint;
+            switch( (TextureFilter)((int)sampler & 0x03))
+            {
+                case TextureFilter.Linear:
+                    filter = Filter.MinMagMipLinear;
+                    break;
+
+                case TextureFilter.Anisotropic:
+                    filter = Filter.Anisotropic;
+                    break;
+
+            }
+
+            var addressU = TextureAddressMode.Wrap;
+            var addressV = TextureAddressMode.Wrap;
+
+            if (sampler.HasFlag(TextureSamplerDesc.ClampU)) addressU = TextureAddressMode.Clamp;
+            else if (sampler.HasFlag(TextureSamplerDesc.MirrorU)) addressU = TextureAddressMode.Mirror;
+
+            if (sampler.HasFlag(TextureSamplerDesc.ClampV)) addressV = TextureAddressMode.Clamp;
+            else if (sampler.HasFlag(TextureSamplerDesc.MirrorV)) addressV = TextureAddressMode.Mirror;
+
             var samplerDesc = new SamplerStateDescription
             {
-                Filter = Filter.MinMagMipPoint,
-                AddressU = TextureAddressMode.Mirror,
-                AddressV = TextureAddressMode.Mirror,
+                Filter = filter,
+                AddressU = addressU,
+                AddressV = addressV,
                 AddressW = TextureAddressMode.Mirror,
                 MipLodBias = 0,
                 MaximumAnisotropy = 8,
@@ -83,20 +107,16 @@ namespace CrossX.DxCommon.Graphics
                 MaximumLod = float.MaxValue
             };
 
-            NearestSamplerState = new SamplerState(d3dDevice, samplerDesc);
-
-            samplerDesc.Filter = Filter.MinMagMipLinear;
-            LinearSamplerState = new SamplerState(d3dDevice, samplerDesc);
-
-            samplerDesc.Filter = Filter.Anisotropic;
-            AnisotropicSamplerState = new SamplerState(d3dDevice, samplerDesc);
+            samplerState = new SamplerState(d3dDevice, samplerDesc);
+            samplerStates.Add(sampler, samplerState);
+            return samplerState;
         }
 
         private void InitRasterizerStates()
         {
             var rasterizerDesc = new RasterizerStateDescription1
             {
-                CullMode = CullMode.Back,
+                CullMode = SharpDX.Direct3D11.CullMode.Back,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
                 FillMode = FillMode.Solid,

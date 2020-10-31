@@ -5,17 +5,21 @@ namespace CrossX.Graphics
     [Flags]
     public enum TextureSamplerDesc
     {
-        Point = 1,
-        Linear = 2,
-        Anisotropic = 3,
+        Point = TextureFilter.Point,
+        Linear = TextureFilter.Linear,
+        Anisotropic = TextureFilter.Anisotropic,
 
-        WrapU = 0,
-        WrapV = 0,
+        WrapU = TextureMode.WrapU,
+        WrapV = TextureMode.WrapV,
+        WrapUV = WrapU | WrapV,
 
-        ClampU = 4,
-        ClampV = 8,
+        ClampU = TextureMode.ClampU,
+        ClampV = TextureMode.ClampV,
+        ClampUV = ClampU | ClampV,
 
-        MirrorU = 16,
-        MirrorV = 32
+        MirrorU = TextureMode.MirrorU,
+        MirrorV = TextureMode.MirrorV,
+        MirrorUV = MirrorU | MirrorV
+            
     }
 }

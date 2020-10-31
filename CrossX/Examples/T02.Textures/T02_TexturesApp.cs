@@ -31,13 +31,9 @@ namespace T02.Textures
                 Count = 4
             });
 
+            // Remember Counter Clockwise primitives!
             VertexPT[] vertices = new VertexPT[]
             {
-                new VertexPT
-                {
-                    Position = new Vector4(-0.5f, -0.5f, 0.5f, 1),
-                    TextureCoordinate = new Vector2(0,1)
-                },
                 new VertexPT
                 {
                     Position = new Vector4(-0.5f, 0.5f, 0.5f, 1),
@@ -45,14 +41,19 @@ namespace T02.Textures
                 },
                 new VertexPT
                 {
-                    Position = new Vector4(0.5f, -0.5f, 0.5f, 1),
-                    TextureCoordinate = new Vector2(1,1)
+                    Position = new Vector4(-0.5f, -0.5f, 0.5f, 1),
+                    TextureCoordinate = new Vector2(0,4)
                 },
                 new VertexPT
                 {
                     Position = new Vector4(0.5f, 0.5f, 0.5f, 1),
-                    TextureCoordinate = new Vector2(1,0)
+                    TextureCoordinate = new Vector2(4,0)
                 },
+                new VertexPT
+                {
+                    Position = new Vector4(0.5f, -0.5f, 0.5f, 1),
+                    TextureCoordinate = new Vector2(4,4)
+                }
             };
             vertexBuffer.SetData(vertices);
 
@@ -66,6 +67,7 @@ namespace T02.Textures
         {
             graphicsDevice.Clear(Color4.Black);
 
+            basicShader.Sampler = TextureSamplerDesc.Linear;
             basicShader.Texture = texture;
             basicShader.Apply();
 

@@ -4,9 +4,8 @@ namespace CrossX.Graphics
 {
     public enum TextureFilter
     {
-        Invalid,
-        Nearest,
-        Linear,
-        Anisotropic
+        Point = 1,
+        Linear = 2,
+        Anisotropic = 3
     }
 }
