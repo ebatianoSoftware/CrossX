@@ -53,18 +53,16 @@ namespace CrossX.DxCommon.Graphics.Shaders
         public override void Apply()
         {
             var context = graphicsDevice.D3dDevice.ImmediateContext1;
-            graphicsDevice.CurrentShader = this;
-            context.VertexShader.SetConstantBuffer(0, constBuffer);
-        }
 
-        public void ApplyShaderParameters()
-        {
+            
+            graphicsDevice.CurrentShader = this;
+
+            context.VertexShader.SetConstantBuffer(0, constBuffer);
+
             var dxTexture = Texture as DxTexture;
-            var context = graphicsDevice.D3dDevice.ImmediateContext1;
 
             var sampler = graphicsDevice.RenderStates.GetSampler(Sampler);
             context.PixelShader.SetSampler(0, sampler);
-
             context.PixelShader.SetShaderResource(0, dxTexture?.View);
 
             var color = DiffuseColor * Alpha;
@@ -76,6 +74,11 @@ namespace CrossX.DxCommon.Graphics.Shaders
             };
 
             context.UpdateSubresource(ref consts, constBuffer);
+        }
+
+        public void ApplyShaderParameters()
+        {
+            
         }
     }
 }

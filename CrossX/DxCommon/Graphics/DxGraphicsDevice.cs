@@ -207,8 +207,6 @@ namespace CrossX.DxCommon.Graphics
             var context = D3dDevice.ImmediateContext1;
             context.InputAssembler.PrimitiveTopology = GeometryExtensions.PrimitiveTopologyFromPrimitiveType(primitiveType);
 
-            CurrentShader.ApplyShaderParameters();
-
             if (ScissorsRect.HasValue)
             {
                 var rect = ScissorsRect.Value;
