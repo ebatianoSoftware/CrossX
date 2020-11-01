@@ -12,7 +12,7 @@ namespace T01.SimpleTriangle
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
         private VertexBuffer vertexBuffer;
-        private BasicEffect basicShader;
+        private BasicEffect basicEffect;
 
         public T01_SimpleTriangleApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
         {
@@ -22,7 +22,9 @@ namespace T01.SimpleTriangle
 
         public void LoadContent()
         {
-            basicShader = objectFactory.Create<BasicEffect>();
+            basicEffect = objectFactory.Create<BasicEffect>();
+            basicEffect.VertexColorEnabled = true;
+
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
                 VertexContent = VertexPC.Content,
@@ -54,7 +56,7 @@ namespace T01.SimpleTriangle
         {
             graphicsDevice.Clear(Color4.Black);
             
-            basicShader.Apply();
+            basicEffect.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 3);

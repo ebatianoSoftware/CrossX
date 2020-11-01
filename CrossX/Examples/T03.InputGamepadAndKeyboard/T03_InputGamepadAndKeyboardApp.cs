@@ -16,7 +16,7 @@ namespace T03.InputGamepadAndKeyboard
         private readonly IKeyboard keyboard;
         private readonly IMouse mouse;
         private VertexBuffer vertexBuffer;
-        private BasicEffect basicShader;
+        private BasicEffect basicEffect;
 
         private Vector2 offset = Vector2.Zero;
         private float rotation = 0;
@@ -37,7 +37,11 @@ namespace T03.InputGamepadAndKeyboard
 
         public void LoadContent()
         {
-            basicShader = objectFactory.Create<BasicEffect>();
+            basicEffect = objectFactory.Create<BasicEffect>();
+
+            basicEffect.TextureEnabled = false;
+            basicEffect.VertexColorEnabled = true;
+
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
                 VertexContent = VertexPC.Content,
@@ -78,12 +82,12 @@ namespace T03.InputGamepadAndKeyboard
                 Matrix.CreateScale(100) *
                 Matrix.CreateRotationY(rotation) *
                 Matrix.CreateTranslation(graphicsDevice.Size.Width / 2 + offset.X, graphicsDevice.Size.Height / 2 + offset.Y, 0);
-            basicShader.SetWorldTransform(worldMatrix);
+            basicEffect.SetWorldTransform(worldMatrix);
 
             var viewProjMatrix = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Size.Width, graphicsDevice.Size.Height, 0, 0.1f, 10);
-            basicShader.SetViewProjectionTransform(viewProjMatrix);
-            basicShader.DiffuseColor = Color4.White;
-            basicShader.Apply();
+            basicEffect.SetViewProjectionTransform(viewProjMatrix);
+            basicEffect.DiffuseColor = Color4.White;
+            basicEffect.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 4);
@@ -93,12 +97,12 @@ namespace T03.InputGamepadAndKeyboard
             worldMatrix =
                 Matrix.CreateScale(size) *
                 Matrix.CreateTranslation(new Vector3(pos, 0));
-            basicShader.SetWorldTransform(worldMatrix);
+            basicEffect.SetWorldTransform(worldMatrix);
 
-            basicShader.DiffuseColor = (mouse.GetButtonState(MouseButtons.Left).HasFlag(KeyBtnState.Down) ? Color4.LightCoral : Color4.White) *
+            basicEffect.DiffuseColor = (mouse.GetButtonState(MouseButtons.Left).HasFlag(KeyBtnState.Down) ? Color4.LightCoral : Color4.White) *
                                         (mouse.GetButtonState(MouseButtons.Right).HasFlag(KeyBtnState.Down) ? Color4.LightGreen : Color4.White) *
                                         (mouse.GetButtonState(MouseButtons.Middle).HasFlag(KeyBtnState.Down) ? Color4.LightBlue : Color4.White);
-            basicShader.Apply();
+            basicEffect.Apply();
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 4);
 
             graphicsDevice.Present();

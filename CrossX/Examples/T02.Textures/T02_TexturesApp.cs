@@ -13,7 +13,7 @@ namespace T02.Textures
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
         private VertexBuffer vertexBuffer;
-        private BasicEffect basicShader;
+        private BasicEffect basicEffect;
         private Texture2D texture = null;
 
         public T02_TexturesApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
@@ -24,7 +24,9 @@ namespace T02.Textures
 
         public void LoadContent()
         {
-            basicShader = objectFactory.Create<BasicEffect>();
+            basicEffect = objectFactory.Create<BasicEffect>();
+            basicEffect.TextureEnabled = true;
+            basicEffect.VertexColorEnabled = false;
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
                 VertexContent = VertexPT.Content,
@@ -67,9 +69,9 @@ namespace T02.Textures
         {
             graphicsDevice.Clear(Color4.Black);
 
-            basicShader.Sampler = TextureSamplerDesc.Linear;
-            basicShader.Texture = texture;
-            basicShader.Apply();
+            basicEffect.Sampler = TextureSamplerDesc.Linear;
+            basicEffect.Texture = texture;
+            basicEffect.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 4);
