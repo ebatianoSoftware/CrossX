@@ -173,6 +173,7 @@
       <Link>Graphics\DxCommon\Shaders\IDxShader.cs</Link>
     </Compile>
     <Compile Include="AppRunner.cs" />
+    <Compile Include="Graphics\DxCommon\DxIndexBuffer2.cs" />
     <Compile Include="Graphics\UwpWindow.cs" />
     <Compile Include="Input\UwpGamePad.cs" />
     <Compile Include="Input\UwpGamePads.cs" />

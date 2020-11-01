@@ -18,7 +18,9 @@ namespace CrossX.Graphics
         void Clear(Color4 color);
         void SetRenderTarget(RenderTarget renderTarget);
         void SetVertexBuffer(VertexBuffer vertexBuffer);
+        void SetIndexBuffer(IndexBuffer indexBuffer);
         void DrawPrimitives(PrimitiveType primitiveType, int vertexStart, int vertexCount);
+        void DrawIndexedPrimitives(PrimitiveType primitiveType, int indexStart, int indexCount);
         void Flush(object sender);
         void SetShader<TConstStruct>(Shader<TConstStruct> shader) where TConstStruct : struct;
         void SetPixelShaderSampler(int slot, TextureSamplerDesc samplerDesc);

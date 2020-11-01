@@ -16,6 +16,8 @@ namespace T03.InputGamepadAndKeyboard
         private readonly IKeyboard keyboard;
         private readonly IMouse mouse;
         private VertexBuffer vertexBuffer;
+        private IndexBuffer2 indexBuffer;
+
         private BasicEffect basicEffect;
 
         private Vector2 offset = Vector2.Zero;
@@ -48,6 +50,8 @@ namespace T03.InputGamepadAndKeyboard
                 Count = 4
             });
 
+            indexBuffer = objectFactory.Create<IndexBuffer2>(6);
+
             VertexPC[] vertices = new VertexPC[]
             {
                 new VertexPC
@@ -71,7 +75,15 @@ namespace T03.InputGamepadAndKeyboard
                     Color = Color4.White
                 },
             };
+
+            var indices = new ushort[]
+            {
+                0,1,2,
+                3,2,1
+            };
+
             vertexBuffer.SetData(vertices);
+            indexBuffer.SetData(indices);
         }
 
         public void Draw(TimeSpan frameTime)
@@ -90,7 +102,9 @@ namespace T03.InputGamepadAndKeyboard
             basicEffect.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
-            graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 4);
+            graphicsDevice.SetIndexBuffer(indexBuffer);
+
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 6);
 
             var pos = mouse.Position;
 
@@ -103,7 +117,7 @@ namespace T03.InputGamepadAndKeyboard
                                         (mouse.GetButtonState(MouseButtons.Right).HasFlag(KeyBtnState.Down) ? Color4.LightGreen : Color4.White) *
                                         (mouse.GetButtonState(MouseButtons.Middle).HasFlag(KeyBtnState.Down) ? Color4.LightBlue : Color4.White);
             basicEffect.Apply();
-            graphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 4);
+            graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 6);
 
             graphicsDevice.Present();
         }

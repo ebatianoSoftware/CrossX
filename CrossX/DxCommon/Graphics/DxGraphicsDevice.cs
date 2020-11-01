@@ -15,6 +15,7 @@ using Texture2D = SharpDX.Direct3D11.Texture2D;
 using CrossX.DxCommon.Helpers;
 using CrossX.DxCommon.Graphics.Shaders;
 using CrossX.Graphics.Shaders;
+using CrossX.UWP.Graphics.DxCommon;
 
 namespace CrossX.DxCommon.Graphics
 {
@@ -198,7 +199,20 @@ namespace CrossX.DxCommon.Graphics
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(buffer, GeometryExtensions.StrideFromVertexContent(vertexBuffer.VertexContent), 0));
         }
 
-        public void DrawPrimitives(PrimitiveType primitiveType, int vertexStart, int vertexCount)
+        public void SetIndexBuffer(IndexBuffer indexBuffer)
+        {
+            var context = D3dDevice.ImmediateContext1;
+            if (indexBuffer is DxIndexBuffer2 dib2)
+            {
+                context.InputAssembler.SetIndexBuffer(dib2.Buffer, Format.R16_UInt, 0);
+            }
+            else if (indexBuffer is DxIndexBuffer4 dib4)
+            {
+                context.InputAssembler.SetIndexBuffer(dib4.Buffer, Format.R32_UInt, 0);
+            }
+        }
+
+        private void PrepareRender(PrimitiveType primitiveType)
         {
             var context = D3dDevice.ImmediateContext1;
             context.InputAssembler.PrimitiveTopology = GeometryExtensions.PrimitiveTopologyFromPrimitiveType(primitiveType);
@@ -215,7 +229,20 @@ namespace CrossX.DxCommon.Graphics
             }
 
             context.OutputMerger.BlendState = blendState;
+        }
+
+        public void DrawPrimitives(PrimitiveType primitiveType, int vertexStart, int vertexCount)
+        {
+            PrepareRender(primitiveType);
+            var context = D3dDevice.ImmediateContext1;
             context.Draw(vertexCount, vertexStart);
+        }
+
+        public void DrawIndexedPrimitives(PrimitiveType primitiveType, int indexStart, int indexCount)
+        {
+            PrepareRender(primitiveType);
+            var context = D3dDevice.ImmediateContext1;
+            context.DrawIndexed(indexCount, indexStart, 0);
         }
 
         public void SetShader<TConstStruct>(Shader<TConstStruct> shader) where TConstStruct : struct

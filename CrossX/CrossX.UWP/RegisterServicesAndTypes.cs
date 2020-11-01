@@ -5,6 +5,7 @@ using CrossX.DxCommon.Graphics.Shaders;
 using CrossX.Graphics;
 using CrossX.Graphics.Shaders;
 using CrossX.IoC;
+using CrossX.UWP.Graphics.DxCommon;
 
 namespace CrossX.UWP
 {
@@ -24,6 +25,8 @@ namespace CrossX.UWP
             return builder
                     .WithType<DxTexture>().As<Texture2D>()
                     .WithType<DxVertexBuffer>().As<VertexBuffer>()
+                    .WithType<DxIndexBuffer2>().As<IndexBuffer2>()
+                    .WithType<DxIndexBuffer4>().As<IndexBuffer4>()
                     .WithType(typeof(DxPixelShader<>)).As(typeof(PixelShader<>))
                     .WithType(typeof(DxVertexShader<>)).As(typeof(VertexShader<>))
                     .WithType<DxRenderTarget>().As<RenderTarget>()

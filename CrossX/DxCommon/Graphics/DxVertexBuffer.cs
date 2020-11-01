@@ -23,8 +23,6 @@ namespace CrossX.DxCommon.Graphics
 
         public bool IsDisposed { get; private set; }
 
-        public T UnderlyingObject<T>() where T: class => (T)(object)Buffer;
-
         
         public DxVertexBuffer(VertexBufferCreationOptions creationOptions, DxGraphicsDevice graphicsDevice)
         {
