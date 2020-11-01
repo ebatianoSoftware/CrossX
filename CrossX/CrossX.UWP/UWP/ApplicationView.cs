@@ -93,8 +93,6 @@ namespace CrossX.UWP.UWP
 
                 keyboard.Update();
                 mouse.Update();
-
-                Task.Delay(1).Wait();
             }
 
             //stopWatch.Stop();

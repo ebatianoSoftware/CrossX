@@ -9,7 +9,7 @@ using Texture2D = SharpDX.Direct3D11.Texture2D;
 
 namespace CrossX.DxCommon.Graphics
 {
-    internal class DxRenderTarget : RenderTarget
+    internal class DxRenderTarget : RenderTarget, IDxTexture
     {
         public RenderTargetView RenderTargetView { get; }
         public ShaderResourceView ShaderResourceView { get; }
@@ -48,6 +48,7 @@ namespace CrossX.DxCommon.Graphics
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = ResourceUsage.Default
             };
+
             var device = graphicsDevice.D3dDevice;
             Texture = new Texture2D(device, desc);
 
@@ -56,8 +57,7 @@ namespace CrossX.DxCommon.Graphics
             var desc2 = new RenderTargetViewDescription
             {
                 Format = Texture.Description.Format,
-                Dimension = RenderTargetViewDimension.Texture2D
-            };
+                Dimension = RenderTargetViewDimension.Texture2D            };
             desc2.Texture2D.MipSlice = 0;
             RenderTargetView = new RenderTargetView(Texture.Device, Texture, desc2);
 

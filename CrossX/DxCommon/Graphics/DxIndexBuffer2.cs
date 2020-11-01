@@ -5,7 +5,7 @@ using SharpDX.Direct3D11;
 using System;
 using Buffer = SharpDX.Direct3D11.Buffer;
 
-namespace CrossX.UWP.Graphics.DxCommon
+namespace CrossX.DxCommon.Graphics
 {
     internal class DxIndexBuffer2 : IndexBuffer2
     {

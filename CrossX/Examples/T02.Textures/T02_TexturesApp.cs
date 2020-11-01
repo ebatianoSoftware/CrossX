@@ -69,7 +69,7 @@ namespace T02.Textures
         {
             graphicsDevice.Clear(Color4.Black);
 
-            basicEffect.Sampler = TextureSamplerDesc.Linear;
+            basicEffect.Sampler = TextureSamplerDesc.Linear | TextureSamplerDesc.MirrorUV;
             basicEffect.Texture = texture;
             basicEffect.Apply();
 

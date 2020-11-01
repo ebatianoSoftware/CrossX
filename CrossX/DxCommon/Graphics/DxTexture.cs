@@ -13,10 +13,10 @@ using System.Linq;
 
 namespace CrossX.DxCommon.Graphics
 {
-    internal class DxTexture : CrossX.Graphics.Texture2D
+    internal class DxTexture : CrossX.Graphics.Texture2D, IDxTexture
     {
         public readonly Texture2D Texture;
-        public readonly ShaderResourceView View;
+        public ShaderResourceView ShaderResourceView { get; }
 
         public bool IsDisposed { get; private set; }
 
@@ -54,17 +54,17 @@ namespace CrossX.DxCommon.Graphics
 
             try
             {
-                View = new ShaderResourceView(Texture.Device, Texture);
+                ShaderResourceView = new ShaderResourceView(Texture.Device, Texture);
             }
             catch
             {
-                View = null;
+                ShaderResourceView = null;
                 this.Texture = null;
             }
 
             if (generateMipMaps)
             {
-                Texture.Device.ImmediateContext.GenerateMips(View);
+                Texture.Device.ImmediateContext.GenerateMips(ShaderResourceView);
             }
         }
 
@@ -108,11 +108,11 @@ namespace CrossX.DxCommon.Graphics
 
             try
             {
-                View = new ShaderResourceView(Texture.Device, Texture);
+                ShaderResourceView = new ShaderResourceView(Texture.Device, Texture);
             }
             catch
             {
-                View = null;
+                ShaderResourceView = null;
                 this.Texture = null;
             }
         }
@@ -135,34 +135,19 @@ namespace CrossX.DxCommon.Graphics
             Height = height;
 
             try
-            { 
-                View = new ShaderResourceView(texture.Device, texture);
+            {
+                ShaderResourceView = new ShaderResourceView(texture.Device, texture);
             }
             catch
             {
-                View = null;
+                ShaderResourceView = null;
                 this.Texture = null;
             }
 
             if (generateMipMaps)
             {
-                texture.Device.ImmediateContext.GenerateMips(View);
+                texture.Device.ImmediateContext.GenerateMips(ShaderResourceView);
             }
-        }
-        
-        public virtual T UnderlyingObject<T>() where T: class
-        {
-            if(typeof(T) == typeof(Texture2D) && Texture != null)
-            {
-                return (T)(object)Texture;
-            }
-
-            if(typeof(T) == typeof(ShaderResourceView) && View != null)
-            {
-                return (T)(object)View;
-            }
-
-            throw new InvalidCastException();
         }
 
         public void Recreate()

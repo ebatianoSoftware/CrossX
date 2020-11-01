@@ -5,7 +5,6 @@ using CrossX.DxCommon.Graphics.Shaders;
 using CrossX.Graphics;
 using CrossX.Graphics.Shaders;
 using CrossX.IoC;
-using CrossX.UWP.Graphics.DxCommon;
 
 namespace CrossX.UWP
 {

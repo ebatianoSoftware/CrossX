@@ -20,6 +20,7 @@ namespace T04.Graphics2D
         private Texture2D texture = null;
         private ITransform2D transform2D;
         private TextObject text;
+        private RenderTarget renderTarget;
 
         private float rotation = 0;
 
@@ -33,28 +34,6 @@ namespace T04.Graphics2D
             spriteBatch = objectFactory.Create<SpriteBatch>(transform2D);
             primitiveBatch = objectFactory.Create<PrimitiveBatch>(transform2D);
             textObjectFactory = new TextObjectFactory();
-        }
-
-        public void Draw(TimeSpan frameTime)
-        {
-            graphicsDevice.Clear(Color4.Black);
-            
-            spriteBatch.DrawImage(texture, Vector2.Zero, null, Color4.White, 1);
-
-            primitiveBatch.BlendMode = BlendMode.Add;
-
-            primitiveBatch.DrawRect(new RectangleF(300, 300, 200, 200), Color4.Green);
-
-            primitiveBatch.DrawOval(new RectangleF(700, 700, 200, 100), Color4.Orange);
-
-            primitiveBatch.BlendMode = BlendMode.AlphaBlend;
-
-            transform2D.Push(Matrix.CreateTranslation(new Vector3(800, 400, 0)));
-            transform2D.Push(Matrix.CreateRotationZ(rotation));
-            spriteBatch.DrawText(text, -text.Size / 2, Color4.Yellow);
-            transform2D.Pop();
-            transform2D.Pop();
-            graphicsDevice.Present();
         }
 
         public void LoadContent()
@@ -74,8 +53,44 @@ namespace T04.Graphics2D
                     }
                 });
 
-                text = textObjectFactory.CreateText(font, new TextSource("This text is multiline text with justify. Word wrap happens automatically."), 24, 256, TextAlignment.Justify);
+                text = textObjectFactory.CreateText(font, new TextSource("This text is multiline text with justify. Word wrap happens automatically."), 48, 480, TextAlignment.Justify);
+
+                renderTarget = objectFactory.Create<RenderTarget>(new RenderTargetCreationOptions
+                {
+                    Width = 480,
+                    Height = (int)(text.Size.Y+1)
+                });
             }
+        }
+
+        public void Draw(TimeSpan frameTime)
+        {
+            graphicsDevice.Clear(Color4.Black);
+            
+            spriteBatch.DrawImage(texture, Vector2.Zero, null, Color4.White, 1);
+
+            primitiveBatch.BlendMode = BlendMode.Add;
+
+            primitiveBatch.DrawRect(new RectangleF(300, 300, 200, 200), Color4.Green);
+
+            primitiveBatch.BlendMode = BlendMode.Multiply;
+
+            primitiveBatch.DrawRect(new RectangleF(300, 0, 200, 200), Color4.CornflowerBlue);
+
+            primitiveBatch.BlendMode = BlendMode.AlphaBlend;
+            primitiveBatch.DrawOval(new RectangleF(700, 700, 200, 100), Color4.Orange);
+
+            graphicsDevice.SetRenderTarget(renderTarget);
+            graphicsDevice.Clear(Color4.Navy);
+
+            spriteBatch.DrawText(text, Vector2.Zero, Color4.Yellow);
+            spriteBatch.Flush();
+
+            graphicsDevice.SetRenderTarget(null);
+
+            spriteBatch.DrawImage(renderTarget, new Vector2(800, 400), null, Color4.White, 1, new Vector2(renderTarget.Width / 2, renderTarget.Height / 2), rotation);
+            
+            graphicsDevice.Present();
         }
 
         public void Update(TimeSpan frameTime)

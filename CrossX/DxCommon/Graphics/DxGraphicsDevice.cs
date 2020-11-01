@@ -15,7 +15,6 @@ using Texture2D = SharpDX.Direct3D11.Texture2D;
 using CrossX.DxCommon.Helpers;
 using CrossX.DxCommon.Graphics.Shaders;
 using CrossX.Graphics.Shaders;
-using CrossX.UWP.Graphics.DxCommon;
 
 namespace CrossX.DxCommon.Graphics
 {
@@ -171,6 +170,7 @@ namespace CrossX.DxCommon.Graphics
 
         public void SetRenderTarget(RenderTarget renderTarget)
         {
+            Flush(this);
             D3dContext.Flush();
 
             RenderTarget = renderTarget ?? mainRenderTarget;
@@ -260,8 +260,8 @@ namespace CrossX.DxCommon.Graphics
         public void SetPixelShaderTexture(int slot, CrossX.Graphics.Texture2D texture)
         {
             var context = D3dDevice.ImmediateContext1;
-            var dxTexture = texture as DxTexture;
-            context.PixelShader.SetShaderResource(slot, dxTexture?.View);
+            var dxTexture = texture as IDxTexture;
+            context.PixelShader.SetShaderResource(slot, dxTexture?.ShaderResourceView);
         }
 
         public void Flush(object sender)

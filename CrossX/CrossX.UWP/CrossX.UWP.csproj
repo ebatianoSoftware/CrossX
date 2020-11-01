@@ -145,6 +145,9 @@
     <Compile Include="..\DxCommon\Graphics\DxGraphicsDevice.cs">
       <Link>Graphics\DxCommon\DxGraphicsDevice.cs</Link>
     </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxIndexBuffer2.cs">
+      <Link>Graphics\DxCommon\DxIndexBuffer2.cs</Link>
+    </Compile>
     <Compile Include="..\DxCommon\Graphics\DxRenderTarget.cs">
       <Link>Graphics\DxCommon\DxRenderTarget.cs</Link>
     </Compile>
@@ -156,6 +159,9 @@
     </Compile>
     <Compile Include="..\DxCommon\Graphics\GeometryExtensions.cs">
       <Link>Graphics\DxCommon\GeometryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\IDxTexture.cs">
+      <Link>Graphics\DxCommon\IDxTexture.cs</Link>
     </Compile>
     <Compile Include="..\DxCommon\Graphics\ITargetWindow.cs">
       <Link>Graphics\DxCommon\ITargetWindow.cs</Link>
@@ -173,7 +179,6 @@
       <Link>Graphics\DxCommon\Shaders\IDxShader.cs</Link>
     </Compile>
     <Compile Include="AppRunner.cs" />
-    <Compile Include="Graphics\DxCommon\DxIndexBuffer2.cs" />
     <Compile Include="Graphics\UwpWindow.cs" />
     <Compile Include="Input\UwpGamePad.cs" />
     <Compile Include="Input\UwpGamePads.cs" />
