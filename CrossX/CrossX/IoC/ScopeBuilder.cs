@@ -20,7 +20,7 @@ namespace CrossX.IoC
                 Singleton = instance != null;
             }
 
-            public void As<TType>() => asTypes.Add(typeof(TType));
+            public void As(Type type) => asTypes.Add(type);
             public void AsSingleton() => Singleton = true;
             public void AsSelf() => asTypes.Add(Type);
 
@@ -49,9 +49,22 @@ namespace CrossX.IoC
             return this;
         }
 
+        public ScopeBuilder WithType(Type type)
+        {
+            var registration = new Registration(null, type);
+            registrations.Add(registration);
+            return this;
+        }
+
         public ScopeBuilder As<TType>()
         {
-            registrations.Last().As<TType>();
+            registrations.Last().As(typeof(TType));
+            return this;
+        }
+
+        public ScopeBuilder As(Type type)
+        {
+            registrations.Last().As(type);
             return this;
         }
 

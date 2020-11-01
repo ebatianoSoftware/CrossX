@@ -1,7 +1,7 @@
 ﻿using CrossX;
 using CrossX.Core;
 using CrossX.Graphics;
-using CrossX.Graphics.Shaders;
+using CrossX.Graphics.Effects;
 using CrossX.IoC;
 using CrossX.Media.Formats;
 using System;
@@ -13,7 +13,7 @@ namespace T02.Textures
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
         private VertexBuffer vertexBuffer;
-        private BasicShader basicShader;
+        private BasicEffect basicShader;
         private Texture2D texture = null;
 
         public T02_TexturesApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
@@ -24,7 +24,7 @@ namespace T02.Textures
 
         public void LoadContent()
         {
-            basicShader = objectFactory.Create<BasicShader>();
+            basicShader = objectFactory.Create<BasicEffect>();
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
                 VertexContent = VertexPT.Content,

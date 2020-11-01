@@ -142,9 +142,6 @@
     <Compile Include="..\DxCommon\Audio\XAudio2Model.cs">
       <Link>Audio\XAudio2Model.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\Graphics\DxEffect.cs">
-      <Link>Graphics\DxCommon\DxEffect.cs</Link>
-    </Compile>
     <Compile Include="..\DxCommon\Graphics\DxGraphicsDevice.cs">
       <Link>Graphics\DxCommon\DxGraphicsDevice.cs</Link>
     </Compile>
@@ -166,8 +163,11 @@
     <Compile Include="..\DxCommon\Graphics\RenderStates.cs">
       <Link>Graphics\DxCommon\RenderStates.cs</Link>
     </Compile>
-    <Compile Include="..\DxCommon\Graphics\Shaders\DxBasicShader.cs">
-      <Link>Graphics\DxCommon\Shaders\DxBasicShader.cs</Link>
+    <Compile Include="..\DxCommon\Graphics\Shaders\DxPixelShader.cs">
+      <Link>Graphics\DxCommon\Shaders\DxPixelShader.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\Shaders\DxVertexShader.cs">
+      <Link>Graphics\DxCommon\Shaders\DxVertexShader.cs</Link>
     </Compile>
     <Compile Include="..\DxCommon\Graphics\Shaders\IDxShader.cs">
       <Link>Graphics\DxCommon\Shaders\IDxShader.cs</Link>

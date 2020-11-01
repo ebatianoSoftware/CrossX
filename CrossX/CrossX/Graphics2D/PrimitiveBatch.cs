@@ -1,5 +1,5 @@
 ﻿using CrossX.Graphics;
-using CrossX.Graphics.Shaders;
+using CrossX.Graphics.Effects;
 using CrossX.IoC;
 using System;
 using System.Drawing;
@@ -8,7 +8,7 @@ namespace CrossX.Graphics2D
 {
     public sealed class PrimitiveBatch : IDisposable
     {
-        private readonly BasicShader basicShader;
+        private readonly BasicEffect basicShader;
         private readonly IGraphicsDevice graphicsDevice;
         private readonly ITransform2D transform2D;
         private VertexPC[] buffer = new VertexPC[2048];
@@ -39,7 +39,10 @@ namespace CrossX.Graphics2D
                 Count = buffer.Length
             });
 
-            basicShader = objectFactory.Create<BasicShader>();
+            basicShader = objectFactory.Create<BasicEffect>();
+            basicShader.Alpha = 1.0f;
+            basicShader.VertexColorEnabled = true;
+            basicShader.TextureEnabled = false;
         }
 
         public void Dispose()
@@ -64,12 +67,12 @@ namespace CrossX.Graphics2D
             vertexBuffer.SetData(buffer);
 
             basicShader.DiffuseColor = Color4.White;
-            basicShader.Alpha = 1.0f;
-            basicShader.Apply();
 
             var vpm = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);
             basicShader.SetViewProjectionTransform(vpm);
             basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix.Identity);
+
+            basicShader.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             

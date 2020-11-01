@@ -1,7 +1,7 @@
 ﻿using CrossX;
 using CrossX.Core;
 using CrossX.Graphics;
-using CrossX.Graphics.Shaders;
+using CrossX.Graphics.Effects;
 using CrossX.Input;
 using CrossX.IoC;
 using System;
@@ -16,7 +16,7 @@ namespace T03.InputGamepadAndKeyboard
         private readonly IKeyboard keyboard;
         private readonly IMouse mouse;
         private VertexBuffer vertexBuffer;
-        private BasicShader basicShader;
+        private BasicEffect basicShader;
 
         private Vector2 offset = Vector2.Zero;
         private float rotation = 0;
@@ -37,7 +37,7 @@ namespace T03.InputGamepadAndKeyboard
 
         public void LoadContent()
         {
-            basicShader = objectFactory.Create<BasicShader>();
+            basicShader = objectFactory.Create<BasicEffect>();
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
                 VertexContent = VertexPC.Content,

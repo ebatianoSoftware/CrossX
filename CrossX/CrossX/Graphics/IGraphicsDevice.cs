@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrossX.Graphics.Shaders;
+using System;
 using System.Drawing;
 
 namespace CrossX.Graphics
@@ -19,5 +20,8 @@ namespace CrossX.Graphics
         void SetVertexBuffer(VertexBuffer vertexBuffer);
         void DrawPrimitives(PrimitiveType primitiveType, int vertexStart, int vertexCount);
         void Flush(object sender);
+        void SetShader<TConstStruct>(Shader<TConstStruct> shader) where TConstStruct : struct;
+        void SetPixelShaderSampler(int slot, TextureSamplerDesc samplerDesc);
+        void SetPixelShaderTexture(int slot, Texture2D texture);
     }
 }

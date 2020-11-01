@@ -72,6 +72,18 @@ namespace CrossX.IoC
         {
             if (typesMapping.TryGetValue(abstractType, out implementationType)) return true;
 
+            if(abstractType.IsGenericType)
+            {
+                var arguments = abstractType.GenericTypeArguments;
+                var genType = abstractType.GetGenericTypeDefinition();
+
+                if (typesMapping.TryGetValue(genType, out implementationType))
+                {
+                    implementationType = implementationType.MakeGenericType(arguments);
+                    return true;
+                }
+            }
+
             var mapper = serviceProvider?.GetService<IAbstractTypeMapping>();
             if (mapper != null && mapper.FindMapping(abstractType, out implementationType)) return true;
 

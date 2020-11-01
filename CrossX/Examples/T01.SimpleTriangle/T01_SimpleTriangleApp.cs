@@ -1,7 +1,7 @@
 ﻿using CrossX;
 using CrossX.Core;
 using CrossX.Graphics;
-using CrossX.Graphics.Shaders;
+using CrossX.Graphics.Effects;
 using CrossX.IoC;
 using System;
 
@@ -12,7 +12,7 @@ namespace T01.SimpleTriangle
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
         private VertexBuffer vertexBuffer;
-        private BasicShader basicShader;
+        private BasicEffect basicShader;
 
         public T01_SimpleTriangleApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
         {
@@ -22,7 +22,7 @@ namespace T01.SimpleTriangle
 
         public void LoadContent()
         {
-            basicShader = objectFactory.Create<BasicShader>();
+            basicShader = objectFactory.Create<BasicEffect>();
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
                 VertexContent = VertexPC.Content,

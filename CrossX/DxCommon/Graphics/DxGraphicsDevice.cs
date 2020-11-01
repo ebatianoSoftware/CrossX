@@ -14,6 +14,7 @@ using System.Drawing;
 using Texture2D = SharpDX.Direct3D11.Texture2D;
 using CrossX.DxCommon.Helpers;
 using CrossX.DxCommon.Graphics.Shaders;
+using CrossX.Graphics.Shaders;
 
 namespace CrossX.DxCommon.Graphics
 {
@@ -193,11 +194,6 @@ namespace CrossX.DxCommon.Graphics
         {
             var buffer = ((DxVertexBuffer)vertexBuffer).Buffer;
             var context = D3dDevice.ImmediateContext1;
-            var effect = CurrentShader.EffectForContent(vertexBuffer.VertexContent);
-
-            context.InputAssembler.InputLayout = effect.InputLayout;
-            context.VertexShader.Set(effect.VertexShader);
-            context.PixelShader.Set(effect.PixelShader);
 
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(buffer, GeometryExtensions.StrideFromVertexContent(vertexBuffer.VertexContent), 0));
         }
@@ -220,6 +216,25 @@ namespace CrossX.DxCommon.Graphics
 
             context.OutputMerger.BlendState = blendState;
             context.Draw(vertexCount, vertexStart);
+        }
+
+        public void SetShader<TConstStruct>(Shader<TConstStruct> shader) where TConstStruct : struct
+        {
+            ((IDxShader)shader).AttachShader();
+        }
+
+        public void SetPixelShaderSampler(int slot, TextureSamplerDesc samplerDesc)
+        {
+            var context = D3dDevice.ImmediateContext1;
+            var sampler = RenderStates.GetSampler(samplerDesc);
+            context.PixelShader.SetSampler(slot, sampler);
+        }
+
+        public void SetPixelShaderTexture(int slot, CrossX.Graphics.Texture2D texture)
+        {
+            var context = D3dDevice.ImmediateContext1;
+            var dxTexture = texture as DxTexture;
+            context.PixelShader.SetShaderResource(slot, dxTexture?.View);
         }
 
         public void Flush(object sender)

@@ -14,15 +14,18 @@ namespace CrossX.UWP
         {
             return builder
                 .WithType<SoundSettings>().As<ISoundSettings>().AsSingleton()
-                .WithType<DxAudioManager>().AsSelf().AsSingleton();
+                .WithType<DxAudioManager>().AsSelf().AsSingleton()
+                .WithType<ShadersRepository>().As<IShadersRepository>().AsSingleton();
         }
 
         public static ScopeBuilder RegisterUwpTypes(this ScopeBuilder builder)
         {
+            
             return builder
                     .WithType<DxTexture>().As<Texture2D>()
                     .WithType<DxVertexBuffer>().As<VertexBuffer>()
-                    .WithType<DxBasicShader>().As<BasicShader>()
+                    .WithType(typeof(DxPixelShader<>)).As(typeof(PixelShader<>))
+                    .WithType(typeof(DxVertexShader<>)).As(typeof(VertexShader<>))
                     .WithType<DxRenderTarget>().As<RenderTarget>()
                     .WithType<DxSound>().As<Sound>()
                     .WithType<DxAudioEmitter>().As<AudioEmitter>()
