@@ -26,7 +26,7 @@ namespace T06.StaticMesh
         public void LoadContent()
         {
             RawMesh rawMesh = null;
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.fighterjet.obj"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Plane.DownNecker.obj"))
             {
                 rawMesh = WavefrontObjFormat.Instance.FromStream(stream, new OpenMaterialFileDelegate( name =>
                 {
@@ -43,7 +43,26 @@ namespace T06.StaticMesh
         {
             managedOutside = false;
             texture = null;
-            if (name == null) return;
+            if (name == null)
+            {
+                switch(target)
+                {
+                    case TextureTarget.Diffuse:
+                        using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.done2.png"))
+                        {
+                            texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
+                        }
+                        break;
+
+                    case TextureTarget.Normal:
+                        using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.done2NM.png"))
+                        {
+                            texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
+                        }
+                        break;
+                }
+                return;
+            }
 
             using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.{name}"))
             {
@@ -59,7 +78,7 @@ namespace T06.StaticMesh
                 Matrix.CreateTranslation(-mesh.Bounds.Center) *
                 Matrix.CreateRotationY(rotation));
 
-            var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 3;
+            var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2;
 
             var projView = Matrix.CreateLookAt(
                     new Vector3(1, 1, 1).Normalized() * dist,

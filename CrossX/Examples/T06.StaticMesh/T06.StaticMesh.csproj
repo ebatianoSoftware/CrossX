@@ -8,16 +8,30 @@
     <None Remove="diffuse.png" />
     <None Remove="fighterjet.mtl" />
     <None Remove="fighterjet.obj" />
+    <None Remove="Fighter\diffuse.png" />
+    <None Remove="Fighter\fighterjet.mtl" />
+    <None Remove="Fighter\fighterjet.obj" />
+    <None Remove="Fighter\normals.png" />
     <None Remove="Horn.jpg" />
     <None Remove="Horn.obj" />
     <None Remove="normals.png" />
+    <None Remove="Plane\Done1.png" />
+    <None Remove="Plane\done2.png" />
+    <None Remove="Plane\done2NM.png" />
+    <None Remove="Plane\done2Spec.png" />
+    <None Remove="Plane\DownNecker.obj" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="diffuse.png" />
-    <EmbeddedResource Include="fighterjet.mtl" />
-    <EmbeddedResource Include="fighterjet.obj" />
-    <EmbeddedResource Include="normals.png" />
+    <EmbeddedResource Include="Fighter\diffuse.png" />
+    <EmbeddedResource Include="Fighter\fighterjet.mtl" />
+    <EmbeddedResource Include="Fighter\fighterjet.obj" />
+    <EmbeddedResource Include="Fighter\normals.png" />
+    <EmbeddedResource Include="Plane\Done1.png" />
+    <EmbeddedResource Include="Plane\done2.png" />
+    <EmbeddedResource Include="Plane\done2NM.png" />
+    <EmbeddedResource Include="Plane\done2Spec.png" />
+    <EmbeddedResource Include="Plane\DownNecker.obj" />
   </ItemGroup>
 
   <ItemGroup>
