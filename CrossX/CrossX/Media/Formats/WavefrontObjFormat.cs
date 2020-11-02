@@ -6,13 +6,35 @@ using System.Collections.Generic;
 
 namespace CrossX.Media.Formats
 {
-    public class WavefrontObjFormat : IRawLoader<RawMesh>
+    public delegate Stream OpenMaterialFileDelegate(string name);
+
+    public class WavefrontObjFormat
     {
-        public static readonly IRawLoader<RawMesh> Instance = new WavefrontObjFormat();
-        public RawMesh FromStream(Stream stream)
+        public static readonly WavefrontObjFormat Instance = new WavefrontObjFormat();
+
+        private WavefrontObjFormat() { }
+
+        public RawMesh FromStream(Stream stream, OpenMaterialFileDelegate openMaterialFile = null)
         {
-            var file = ObjFile.FromStream(stream);
+            var materials = new Dictionary<string, RawMaterial>();
+
             
+            var file = ObjFile.FromStream(stream);
+
+            if(openMaterialFile != null)
+            {
+                foreach(var lib in file.MaterialLibraries)
+                {
+                    using (var stream2 = openMaterialFile(lib))
+                    {
+                        if (stream2 != null)
+                        {
+                            LoadMaterials(stream2, materials);
+                        }
+                    }
+                }
+            }
+
             var vertices = new List<VertexPNT>();
             var map = new Dictionary<ObjTriplet, uint>();
 
@@ -47,10 +69,40 @@ namespace CrossX.Media.Formats
 
             foreach(var sl in objSlices)
             {
-                slices[sliceIndex++] = new RawMeshSlice(sl.Key, sl.Value.ToArray());
+                if(!materials.TryGetValue(sl.Key, out var material))
+                {
+                    material = new RawMaterial(sl.Key, null, null, Color4.Transparent, Color4.White, Color4.Transparent, 1);
+                }
+                slices[sliceIndex++] = new RawMeshSlice(material, sl.Value.ToArray());
             }
 
             return new RawMesh(slices, vertices.ToArray());
+        }
+
+        private void LoadMaterials(Stream stream, Dictionary<string, RawMaterial> materials)
+        {
+            var objMat = ObjMaterialFile.FromStream(stream);
+
+            foreach(var mat in objMat.Materials)
+            {
+                var raw = new RawMaterial(
+                        mat.Name,
+                        mat.DiffuseMap?.FileName,
+                        mat.BumpMap?.FileName,
+                        FromObj(mat.AmbientColor),
+                        FromObj(mat.DiffuseColor),
+                        FromObj(mat.SpecularColor),
+                        mat.SpecularExponent
+                    );
+
+                materials.Add(mat.Name, raw);
+            }
+
+        }
+
+        private Color4 FromObj(ObjMaterialColor color)
+        {
+            return new Color4(color.Color.X, color.Color.Y, color.Color.Z);
         }
 
         private uint GetIndex(ObjFile file, ObjTriplet tri, Dictionary<ObjTriplet, uint> map, List<VertexPNT> vertices)

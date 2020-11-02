@@ -28,24 +28,27 @@ namespace T06.StaticMesh
             RawMesh rawMesh = null;
             using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.fighterjet.obj"))
             {
-                rawMesh = WavefrontObjFormat.Instance.FromStream(stream);
+                rawMesh = WavefrontObjFormat.Instance.FromStream(stream, new OpenMaterialFileDelegate( name =>
+                {
+                    name = name.Replace("./", "");
+                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.{name}");
+                }));
             }
 
             lightedEffect = objectFactory.Create<LightedEffect>();
-            mesh = objectFactory.Create<Mesh>(rawMesh, new LoadMeshTexturesDelegate(LoadMeshTextures));
+            mesh = objectFactory.Create<Mesh>(rawMesh, new LoadTextureDelegate(LoadTexture));
         }
 
-        private void LoadMeshTextures(string name, out Texture2D texture, out Texture2D normal, out bool managedOutside)
+        private void LoadTexture(string name, TextureTarget target, out Texture2D texture, out bool managedOutside)
         {
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.diffuse.png"))
+            managedOutside = false;
+            texture = null;
+            if (name == null) return;
+
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.{name}"))
             {
                 texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
             }
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.normals.png"))
-            {
-                normal = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
-            }
-            managedOutside = false;
         }
 
         public void Draw(TimeSpan frameTime)
@@ -65,7 +68,7 @@ namespace T06.StaticMesh
                     Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 0.1f, dist * 2);
 
             lightedEffect.SetViewProjectionTransform(projView);
-            lightedEffect.LightDir = new Vector3(1, -1, 0).Normalized();
+            lightedEffect.LightDir = new Vector3(0.3f, -1, 0).Normalized();
             graphicsDevice.DepthClip = true;
             for (var idx = 0; idx < mesh.Slices.Count; ++idx)
             {

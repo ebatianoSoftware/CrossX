@@ -6,7 +6,12 @@ using System.Collections.Generic;
 
 namespace CrossX.Graphics3D
 {
-    public delegate void LoadMeshTexturesDelegate(string name, out Texture2D texture, out Texture2D normal, out bool managedOutside );
+    public enum TextureTarget
+    {
+        Diffuse,
+        Normal
+    }
+    public delegate void LoadTextureDelegate(string name, TextureTarget target, out Texture2D texture, out bool managedOutside);
 
     public class Mesh: IDisposable
     {
@@ -16,7 +21,7 @@ namespace CrossX.Graphics3D
         public IList<MeshSlice> Slices { get; }
         public Aabb3 Bounds { get; }
 
-        public Mesh(IObjectFactory objectFactory, RawMesh mesh, LoadMeshTexturesDelegate loadTexturesDelegate)
+        public Mesh(IObjectFactory objectFactory, RawMesh mesh, LoadTextureDelegate loadTextureDelegate)
         {
             Vertices = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
@@ -29,7 +34,7 @@ namespace CrossX.Graphics3D
             foreach(var slice in mesh.Slices)
             {
                 Slices.Add(
-                    objectFactory.Create<MeshSlice>(slice, loadTexturesDelegate)
+                    objectFactory.Create<MeshSlice>(slice, loadTextureDelegate)
                     );
             }
 

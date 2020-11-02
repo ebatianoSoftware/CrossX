@@ -43,7 +43,7 @@ PS_IN VS(VS_IN input)
 float4 PS(PS_IN input): SV_Target
 {
   float4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f};
-  float4 ambient = { 0.3f, 0.3f, 0.3f, 1.0f };
+  float4 ambient = { 0.05f, 0.05f, 0.2f, 1.0f };
   float4 color = ambient + diffuse * saturate(dot(input.light, input.norm));
   
   return colorTexture.Sample(colorTextureSampler, input.texCoord) * color * input.color;

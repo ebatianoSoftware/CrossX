@@ -4,11 +4,11 @@ namespace CrossX.Data
 {
     public class RawMeshSlice
     {
-        public string Material { get; }
+        public RawMaterial Material { get; }
         public uint[] Indices4 { get; }
         public ushort[] Indices2 { get; }
 
-        public RawMeshSlice(string material, uint[] indices)
+        public RawMeshSlice(RawMaterial material, uint[] indices)
         {
             Material = material;
             var is4 = false;
