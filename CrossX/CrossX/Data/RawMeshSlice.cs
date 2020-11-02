@@ -3,9 +3,9 @@
     public class RawMeshSlice
     {
         public string Material { get; }
-        public ushort[] Indices { get; }
+        public uint[] Indices { get; }
 
-        public RawMeshSlice(string material, ushort[] indices)
+        public RawMeshSlice(string material, uint[] indices)
         {
             Material = material;
             Indices = indices;

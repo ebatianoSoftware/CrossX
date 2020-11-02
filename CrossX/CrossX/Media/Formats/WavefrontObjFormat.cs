@@ -14,15 +14,15 @@ namespace CrossX.Media.Formats
             var file = ObjFile.FromStream(stream);
 
             var vertices = new List<VertexPNCT>();
-            var map = new Dictionary<ObjTriplet, int>();
+            var map = new Dictionary<ObjTriplet, uint>();
 
-            List<Tuple<string, List<ushort>>> faces = new List<Tuple<string, List<ushort>>>();
+            List<Tuple<string, List<uint>>> faces = new List<Tuple<string, List<uint>>>();
 
             for(var idx = 0; idx <  file.Faces.Count; ++idx)
             {
                 var mat = file.Faces[idx].MaterialName;
 
-                var list = new List<ushort>();
+                var list = new List<uint>();
                 var tuple = Tuple.Create(mat, list);
                 faces.Add(tuple);
 
@@ -30,10 +30,10 @@ namespace CrossX.Media.Formats
                 {
                     if(!map.TryGetValue(tri, out var index))
                     {
-                        map.Add(tri, vertices.Count);
+                        map.Add(tri, (uint)vertices.Count);
                         vertices.Add(FromData(file, tri));
                     }
-                    list.Add((ushort)index);
+                    list.Add(index);
                 }
             }
 
