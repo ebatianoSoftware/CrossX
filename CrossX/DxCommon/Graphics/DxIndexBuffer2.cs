@@ -1,5 +1,4 @@
-﻿using CrossX.DxCommon.Graphics;
-using CrossX.Graphics;
+﻿using CrossX.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System;
