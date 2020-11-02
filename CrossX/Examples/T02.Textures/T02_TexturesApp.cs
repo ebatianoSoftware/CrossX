@@ -29,29 +29,29 @@ namespace T02.Textures
             basicEffect.VertexColorEnabled = false;
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
             {
-                VertexContent = VertexPT.Content,
+                VertexContent = VertexPNT.Content,
                 Count = 4
             });
 
             // Remember Counter Clockwise primitives!
-            VertexPT[] vertices = new VertexPT[]
+            VertexPNT[] vertices = new []
             {
-                new VertexPT
+                new VertexPNT
                 {
                     Position = new Vector4(-0.5f, 0.5f, 0.5f, 1),
                     TextureCoordinate = new Vector2(0,0)
                 },
-                new VertexPT
+                new VertexPNT
                 {
                     Position = new Vector4(-0.5f, -0.5f, 0.5f, 1),
                     TextureCoordinate = new Vector2(0,4)
                 },
-                new VertexPT
+                new VertexPNT
                 {
                     Position = new Vector4(0.5f, 0.5f, 0.5f, 1),
                     TextureCoordinate = new Vector2(4,0)
                 },
-                new VertexPT
+                new VertexPNT
                 {
                     Position = new Vector4(0.5f, -0.5f, 0.5f, 1),
                     TextureCoordinate = new Vector2(4,4)
@@ -71,6 +71,16 @@ namespace T02.Textures
 
             basicEffect.Sampler = TextureSamplerDesc.Linear | TextureSamplerDesc.MirrorUV;
             basicEffect.Texture = texture;
+            basicEffect.VertexHasNormals = true;
+
+            var projView = Matrix.CreateLookAt(
+                    new Vector3(1, 1, 1).Normalized() * 2,
+                    Vector3.Zero,
+                    Vector3.Up) *
+                    Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 0.1f, 1000f);
+
+            basicEffect.SetViewProjectionTransform(projView);
+
             basicEffect.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);

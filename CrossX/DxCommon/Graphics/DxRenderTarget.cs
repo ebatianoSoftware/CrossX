@@ -12,6 +12,7 @@ namespace CrossX.DxCommon.Graphics
     internal class DxRenderTarget : RenderTarget, IDxTexture
     {
         public RenderTargetView RenderTargetView { get; }
+        public DepthStencilView DepthStencilView { get; }
         public ShaderResourceView ShaderResourceView { get; }
 
         public bool IsDisposed { get; private set; }
@@ -31,6 +32,21 @@ namespace CrossX.DxCommon.Graphics
 
             Width = width;
             Height = height;
+
+            using (var depthBuffer = new Texture2D(texture.Device, new Texture2DDescription
+            {
+                Format = Format.D24_UNorm_S8_UInt,
+                ArraySize = 1,
+                MipLevels = 1,
+                Width = width,
+                Height = height,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = ResourceUsage.Default,
+                BindFlags = BindFlags.DepthStencil,
+            }))
+            {
+                DepthStencilView = new DepthStencilView(texture.Device, depthBuffer);
+            }
         }
 
         public DxRenderTarget(DxGraphicsDevice graphicsDevice, RenderTargetCreationOptions creationOptions)
@@ -63,6 +79,21 @@ namespace CrossX.DxCommon.Graphics
 
             Width = creationOptions.Width;
             Height = creationOptions.Height;
+
+            using (var depthBuffer = new Texture2D(graphicsDevice.D3dDevice, new Texture2DDescription
+            {
+                Format = Format.D24_UNorm_S8_UInt,
+                ArraySize = 1,
+                MipLevels = 1,
+                Width = creationOptions.Width,
+                Height = creationOptions.Height,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = ResourceUsage.Default,
+                BindFlags = BindFlags.DepthStencil,
+            }))
+            {
+                DepthStencilView = new DepthStencilView(graphicsDevice.D3dDevice, depthBuffer);
+            }
         }
 
         protected void Dispose(bool disposing)
@@ -72,6 +103,7 @@ namespace CrossX.DxCommon.Graphics
                 ShaderResourceView?.Dispose();
                 Texture?.Dispose();
                 RenderTargetView?.Dispose();
+                DepthStencilView?.Dispose();
                 IsDisposed = true;
             }
         }

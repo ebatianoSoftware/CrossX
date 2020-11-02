@@ -220,7 +220,32 @@
       <Name>CrossX</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="..\DxCommon\FX\DefaultPC.fx">
+      <Link>FX\Code\DefaultPC.fx</Link>
+    </None>
+    <None Include="..\DxCommon\FX\DefaultPCT.fx">
+      <Link>FX\Code\DefaultPCT.fx</Link>
+    </None>
+    <None Include="..\DxCommon\FX\DefaultPT.fx">
+      <Link>FX\Code\DefaultPT.fx</Link>
+    </None>
+    <None Include="..\DxCommon\FX\LightedPNT.fx">
+      <Link>FX\Code\LightedPNT.fx</Link>
+    </None>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\LightedPNT.psbc">
+      <Link>FX\LightedPNT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\LightedPNT.vsbc">
+      <Link>FX\LightedPNT.vsbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPNT.psbc">
+      <Link>FX\DefaultPNT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPNT.vsbc">
+      <Link>FX\DefaultPNT.vsbc</Link>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.psbc">
       <Link>FX\DefaultPC.psbc</Link>

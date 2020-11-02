@@ -33,7 +33,7 @@ namespace CrossX.DxCommon.Graphics
         private SwapChain1 swapChain;
         private DeviceContext1 D3dContext => d3dDevice.ImmediateContext1;
         private RenderTarget mainRenderTarget;
-
+        DepthStencilView depthStencilView;
         public SdxDevice1 D3dDevice => d3dDevice;
 
         public RenderTarget RenderTarget { get; private set; }
@@ -166,6 +166,8 @@ namespace CrossX.DxCommon.Graphics
 
             D3dContext.ClearRenderTargetView(rt.RenderTargetView,
                 new RawColor4(color.Rf, color.Gf, color.Bf, color.Af));
+
+            D3dContext.ClearDepthStencilView(rt.DepthStencilView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1, 1);
         }
 
         public void SetRenderTarget(RenderTarget renderTarget)
@@ -174,8 +176,9 @@ namespace CrossX.DxCommon.Graphics
             D3dContext.Flush();
 
             RenderTarget = renderTarget ?? mainRenderTarget;
+
             var rt = (DxRenderTarget)RenderTarget;
-            D3dContext.OutputMerger.SetRenderTargets(rt.RenderTargetView);
+            D3dContext.OutputMerger.SetRenderTargets( rt.DepthStencilView, rt.RenderTargetView);
 
             var viewport = new RawViewportF
             {

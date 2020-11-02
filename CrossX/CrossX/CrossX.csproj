@@ -34,8 +34,4 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Graphics3D\" />
-  </ItemGroup>
-
 </Project>

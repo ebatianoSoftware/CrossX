@@ -171,6 +171,10 @@
       <Project>{4f261d84-c030-4fe6-bb73-7c78b7d43505}</Project>
       <Name>T05.Audio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\T06.StaticMesh\T06.StaticMesh.csproj">
+      <Project>{243042b0-3c9d-401c-b881-2797dd77b35a}</Project>
+      <Name>T06.StaticMesh</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

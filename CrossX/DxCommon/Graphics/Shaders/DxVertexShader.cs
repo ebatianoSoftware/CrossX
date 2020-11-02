@@ -78,7 +78,7 @@ namespace CrossX.DxCommon.Graphics.Shaders
 
             if (content.HasFlag(VertexContent.Normal))
             {
-                list.Add(new InputElement("NORMAL", 0, SharpDX.DXGI.Format.R32G32B32A32_Float, 0, 0));
+                list.Add(new InputElement("NORMAL", 0, SharpDX.DXGI.Format.R32G32B32A32_Float, offset, 0));
                 offset += 16;
             }
 

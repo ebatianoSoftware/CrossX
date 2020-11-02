@@ -17,16 +17,16 @@ namespace CrossX.Graphics
         /// </summary>
         Position = 1,
         /// <summary>
+        /// Vertex contains normal vector.
+        /// </summary>
+        Normal = 2,
+        /// <summary>
         /// Vertex contains color.
         /// </summary>
-        Color = 2,
+        Color = 4,
         /// <summary>
         /// Vertex contains texture coordinates.
         /// </summary>
-        TextureCoordinates = 4,
-        /// <summary>
-        /// Vertex contains normal vector.
-        /// </summary>
-        Normal = 8,
+        TextureCoordinates = 8
     }
 }

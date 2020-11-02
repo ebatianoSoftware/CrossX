@@ -26,16 +26,19 @@ namespace CrossX.Graphics.Effects
 
         public bool VertexColorEnabled { get; set; }
         public bool TextureEnabled { get; set; }
+        public bool VertexHasNormals { get; set; }
 
         public TextureSamplerDesc Sampler { get; set; }
 
         private readonly VertexShader<ConstBuffer> pcVertexShader;
         private readonly VertexShader<ConstBuffer> ptVertexShader;
         private readonly VertexShader<ConstBuffer> pctVertexShader;
+        private readonly VertexShader<ConstBuffer> pntVertexShader;
 
         private readonly PixelShader<EmptyConstData> pcPixelShader;
         private readonly PixelShader<EmptyConstData> ptPixelShader;
         private readonly PixelShader<EmptyConstData> pctPixelShader;
+        private readonly PixelShader<EmptyConstData> pntPixelShader;
 
         public BasicEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository)
         {
@@ -46,10 +49,12 @@ namespace CrossX.Graphics.Effects
             pcVertexShader = CreateVertexShader("DefaultPC", VertexPC.Content, shadersRepository, objectFactory);
             pctVertexShader = CreateVertexShader("DefaultPCT", VertexPCT.Content, shadersRepository, objectFactory);
             ptVertexShader = CreateVertexShader("DefaultPT", VertexPT.Content, shadersRepository, objectFactory);
+            pntVertexShader = CreateVertexShader("DefaultPNT", VertexPNT.Content, shadersRepository, objectFactory);
 
             pcPixelShader = CreatePixelShader("DefaultPC", shadersRepository, objectFactory);
             pctPixelShader = CreatePixelShader("DefaultPCT", shadersRepository, objectFactory);
             ptPixelShader = CreatePixelShader("DefaultPT", shadersRepository, objectFactory);
+            pntPixelShader = CreatePixelShader("DefaultPNT", shadersRepository, objectFactory);
         }
 
         private VertexShader<ConstBuffer> CreateVertexShader(string name, VertexContent vertexContent, IShadersRepository repository, IObjectFactory objectFactory)
@@ -102,8 +107,17 @@ namespace CrossX.Graphics.Effects
             else
             {
                 if (!TextureEnabled) throw new InvalidOperationException();
-                vs = ptVertexShader;
-                ps = ptPixelShader;
+
+                if (VertexHasNormals)
+                {
+                    vs = pntVertexShader;
+                    ps = pntPixelShader;
+                }
+                else
+                {
+                    vs = ptVertexShader;
+                    ps = ptPixelShader;
+                }
             }
 
             var color = DiffuseColor * Alpha;
@@ -111,7 +125,7 @@ namespace CrossX.Graphics.Effects
             var consts = new ConstBuffer
             {
                 Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
-                Color = new Vector4(color.Rf, color.Gf, color.Bf, color.Af)
+                Color = new Vector4(color.Rf, color.Gf, color.Bf, color.Af) * Alpha
             };
 
             vs.ConstData = consts;

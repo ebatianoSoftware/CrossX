@@ -278,7 +278,7 @@ namespace CrossX.Graphics2D
             buffer[index] = new VertexPNCT
             {
                 Position = new Vector4(position, 0, 1),
-                Normal = new Vector4(0, 0, 1, 0),
+                Normal = new Vector4(0, 0, 1,0),
                 Color = color,
                 TextureCoordinate = coordinates
             };

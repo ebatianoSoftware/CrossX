@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="diffuse.png" />
+    <None Remove="fighterjet.mtl" />
+    <None Remove="fighterjet.obj" />
+    <None Remove="Horn.jpg" />
+    <None Remove="Horn.obj" />
+    <None Remove="normals.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="diffuse.png" />
+    <EmbeddedResource Include="fighterjet.mtl" />
+    <EmbeddedResource Include="fighterjet.obj" />
+    <EmbeddedResource Include="normals.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CrossX\CrossX.csproj" />
+  </ItemGroup>
+
+</Project>
