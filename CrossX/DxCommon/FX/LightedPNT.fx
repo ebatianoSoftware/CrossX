@@ -42,17 +42,23 @@ PS_IN VS(VS_IN input)
   return output;
 }
 
-float4 CalculateLights(float4 pos, float4 normal, float4 specular)
+LIGHT_RES CalculateLights(float4 pos, float4 normal)
 {
-	float4 col = CalculateDirLights(pos, normal, specular) + CalculatePointLights(pos, normal, specular);
-	col.a = 1;
-	return col;
+	LIGHT_RES dir = CalculateDirLights(pos, normal);
+	LIGHT_RES pt = CalculatePointLights(pos, normal);
+
+	LIGHT_RES res = (LIGHT_RES)0;
+	res.diff = dir.diff + pt.diff;
+	res.spec = dir.spec + pt.spec;
+	return res;
 }
 
 float4 PS(PS_IN input) : SV_Target
 {
-	float4 specular = specularTexture.Sample(specularTextureSampler, input.texCoord);
-	float4 color = g_ambientColor + CalculateLights(input.orig, input.norm, specular);
-	color.a = 1;
-	return colorTexture.Sample(colorTextureSampler, input.texCoord) * color;
+	LIGHT_RES light = CalculateLights(input.orig, input.norm);
+
+	float4 specular = specularTexture.Sample(specularTextureSampler, input.texCoord) * light.spec;
+	float4 color = g_ambientColor + colorTexture.Sample(colorTextureSampler, input.texCoord) * light.diff;
+
+	return  color + specular;
 }

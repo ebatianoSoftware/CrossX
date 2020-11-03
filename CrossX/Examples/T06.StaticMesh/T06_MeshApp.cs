@@ -5,6 +5,7 @@ using CrossX.Graphics;
 using CrossX.Graphics.Effects;
 using CrossX.Graphics3D;
 using CrossX.Graphics3D.Light;
+using CrossX.Input;
 using CrossX.IoC;
 using CrossX.Media.Formats;
 using System;
@@ -15,15 +16,24 @@ namespace T06.StaticMesh
     {
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
+        private readonly IMouse mouse;
         private Mesh mesh;
         private LightedEffect lightedEffect;
         private float rotation = 0;
         private float rotation2 = 0;
 
-        public T06_MeshApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
+        private float yaw = 0;
+        private float pitch = 0;
+
+        private Vector2 lastMouse;
+
+        public T06_MeshApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IMouse mouse)
         {
             this.graphicsDevice = graphicsDevice;
             this.objectFactory = objectFactory;
+            this.mouse = mouse;
+
+            lastMouse = mouse.Position;
         }
 
         public void LoadContent()
@@ -86,7 +96,7 @@ namespace T06.StaticMesh
 
             lightedEffect.SetWorldTransform(
                 Matrix.CreateTranslation(-mesh.Bounds.Center) *
-                Matrix.CreateRotationY(rotation));
+                Matrix.CreateFromYawPitchRoll(yaw, 0, pitch));
 
             var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2.5f;
 
@@ -168,8 +178,20 @@ namespace T06.StaticMesh
 
         public void Update(TimeSpan frameTime)
         {
-            rotation += (float)frameTime.TotalSeconds * 1.23f;
+            //rotation += (float)frameTime.TotalSeconds * 1.23f;
             rotation2 += (float)frameTime.TotalSeconds * 3.1f;
+
+            if(mouse.GetButtonState(MouseButtons.Left) == KeyBtnState.JustPressed)
+            {
+                lastMouse = mouse.Position;
+            }
+
+            if(mouse.GetButtonState(MouseButtons.Left) == KeyBtnState.Down)
+            {
+                yaw -= (lastMouse.X - mouse.Position.X)/ 100.0f;
+                pitch -= (lastMouse.Y - mouse.Position.Y) / 100.0f;
+                lastMouse = mouse.Position;
+            }
         }
     }
 }

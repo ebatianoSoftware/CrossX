@@ -19,6 +19,12 @@ struct SPOT_LIGHT
 	float4 cut;
 };
 
+struct LIGHT_RES
+{
+	float4 diff;
+	float4 spec;
+};
+
 cbuffer PixelShaderData: register(b1)
 {
 	float4 g_ambientColor;
@@ -52,24 +58,26 @@ float4 CalculateSpecular(float4 pos, float4 normal, float4 dir)
 	return 0;
 }
 
-float4 CalculateDirLights(float4 pos, float4 normal, float4 specular)
+LIGHT_RES CalculateDirLights(float4 pos, float4 normal)
 {
-	float4 col = {0,0,0,0};
+	LIGHT_RES res = (LIGHT_RES)0;
+
 	for (int i = 0; i < 2; ++i)
 	{
 		DIR_LIGHT light = g_directionalLights[i];
 		if (light.color.a > 0.1f)
 		{
-			col = col + light.color * g_materialDiffuse * saturate(dot(light.dir, normal));
-			col = col + light.color * specular * CalculateSpecular(pos, normal, light.dir);
+			res.diff = res.diff + light.color * g_materialDiffuse * saturate(dot(light.dir, normal));
+			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, light.dir);
 		}
 	}
-	return col;
+	return res;
 }
 
-float4 CalculatePointLights(float4 pos, float4 normal, float4 specular)
+LIGHT_RES CalculatePointLights(float4 pos, float4 normal)
 {
-	float4 col = { 0,0,0,0 };
+	LIGHT_RES res = (LIGHT_RES)0;
+
 	for (int i = 0; i < 8; ++i)
 	{
 		POINT_LIGHT light = g_pointLights[i];
@@ -81,10 +89,9 @@ float4 CalculatePointLights(float4 pos, float4 normal, float4 specular)
 			dir = normalize(dir);
 
 			float distAtt = 1.0f / (light.att.x + dist * light.att.y + dist * dist * light.att.z);
-
-			col = col + light.color * g_materialDiffuse * saturate(dot(dir, normal)) * distAtt;
-			col = col + light.color * specular * CalculateSpecular(pos, normal, dir) * distAtt;
+			res.diff = res.diff + light.color * g_materialDiffuse * saturate(dot(dir, normal)) * distAtt;
+			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, dir) * distAtt;
 		}
 	}
-	return col;
+	return res;
 }
