@@ -88,12 +88,9 @@ namespace CrossX.Graphics.Effects
             pntPixelShader = CreatePixelShader("LightedPNT", shadersRepository, objectFactory);
 
             whiteTexture = objectFactory.Create<Texture2D>(
-                new RawImage(2, 2, new byte[] 
+                new RawImage(1, 1, new byte[] 
                 { 
                     255, 255, 255, 255,
-                    255, 255, 255, 255,
-                    255, 255, 255, 255,
-                    255, 255, 255, 255
                 }, PixelDataFormat.Format32bppRGBA));
         }
 
