@@ -266,6 +266,11 @@
       <Link>FX\DefaultPT.vsbc</Link>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\DxCommon\FX\Lighted\Common.fx">
+      <Link>FX\Code\Lighted\Common.fx</Link>
+    </Content>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

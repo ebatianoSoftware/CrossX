@@ -63,6 +63,13 @@ namespace T06.StaticMesh
                             texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
                         }
                         break;
+
+                    case TextureTarget.Specular:
+                        using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.done2Spec.png"))
+                        {
+                            texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
+                        }
+                        break;
                 }
                 return;
             }
@@ -87,7 +94,7 @@ namespace T06.StaticMesh
             var lpos = cameraPos;
 
             lpos = Vector3.Transform(cameraPos,
-                Matrix.CreateRotationY(rotation2*4)
+                Matrix.CreateRotationY(rotation2)
                 );
 
             var projView = Matrix.CreateLookAt(
@@ -101,9 +108,6 @@ namespace T06.StaticMesh
             lightedEffect.SetViewProjectionTransform(projView);
             lightedEffect.CameraPosition = cameraPos;
 
-            lightedEffect.SpecularIntensity = 4;
-            lightedEffect.SpecularExponent = 16;
-
             lightedEffect.AddLight(new DirectionalLight
             {
                 Direction = new Vector3(-0.3f, -1, 0).Normalized(),
@@ -116,12 +120,12 @@ namespace T06.StaticMesh
             //    Color = new Color4(255, 0, 0)
             //});
 
-            //lightedEffect.AddLight(new PointLight
-            //{
-            //    Position = lpos,
-            //    Color = Color4.Blue,
-            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            //});
+            lightedEffect.AddLight(new PointLight
+            {
+                Position = lpos,
+                Color = new Color4(128,0,255),
+                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            });
 
 
             //lightedEffect.AddLight(new DirectionalLight
@@ -139,6 +143,11 @@ namespace T06.StaticMesh
             {
                 var slice = mesh.Slices[idx];
                 lightedEffect.Texture = slice.Texture;
+                lightedEffect.SpecularTexture = slice.SpecularMap;
+
+                lightedEffect.SpecularColor = new Color4(255, 224, 192);
+                lightedEffect.SpecularExponent = slice.Material?.SpecularExponent ?? 32;
+
                 lightedEffect.Apply();
 
                 graphicsDevice.SetIndexBuffer(slice.Indices);
@@ -152,8 +161,8 @@ namespace T06.StaticMesh
 
         public void Update(TimeSpan frameTime)
         {
-            rotation += (float)frameTime.TotalSeconds * 2;
-            rotation2 += (float)frameTime.TotalSeconds * 0.41f;
+            rotation += (float)frameTime.TotalSeconds * 1.23f;
+            rotation2 += (float)frameTime.TotalSeconds * 3.1f;
         }
     }
 }

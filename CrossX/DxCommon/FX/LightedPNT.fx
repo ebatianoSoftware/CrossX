@@ -28,6 +28,9 @@ cbuffer VertexShaderData : register(b0)
 Texture2D<float4> colorTexture : register(t0);
 sampler colorTextureSampler : register(s0);
 
+Texture2D<float4> specularTexture : register(t1);
+sampler specularTextureSampler : register(s1);
+
 PS_IN VS(VS_IN input)
 {
   PS_IN output = (PS_IN)0;
@@ -39,17 +42,16 @@ PS_IN VS(VS_IN input)
   return output;
 }
 
-
-
-float4 CalculateLights(float4 pos, float4 normal)
+float4 CalculateLights(float4 pos, float4 normal, float4 specular)
 {
-	float4 col = CalculateDirLights(pos, normal) + CalculatePointLights(pos, normal);
+	float4 col = CalculateDirLights(pos, normal, specular) + CalculatePointLights(pos, normal, specular);
 	col.a = 1;
 	return col;
 }
 
 float4 PS(PS_IN input) : SV_Target
 {
-	float4 color = CalculateLights(input.orig, input.norm);
+	float4 specular = specularTexture.Sample(specularTextureSampler, input.texCoord);
+	float4 color = CalculateLights(input.orig, input.norm, specular);
 	return colorTexture.Sample(colorTextureSampler, input.texCoord) * color;
 }

@@ -11,6 +11,7 @@ namespace CrossX.Graphics3D
         private readonly bool normalManagedOutside;
         public RawMaterial Material { get; }
         public Texture2D Texture { get; }
+        public Texture2D SpecularMap { get; }
         public Texture2D NormalMap { get; }
         public IndexBuffer Indices { get; }
 
@@ -18,12 +19,15 @@ namespace CrossX.Graphics3D
         {
             Texture2D texture = null;
             Texture2D normal = null;
+            Texture2D specular = null;
 
             loadTextureDelegate?.Invoke(slice.Material.DiffuseMap, TextureTarget.Diffuse, out texture, out diffManagedOutside);
             loadTextureDelegate?.Invoke(slice.Material.NormalMap, TextureTarget.Normal, out normal, out normalManagedOutside);
-            
+            loadTextureDelegate?.Invoke(slice.Material.SpecularMap, TextureTarget.Specular, out specular, out normalManagedOutside);
+
             Texture = texture;
             NormalMap = normal;
+            SpecularMap = specular;
 
             if (slice.Indices2 != null)
             {

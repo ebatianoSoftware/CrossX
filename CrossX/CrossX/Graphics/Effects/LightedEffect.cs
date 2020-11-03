@@ -1,4 +1,5 @@
-﻿using CrossX.Graphics.Shaders;
+﻿using CrossX.Data;
+using CrossX.Graphics.Shaders;
 using CrossX.Graphics3D.Light;
 using CrossX.IoC;
 using System;
@@ -22,10 +23,7 @@ namespace CrossX.Graphics.Effects
             public Vector4 Ambient;
             public Vector4 MatDiffuse;
             public Vector4 CameraPosition;
-            public float SpecularExponent;
-            public float SpecularIntensity;
-            public float Unused0;
-            public float Unused1;
+            public Vector4 Specular;
             public DirectionalLight DirectionalLight0;
             public DirectionalLight DirectionalLight1;
         }
@@ -63,10 +61,14 @@ namespace CrossX.Graphics.Effects
         public Color4 MaterialDiffuseColor { get; set; } = Color4.White;
 
         public Vector3 CameraPosition { get; set; }
-        public float SpecularIntensity { get; set; }
+        public Color4 SpecularColor { get; set; }
         public float SpecularExponent { get; set; }
 
         public Texture2D Texture { get; set; }
+        public Texture2D SpecularTexture { get; set; }
+
+        private Texture2D whiteTexture;
+
         public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
         public void SetViewProjectionTransform(Matrix transform) => viewProjectionMatrix = transform;
 
@@ -84,6 +86,15 @@ namespace CrossX.Graphics.Effects
 
             pntVertexShader = CreateVertexShader("LightedPNT", VertexPNT.Content, shadersRepository, objectFactory);
             pntPixelShader = CreatePixelShader("LightedPNT", shadersRepository, objectFactory);
+
+            whiteTexture = objectFactory.Create<Texture2D>(
+                new RawImage(2, 2, new byte[] 
+                { 
+                    255, 255, 255, 255,
+                    255, 255, 255, 255,
+                    255, 255, 255, 255,
+                    255, 255, 255, 255
+                }, PixelDataFormat.Format32bppRGBA));
         }
 
         private VertexShader CreateVertexShader(string name, VertexContent vertexContent, IShadersRepository repository, IObjectFactory objectFactory)
@@ -171,8 +182,7 @@ namespace CrossX.Graphics.Effects
                 Ambient = AmbientColor,
                 MatDiffuse = MaterialDiffuseColor,
                 CameraPosition = new Vector4(CameraPosition, 1),
-                SpecularExponent = SpecularExponent,
-                SpecularIntensity = SpecularIntensity,
+                Specular = new Vector4(SpecularColor.Rf, SpecularColor.Gf, SpecularColor.Bf, SpecularExponent),
                 DirectionalLight0 = directionalLights.Count > 0 ? directionalLights[0] : default,
                 DirectionalLight1 = directionalLights.Count > 1 ? directionalLights[1] : default
             };
@@ -208,6 +218,8 @@ namespace CrossX.Graphics.Effects
 
             graphicsDevice.SetPixelShaderSampler(0, Sampler);
             graphicsDevice.SetPixelShaderTexture(0, Texture);
+            graphicsDevice.SetPixelShaderSampler(1, Sampler);
+            graphicsDevice.SetPixelShaderTexture(1, SpecularTexture ?? whiteTexture);
         }
 
         public void Dispose()

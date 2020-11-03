@@ -9,7 +9,8 @@ namespace CrossX.Graphics3D
     public enum TextureTarget
     {
         Diffuse,
-        Normal
+        Normal,
+        Specular
     }
     public delegate void LoadTextureDelegate(string name, TextureTarget target, out Texture2D texture, out bool managedOutside);
 

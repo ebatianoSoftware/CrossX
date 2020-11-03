@@ -46,13 +46,13 @@ float4 CalculateSpecular(float4 pos, float4 normal, float4 dir)
 
 	if (specularFactor > 0)
 	{
-		specularFactor = pow(specularFactor, g_specular.x);
-		return g_specular.y * specularFactor;
+		specularFactor = pow(specularFactor, g_specular.w);
+		return float4(g_specular.xyz * specularFactor, 0);
 	}
 	return 0;
 }
 
-float4 CalculateDirLights(float4 pos, float4 normal)
+float4 CalculateDirLights(float4 pos, float4 normal, float4 specular)
 {
 	float4 col = {0,0,0,0};
 	for (int i = 0; i < 2; ++i)
@@ -60,14 +60,14 @@ float4 CalculateDirLights(float4 pos, float4 normal)
 		DIR_LIGHT light = g_directionalLights[i];
 		if (light.color.a > 0.1f)
 		{
-			col = col + light.color * saturate(dot(light.dir, normal));
-			col = col + light.color * CalculateSpecular(pos, normal, light.dir);
+			col = col + light.color * g_materialDiffuse * saturate(dot(light.dir, normal));
+			col = col + light.color * specular * CalculateSpecular(pos, normal, light.dir);
 		}
 	}
 	return col;
 }
 
-float4 CalculatePointLights(float4 pos, float4 normal)
+float4 CalculatePointLights(float4 pos, float4 normal, float4 specular)
 {
 	float4 col = { 0,0,0,0 };
 	for (int i = 0; i < 8; ++i)
@@ -80,11 +80,10 @@ float4 CalculatePointLights(float4 pos, float4 normal)
 			float dist = length(dir) * light.att.w;
 			dir = normalize(dir);
 
-			col = col + light.color *  
-				(saturate(dot(dir, normal)) /
-				 (light.att.x + dist * light.att.y + dist * dist * light.att.z));
+			float distAtt = 1.0f / (light.att.x + dist * light.att.y + dist * dist * light.att.z);
 
-			col = col + light.color * CalculateSpecular(pos, normal, dir);
+			col = col + light.color * g_materialDiffuse * saturate(dot(dir, normal)) * distAtt;
+			col = col + light.color * specular * CalculateSpecular(pos, normal, dir) * distAtt;
 		}
 	}
 	return col;
