@@ -52,6 +52,7 @@ float4 CalculateLights(float4 pos, float4 normal, float4 specular)
 float4 PS(PS_IN input) : SV_Target
 {
 	float4 specular = specularTexture.Sample(specularTextureSampler, input.texCoord);
-	float4 color = CalculateLights(input.orig, input.norm, specular);
+	float4 color = g_ambientColor + CalculateLights(input.orig, input.norm, specular);
+	color.a = 1;
 	return colorTexture.Sample(colorTextureSampler, input.texCoord) * color;
 }

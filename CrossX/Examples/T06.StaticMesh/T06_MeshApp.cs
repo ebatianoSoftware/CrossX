@@ -82,7 +82,7 @@ namespace T06.StaticMesh
 
         public void Draw(TimeSpan frameTime)
         {
-            graphicsDevice.Clear(Color4.CornflowerBlue);
+            graphicsDevice.Clear(Color4.Black);
 
             lightedEffect.SetWorldTransform(
                 Matrix.CreateTranslation(-mesh.Bounds.Center) *
@@ -90,7 +90,7 @@ namespace T06.StaticMesh
 
             var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2;
 
-            var cameraPos = new Vector3(1, 1, -1).Normalized() * dist;
+            var cameraPos = new Vector3(1, 0, -1).Normalized() * dist;
             var lpos = cameraPos;
 
             lpos = Vector3.Transform(cameraPos,
@@ -142,7 +142,7 @@ namespace T06.StaticMesh
             //});
 
             lightedEffect.MaterialDiffuseColor = new Color4(255, 255, 255);
-            lightedEffect.AmbientColor = new Color4(8, 16, 24);
+            lightedEffect.AmbientColor = new Color4(0, 16, 32);
 
             graphicsDevice.DepthClip = true;
 
@@ -153,7 +153,7 @@ namespace T06.StaticMesh
                 lightedEffect.SpecularTexture = slice.SpecularMap;
 
                 lightedEffect.SpecularColor = new Color4(255, 224, 192);
-                lightedEffect.SpecularExponent = slice.Material?.SpecularExponent ?? 32;
+                lightedEffect.SpecularExponent = slice.Material?.SpecularExponent ?? 64;
 
                 lightedEffect.Apply();
 
