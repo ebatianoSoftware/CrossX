@@ -88,7 +88,7 @@ namespace T06.StaticMesh
                 Matrix.CreateTranslation(-mesh.Bounds.Center) *
                 Matrix.CreateRotationY(rotation));
 
-            var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2;
+            var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2.5f;
 
             var cameraPos = new Vector3(1, 1, -1).Normalized() * dist;
             var lpos = cameraPos;
@@ -111,21 +111,21 @@ namespace T06.StaticMesh
             lightedEffect.AddLight(new DirectionalLight
             {
                 Direction = new Vector3(-0.3f, -1, 0).Normalized(),
-                Color = new Color4(255, 255, 255)
+                Color = new Color4(255, 255, 224)
             });
 
-            //lightedEffect.AddLight(new DirectionalLight
-            //{
-            //    Direction = new Vector3(-1, 1, 0).Normalized(),
-            //    Color = new Color4(255, 0, 0)
-            //});
-
-            lightedEffect.AddLight(new PointLight
+            lightedEffect.AddLight(new DirectionalLight
             {
-                Position = lpos,
-                Color = new Color4(128,0,255),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+                Direction = new Vector3(-1, 1, 0).Normalized(),
+                Color = new Color4(128, 96, 0)
             });
+
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = lpos,
+            //    Color = new Color4(128,0,255),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
             //lightedEffect.AddLight(new PointLight
             //{
