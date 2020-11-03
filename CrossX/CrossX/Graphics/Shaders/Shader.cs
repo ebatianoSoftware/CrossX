@@ -2,11 +2,10 @@
 
 namespace CrossX.Graphics.Shaders
 {
-    public struct EmptyConstData { }
-
-    public abstract class Shader<TConstStruct>: IDisposable where TConstStruct: struct
+    public abstract class Shader: IDisposable
     {
-        public TConstStruct ConstData { get; set; }
         public abstract void Dispose();
+        public abstract void SetConstData<T>(int slot, ref T data) where T : struct;
+        public abstract void CreateConstBuffer<T>(int slot) where T : struct;
     }
 }

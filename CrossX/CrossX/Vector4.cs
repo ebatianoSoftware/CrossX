@@ -6,6 +6,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace CrossX
 {
@@ -1243,6 +1244,9 @@ namespace CrossX
             value1.Z *= factor;
             return value1;
         }
+
+        public static implicit operator Vector4(Vector3 vec) => new Vector4(vec, 0);
+        public static implicit operator Vector4(Vector2 vec) => new Vector4(vec, 0, 0);
 
         #endregion
     }

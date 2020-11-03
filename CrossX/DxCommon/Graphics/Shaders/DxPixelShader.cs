@@ -1,20 +1,19 @@
-﻿using CrossX.Graphics;
-using CrossX.Graphics.Shaders;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
-using System.IO;
+using System.Collections.Generic;
+using XxPixelShader = CrossX.Graphics.Shaders.PixelShader;
 
 namespace CrossX.DxCommon.Graphics.Shaders
 {
-    internal class DxPixelShader<TConstStruct> : PixelShader<TConstStruct>, IDxShader where TConstStruct : struct
+    internal class DxPixelShader : XxPixelShader, IDxShader
     {
         private readonly PixelShader shader;
 
         private readonly DxGraphicsDevice graphicsDevice;
-        private Buffer constBuffer;
+        private Dictionary<int, Buffer> buffers = new Dictionary<int, Buffer>();
 
-        public DxPixelShader(DxGraphicsDevice graphicsDevice, CreatePixelShaderFromResource options)
+        public DxPixelShader(DxGraphicsDevice graphicsDevice, CrossX.Graphics.Shaders.CreatePixelShaderFromResource options)
         {
             this.graphicsDevice = graphicsDevice;
 
@@ -25,34 +24,54 @@ namespace CrossX.DxCommon.Graphics.Shaders
             }
             
             shader = new PixelShader(graphicsDevice.D3dDevice, psCode);
-
-            var size = Utilities.SizeOf<TConstStruct>();
-            if (size > 1)
-            {
-                constBuffer = new Buffer(graphicsDevice.D3dDevice, size, ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
-            }
         }
 
         public override void Dispose()
         {
-            shader.Dispose();
+            graphicsDevice.D3dDevice.ImmediateContext1.PixelShader.Set(null);
+            
+            foreach (var buf in buffers)
+            {
+                graphicsDevice.D3dDevice.ImmediateContext1.PixelShader.SetConstantBuffer(buf.Key, null);
+                buf.Value.Dispose();
+            }
 
-            constBuffer?.Dispose();
-            constBuffer = null;
+            buffers.Clear();
+            shader.Dispose();
         }
 
         public void AttachShader()
         {
             var context = graphicsDevice.D3dDevice.ImmediateContext1;
-
             context.PixelShader.Set(shader);
 
-            if (constBuffer != null)
+            foreach (var buf in buffers)
             {
-                context.VertexShader.SetConstantBuffer(0, constBuffer);
-                var consts = ConstData;
-                context.UpdateSubresource(ref consts, constBuffer);
+                context.PixelShader.SetConstantBuffer(buf.Key, buf.Value);
             }
+        }
+
+        public override void SetConstData<T>(int slot, ref T data)
+        {
+            if (buffers.TryGetValue(slot, out var buffer))
+            {
+                var context = graphicsDevice.D3dDevice.ImmediateContext1;
+                context.UpdateSubresource(ref data, buffer);
+            }
+        }
+
+        public override void CreateConstBuffer<T>(int slot)
+        {
+            var size = Utilities.SizeOf<T>();
+
+            int power = 1;
+            while (power < size)
+            {
+                power *= 2;
+            }
+
+            var constBuffer = new Buffer(graphicsDevice.D3dDevice, power, ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
+            buffers.Add(slot, constBuffer);
         }
     }
 }

@@ -163,5 +163,10 @@ namespace CrossX
 
             return FromNonPremultiplied(r, g, b, a);
         }
+
+        public static implicit operator Vector4 (Color4 color)
+        {
+            return new Vector4(color.Rf, color.Gf, color.Bf, color.Af);
+        }
     }
 }

@@ -4,6 +4,7 @@ using CrossX.Data;
 using CrossX.Graphics;
 using CrossX.Graphics.Effects;
 using CrossX.Graphics3D;
+using CrossX.Graphics3D.Light;
 using CrossX.IoC;
 using CrossX.Media.Formats;
 using System;
@@ -15,8 +16,10 @@ namespace T06.StaticMesh
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
         private Mesh mesh;
-        private LightedEffect lightedEffect;
+        private LightedEffect2 lightedEffect;
         private float rotation = 0;
+        private float rotation2 = 0;
+
         public T06_MeshApp(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
         {
             this.graphicsDevice = graphicsDevice;
@@ -35,7 +38,7 @@ namespace T06.StaticMesh
                 }));
             }
 
-            lightedEffect = objectFactory.Create<LightedEffect>();
+            lightedEffect = objectFactory.Create<LightedEffect2>();
             mesh = objectFactory.Create<Mesh>(rawMesh, new LoadTextureDelegate(LoadTexture));
         }
 
@@ -80,15 +83,54 @@ namespace T06.StaticMesh
 
             var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2;
 
+            var cameraPos = new Vector3(1, 1, -1).Normalized() * dist;
+            var lpos = cameraPos;
+
+            lpos = Vector3.Transform(cameraPos,
+                Matrix.CreateRotationY(rotation2*4)
+                );
+
             var projView = Matrix.CreateLookAt(
-                    new Vector3(1, 1, 1).Normalized() * dist,
+                    cameraPos,
                     Vector3.Zero,
                     Vector3.Up) *
                     Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 0.1f, dist * 2);
 
+            lightedEffect.Reset();
+
             lightedEffect.SetViewProjectionTransform(projView);
-            lightedEffect.LightDir = new Vector3(0.3f, -1, 0).Normalized();
+
+            lightedEffect.AddLight(new DirectionalLight
+            {
+                Direction = new Vector3(1, -1, 0).Normalized(),
+                Color = new Color4(0, 255, 0)
+            });
+
+            lightedEffect.AddLight(new DirectionalLight
+            {
+                Direction = new Vector3(-1, 1, 0).Normalized(),
+                Color = new Color4(255, 0, 0)
+            });
+
+            lightedEffect.AddLight(new PointLight
+            {
+                Position = lpos,
+                Color = Color4.Blue,
+                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            });
+
+
+            //lightedEffect.AddLight(new DirectionalLight
+            //{
+            //    Direction = new Vector3(-0.3f, 1, 0).Normalized(),
+            //    Color = new Color4(0, 128,255)
+            //});
+
+            lightedEffect.MaterialDiffuseColor = new Color4(255, 255, 255);
+            lightedEffect.AmbientColor = Color4.Transparent;
+
             graphicsDevice.DepthClip = true;
+
             for (var idx = 0; idx < mesh.Slices.Count; ++idx)
             {
                 var slice = mesh.Slices[idx];
@@ -107,6 +149,7 @@ namespace T06.StaticMesh
         public void Update(TimeSpan frameTime)
         {
             rotation += (float)frameTime.TotalSeconds * 2;
+            rotation2 += (float)frameTime.TotalSeconds * 0.41f;
         }
     }
 }

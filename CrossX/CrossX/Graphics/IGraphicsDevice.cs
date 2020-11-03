@@ -22,7 +22,7 @@ namespace CrossX.Graphics
         void DrawPrimitives(PrimitiveType primitiveType, int vertexStart, int vertexCount);
         void DrawIndexedPrimitives(PrimitiveType primitiveType, int indexStart, int indexCount);
         void Flush(object sender);
-        void SetShader<TConstStruct>(Shader<TConstStruct> shader) where TConstStruct : struct;
+        void SetShader(Shader shader);
         void SetPixelShaderSampler(int slot, TextureSamplerDesc samplerDesc);
         void SetPixelShaderTexture(int slot, Texture2D texture);
     }

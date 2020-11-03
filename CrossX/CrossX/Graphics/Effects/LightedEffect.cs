@@ -16,16 +16,14 @@ namespace CrossX.Graphics.Effects
             public Vector4 Color;
         }
 
-        private readonly VertexShader<ConstBuffer> pntVertexShader;
-        private readonly PixelShader<EmptyConstData> pntPixelShader;
+        private readonly VertexShader pntVertexShader;
+        private readonly PixelShader pntPixelShader;
 
         private Matrix viewProjectionMatrix;
         private Matrix worldMatrix;
         private readonly IGraphicsDevice graphicsDevice;
 
-        public float Alpha { get; set; } = 1;
-        public Color4 DiffuseColor { get; set; } = Color4.White;
-
+        public Color4 MaterialDiffuseColor { get; set; } = Color4.White;
         public Vector3 LightDir { get; set; } = Vector3.Down;
 
         public Texture2D Texture { get; set; }
@@ -42,18 +40,17 @@ namespace CrossX.Graphics.Effects
 
             pntVertexShader = CreateVertexShader("LightedPNT", VertexPNT.Content, shadersRepository, objectFactory);
             pntPixelShader = CreatePixelShader("LightedPNT", shadersRepository, objectFactory);
-            
         }
 
-        private VertexShader<ConstBuffer> CreateVertexShader(string name, VertexContent vertexContent, IShadersRepository repository, IObjectFactory objectFactory)
+        private VertexShader CreateVertexShader(string name, VertexContent vertexContent, IShadersRepository repository, IObjectFactory objectFactory)
         {
             var assembly = graphicsDevice.GetType().Assembly;
             name = assembly.FullName.Split(',')[0] + ".FX." + name;
 
-            var shader = repository.GetVertexShader<ConstBuffer>(name);
+            var shader = repository.GetVertexShader(name);
             if (shader != null) return shader;
 
-            shader = objectFactory.Create<VertexShader<ConstBuffer>>(new CreateVertexShaderFromResource
+            shader = objectFactory.Create<VertexShader>(new CreateVertexShaderFromResource
             {
                 Assembly = assembly,
                 Path = name,
@@ -64,15 +61,15 @@ namespace CrossX.Graphics.Effects
             return shader;
         }
 
-        private PixelShader<EmptyConstData> CreatePixelShader(string name, IShadersRepository repository, IObjectFactory objectFactory)
+        private PixelShader CreatePixelShader(string name, IShadersRepository repository, IObjectFactory objectFactory)
         {
             var assembly = graphicsDevice.GetType().Assembly;
             name = assembly.FullName.Split(',')[0] + ".FX." + name;
 
-            var shader = repository.GetPixelShader<EmptyConstData>(name);
+            var shader = repository.GetPixelShader(name);
             if (shader != null) return shader;
 
-            shader = objectFactory.Create<PixelShader<EmptyConstData>>(new CreatePixelShaderFromResource
+            shader = objectFactory.Create<PixelShader>(new CreatePixelShaderFromResource
             {
                 Assembly = assembly,
                 Path = name
@@ -84,20 +81,20 @@ namespace CrossX.Graphics.Effects
 
         public void Apply()
         {
-            VertexShader<ConstBuffer> vs = pntVertexShader;
-            PixelShader<EmptyConstData> ps = pntPixelShader;
+            VertexShader vs = pntVertexShader;
+            PixelShader ps = pntPixelShader;
 
-            var color = DiffuseColor * Alpha;
+            var color = MaterialDiffuseColor;
 
             var consts = new ConstBuffer
             {
                 MatrixWorldViewProj = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
                 MatrixWorld = worldMatrix,
-                Color = new Vector4(color.Rf, color.Gf, color.Bf, color.Af) * Alpha,
+                Color = new Vector4(color.Rf, color.Gf, color.Bf, color.Af),
                 LightDir = new Vector4(-LightDir, 0)
             };
 
-            vs.ConstData = consts;
+            //vs.ConstData = consts;
 
             graphicsDevice.SetShader(vs);
             graphicsDevice.SetShader(ps);

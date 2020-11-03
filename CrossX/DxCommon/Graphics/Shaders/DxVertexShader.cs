@@ -1,25 +1,21 @@
 ﻿using CrossX.Graphics;
-using CrossX.Graphics.Shaders;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
-using System.IO;
 
 namespace CrossX.DxCommon.Graphics.Shaders
 {
-    internal class DxVertexShader<TConstStruct> : VertexShader<TConstStruct>, IDxShader where TConstStruct : struct
+    internal class DxVertexShader : CrossX.Graphics.Shaders.VertexShader, IDxShader
     {
         private readonly VertexShader shader;
         public override VertexContent VertexContent { get; }
+        private Dictionary<int, Buffer> buffers = new Dictionary<int, Buffer>();
 
         private readonly DxGraphicsDevice graphicsDevice;
-
-        private Buffer constBuffer;
-
         private readonly InputLayout inputLayout;
 
-        public DxVertexShader(DxGraphicsDevice graphicsDevice, CreateVertexShaderFromResource options)
+        public DxVertexShader(DxGraphicsDevice graphicsDevice, CrossX.Graphics.Shaders.CreateVertexShaderFromResource options)
         {
             this.graphicsDevice = graphicsDevice;
 
@@ -34,12 +30,6 @@ namespace CrossX.DxCommon.Graphics.Shaders
             
             inputLayout = new InputLayout(graphicsDevice.D3dDevice, vsCode, elements);
             shader = new VertexShader(graphicsDevice.D3dDevice, vsCode);
-
-            var size = Utilities.SizeOf<TConstStruct>();
-            if (size > 0)
-            {
-                constBuffer = new Buffer(graphicsDevice.D3dDevice, size, ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
-            }
         }
 
         public void AttachShader()
@@ -48,22 +38,46 @@ namespace CrossX.DxCommon.Graphics.Shaders
             context.VertexShader.Set(shader);
             context.InputAssembler.InputLayout = inputLayout;
 
-            if (constBuffer != null)
+            foreach (var buf in buffers)
             {
-                context.VertexShader.SetConstantBuffer(0, constBuffer);
-
-                var consts = ConstData;
-                context.UpdateSubresource(ref consts, constBuffer);
+                context.VertexShader.SetConstantBuffer(buf.Key, buf.Value);
             }
         }
 
         public override void Dispose()
         {
+            graphicsDevice.D3dDevice.ImmediateContext1.VertexShader.Set(null);
+
+            foreach (var buf in buffers)
+            {
+                graphicsDevice.D3dDevice.ImmediateContext1.VertexShader.SetConstantBuffer(buf.Key, null);
+                buf.Value.Dispose();
+            }
+
             inputLayout.Dispose();
             shader.Dispose();
+        }
 
-            constBuffer?.Dispose();
-            constBuffer = null;
+        public override void SetConstData<T>(int slot, ref T data)
+        {
+            if (buffers.TryGetValue(slot, out var buffer))
+            {
+                var context = graphicsDevice.D3dDevice.ImmediateContext1;
+                context.UpdateSubresource(ref data, buffer);
+            }
+        }
+
+        public override void CreateConstBuffer<T>(int slot)
+        {
+            var size = Utilities.SizeOf<T>();
+            int power = 1;
+            while (power < size)
+            {
+                power *= 2;
+            }
+
+            var constBuffer = new Buffer(graphicsDevice.D3dDevice, power, ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
+            buffers.Add(slot, constBuffer);
         }
 
         private static InputElement[] ElementsFromVertexContent(VertexContent content)

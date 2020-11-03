@@ -30,15 +30,15 @@ namespace CrossX.Graphics.Effects
 
         public TextureSamplerDesc Sampler { get; set; }
 
-        private readonly VertexShader<ConstBuffer> pcVertexShader;
-        private readonly VertexShader<ConstBuffer> ptVertexShader;
-        private readonly VertexShader<ConstBuffer> pctVertexShader;
-        private readonly VertexShader<ConstBuffer> pntVertexShader;
+        private readonly VertexShader pcVertexShader;
+        private readonly VertexShader ptVertexShader;
+        private readonly VertexShader pctVertexShader;
+        private readonly VertexShader pntVertexShader;
 
-        private readonly PixelShader<EmptyConstData> pcPixelShader;
-        private readonly PixelShader<EmptyConstData> ptPixelShader;
-        private readonly PixelShader<EmptyConstData> pctPixelShader;
-        private readonly PixelShader<EmptyConstData> pntPixelShader;
+        private readonly PixelShader pcPixelShader;
+        private readonly PixelShader ptPixelShader;
+        private readonly PixelShader pctPixelShader;
+        private readonly PixelShader pntPixelShader;
 
         public BasicEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository)
         {
@@ -57,15 +57,15 @@ namespace CrossX.Graphics.Effects
             pntPixelShader = CreatePixelShader("DefaultPNT", shadersRepository, objectFactory);
         }
 
-        private VertexShader<ConstBuffer> CreateVertexShader(string name, VertexContent vertexContent, IShadersRepository repository, IObjectFactory objectFactory)
+        private VertexShader CreateVertexShader(string name, VertexContent vertexContent, IShadersRepository repository, IObjectFactory objectFactory)
         {
             var assembly = graphicsDevice.GetType().Assembly;
             name = assembly.FullName.Split(',')[0] + ".FX." + name;
 
-            var shader = repository.GetVertexShader<ConstBuffer>(name);
+            var shader = repository.GetVertexShader(name);
             if (shader != null) return shader;
 
-            shader = objectFactory.Create<VertexShader<ConstBuffer>>(new CreateVertexShaderFromResource
+            shader = objectFactory.Create<VertexShader>(new CreateVertexShaderFromResource
             {
                 Assembly = assembly,
                 Path = name,
@@ -73,18 +73,19 @@ namespace CrossX.Graphics.Effects
             });
 
             repository.RegisterVertexShader(name, shader);
+            shader.CreateConstBuffer<ConstBuffer>(0);
             return shader;
         }
 
-        private PixelShader<EmptyConstData> CreatePixelShader(string name, IShadersRepository repository, IObjectFactory objectFactory)
+        private PixelShader CreatePixelShader(string name, IShadersRepository repository, IObjectFactory objectFactory)
         {
             var assembly = graphicsDevice.GetType().Assembly;
             name = assembly.FullName.Split(',')[0] + ".FX." + name;
 
-            var shader = repository.GetPixelShader<EmptyConstData>(name);
+            var shader = repository.GetPixelShader(name);
             if (shader != null) return shader;
 
-            shader = objectFactory.Create<PixelShader<EmptyConstData>>(new CreatePixelShaderFromResource
+            shader = objectFactory.Create<PixelShader>(new CreatePixelShaderFromResource
             {
                 Assembly = assembly,
                 Path = name
@@ -96,8 +97,8 @@ namespace CrossX.Graphics.Effects
 
         public void Apply()
         {
-            VertexShader<ConstBuffer> vs = null;
-            PixelShader<EmptyConstData> ps = null;
+            VertexShader vs = null;
+            PixelShader ps = null;
 
             if (VertexColorEnabled)
             {
@@ -125,10 +126,10 @@ namespace CrossX.Graphics.Effects
             var consts = new ConstBuffer
             {
                 Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
-                Color = new Vector4(color.Rf, color.Gf, color.Bf, color.Af) * Alpha
+                Color = color * Alpha
             };
 
-            vs.ConstData = consts;
+            vs.SetConstData(0, ref consts);
 
             graphicsDevice.SetShader(vs);
             graphicsDevice.SetShader(ps);

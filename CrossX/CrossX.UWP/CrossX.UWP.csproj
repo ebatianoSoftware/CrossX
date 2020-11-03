@@ -245,6 +245,12 @@
     <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPNT.vsbc">
       <Link>FX\DefaultPNT.vsbc</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\Lighted2PNT.psbc">
+      <Link>FX\Lighted2PNT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\Lighted2PNT.vsbc">
+      <Link>FX\Lighted2PNT.vsbc</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.psbc">
@@ -265,6 +271,11 @@
     <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPT.vsbc">
       <Link>FX\DefaultPT.vsbc</Link>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\DxCommon\FX\Lighted2PNT.fx">
+      <Link>FX\Code\Lighted2PNT.fx</Link>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

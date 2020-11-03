@@ -23,7 +23,7 @@ namespace CrossX.Graphics.Shaders
             vertexShaders.Clear();
         }
 
-        public void DisposePixelShader<T>(string name) where T : struct
+        public void DisposePixelShader(string name)
         {
             if(pixelShaders.TryGetValue(name, out var obj))
             {
@@ -32,7 +32,7 @@ namespace CrossX.Graphics.Shaders
             }
         }
 
-        public void DisposeVertexShader<T>(string name) where T : struct
+        public void DisposeVertexShader(string name)
         {
             if (vertexShaders.TryGetValue(name, out var obj))
             {
@@ -41,24 +41,24 @@ namespace CrossX.Graphics.Shaders
             }
         }
 
-        public PixelShader<T> GetPixelShader<T>(string name) where T : struct
+        public PixelShader GetPixelShader(string name)
         {
-            if (pixelShaders.TryGetValue(name, out var obj)) return obj as PixelShader<T>;
+            if (pixelShaders.TryGetValue(name, out var obj)) return obj as PixelShader;
             return null;
         }
 
-        public VertexShader<T> GetVertexShader<T>(string name) where T : struct
+        public VertexShader GetVertexShader(string name)
         {
-            if (vertexShaders.TryGetValue(name, out var obj)) return obj as VertexShader<T>;
+            if (vertexShaders.TryGetValue(name, out var obj)) return obj as VertexShader;
             return null;
         }
 
-        public void RegisterPixelShader<T>(string name, PixelShader<T> pixelShader) where T : struct
+        public void RegisterPixelShader(string name, PixelShader pixelShader)
         {
             pixelShaders.Add(name, pixelShader);
         }
 
-        public void RegisterVertexShader<T>(string name, VertexShader<T> vertexShader) where T : struct
+        public void RegisterVertexShader(string name, VertexShader vertexShader)
         {
             vertexShaders.Add(name, vertexShader);
         }

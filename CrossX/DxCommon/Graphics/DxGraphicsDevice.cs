@@ -248,7 +248,7 @@ namespace CrossX.DxCommon.Graphics
             context.DrawIndexed(indexCount, indexStart, 0);
         }
 
-        public void SetShader<TConstStruct>(Shader<TConstStruct> shader) where TConstStruct : struct
+        public void SetShader(Shader shader)
         {
             ((IDxShader)shader).AttachShader();
         }
