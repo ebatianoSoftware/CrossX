@@ -127,6 +127,13 @@ namespace T06.StaticMesh
                 Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
             });
 
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = -lpos,
+            //    Color = new Color4(0, 255, 0),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
+
 
             //lightedEffect.AddLight(new DirectionalLight
             //{
@@ -135,7 +142,7 @@ namespace T06.StaticMesh
             //});
 
             lightedEffect.MaterialDiffuseColor = new Color4(255, 255, 255);
-            lightedEffect.AmbientColor = Color4.Transparent;
+            lightedEffect.AmbientColor = new Color4(8, 16, 24);
 
             graphicsDevice.DepthClip = true;
 
