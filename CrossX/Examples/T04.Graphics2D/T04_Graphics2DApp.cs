@@ -54,13 +54,14 @@ namespace T04.Graphics2D
                 });
 
                 text = textObjectFactory.CreateText(font, new TextSource("This text is multiline text with justify. Word wrap happens automatically."), 48, 480, TextAlignment.Justify);
-
-                renderTarget = objectFactory.Create<RenderTarget>(new RenderTargetCreationOptions
-                {
-                    Width = 480,
-                    Height = (int)(text.Size.Y+1)
-                });
             }
+
+            renderTarget = objectFactory.Create<RenderTarget>(new RenderTargetCreationOptions
+            {
+                Width = 480,
+                Height = (int)(text.Size.Y+1)
+            });
+            
         }
 
         public void Draw(TimeSpan frameTime)

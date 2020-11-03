@@ -1,4 +1,6 @@
 ﻿using CrossX.UWP;
+using CrossX.UWP.UWP;
+using Windows.UI.ViewManagement;
 
 //using App = T01.SimpleTriangle.T01_SimpleTriangleApp;
 //using App = T02.Textures.T02_TexturesApp;
@@ -13,6 +15,7 @@ namespace CrossXExample.UWP
     {
         static void Main(string[] _)
         {
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
             var runner = new AppRunner<App>();
             runner.Run(0);
         }

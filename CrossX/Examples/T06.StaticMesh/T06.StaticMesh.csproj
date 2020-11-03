@@ -21,6 +21,8 @@
     <None Remove="Fighter\fighterjet.mtl" />
     <None Remove="Fighter\fighterjet.obj" />
     <None Remove="Fighter\normals.png" />
+    <None Remove="Font.fnt" />
+    <None Remove="Font_0.png" />
     <None Remove="Horn.jpg" />
     <None Remove="Horn.obj" />
     <None Remove="normals.png" />
@@ -45,6 +47,8 @@
     <EmbeddedResource Include="Fighter\fighterjet.mtl" />
     <EmbeddedResource Include="Fighter\fighterjet.obj" />
     <EmbeddedResource Include="Fighter\normals.png" />
+    <EmbeddedResource Include="Font.fnt" />
+    <EmbeddedResource Include="Font_0.png" />
     <EmbeddedResource Include="Plane\Done1.png" />
     <EmbeddedResource Include="Plane\done2.png" />
     <EmbeddedResource Include="Plane\done2NM.png" />
