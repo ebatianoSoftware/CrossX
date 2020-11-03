@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Aston\AM-01.mtl" />
+    <None Remove="Aston\AM-01.obj" />
+    <None Remove="Aston\AM-01_diffuse.jpg" />
+    <None Remove="Aston\AM-01_DiffuseMap.jpg" />
+    <None Remove="Aston\AM-01_gloss.jpg" />
+    <None Remove="Aston\AM-01_LightingMap.jpg" />
+    <None Remove="Aston\AM-01_Normal.jpg" />
+    <None Remove="Aston\AM-01_Opacity.jpg" />
+    <None Remove="Aston\AM-01_specular.jpg" />
     <None Remove="diffuse.png" />
     <None Remove="fighterjet.mtl" />
     <None Remove="fighterjet.obj" />
@@ -23,6 +32,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Aston\AM-01.mtl" />
+    <EmbeddedResource Include="Aston\AM-01.obj" />
+    <EmbeddedResource Include="Aston\AM-01_diffuse.jpg" />
+    <EmbeddedResource Include="Aston\AM-01_DiffuseMap.jpg" />
+    <EmbeddedResource Include="Aston\AM-01_gloss.jpg" />
+    <EmbeddedResource Include="Aston\AM-01_LightingMap.jpg" />
+    <EmbeddedResource Include="Aston\AM-01_Normal.jpg" />
+    <EmbeddedResource Include="Aston\AM-01_Opacity.jpg" />
+    <EmbeddedResource Include="Aston\AM-01_specular.jpg" />
     <EmbeddedResource Include="Fighter\diffuse.png" />
     <EmbeddedResource Include="Fighter\fighterjet.mtl" />
     <EmbeddedResource Include="Fighter\fighterjet.obj" />

@@ -124,7 +124,7 @@ namespace CrossX.Media.Formats
             var oTexCoords = file.TextureVertices;
 
             var normal = oNormals != null ? new Vector4(oNormals[tri.Normal-1].X, oNormals[tri.Normal - 1].Y, oNormals[tri.Normal-1].Z, 0) : Vector4.Zero;
-            var texCoord = oTexCoords != null ? new Vector2(oTexCoords[tri.Texture-1].X, oTexCoords[tri.Texture-1].Y) : Vector2.Zero;
+            var texCoord = oTexCoords != null ? new Vector2(oTexCoords[tri.Texture-1].X, 1-oTexCoords[tri.Texture-1].Y) : Vector2.Zero;
             var position = new Vector4(oVert[tri.Vertex-1].Position.X, oVert[tri.Vertex-1].Position.Y, oVert[tri.Vertex-1].Position.Z, oVert[tri.Vertex-1].Position.W);
             
             return new VertexPNT

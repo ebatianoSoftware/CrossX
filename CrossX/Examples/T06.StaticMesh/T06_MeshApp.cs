@@ -29,12 +29,12 @@ namespace T06.StaticMesh
         public void LoadContent()
         {
             RawMesh rawMesh = null;
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Plane.DownNecker.obj"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Aston.AM-01.obj"))
             {
                 rawMesh = WavefrontObjFormat.Instance.FromStream(stream, new OpenMaterialFileDelegate( name =>
                 {
                     name = name.Replace("./", "");
-                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Fighter.{name}");
+                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}");
                 }));
             }
 
@@ -74,7 +74,7 @@ namespace T06.StaticMesh
                 return;
             }
 
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Fighter.{name}"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}"))
             {
                 texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
             }
@@ -90,7 +90,7 @@ namespace T06.StaticMesh
 
             var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2;
 
-            var cameraPos = new Vector3(1, 0, -1).Normalized() * dist;
+            var cameraPos = new Vector3(1, 1, -1).Normalized() * dist;
             var lpos = cameraPos;
 
             lpos = Vector3.Transform(cameraPos,
@@ -101,7 +101,7 @@ namespace T06.StaticMesh
                     cameraPos,
                     Vector3.Zero,
                     Vector3.Up) *
-                    Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 0.1f, dist * 2);
+                    Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 1f, dist * 1.5f);
 
             lightedEffect.Reset();
 
