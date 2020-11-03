@@ -16,7 +16,7 @@ namespace T06.StaticMesh
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
         private Mesh mesh;
-        private LightedEffect2 lightedEffect;
+        private LightedEffect lightedEffect;
         private float rotation = 0;
         private float rotation2 = 0;
 
@@ -34,11 +34,11 @@ namespace T06.StaticMesh
                 rawMesh = WavefrontObjFormat.Instance.FromStream(stream, new OpenMaterialFileDelegate( name =>
                 {
                     name = name.Replace("./", "");
-                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.{name}");
+                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Fighter.{name}");
                 }));
             }
 
-            lightedEffect = objectFactory.Create<LightedEffect2>();
+            lightedEffect = objectFactory.Create<LightedEffect>();
             mesh = objectFactory.Create<Mesh>(rawMesh, new LoadTextureDelegate(LoadTexture));
         }
 
@@ -67,7 +67,7 @@ namespace T06.StaticMesh
                 return;
             }
 
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.{name}"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Fighter.{name}"))
             {
                 texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
             }
@@ -99,25 +99,29 @@ namespace T06.StaticMesh
             lightedEffect.Reset();
 
             lightedEffect.SetViewProjectionTransform(projView);
+            lightedEffect.CameraPosition = cameraPos;
+
+            lightedEffect.SpecularIntensity = 4;
+            lightedEffect.SpecularExponent = 16;
 
             lightedEffect.AddLight(new DirectionalLight
             {
-                Direction = new Vector3(1, -1, 0).Normalized(),
-                Color = new Color4(0, 255, 0)
+                Direction = new Vector3(-0.3f, -1, 0).Normalized(),
+                Color = new Color4(255, 255, 255)
             });
 
-            lightedEffect.AddLight(new DirectionalLight
-            {
-                Direction = new Vector3(-1, 1, 0).Normalized(),
-                Color = new Color4(255, 0, 0)
-            });
+            //lightedEffect.AddLight(new DirectionalLight
+            //{
+            //    Direction = new Vector3(-1, 1, 0).Normalized(),
+            //    Color = new Color4(255, 0, 0)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = lpos,
-                Color = Color4.Blue,
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = lpos,
+            //    Color = Color4.Blue,
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
 
             //lightedEffect.AddLight(new DirectionalLight

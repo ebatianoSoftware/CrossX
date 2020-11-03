@@ -1,6 +1,8 @@
 ﻿using CrossX.Graphics.Shaders;
+using CrossX.Graphics3D.Light;
 using CrossX.IoC;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace CrossX.Graphics.Effects
@@ -8,12 +10,46 @@ namespace CrossX.Graphics.Effects
     public sealed class LightedEffect : IDisposable
     {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct ConstBuffer
+        struct VertexShaderConst
         {
             public Matrix MatrixWorldViewProj;
             public Matrix MatrixWorld;
-            public Vector4 LightDir;
-            public Vector4 Color;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        struct BasicPixelShaderData
+        {
+            public Vector4 Ambient;
+            public Vector4 MatDiffuse;
+            public Vector4 CameraPosition;
+            public float SpecularExponent;
+            public float SpecularIntensity;
+            public float Unused0;
+            public float Unused1;
+            public DirectionalLight DirectionalLight0;
+            public DirectionalLight DirectionalLight1;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        struct PointLightsData
+        {
+            public PointLight PointLight0;
+            public PointLight PointLight1;
+            public PointLight PointLight2;
+            public PointLight PointLight3;
+            public PointLight PointLight4;
+            public PointLight PointLight5;
+            public PointLight PointLight6;
+            public PointLight PointLight7;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        struct SpotLightsData
+        {
+            public SpotLight SpotLight0;
+            public SpotLight SpotLight1;
+            public SpotLight SpotLight2;
+            public SpotLight SpotLight3;
         }
 
         private readonly VertexShader pntVertexShader;
@@ -23,14 +59,22 @@ namespace CrossX.Graphics.Effects
         private Matrix worldMatrix;
         private readonly IGraphicsDevice graphicsDevice;
 
+        public Color4 AmbientColor { get; set; } = Color4.Black;
         public Color4 MaterialDiffuseColor { get; set; } = Color4.White;
-        public Vector3 LightDir { get; set; } = Vector3.Down;
+
+        public Vector3 CameraPosition { get; set; }
+        public float SpecularIntensity { get; set; }
+        public float SpecularExponent { get; set; }
 
         public Texture2D Texture { get; set; }
         public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
         public void SetViewProjectionTransform(Matrix transform) => viewProjectionMatrix = transform;
 
         public TextureSamplerDesc Sampler { get; set; }
+
+        private readonly List<PointLight> pointLights = new List<PointLight>();
+        private readonly List<SpotLight> spotLights = new List<SpotLight>();
+        private readonly List<DirectionalLight> directionalLights = new List<DirectionalLight>();
 
         public LightedEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository)
         {
@@ -58,6 +102,7 @@ namespace CrossX.Graphics.Effects
             });
 
             repository.RegisterVertexShader(name, shader);
+            shader.CreateConstBuffer<VertexShaderConst>(0);
             return shader;
         }
 
@@ -76,7 +121,36 @@ namespace CrossX.Graphics.Effects
             });
 
             repository.RegisterPixelShader(name, shader);
+            shader.CreateConstBuffer<BasicPixelShaderData>(1);
+            shader.CreateConstBuffer<PointLightsData>(2);
             return shader;
+        }
+
+        public void Reset()
+        {
+            pointLights.Clear();
+            spotLights.Clear();
+            directionalLights.Clear();
+        }
+
+        public void AddLight(DirectionalLight light)
+        {
+            if (directionalLights.Count >= 2) throw new Exception($"Max 2 directional lights.");
+            light.Direction = -light.Direction;
+            directionalLights.Add(light);
+        }
+
+        public void AddLight(PointLight light)
+        {
+            if (pointLights.Count >= 8) throw new Exception($"Max 8 point lights.");
+            pointLights.Add(light);
+        }
+
+        public void AddLight(SpotLight light)
+        {
+            if (spotLights.Count >= 8) throw new Exception($"Max 8 spot lights.");
+            light.Direction = -light.Direction;
+            spotLights.Add(light);
         }
 
         public void Apply()
@@ -84,17 +158,50 @@ namespace CrossX.Graphics.Effects
             VertexShader vs = pntVertexShader;
             PixelShader ps = pntPixelShader;
 
-            var color = MaterialDiffuseColor;
-
-            var consts = new ConstBuffer
+            var vsConsts = new VertexShaderConst
             {
                 MatrixWorldViewProj = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
                 MatrixWorld = worldMatrix,
-                Color = new Vector4(color.Rf, color.Gf, color.Bf, color.Af),
-                LightDir = new Vector4(-LightDir, 0)
             };
 
-            //vs.ConstData = consts;
+            vs.SetConstData(0, ref vsConsts);
+
+            var psConsts = new BasicPixelShaderData
+            {
+                Ambient = AmbientColor,
+                MatDiffuse = MaterialDiffuseColor,
+                CameraPosition = new Vector4(CameraPosition, 1),
+                SpecularExponent = SpecularExponent,
+                SpecularIntensity = SpecularIntensity,
+                DirectionalLight0 = directionalLights.Count > 0 ? directionalLights[0] : default,
+                DirectionalLight1 = directionalLights.Count > 1 ? directionalLights[1] : default
+            };
+
+            ps.SetConstData(1, ref psConsts);
+
+            var psPointLightsData = new PointLightsData
+            {
+                PointLight0 = pointLights.Count > 0 ? pointLights[0] : default,
+                PointLight1 = pointLights.Count > 1 ? pointLights[1] : default,
+                PointLight2 = pointLights.Count > 2 ? pointLights[2] : default,
+                PointLight3 = pointLights.Count > 3 ? pointLights[3] : default,
+                PointLight4 = pointLights.Count > 4 ? pointLights[4] : default,
+                PointLight5 = pointLights.Count > 5 ? pointLights[5] : default,
+                PointLight6 = pointLights.Count > 6 ? pointLights[6] : default,
+                PointLight7 = pointLights.Count > 7 ? pointLights[7] : default
+            };
+            ps.SetConstData(2, ref psPointLightsData);
+
+            //    SpotLightsNumber = numSpotLights,
+            //    SpotLight0 = numSpotLights > 0 ? spotLights[0] : default,
+            //    SpotLight1 = numSpotLights > 1 ? spotLights[1] : default,
+            //    SpotLight2 = numSpotLights > 2 ? spotLights[2] : default,
+            //    SpotLight3 = numSpotLights > 3 ? spotLights[3] : default,
+            //    //SpotLight4 = numSpotLights > 4 ? spotLights[4] : default,
+            //    //SpotLight5 = numSpotLights > 5 ? spotLights[5] : default,
+            //    //SpotLight6 = numSpotLights > 6 ? spotLights[6] : default,
+            //    //SpotLight7 = numSpotLights > 7 ? spotLights[7] : default,
+            //};
 
             graphicsDevice.SetShader(vs);
             graphicsDevice.SetShader(ps);

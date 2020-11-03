@@ -2,6 +2,8 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
+#include "Lighted/Common.fx"
+
 struct VS_IN
 {
 	float4 pos : POSITION;
@@ -12,41 +14,42 @@ struct VS_IN
 struct PS_IN
 {
 	float4 pos : SV_POSITION;
-	float4 color: COLOR;
-	float4 light : TEXCOORD0;
-	float4 norm : TEXCOORD1;
-	float2 texCoord: TEXCOORD2;
+	float4 orig : POSITION;
+	float4 norm : TEXCOORD0;
+	float2 texCoord: TEXCOORD1;
 };
 
-float4x4 matWorldViewProj;
-float4x4 matWorld;
-float4 vecLightDir;
-float4 color;
+cbuffer VertexShaderData : register(b0)
+{
+	float4x4 g_matWorldViewProj;
+	float4x4 g_matWorld;
+};
 
 Texture2D<float4> colorTexture : register(t0);
 sampler colorTextureSampler : register(s0);
-
 
 PS_IN VS(VS_IN input)
 {
   PS_IN output = (PS_IN)0;
   
-  output.pos = mul(matWorldViewProj, input.pos); // transform Position
-  output.light = vecLightDir; // output light vector
-  output.norm = normalize(mul(matWorld, input.norm)); // transform Normal and normalize it
+  output.pos = mul(g_matWorldViewProj, input.pos); // transform Position
+  output.orig = mul(g_matWorld, input.pos); // calculate original posEfition
+  output.norm = normalize(mul(g_matWorld, input.norm)); // transform Normal and normalize it
   output.texCoord = input.texCoord;
-  output.color = color;
-  
   return output;
 }
 
-float4 PS(PS_IN input): SV_Target
+
+
+float4 CalculateLights(float4 pos, float4 normal)
 {
-  float4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f};
-  float4 ambient = { 0.05f, 0.05f, 0.2f, 1.0f };
-  float4 color = ambient + diffuse * saturate(dot(input.light, input.norm));
-  
-  return colorTexture.Sample(colorTextureSampler, input.texCoord) * color * input.color;
+	float4 col = CalculateDirLights(pos, normal) + CalculatePointLights(pos, normal);
+	col.a = 1;
+	return col;
 }
 
-
+float4 PS(PS_IN input) : SV_Target
+{
+	float4 color = CalculateLights(input.orig, input.norm);
+	return colorTexture.Sample(colorTextureSampler, input.texCoord) * color;
+}
