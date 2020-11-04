@@ -58,7 +58,7 @@ float4 PS(PS_IN input) : SV_Target
 	LIGHT_RES light = CalculateLights(input.orig, input.norm);
 
 	float4 specular = specularTexture.Sample(specularTextureSampler, input.texCoord) * light.spec;
-	float4 color = g_ambientColor + colorTexture.Sample(colorTextureSampler, input.texCoord) * light.diff;
+	float4 color = colorTexture.Sample(colorTextureSampler, input.texCoord) * (g_ambientColor + light.diff);
 
 	return  color + specular;
 }

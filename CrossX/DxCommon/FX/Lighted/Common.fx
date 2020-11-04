@@ -67,8 +67,9 @@ LIGHT_RES CalculateDirLights(float4 pos, float4 normal)
 		DIR_LIGHT light = g_directionalLights[i];
 		if (light.color.a > 0.1f)
 		{
-			res.diff = res.diff + light.color * g_materialDiffuse * saturate(dot(light.dir, normal));
-			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, light.dir);
+			float saturation = saturate(dot(light.dir, normal));
+			res.diff = res.diff + light.color * g_materialDiffuse * saturation;
+			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, light.dir) * saturation;
 		}
 	}
 	return res;
@@ -87,10 +88,12 @@ LIGHT_RES CalculatePointLights(float4 pos, float4 normal)
 			float4 dir = light.pos - pos;
 			float dist = length(dir) * light.att.w;
 			dir = normalize(dir);
-
+			
 			float distAtt = 1.0f / (light.att.x + dist * light.att.y + dist * dist * light.att.z);
-			res.diff = res.diff + light.color * g_materialDiffuse * saturate(dot(dir, normal)) * distAtt;
-			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, dir) * distAtt;
+			float saturation = saturate(dot(dir, normal)) * distAtt;
+
+			res.diff = res.diff + light.color * g_materialDiffuse * saturation;
+			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, dir) * saturation;
 		}
 	}
 	return res;

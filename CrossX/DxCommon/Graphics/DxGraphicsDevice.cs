@@ -178,7 +178,7 @@ namespace CrossX.DxCommon.Graphics
             RenderTarget = renderTarget ?? mainRenderTarget;
 
             var rt = (DxRenderTarget)RenderTarget;
-            D3dContext.OutputMerger.SetRenderTargets( rt.DepthStencilView, rt.RenderTargetView);
+            D3dContext.OutputMerger.SetRenderTargets(rt.DepthStencilView, rt.RenderTargetView);
 
             var viewport = new RawViewportF
             {

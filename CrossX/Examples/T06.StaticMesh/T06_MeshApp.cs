@@ -52,14 +52,14 @@ namespace T06.StaticMesh
         public void LoadContent()
         {
             RawMesh rawMesh = null;
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Aston.AM-01.obj"))
-            //using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Plane.DownNecker.obj"))
+            //using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Aston.AM-01.obj"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Plane.DownNecker.obj"))
             {
                 rawMesh = WavefrontObjFormat.Instance.FromStream(stream, new OpenMaterialFileDelegate( name =>
                 {
                     name = name.Replace("./", "");
-                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}");
-                    //return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.{name}");
+                    //return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}");
+                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.{name}");
                 }));
             }
 
@@ -123,15 +123,17 @@ namespace T06.StaticMesh
             graphicsDevice.Clear(Color4.Black);
 
             lightedEffect.SetWorldTransform(
-                Matrix.CreateTranslation(-mesh.Bounds.Center) *
-                Matrix.CreateFromYawPitchRoll(yaw, 0, pitch)*
-                Matrix.CreateTranslation(-mesh.Bounds.Width, 0, 0)
+                Matrix.CreateTranslation(-mesh.Bounds.Center)// *
+                //Matrix.CreateFromYawPitchRoll(yaw, 0, pitch)
                 );
 
             var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2.5f;
 
             var cameraPos = new Vector3(1, 1, -1).Normalized() * dist;
             var lpos = cameraPos;
+
+            cameraPos = Vector3.Transform(cameraPos,
+                Matrix.CreateFromYawPitchRoll(yaw, 0, pitch));
 
             lpos = Vector3.Transform(cameraPos,
                 Matrix.CreateRotationY(rotation2)
@@ -154,67 +156,67 @@ namespace T06.StaticMesh
                 Color = new Color4(255, 255, 224)
             });
 
-            lightedEffect.AddLight(new DirectionalLight
-            {
-                Direction = new Vector3(-1, 1, 0).Normalized(),
-                Color = new Color4(128, 96, 0)
-            });
+            //lightedEffect.AddLight(new DirectionalLight
+            //{
+            //    Direction = new Vector3(0.3f, 1, 0).Normalized(),
+            //    Color = new Color4(0, 16, 64)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = lpos,
-                Color = new Color4(128, 0, 255),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = lpos,
+            //    Color = new Color4(128, 0, 255),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = -lpos,
-                Color = new Color4(0, 255, 0),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = -lpos,
+            //    Color = new Color4(0, 255, 0),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = lpos,
-                Color = new Color4(128, 0, 255),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = lpos,
+            //    Color = new Color4(128, 0, 255),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = -lpos,
-                Color = new Color4(0, 255, 0),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = -lpos,
+            //    Color = new Color4(0, 255, 0),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = lpos,
-                Color = new Color4(128, 0, 255),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = lpos,
+            //    Color = new Color4(128, 0, 255),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = -lpos,
-                Color = new Color4(0, 255, 0),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = -lpos,
+            //    Color = new Color4(0, 255, 0),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = lpos,
-                Color = new Color4(128, 0, 255),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = lpos,
+            //    Color = new Color4(128, 0, 255),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
-            lightedEffect.AddLight(new PointLight
-            {
-                Position = -lpos,
-                Color = new Color4(0, 255, 0),
-                Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
-            });
+            //lightedEffect.AddLight(new PointLight
+            //{
+            //    Position = -lpos,
+            //    Color = new Color4(0, 255, 0),
+            //    Attenuation = new Vector4(1, 0.2f, 0.1f, 0.01f)
+            //});
 
             //lightedEffect.AddLight(new DirectionalLight
             //{
@@ -223,36 +225,29 @@ namespace T06.StaticMesh
             //});
 
             lightedEffect.MaterialDiffuseColor = new Color4(255, 255, 255);
-            lightedEffect.AmbientColor = new Color4(0, 16, 32);
+            lightedEffect.AmbientColor = new Color4(0, 24, 64);
 
             graphicsDevice.DepthClip = true;
 
-            for (var tt = 0; tt < 2; ++tt)
+            
+            for (var idx = 0; idx < mesh.Slices.Count; ++idx)
             {
-                for (var idx = 0; idx < mesh.Slices.Count; ++idx)
-                {
-                    var slice = mesh.Slices[idx];
-                    lightedEffect.Texture = slice.Texture;
-                    lightedEffect.SpecularTexture = slice.SpecularMap;
+                var slice = mesh.Slices[idx];
+                lightedEffect.Texture = slice.Texture;
+                lightedEffect.SpecularTexture = slice.SpecularMap;
 
-                    lightedEffect.SpecularColor = new Color4(255, 224, 192);
-                    lightedEffect.SpecularExponent = slice.Material?.SpecularExponent ?? 64;
+                lightedEffect.SpecularColor = new Color4(255, 224, 192);
+                lightedEffect.SpecularExponent = slice.Material?.SpecularExponent ?? 64;
 
-                    lightedEffect.Apply();
+                lightedEffect.Apply();
 
-                    graphicsDevice.SetIndexBuffer(slice.Indices);
-                    graphicsDevice.SetVertexBuffer(mesh.Vertices);
+                graphicsDevice.SetIndexBuffer(slice.Indices);
+                graphicsDevice.SetVertexBuffer(mesh.Vertices);
 
-                    graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, slice.Indices.Count);
-                }
-
-                lightedEffect.SetWorldTransform(
-                    Matrix.CreateTranslation(-mesh.Bounds.Center) *
-                    Matrix.CreateFromYawPitchRoll(yaw, 0, pitch) * Matrix.CreateTranslation(mesh.Bounds.Width, 0, 0));
+                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, slice.Indices.Count);
             }
 
             spriteBatch.DrawText(text, new Vector2(10, 10), Color4.White);
-
             graphicsDevice.Present();
         }
 

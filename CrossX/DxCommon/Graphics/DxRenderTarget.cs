@@ -51,48 +51,55 @@ namespace CrossX.DxCommon.Graphics
 
         public DxRenderTarget(DxGraphicsDevice graphicsDevice, RenderTargetCreationOptions creationOptions)
         {
-            var desc = new Texture2DDescription
+            if (creationOptions.Content.HasFlag(RenderTargetContent.Color))
             {
-                ArraySize = 1,
-                BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget,
-                CpuAccessFlags = CpuAccessFlags.None,
-                Format = Format.B8G8R8A8_UNorm,
-                Height = creationOptions.Height,
-                Width = creationOptions.Width,
-                MipLevels = 1,
-                OptionFlags = ResourceOptionFlags.None,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = ResourceUsage.Default
-            };
+                var desc = new Texture2DDescription
+                {
+                    ArraySize = 1,
+                    BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget,
+                    CpuAccessFlags = CpuAccessFlags.None,
+                    Format = Format.B8G8R8A8_UNorm,
+                    Height = creationOptions.Height,
+                    Width = creationOptions.Width,
+                    MipLevels = 1,
+                    OptionFlags = ResourceOptionFlags.None,
+                    SampleDescription = new SampleDescription(1, 0),
+                    Usage = ResourceUsage.Default
+                };
 
-            var device = graphicsDevice.D3dDevice;
-            Texture = new Texture2D(device, desc);
+                var device = graphicsDevice.D3dDevice;
+                Texture = new Texture2D(device, desc);
 
-            ShaderResourceView = new ShaderResourceView(Texture.Device, Texture);
+                ShaderResourceView = new ShaderResourceView(Texture.Device, Texture);
 
-            var desc2 = new RenderTargetViewDescription
-            {
-                Format = Texture.Description.Format,
-                Dimension = RenderTargetViewDimension.Texture2D            };
-            desc2.Texture2D.MipSlice = 0;
-            RenderTargetView = new RenderTargetView(Texture.Device, Texture, desc2);
+                var desc2 = new RenderTargetViewDescription
+                {
+                    Format = Texture.Description.Format,
+                    Dimension = RenderTargetViewDimension.Texture2D
+                };
+                desc2.Texture2D.MipSlice = 0;
+                RenderTargetView = new RenderTargetView(Texture.Device, Texture, desc2);
+            }
 
             Width = creationOptions.Width;
             Height = creationOptions.Height;
 
-            using (var depthBuffer = new Texture2D(graphicsDevice.D3dDevice, new Texture2DDescription
+            if (creationOptions.Content.HasFlag(RenderTargetContent.Depth))
             {
-                Format = Format.D24_UNorm_S8_UInt,
-                ArraySize = 1,
-                MipLevels = 1,
-                Width = creationOptions.Width,
-                Height = creationOptions.Height,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = ResourceUsage.Default,
-                BindFlags = BindFlags.DepthStencil,
-            }))
-            {
-                DepthStencilView = new DepthStencilView(graphicsDevice.D3dDevice, depthBuffer);
+                using (var depthBuffer = new Texture2D(graphicsDevice.D3dDevice, new Texture2DDescription
+                {
+                    Format = Format.D24_UNorm_S8_UInt,
+                    ArraySize = 1,
+                    MipLevels = 1,
+                    Width = creationOptions.Width,
+                    Height = creationOptions.Height,
+                    SampleDescription = new SampleDescription(1, 0),
+                    Usage = ResourceUsage.Default,
+                    BindFlags = BindFlags.DepthStencil,
+                }))
+                {
+                    DepthStencilView = new DepthStencilView(graphicsDevice.D3dDevice, depthBuffer);
+                }
             }
         }
 
