@@ -52,14 +52,14 @@ namespace T06.StaticMesh
         public void LoadContent()
         {
             RawMesh rawMesh = null;
-            //using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Aston.AM-01.obj"))
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Plane.DownNecker.obj"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Aston.AM-01.obj"))
+            //using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Plane.DownNecker.obj"))
             {
                 rawMesh = WavefrontObjFormat.Instance.FromStream(stream, new OpenMaterialFileDelegate( name =>
                 {
                     name = name.Replace("./", "");
-                    //return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}");
-                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.{name}");
+                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}");
+                    //return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.{name}");
                 }));
             }
 
@@ -133,7 +133,7 @@ namespace T06.StaticMesh
             var lpos = cameraPos;
 
             cameraPos = Vector3.Transform(cameraPos,
-                Matrix.CreateFromYawPitchRoll(yaw, 0, pitch));
+                Matrix.CreateFromYawPitchRoll(-yaw, -pitch, 0));
 
             lpos = Vector3.Transform(cameraPos,
                 Matrix.CreateRotationY(rotation2)
@@ -156,11 +156,11 @@ namespace T06.StaticMesh
                 Color = new Color4(255, 255, 224)
             });
 
-            //lightedEffect.AddLight(new DirectionalLight
-            //{
-            //    Direction = new Vector3(0.3f, 1, 0).Normalized(),
-            //    Color = new Color4(0, 16, 64)
-            //});
+            lightedEffect.AddLight(new DirectionalLight
+            {
+                Direction = new Vector3(0.3f, 1, 0).Normalized(),
+                Color = new Color4(64, 16, 0)
+            });
 
             //lightedEffect.AddLight(new PointLight
             //{
@@ -236,7 +236,7 @@ namespace T06.StaticMesh
                 lightedEffect.Texture = slice.Texture;
                 lightedEffect.SpecularTexture = slice.SpecularMap;
 
-                lightedEffect.SpecularColor = new Color4(255, 224, 192);
+                lightedEffect.SpecularColor = (Vector4)(slice.Material?.Specular ?? Color4.White) * 2;
                 lightedEffect.SpecularExponent = slice.Material?.SpecularExponent ?? 64;
 
                 lightedEffect.Apply();

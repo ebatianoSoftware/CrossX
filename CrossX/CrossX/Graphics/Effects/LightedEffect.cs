@@ -61,12 +61,11 @@ namespace CrossX.Graphics.Effects
         public Color4 MaterialDiffuseColor { get; set; } = Color4.White;
 
         public Vector3 CameraPosition { get; set; }
-        public Color4 SpecularColor { get; set; }
+        public Vector4 SpecularColor { get; set; }
         public float SpecularExponent { get; set; }
 
         public Texture2D Texture { get; set; }
         public Texture2D SpecularTexture { get; set; }
-
         private Texture2D whiteTexture;
 
         public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
@@ -179,7 +178,7 @@ namespace CrossX.Graphics.Effects
                 Ambient = AmbientColor,
                 MatDiffuse = MaterialDiffuseColor,
                 CameraPosition = new Vector4(CameraPosition, 1),
-                Specular = new Vector4(SpecularColor.Rf, SpecularColor.Gf, SpecularColor.Bf, SpecularExponent),
+                Specular = new Vector4(SpecularColor.X, SpecularColor.Y, SpecularColor.Z, SpecularExponent),
                 DirectionalLight0 = directionalLights.Count > 0 ? directionalLights[0] : default,
                 DirectionalLight1 = directionalLights.Count > 1 ? directionalLights[1] : default
             };
