@@ -52,13 +52,13 @@ namespace T06.StaticMesh
         public void LoadContent()
         {
             RawMesh rawMesh = null;
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Aston.AM-01.obj"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Pillar.Pillar.obj"))
             //using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Plane.DownNecker.obj"))
             {
                 rawMesh = WavefrontObjFormat.Instance.FromStream(stream, new OpenMaterialFileDelegate( name =>
                 {
                     name = name.Replace("./", "");
-                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}");
+                    return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Pillar.{name}");
                     //return typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Plane.{name}");
                 }));
             }
@@ -112,7 +112,7 @@ namespace T06.StaticMesh
                 return;
             }
 
-            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Aston.{name}"))
+            using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream($"T06.StaticMesh.Pillar.{name}"))
             {
                 texture = objectFactory.Create<Texture2D>(stream, ImagesFormat.Instance);
             }

@@ -115,50 +115,71 @@ namespace CrossX.IoC
 
         public object GetService(Type serviceType)
         {
+            if (TryResolveInstance(serviceType, out var instance)) return instance;
+            throw new Exception();
+        }
+
+        public TService GetService<TService>() => (TService)GetService(typeof(TService));
+
+        public bool TryResolveInstance(Type serviceType, out object instance)
+        {
             if (builded) throw new InvalidOperationException();
 
-            if (serviceType == typeof(IServicesProvider)) return this;
-
-            if (services.TryGetValue(serviceType, out var service) && service != null) return service;
-
-            foreach(var reg in registrations)
+            if (serviceType == typeof(IServicesProvider))
             {
-                if(reg.Resolves(serviceType))
+                instance = this;
+                return true;
+            }
+
+            if (services.TryGetValue(serviceType, out var service) && service != null)
+            {
+                instance = service;
+                return true;
+            }
+
+            foreach (var reg in registrations)
+            {
+                if (reg.Resolves(serviceType))
                 {
-                    if(reg.Instance != null)
+                    if (reg.Instance != null)
                     {
                         services[serviceType] = reg.Instance;
-                        return reg.Instance;
+                        instance = reg.Instance;
+                        return true;
                     }
 
                     if (reg.Type != null)
                     {
                         services.Add(serviceType, null);
                         service = DynamicActivator.New(reg.Type, this);
-                        services[serviceType] = service;
-                        return service;
+
+                        foreach (var type in reg.ResolutionTypes)
+                        {
+                            services[type] = service;
+                        }
+                        instance = service;
+                        return true;
                     }
                 }
             }
 
-            if(parentServiceProvider != null)
+            if (parentServiceProvider != null)
             {
-                return parentServiceProvider.GetService(serviceType);
+                return parentServiceProvider.TryResolveInstance(serviceType, out instance);
             }
-
-            throw new Exception();
-        }
-
-        public TService GetService<TService>() => (TService)GetService(typeof(TService));
-
-        public bool TryResolveInstance(Type type, out object instance)
-        {
-            throw new NotSupportedException();
+            instance = null;
+            return false;
         }
 
         public bool TryResolveInstance<TType>(out TType instance)
         {
-            throw new NotSupportedException();
+            if (TryResolveInstance(typeof(TType), out var obj))
+            {
+                instance = (TType)obj;
+                return true;
+            }
+            instance = default;
+            return false;
         }
     }
 }

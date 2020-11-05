@@ -103,7 +103,7 @@ namespace CrossX.Media.Formats
 
         private Color4 FromObj(ObjMaterialColor color)
         {
-            return new Color4(color.Color.X, color.Color.Y, color.Color.Z);
+            return color != null ? new Color4(color.Color.X, color.Color.Y, color.Color.Z) : Color4.White;
         }
 
         private uint GetIndex(ObjFile file, ObjTriplet tri, Dictionary<ObjTriplet, uint> map, List<VertexPNT> vertices)
@@ -134,12 +134,5 @@ namespace CrossX.Media.Formats
                 TextureCoordinate = texCoord
             };
         }
-
-        //private Color4 FromObjVector4(ObjVector4? v)
-        //{
-        //    if (!v.HasValue) return Color4.White;
-        //    var col = v.Value;
-        //    return new Color4(col.X, col.Y, col.Z, col.W);
-        //}
     }
 }

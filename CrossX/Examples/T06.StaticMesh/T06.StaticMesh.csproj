@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dragon\**" />
+    <EmbeddedResource Remove="Dragon\**" />
+    <None Remove="Dragon\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Aston\AM-01.mtl" />
     <None Remove="Aston\AM-01.obj" />
     <None Remove="Aston\AM-01_diffuse.jpg" />
@@ -26,6 +32,10 @@
     <None Remove="Horn.jpg" />
     <None Remove="Horn.obj" />
     <None Remove="normals.png" />
+    <None Remove="Pillar\Pillar.mtl" />
+    <None Remove="Pillar\Pillar.obj" />
+    <None Remove="Pillar\Pillar.png" />
+    <None Remove="Pillar\Pillar.tga" />
     <None Remove="Plane\Done1.png" />
     <None Remove="Plane\done2.png" />
     <None Remove="Plane\done2NM.png" />
@@ -49,6 +59,9 @@
     <EmbeddedResource Include="Fighter\normals.png" />
     <EmbeddedResource Include="Font.fnt" />
     <EmbeddedResource Include="Font_0.png" />
+    <EmbeddedResource Include="Pillar\Pillar.mtl" />
+    <EmbeddedResource Include="Pillar\Pillar.obj" />
+    <EmbeddedResource Include="Pillar\Pillar.png" />
     <EmbeddedResource Include="Plane\Done1.png" />
     <EmbeddedResource Include="Plane\done2.png" />
     <EmbeddedResource Include="Plane\done2NM.png" />

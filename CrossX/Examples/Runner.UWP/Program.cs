@@ -15,7 +15,7 @@ namespace CrossXExample.UWP
     {
         static void Main(string[] _)
         {
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             var runner = new AppRunner<App>();
             runner.Run(0);
         }

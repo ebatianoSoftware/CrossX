@@ -47,7 +47,7 @@ namespace CrossX.DxCommon.Audio
         {
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Disposed?.Invoke();
         }

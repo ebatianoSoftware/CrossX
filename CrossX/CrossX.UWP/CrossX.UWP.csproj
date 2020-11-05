@@ -218,6 +218,7 @@
     <ProjectReference Include="..\CrossX\CrossX.csproj">
       <Project>{7b1c3193-96dc-44c1-b232-2e8a7bd8080a}</Project>
       <Name>CrossX</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -267,9 +268,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\DxCommon\FX\Lighted\Common.fx">
+    <None Include="..\DxCommon\FX\Lighted\Common.fx">
       <Link>FX\Code\Lighted\Common.fx</Link>
-    </Content>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
