@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CrossX.IoC
 {
-    public class ScopeBuilder: IServicesProvider
+    public class ScopeBuilder: IServicesProvider, IScopeBuilder
     {
         public class Registration
         {
@@ -181,5 +181,13 @@ namespace CrossX.IoC
             instance = default;
             return false;
         }
+
+        IScopeBuilder IScopeBuilder.WithType<TType>() => WithType<TType>();
+        IScopeBuilder IScopeBuilder.WithType(Type type) => WithType(type);
+        IScopeBuilder IScopeBuilder.As<TType>() => As<TType>();
+        IScopeBuilder IScopeBuilder.As(Type type) => As(type);
+        IScopeBuilder IScopeBuilder.AsSingleton() => AsSingleton();
+        IScopeBuilder IScopeBuilder.AsSelf() => AsSelf();
+        IScopeBuilder IScopeBuilder.WithInstance(object instance) => WithInstance(instance);
     }
 }

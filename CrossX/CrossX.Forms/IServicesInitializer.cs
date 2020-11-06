@@ -4,6 +4,6 @@ namespace CrossX.Forms
 {
     public interface IServicesInitializer
     {
-        void InitializeServices(ScopeBuilder scopeBuilder);
+        void InitializeServices(IScopeBuilder scopeBuilder);
     }
 }

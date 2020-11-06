@@ -8,4 +8,8 @@
     <ProjectReference Include="..\CrossX\CrossX.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Xml\" />
+  </ItemGroup>
+
 </Project>
