@@ -14,7 +14,7 @@ namespace CrossX.Forms.View
 
         }
 
-        internal void Update(TimeSpan frameTime)
+        public void Update(TimeSpan frameTime)
         {
             
         }
