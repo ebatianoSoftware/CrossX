@@ -1,17 +1,17 @@
 ﻿using CrossX.Forms.Values;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace CrossX.Forms.Controls
 {
     public abstract class Control : ObservableDataModel
     {
+        public string Id { get; internal set; }
         public Length Width { get => width; set => SetProperty(ref width, value); }
         public Length Height { get => height; set => SetProperty(ref height, value); }
-
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
-
         public Margin Margin { get => margin; set => SetProperty(ref margin, value); }
 
         public float ActualWidth { get => actualWidth; private set => SetProperty(ref actualWidth, value); }
@@ -20,8 +20,8 @@ namespace CrossX.Forms.Controls
         public float ActualX { get => actualX; set => SetProperty(ref actualX, value); }
         public float ActualY { get => actualY; set => SetProperty(ref actualY, value); }
 
-        public bool ShouldCalculateLayout { get; private set; }
-        private IControlParent parent;
+        public bool ShouldCalculateLayout { get; protected set; }
+        public IControlParent Parent { get; }
 
         private Length width;
         private Length height;
@@ -33,9 +33,13 @@ namespace CrossX.Forms.Controls
         private Alignment verticalAlignment;
         private Margin margin;
 
+        private Dictionary<string, object> customProperties;
+
+        protected RectangleF ClientArea => new RectangleF(actualX, actualY, actualWidth, actualHeight);
+
         protected Control(IControlParent parent)
         {
-            this.parent = parent;
+            Parent = parent;
         }
 
         protected override void OnPropertyChanged(string name)
@@ -53,8 +57,7 @@ namespace CrossX.Forms.Controls
                     break;
             }
         }
-
-        internal void BeforeUpdate()
+        public virtual void BeforeUpdate()
         {
             if (ShouldCalculateLayout)
             {
@@ -63,10 +66,12 @@ namespace CrossX.Forms.Controls
             }
         }
 
+        public virtual void AddChild(Control control) => throw new NotSupportedException();
+
         protected virtual void CalculateLayout()
         {
-            var size = CalculateSize(parent.ClientArea);
-            var position = CalculatePosition(parent.ClientArea, size);
+            var size = CalculateSize(Parent.ClientArea);
+            var position = CalculatePosition(Parent.ClientArea, size);
 
             PositionControl(position, size);
         }
@@ -138,12 +143,24 @@ namespace CrossX.Forms.Controls
             }
         }
 
-        public virtual void Update(TimeSpan frameTime)
+        internal void SetCustomProperty(string name, object value)
         {
+            if(customProperties == null)
+            {
+                customProperties = new Dictionary<string, object>();
+            }
+            customProperties[name] = value;
         }
 
-        public virtual void Draw(TimeSpan frameTime)
+        public TProperty GetCustomProperty<TProperty>(string name)
         {
+            if (customProperties == null) return default;
+            if (customProperties.TryGetValue(name, out var obj) && obj is TProperty) return (TProperty)obj;
+            return default;
         }
+
+        public virtual void Update(TimeSpan frameTime) {}
+
+        public virtual void Draw(TimeSpan frameTime) {}
     }
 }

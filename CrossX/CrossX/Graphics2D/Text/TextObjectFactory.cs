@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace CrossX.Graphics2D.Text
 {
@@ -13,6 +12,8 @@ namespace CrossX.Graphics2D.Text
     /// </summary>
     public class TextObjectFactory
     {
+        public static TextObjectFactory Instance = new TextObjectFactory();
+
         private readonly int[,] partsBuffer = new int[4, 256];
         private readonly int[] linesWidth = new int[256];
         private readonly int[] lastWordLastIndex = new int[4];

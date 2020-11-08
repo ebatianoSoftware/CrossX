@@ -151,7 +151,7 @@ namespace CrossX.IoC
                     if (reg.Type != null)
                     {
                         services.Add(serviceType, null);
-                        service = DynamicActivator.New(reg.Type, this);
+                        service = DynamicActivator.Create(reg.Type, this);
 
                         foreach (var type in reg.ResolutionTypes)
                         {

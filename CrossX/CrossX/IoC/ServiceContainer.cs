@@ -19,7 +19,7 @@ namespace CrossX.IoC
         public object Create(Type type, params object[] parameters)
         {
             if (!FindMapping(type, out var implType)) implType = type;
-            return DynamicActivator.New(implType, this, parameters);
+            return DynamicActivator.Create(implType, this, parameters);
         }
 
         public TObject Create<TObject>(params object[] parameters) => (TObject)Create(typeof(TObject), parameters);
@@ -38,7 +38,7 @@ namespace CrossX.IoC
             }
 
             if (!FindMapping(serviceType, out var implType)) throw new KeyNotFoundException();
-            return DynamicActivator.New(implType, this);
+            return DynamicActivator.Create(implType, this);
         }
 
         public TService GetService<TService>() => (TService)GetService(typeof(TService));

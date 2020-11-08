@@ -21,7 +21,7 @@ namespace CrossX.IO
             if (!fileSources.TryGetValue(parts[0], out var source)) throw new FileNotFoundException();
 
             parts[0] = "";
-            path = string.Join(":", parts);
+            path = string.Join(":", parts).Trim(':');
             return source.Open(path.Trim('\\', '/'));
         }
 

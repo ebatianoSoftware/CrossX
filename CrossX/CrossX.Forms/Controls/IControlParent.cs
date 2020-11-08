@@ -8,5 +8,6 @@ namespace CrossX.Forms.Controls
         RectangleF ClientArea { get; }
         SpriteBatch SpriteBatch { get; }
         PrimitiveBatch PrimitiveBatch { get; }
+        IControlsLoader ControlsLoader { get; }
     }
 }
