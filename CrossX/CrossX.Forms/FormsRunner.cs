@@ -9,8 +9,10 @@ using CrossX.Forms.Styles;
 using CrossX.Forms.Values;
 using CrossX.Forms.View;
 using CrossX.Graphics;
+using CrossX.Graphics2D.Text;
 using CrossX.IoC;
 using System;
+using System.Text;
 
 namespace CrossX.Forms
 {
@@ -53,13 +55,7 @@ namespace CrossX.Forms
             navigationView = servicesProvider.GetService<NavigationView>();
 
             var defaultConverters = servicesProvider.GetService<IDefaultConverters>();
-            
-            defaultConverters.RegisterConverter<string, int>(new StringToIntConverter());
-            defaultConverters.RegisterConverter<string, Length>(new StringToLengthConverter());
-            defaultConverters.RegisterConverter<string, float>(new StringToFloatConverter());
-            defaultConverters.RegisterConverter<string, Margin>(new StringToMarginConverter());
-            defaultConverters.RegisterConverter<string, GridLength[]>(new StringToGridRowColumnDefinitionsConverter());
-            defaultConverters.RegisterConverter<string, Color4>(new StringToColorConverter());
+            RegisterConverters(defaultConverters);
 
             if (!contentManager.CanLoadContent<Texture2D>()) contentManager.SetContentLoader(objectFactory.Create<TextureLoader>());
             if (!contentManager.CanLoadContent<Sound>()) contentManager.SetContentLoader(objectFactory.Create<SoundLoader>());
@@ -67,6 +63,20 @@ namespace CrossX.Forms
             var formsStartup = objectFactory.Create<TFormsStartup>();
             formsStartup.Load();
             formsStartup.Run();
+        }
+
+        private static void RegisterConverters(IDefaultConverters defaultConverters)
+        {
+            defaultConverters.RegisterConverter<string, TextSource>(new StringToTextSourceConverter());
+            defaultConverters.RegisterConverter<StringBuilder, TextSource>(new StringBuilderToTextSourceConverter());
+            defaultConverters.RegisterConverter<string, int>(new StringToIntConverter());
+            defaultConverters.RegisterConverter<string, Length>(new StringToLengthConverter());
+            defaultConverters.RegisterConverter<string, float>(new StringToFloatConverter());
+            defaultConverters.RegisterConverter<string, Margin>(new StringToMarginConverter());
+            defaultConverters.RegisterConverter<string, GridLength[]>(new StringToGridRowColumnDefinitionsConverter());
+            defaultConverters.RegisterConverter<string, Color4>(new StringToColorConverter());
+            defaultConverters.RegisterConverter<float, Length>(new UniversalConverter<float, Length>( o=>new Length(0, o)));
+            defaultConverters.RegisterConverter<float, GridLength>(new UniversalConverter<float, GridLength>(o => new GridLength(GridLengthMode.Value, o)));
         }
 
         public void Draw(TimeSpan frameTime)

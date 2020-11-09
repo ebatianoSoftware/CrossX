@@ -30,6 +30,7 @@ namespace CrossX.Forms.Converters
             if(str.EndsWith("*", StringComparison.OrdinalIgnoreCase))
             {
                 str = str.Trim('*');
+                if (string.IsNullOrWhiteSpace(str)) return new GridLength(GridLengthMode.Star, 1);
                 float.TryParse(str, NumberStyles.AllowDecimalPoint | NumberStyles.Float, CultureInfo.InvariantCulture, out var value);
                 return new GridLength(GridLengthMode.Star, value);
             }

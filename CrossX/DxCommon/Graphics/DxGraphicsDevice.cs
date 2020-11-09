@@ -33,7 +33,7 @@ namespace CrossX.DxCommon.Graphics
         private SwapChain1 swapChain;
         private DeviceContext1 D3dContext => d3dDevice.ImmediateContext1;
         private RenderTarget mainRenderTarget;
-        DepthStencilView depthStencilView;
+        
         public SdxDevice1 D3dDevice => d3dDevice;
 
         public RenderTarget RenderTarget { get; private set; }
@@ -219,6 +219,8 @@ namespace CrossX.DxCommon.Graphics
         {
             var context = D3dDevice.ImmediateContext1;
             context.InputAssembler.PrimitiveTopology = GeometryExtensions.PrimitiveTopologyFromPrimitiveType(primitiveType);
+
+            context.OutputMerger.DepthStencilState = DepthClip ? RenderStates.DepthStencilState : RenderStates.NoClipDepthStencilState;
 
             if (ScissorsRect.HasValue)
             {

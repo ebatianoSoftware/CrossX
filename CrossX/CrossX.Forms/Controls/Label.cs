@@ -9,23 +9,26 @@ namespace CrossX.Forms.Controls
         private TextSource text;
         private bool shouldUpdateText = true;
 
-        public Font Font { get => font; set => SetProperty(ref font, value); }
+        public string Font { get => font; set => SetProperty(ref font, value); }
+        public FontStyle FontStyle { get => fontStyle; set => SetProperty(ref fontStyle, value); }
         public TextAlignment TextAlignment { get => textAlignment; set => SetProperty(ref textAlignment, value); }
         public float FontSize { get => fontSize; set => SetProperty(ref fontSize, value); }
-
         public Color4 TextColor { get => textColor; set => SetProperty(ref textColor, value); }
         public Color4 Background { get => background; set => SetProperty(ref background, value); }
 
         public TextSource Text { get => text; set => SetProperty(ref text, value); }
         private TextObject textObject;
-        private Font font;
-        private float fontSize;
+        private string font = "";
+        private float fontSize = 12;
         private TextAlignment textAlignment;
-        private Color4 textColor;
+        private Color4 textColor = Color4.White;
         private Color4 background;
+        private FontStyle fontStyle = FontStyle.Regular;
+        private readonly IFontsContainer fontsContainer;
 
-        public Label(IControlParent parent) : base(parent)
+        public Label(IControlParent parent, IFontsContainer fontsContainer) : base(parent)
         {
+            this.fontsContainer = fontsContainer;
         }
 
         protected override void OnPropertyChanged(string name)
@@ -40,6 +43,7 @@ namespace CrossX.Forms.Controls
                 case nameof(TextAlignment):
                 case nameof(Font):
                 case nameof(FontSize):
+                case nameof(FontStyle):
                     shouldUpdateText = true;
                     break;
             }
@@ -47,36 +51,37 @@ namespace CrossX.Forms.Controls
 
         private void UpdateText()
         {
+            var fontObj = fontsContainer.Find(font, fontSize, fontStyle);
             if (textObject == null)
             {
-                textObject = TextObjectFactory.Instance.CreateText(font, new TextSource(""), fontSize);
+                textObject = TextObjectFactory.Instance.CreateText(fontObj, new TextSource("@"), fontSize);
             }
 
             int maxWidth = (int)ActualWidth;
-            if(Width.IsAuto)
+            if (Width.IsAuto)
             {
                 maxWidth = 0;
             }
 
-            TextObjectFactory.Instance.UpdateText(textObject, text, fontSize, maxWidth, textAlignment, font);
+            TextObjectFactory.Instance.UpdateText(textObject, text, fontSize, maxWidth, textAlignment, fontObj);
+            Parent.InvalidateLayout();
         }
 
         public override Vector2 CalculateSize(RectangleF clientArea)
         {
             var size = base.CalculateSize(clientArea);
 
-            if(Width.IsAuto)
+            if (Width.IsAuto)
             {
-                size.X = textObject.Size.X;
+                size.X = textObject?.Size.X ?? 0;
             }
 
             if (Height.IsAuto)
             {
-                size.Y = textObject.Size.Y;
+                size.Y = textObject?.Size.Y ?? 0;
             }
 
             return size;
-
         }
 
         public override void BeforeUpdate()
@@ -85,7 +90,6 @@ namespace CrossX.Forms.Controls
             {
                 UpdateText();
                 shouldUpdateText = false;
-                ShouldCalculateLayout = true;
             }
             base.BeforeUpdate();
         }

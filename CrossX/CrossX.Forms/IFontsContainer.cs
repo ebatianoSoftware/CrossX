@@ -4,6 +4,6 @@ namespace CrossX.Forms
 {
     public interface IFontsContainer
     {
-        Font Find(string fontFace, float size);
+        Font Find(string fontFace, float size, FontStyle fontStyle);
     }
 }

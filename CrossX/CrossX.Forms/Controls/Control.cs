@@ -23,15 +23,15 @@ namespace CrossX.Forms.Controls
         public bool ShouldCalculateLayout { get; protected set; }
         public IControlParent Parent { get; }
 
-        private Length width;
-        private Length height;
+        private Length width = Length.Auto;
+        private Length height = Length.Auto;
         private float actualWidth;
         private float actualHeight;
         private float actualX;
         private float actualY;
-        private Alignment horizontalAlignment;
-        private Alignment verticalAlignment;
-        private Margin margin;
+        private Alignment horizontalAlignment = Alignment.Stretch;
+        private Alignment verticalAlignment = Alignment.Stretch;
+        private Margin margin = Margin.Zero;
 
         private Dictionary<string, object> customProperties;
 
@@ -48,6 +48,10 @@ namespace CrossX.Forms.Controls
 
             switch (name)
             {
+                case nameof(ActualWidth):
+                case nameof(ActualHeight):
+                case nameof(ActualX):
+                case nameof(ActualY):
                 case nameof(Width):
                 case nameof(Height):
                 case nameof(Margin):

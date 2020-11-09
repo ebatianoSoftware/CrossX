@@ -8,7 +8,7 @@ namespace CrossX.Forms.Controls
     public abstract class ContainerControl : Control, IControlParent
     {
         public Color4 Background { get => background; set => SetProperty(ref background, value); }
-        private Color4 background;
+        private Color4 background = Color4.Transparent;
 
         public IEnumerable<Control> Children => children;
 
@@ -49,6 +49,7 @@ namespace CrossX.Forms.Controls
 
         public override void BeforeUpdate()
         {
+            base.BeforeUpdate();
             for (var idx = 0; idx < children.Count; ++idx)
             {
                 children[idx].BeforeUpdate();

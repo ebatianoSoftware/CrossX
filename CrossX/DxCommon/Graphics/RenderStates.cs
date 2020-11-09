@@ -14,6 +14,8 @@ namespace CrossX.DxCommon.Graphics
     {
         private readonly Device1 d3dDevice;
 
+        public DepthStencilState NoClipDepthStencilState { get; private set; }
+        public DepthStencilState DepthStencilState { get; private set; }
         public RasterizerState1 RasterizerState { get; private set; }
         public RasterizerState1 ClipRasterizerState { get; private set; }
 
@@ -36,6 +38,41 @@ namespace CrossX.DxCommon.Graphics
         {
             InitBlendStates();
             InitRasterizerStates();
+            InitDepthStencilStates();
+        }
+
+        private void InitDepthStencilStates()
+        {
+            var stateDesc = new DepthStencilStateDescription
+            {
+                IsDepthEnabled = true,
+                IsStencilEnabled = true,
+                DepthComparison = Comparison.LessEqual,
+                DepthWriteMask = DepthWriteMask.All,
+                StencilWriteMask = (byte)DepthWriteMask.All,
+                FrontFace = new DepthStencilOperationDescription 
+                {
+                    Comparison = Comparison.Always,
+                    DepthFailOperation = StencilOperation.Increment,
+                    FailOperation = StencilOperation.Keep,
+                    PassOperation = StencilOperation.Keep
+                },
+                BackFace = new DepthStencilOperationDescription
+                {
+                    Comparison = Comparison.Always,
+                    DepthFailOperation = StencilOperation.Decrement,
+                    FailOperation = StencilOperation.Keep,
+                    PassOperation = StencilOperation.Keep
+                }
+            };
+
+            DepthStencilState = new DepthStencilState(d3dDevice, stateDesc);
+            stateDesc.IsStencilEnabled = false;
+            stateDesc.IsDepthEnabled = false;
+
+
+
+            NoClipDepthStencilState = new DepthStencilState(d3dDevice, stateDesc);
         }
 
         private void InitBlendStates()

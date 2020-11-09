@@ -20,8 +20,8 @@
 
     public class Grid : ContainerControl
     {
-        public GridLength[] ColumnDefinitions { get; set; }
-        public GridLength[] RowDefinitions { get; set; }
+        public GridLength[] ColumnDefinitions { get; set; } = new GridLength[] { new GridLength(GridLengthMode.Star, 1) };
+        public GridLength[] RowDefinitions { get; set; } = new GridLength[] { new GridLength(GridLengthMode.Star, 1) };
         
         public float[] ActualColumnWidth { get; }
         public float[] ActualColumnHeight { get; }

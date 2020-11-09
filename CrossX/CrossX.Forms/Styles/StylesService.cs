@@ -24,14 +24,17 @@ namespace CrossX.Forms.Styles
 
         public void ApplyStyle(XNode node)
         {
-            var names = node.Attribute("Class").Split(',',' ');
-            node.RemoveAttribute("Class");
-
-            foreach(var name in names)
+            if (node.HasAttribute("Class"))
             {
-                if(styles.TryGetValue( '.'+ name, out var style))
+                var names = node.Attribute("Class").Split(',', ' ');
+                node.RemoveAttribute("Class");
+
+                foreach (var name in names)
                 {
-                    ApplyStyle(node, style);
+                    if (styles.TryGetValue('.' + name, out var style))
+                    {
+                        ApplyStyle(node, style);
+                    }
                 }
             }
             
