@@ -2,6 +2,7 @@
 {
     public struct Margin
     {
+        public static readonly Margin Zero = new Margin(0, 0, 0, 0);
         public float Left { get; }
         public float Top { get; }
         public float Right { get; }

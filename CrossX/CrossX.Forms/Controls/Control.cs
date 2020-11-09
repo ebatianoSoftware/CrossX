@@ -17,8 +17,8 @@ namespace CrossX.Forms.Controls
         public float ActualWidth { get => actualWidth; private set => SetProperty(ref actualWidth, value); }
         public float ActualHeight { get => actualHeight; private set => SetProperty(ref actualHeight, value); }
 
-        public float ActualX { get => actualX; set => SetProperty(ref actualX, value); }
-        public float ActualY { get => actualY; set => SetProperty(ref actualY, value); }
+        public float ActualX { get => actualX; private set => SetProperty(ref actualX, value); }
+        public float ActualY { get => actualY; private set => SetProperty(ref actualY, value); }
 
         public bool ShouldCalculateLayout { get; protected set; }
         public IControlParent Parent { get; }
@@ -66,14 +66,14 @@ namespace CrossX.Forms.Controls
             }
         }
 
-        public virtual void AddChild(Control control) => throw new NotSupportedException();
+        public void InvalidateLayout()
+        {
+            ShouldCalculateLayout = true;
+        }
 
         protected virtual void CalculateLayout()
         {
-            var size = CalculateSize(Parent.ClientArea);
-            var position = CalculatePosition(Parent.ClientArea, size);
-
-            PositionControl(position, size);
+            ShouldCalculateLayout = false;
         }
 
         private RectangleF ClientAreaWithMargin(RectangleF clientArea)
@@ -130,17 +130,12 @@ namespace CrossX.Forms.Controls
             return new Vector2(pw, ph);
         }
 
-        public void PositionControl(Vector2 position, Vector2 size, bool resetCalculateFlag = true)
+        public void PositionControl(Vector2 position, Vector2 size)
         {
             ActualX = position.X;
             ActualY = position.Y;
             ActualWidth = size.X;
             ActualHeight = size.Y;
-
-            if (resetCalculateFlag)
-            {
-                ShouldCalculateLayout = false;
-            }
         }
 
         internal void SetCustomProperty(string name, object value)

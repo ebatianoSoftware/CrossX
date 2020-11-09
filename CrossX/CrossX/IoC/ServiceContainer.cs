@@ -16,6 +16,15 @@ namespace CrossX.IoC
             this.serviceProvider = serviceProvider;
         }
 
+        public ServiceContainer(IServicesProvider serviceProvider, Dictionary<Type, Type> typesMapping)
+        {
+            this.typesMapping = typesMapping;
+            this.serviceProvider = serviceProvider;
+            instances = new Dictionary<Type, object>();
+        }
+
+        public void RegisterInstance(Type type, object instance) => instances.Add(type, instance);
+
         public object Create(Type type, params object[] parameters)
         {
             if (!FindMapping(type, out var implType)) implType = type;

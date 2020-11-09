@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CrossX.IoC
 {
-    public class ScopeBuilder: IServicesProvider, IScopeBuilder
+    public class ScopeBuilder: IScopeBuilder
     {
         public class Registration
         {
@@ -30,12 +30,10 @@ namespace CrossX.IoC
         }
 
         private readonly List<Registration> registrations = new List<Registration>();
-        private readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
 
         private IServicesProvider parentServiceProvider;
-
         private bool builded = false;
-        
+
         public ScopeBuilder WithParent(IServicesProvider serviceProvider)
         {
             parentServiceProvider = serviceProvider;
@@ -60,6 +58,11 @@ namespace CrossX.IoC
         {
             registrations.Last().As(typeof(TType));
             return this;
+        }
+
+        public bool HasRegisteredInstance(Type type)
+        {
+            return registrations.Find(o => o.Singleton && o.ResolutionTypes.Contains(type)) != null;
         }
 
         public ScopeBuilder As(Type type)
@@ -93,47 +96,44 @@ namespace CrossX.IoC
 
             foreach (var reg in registrations)
             {
-                if (reg.Singleton)
+                if (reg.Type != null)
                 {
                     foreach (var type in reg.ResolutionTypes)
-                    {
-                        GetService(type);
-                    }
-                }
-                else if(reg.Type != null)
-                {
-                    foreach(var type in reg.ResolutionTypes)
                     {
                         typesMapping.Add(type, reg.Type);
                     }
                 }
             }
+            var servicesContainer = new ServiceContainer(parentServiceProvider, typesMapping);
+
+            foreach (var reg in registrations)
+            {
+                if (reg.Singleton)
+                {
+                    foreach (var type in reg.ResolutionTypes)
+                    {
+                        if (!TryRegisterInstance(servicesContainer, type)) throw new Exception();
+                    }
+                }
+            }
 
             builded = true;
-            return new ServiceContainer(typesMapping, services, parentServiceProvider);
+            return servicesContainer;
         }
 
-        public object GetService(Type serviceType)
-        {
-            if (TryResolveInstance(serviceType, out var instance)) return instance;
-            throw new Exception();
-        }
+       
 
-        public TService GetService<TService>() => (TService)GetService(typeof(TService));
-
-        public bool TryResolveInstance(Type serviceType, out object instance)
+        private bool TryRegisterInstance(ServiceContainer container, Type serviceType)
         {
             if (builded) throw new InvalidOperationException();
 
             if (serviceType == typeof(IServicesProvider))
             {
-                instance = this;
-                return true;
+                return false;
             }
 
-            if (services.TryGetValue(serviceType, out var service) && service != null)
+            if (container.TryResolveInstance(serviceType, out var service) && service != null)
             {
-                instance = service;
                 return true;
             }
 
@@ -143,42 +143,22 @@ namespace CrossX.IoC
                 {
                     if (reg.Instance != null)
                     {
-                        services[serviceType] = reg.Instance;
-                        instance = reg.Instance;
+                        container.RegisterInstance(serviceType, reg.Instance);
                         return true;
                     }
 
                     if (reg.Type != null)
                     {
-                        services.Add(serviceType, null);
-                        service = DynamicActivator.Create(reg.Type, this);
+                        service = DynamicActivator.Create(reg.Type, container);
 
                         foreach (var type in reg.ResolutionTypes)
                         {
-                            services[type] = service;
+                            container.RegisterInstance(type, service);
                         }
-                        instance = service;
                         return true;
                     }
                 }
             }
-
-            if (parentServiceProvider != null)
-            {
-                return parentServiceProvider.TryResolveInstance(serviceType, out instance);
-            }
-            instance = null;
-            return false;
-        }
-
-        public bool TryResolveInstance<TType>(out TType instance)
-        {
-            if (TryResolveInstance(typeof(TType), out var obj))
-            {
-                instance = (TType)obj;
-                return true;
-            }
-            instance = default;
             return false;
         }
 

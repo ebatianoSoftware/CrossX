@@ -50,7 +50,8 @@ namespace CrossX.Forms.View
             if (node.Tag != "Page") throw new InvalidOperationException();
 
             var view = objectFactory.Create<View>(vm);
-            view.Root = view.Load(node.Nodes[0]);
+            view.Root = view.Load(node.Nodes[0], view);
+            view.InvalidateLayout();
 
             foreach (var cv in views)
             {
