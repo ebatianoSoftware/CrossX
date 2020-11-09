@@ -19,34 +19,47 @@ namespace CrossX.Forms.Xml
 
         public List<XNode> Nodes { get; private set; }
 
-        readonly Dictionary<string, string> _attributes = new Dictionary<string, string>();
+        readonly Dictionary<string, string> attributes = new Dictionary<string, string>();
 
-        readonly XNode _parent;
+        readonly XNode parent;
 
         internal XNode(string tag)
         {
-            _parent = null;
+            parent = null;
             Tag = tag;
             Nodes = new List<XNode>();
+        }
+
+        public void RemoveAttribute(string key)
+        {
+            attributes.Remove(key);
         }
 
         public XNode(XNode parent, string tag)
         {
-            _parent = parent;
+            this.parent = parent;
             Tag = tag;
             Nodes = new List<XNode>();
         }
 
-        public XNode AddChildNode(string tag)
+        public XNode(XNode parent, string tag, string @namespace)
         {
-            var node = new XNode(this, tag);
+            this.parent = parent;
+            Namespace = @namespace;
+            Tag = tag;
+            Nodes = new List<XNode>();
+        }
+
+        public XNode AddChildNode(string tag, string @namespace)
+        {
+            var node = new XNode(this, tag, @namespace);
             Nodes.Add(node);
             return node;
         }
 
         private XNode(XNode parent, int lineNumber)
         {
-            _parent = parent;
+            this.parent = parent;
             LineNumber = lineNumber;
             Nodes = new List<XNode>();
         }
@@ -55,7 +68,7 @@ namespace CrossX.Forms.Xml
         {
             namespaces = new Dictionary<string, string>(namespaces);
 
-            _parent = parent;
+            this.parent = parent;
 
             while (reader.NodeType != XmlNodeType.Element)
             {
@@ -107,7 +120,7 @@ namespace CrossX.Forms.Xml
                             key = string.Format("{0}:{1}", namespaces[vals[0]], vals[1]);
                         }
 
-                        _attributes.Add(key, reader.Value);
+                        attributes.Add(key, reader.Value);
                     }
                 }
             }
@@ -158,19 +171,19 @@ namespace CrossX.Forms.Xml
         public void AddAttribute(string name, string value)
         {
             if (value == null) return;
-            _attributes.Add(name, value);
+            attributes.Add(name, value);
         }
 
         public XNode EnucleateAttributes(string attribPrefix)
         {
-            var node = new XNode(_parent, LineNumber);
+            var node = new XNode(parent, LineNumber);
             int prefixLength = attribPrefix.Length;
 
-            foreach (var attrib in _attributes)
+            foreach (var attrib in attributes)
             {
                 if (attrib.Key.StartsWith(attribPrefix, StringComparison.InvariantCulture))
                 {
-                    node._attributes.Add(attrib.Key.Substring(prefixLength), attrib.Value);
+                    node.attributes.Add(attrib.Key.Substring(prefixLength), attrib.Value);
                 }
             }
 
@@ -210,12 +223,12 @@ namespace CrossX.Forms.Xml
 
         public string Attribute(string name)
         {
-            return _attributes.TryGetValue(name, out var value) ? value : null;
+            return attributes.TryGetValue(name, out var value) ? value : null;
         }
 
         public bool HasAttribute(string name)
         {
-            return _attributes.ContainsKey(name);
+            return attributes.ContainsKey(name);
         }
 
         public string NodeInfo => $"{LineNumber}";
@@ -230,7 +243,7 @@ namespace CrossX.Forms.Xml
         {
             get
             {
-                return _attributes.Keys;
+                return attributes.Keys;
             }
         }
 
@@ -250,7 +263,7 @@ namespace CrossX.Forms.Xml
         {
             writer.WriteStartElement(Tag, Namespace);
 
-            foreach (var attr in _attributes)
+            foreach (var attr in attributes)
             {
                 writer.WriteAttributeString(attr.Key, attr.Value);
             }

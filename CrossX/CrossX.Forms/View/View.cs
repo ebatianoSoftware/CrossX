@@ -1,5 +1,6 @@
 ﻿using CrossX.Forms.Controls;
 using CrossX.Forms.Converters;
+using CrossX.Forms.Styles;
 using CrossX.Forms.Xml;
 using CrossX.Graphics;
 using CrossX.Graphics2D;
@@ -15,7 +16,6 @@ namespace CrossX.Forms.View
     {
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
-        private readonly IServicesProvider servicesProvider;
         private readonly IDefaultConverters defaultConverters;
 
         public SpriteBatch SpriteBatch { get; }
@@ -31,13 +31,12 @@ namespace CrossX.Forms.View
 
         private bool shouldCalculateLayout;
 
-        public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IServicesProvider servicesProvider, IDefaultConverters defaultConverters, FormsViewModel viewModel)
+        public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IDefaultConverters defaultConverters, FormsViewModel viewModel)
         {
             SpriteBatch = objectFactory.Create<SpriteBatch>();
             PrimitiveBatch = objectFactory.Create<PrimitiveBatch>();
             this.graphicsDevice = graphicsDevice;
             this.objectFactory = objectFactory;
-            this.servicesProvider = servicesProvider;
             this.defaultConverters = defaultConverters;
             ViewModel = viewModel;
         }
@@ -125,7 +124,6 @@ namespace CrossX.Forms.View
             var ns = node.Namespace.Replace("clr-namespace:", "").Split(',');
             var name = node.Tag;
             return Type.GetType(ns[0] + '.' + name + ',' + ns[1]);
-
         }
 
         public void InvalidateLayout()

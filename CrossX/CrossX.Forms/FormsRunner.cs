@@ -2,6 +2,7 @@
 using CrossX.Content;
 using CrossX.Content.Loaders;
 using CrossX.Core;
+using CrossX.Forms.Controls;
 using CrossX.Forms.Converters;
 using CrossX.Forms.Services;
 using CrossX.Forms.Styles;
@@ -36,9 +37,9 @@ namespace CrossX.Forms
 
             scopeBuilder
                 .WithType<DefaultConverters>().As<IDefaultConverters>().AsSingleton()
+                .WithType<StylesService>().As<IStylesService>().As<IStylesServiceEx>().AsSingleton()
                 .WithType<NavigationView>().As<INavigation>().AsSelf().AsSingleton()
                 .WithType<FontsContainer>().As<IFontsContainer>().As<IFontsLoader>().AsSingleton()
-                .WithType<StylesService>().As<IStylesService>().AsSingleton()
                 .WithType<Application>().As<IApplication>().AsSingleton();
 
             if (!servicesProvider.TryResolveInstance(out IContentManager contentManager) && !scopeBuilder.HasRegisteredInstance(typeof(IContentManager)))
@@ -52,8 +53,13 @@ namespace CrossX.Forms
             navigationView = servicesProvider.GetService<NavigationView>();
 
             var defaultConverters = servicesProvider.GetService<IDefaultConverters>();
+            
             defaultConverters.RegisterConverter<string, int>(new StringToIntConverter());
             defaultConverters.RegisterConverter<string, Length>(new StringToLengthConverter());
+            defaultConverters.RegisterConverter<string, float>(new StringToFloatConverter());
+            defaultConverters.RegisterConverter<string, Margin>(new StringToMarginConverter());
+            defaultConverters.RegisterConverter<string, GridLength[]>(new StringToGridRowColumnDefinitionsConverter());
+            defaultConverters.RegisterConverter<string, Color4>(new StringToColorConverter());
 
             if (!contentManager.CanLoadContent<Texture2D>()) contentManager.SetContentLoader(objectFactory.Create<TextureLoader>());
             if (!contentManager.CanLoadContent<Sound>()) contentManager.SetContentLoader(objectFactory.Create<SoundLoader>());
