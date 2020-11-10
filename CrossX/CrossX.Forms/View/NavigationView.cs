@@ -21,6 +21,8 @@ namespace CrossX.Forms.View
         private Stack<FormsViewModel> popupNavigations = new Stack<FormsViewModel>();
         private Stack<FormsViewModel> viewModels = new Stack<FormsViewModel>();
 
+        private Dictionary<Type, XNode> preloadedNodes = new Dictionary<Type, XNode>();
+
         public NavigationView(IFilesRepository filesRepository, IObjectFactory objectFactory, IStylesServiceEx stylesService)
         {
             this.filesRepository = filesRepository;
@@ -37,20 +39,28 @@ namespace CrossX.Forms.View
             AddView(viewModel);
         }
 
-        private void AddView(FormsViewModel vm)
+        private XNode LoadViewForVm(FormsViewModel vm)
         {
+            if (preloadedNodes.TryGetValue(vm.GetType(), out var node)) return node;
+
             var attr = vm.GetType().GetCustomAttribute<ViewAttribute>();
             if (attr is null) throw new InvalidOperationException();
 
-            XNode node;
             using (var stream = filesRepository.Open(attr.Path))
             {
                 var xmlReader = XmlReader.Create(stream);
                 node = XNode.ReadXml(xmlReader);
                 stylesService.ApplyStyle(node);
             }
-
             if (node.Tag != "Page") throw new InvalidOperationException();
+
+            preloadedNodes.Add(vm.GetType(), node);
+            return node;
+        }
+
+        private void AddView(FormsViewModel vm)
+        {
+            var node = LoadViewForVm(vm);
 
             var view = objectFactory.Create<View>(vm);
             view.Root = view.Load(node.Nodes[0], view);

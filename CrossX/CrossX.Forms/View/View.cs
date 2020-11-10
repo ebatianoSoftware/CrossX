@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace CrossX.Forms.View
 {
-    internal class View: IControlParent, IControlsLoader
+    internal class View: IControlParent, IControlsLoader, IDisposable
     {
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
@@ -30,6 +30,8 @@ namespace CrossX.Forms.View
         public FormsViewModel ViewModel { get; }
 
         private bool shouldCalculateLayout;
+
+        private Size clientSize = Size.Empty;
 
         public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IDefaultConverters defaultConverters, FormsViewModel viewModel)
         {
@@ -102,13 +104,19 @@ namespace CrossX.Forms.View
 
         public void Update(TimeSpan frameTime)
         {
+            if(clientSize != graphicsDevice.CurrentTargetSize)
+            {
+                shouldCalculateLayout = true;
+            }
             if(shouldCalculateLayout)
             {
                 var screenSize = graphicsDevice.CurrentTargetSize;
                 var clientArea = new RectangleF(0, 0, screenSize.Width, screenSize.Height);
-                var size = Root.CalculateSize(clientArea);
+                Root.CalculateSizeWithMargins(clientArea, out var size, out var _);
                 var position = Root.CalculatePosition(clientArea, size);
                 Root.PositionControl(position, size);
+                clientSize = screenSize;
+                shouldCalculateLayout = false;
             }
             Root.BeforeUpdate();
             Root.Update(frameTime);
@@ -129,6 +137,11 @@ namespace CrossX.Forms.View
         public void InvalidateLayout()
         {
             shouldCalculateLayout = true;
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

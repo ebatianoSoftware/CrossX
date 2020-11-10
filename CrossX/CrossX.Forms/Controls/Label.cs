@@ -1,4 +1,5 @@
-﻿using CrossX.Graphics2D.Text;
+﻿using CrossX.Forms.Values;
+using CrossX.Graphics2D.Text;
 using System;
 using System.Drawing;
 
@@ -29,6 +30,8 @@ namespace CrossX.Forms.Controls
         public Label(IControlParent parent, IFontsContainer fontsContainer) : base(parent)
         {
             this.fontsContainer = fontsContainer;
+            VerticalAlignment = Alignment.Start;
+            HorizontalAlignment = Alignment.Start;
         }
 
         protected override void OnPropertyChanged(string name)
@@ -58,7 +61,7 @@ namespace CrossX.Forms.Controls
             }
 
             int maxWidth = (int)ActualWidth;
-            if (Width.IsAuto)
+            if (Width.IsAuto && HorizontalAlignment != Alignment.Stretch)
             {
                 maxWidth = 0;
             }
@@ -67,18 +70,20 @@ namespace CrossX.Forms.Controls
             Parent.InvalidateLayout();
         }
 
-        public override Vector2 CalculateSize(RectangleF clientArea)
+        protected override Vector2 CalculateSize(RectangleF clientArea)
         {
             var size = base.CalculateSize(clientArea);
 
-            if (Width.IsAuto)
+            clientArea = ClientAreaWithMargin(clientArea);
+
+            if (Width.IsAuto && clientArea.Width > 0 && HorizontalAlignment != Alignment.Stretch)
             {
-                size.X = textObject?.Size.X ?? 0;
+                size.X = textObject?.Size.X ?? size.X;
             }
 
-            if (Height.IsAuto)
+            if (Height.IsAuto && clientArea.Height > 0 && VerticalAlignment != Alignment.Stretch)
             {
-                size.Y = textObject?.Size.Y ?? 0;
+                size.Y = textObject?.Size.Y ?? size.Y;
             }
 
             return size;

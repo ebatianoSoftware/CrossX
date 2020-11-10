@@ -80,13 +80,19 @@ namespace CrossX.Forms.Controls
             ShouldCalculateLayout = false;
         }
 
-        private RectangleF ClientAreaWithMargin(RectangleF clientArea)
+        protected RectangleF ClientAreaWithMargin(RectangleF clientArea)
         {
             clientArea.X += margin.Left;
             clientArea.Y += margin.Top;
             clientArea.Width -= margin.Left + margin.Right;
             clientArea.Height -= margin.Top + margin.Bottom;
             return clientArea;
+        }
+
+        public void CalculateSizeWithMargins(RectangleF clientArea, out Vector2 size, out Vector2 sizeWithMargins)
+        {
+            size = CalculateSize(clientArea);
+            sizeWithMargins = new Vector2(size.X + margin.Left + margin.Right, size.Y + margin.Top + margin.Bottom);
         }
 
         public Vector2 CalculatePosition(RectangleF clientArea, Vector2 size)
@@ -121,7 +127,7 @@ namespace CrossX.Forms.Controls
             return new Vector2(px, py);
         }
 
-        public virtual Vector2 CalculateSize(RectangleF clientArea)
+        protected virtual Vector2 CalculateSize(RectangleF clientArea)
         {
             clientArea = ClientAreaWithMargin(clientArea);
 
@@ -130,6 +136,9 @@ namespace CrossX.Forms.Controls
 
             if (horizontalAlignment == Alignment.Stretch) pw = clientArea.Width;
             if (verticalAlignment == Alignment.Stretch) ph = clientArea.Height;
+
+            pw = Math.Max(0, pw);
+            ph = Math.Max(0, ph);
 
             return new Vector2(pw, ph);
         }

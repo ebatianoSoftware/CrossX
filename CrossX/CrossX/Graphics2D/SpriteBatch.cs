@@ -219,6 +219,7 @@ namespace CrossX.Graphics2D
 
         public void DrawText(TextObject text, Vector2 position, Color4 color)
         {
+            graphicsDevice.Flush(this);
             for (var idx = 0; idx < text.Vertices.Count; ++idx)
             {
                 var vertices = text.Vertices[idx];
@@ -245,6 +246,7 @@ namespace CrossX.Graphics2D
         private void AddVertex(Vector2 position, Vector2 coordinates, Color4 color)
         {
             SetVertex(currentIndex++, position, coordinates, color);
+            if ((currentIndex % 3) == 0 && currentIndex > buffer.Length - 3) Flush();
         }
 
         protected abstract void SetVertex(int index, Vector2 position, Vector2 coordinates, Color4 color);

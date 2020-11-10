@@ -36,7 +36,7 @@
             ShouldCalculateLayout = false;
             for (var idx = 0; idx < children.Count; ++idx)
             {
-                var size = children[idx].CalculateSize(ClientArea);
+                children[idx].CalculateSizeWithMargins(ClientArea, out var size, out var sizeWithMargins);
                 var position = children[idx].CalculatePosition(ClientArea, size);
                 children[idx].PositionControl(position, size);
             }
