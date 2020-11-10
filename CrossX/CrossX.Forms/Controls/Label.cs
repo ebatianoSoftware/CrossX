@@ -70,18 +70,21 @@ namespace CrossX.Forms.Controls
             Parent.InvalidateLayout();
         }
 
-        protected override Vector2 CalculateSize(RectangleF clientArea)
+        public override Vector2 CalculateSize(RectangleF clientArea, bool includeMargins)
         {
-            var size = base.CalculateSize(clientArea);
+            var size = base.CalculateSize(clientArea, includeMargins);
 
-            clientArea = ClientAreaWithMargin(clientArea);
+            if (includeMargins)
+            {
+                clientArea = ClientAreaWithMargin(clientArea);
+            }
 
-            if (Width.IsAuto && clientArea.Width > 0 && HorizontalAlignment != Alignment.Stretch)
+            if (Width.IsAuto && HorizontalAlignment != Alignment.Stretch)
             {
                 size.X = textObject?.Size.X ?? size.X;
             }
 
-            if (Height.IsAuto && clientArea.Height > 0 && VerticalAlignment != Alignment.Stretch)
+            if (Height.IsAuto && VerticalAlignment != Alignment.Stretch)
             {
                 size.Y = textObject?.Size.Y ?? size.Y;
             }
@@ -106,6 +109,7 @@ namespace CrossX.Forms.Controls
                 Parent.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
             }
 
+            Parent.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
             Parent.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY), textColor);
         }
     }

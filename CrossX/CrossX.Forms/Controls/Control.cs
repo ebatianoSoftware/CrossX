@@ -91,7 +91,7 @@ namespace CrossX.Forms.Controls
 
         public void CalculateSizeWithMargins(RectangleF clientArea, out Vector2 size, out Vector2 sizeWithMargins)
         {
-            size = CalculateSize(clientArea);
+            size = CalculateSize(clientArea, true);
             sizeWithMargins = new Vector2(size.X + margin.Left + margin.Right, size.Y + margin.Top + margin.Bottom);
         }
 
@@ -127,9 +127,12 @@ namespace CrossX.Forms.Controls
             return new Vector2(px, py);
         }
 
-        protected virtual Vector2 CalculateSize(RectangleF clientArea)
+        public virtual Vector2 CalculateSize(RectangleF clientArea, bool includeMargins)
         {
-            clientArea = ClientAreaWithMargin(clientArea);
+            if (includeMargins)
+            {
+                clientArea = ClientAreaWithMargin(clientArea);
+            }
 
             var pw = width.Value + clientArea.Width * width.Percent;
             var ph = height.Value + clientArea.Height * height.Percent;

@@ -51,7 +51,7 @@ namespace CrossX.Forms.Converters
                         var sym = symbol.Trim('%');
                         if (int.TryParse(sym, out var per))
                         {
-                            percent += sign * percent / 100.0f;
+                            percent += sign * per / 100.0f;
                         }
                     }
                     else if (float.TryParse(symbol, NumberStyles.AllowDecimalPoint | NumberStyles.Float, CultureInfo.InvariantCulture, out var floatVal))
