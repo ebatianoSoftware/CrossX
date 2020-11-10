@@ -1,14 +1,12 @@
 ﻿using CrossX.Graphics2D;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace CrossX.Forms.Controls
 {
     public abstract class ContainerControl : Control, IControlParent
     {
-        public Color4 Background { get => background; set => SetProperty(ref background, value); }
-        private Color4 background = Color4.Transparent;
+        
 
         public IEnumerable<Control> Children => children;
 
@@ -28,10 +26,7 @@ namespace CrossX.Forms.Controls
 
         public override void Draw(TimeSpan frameTime)
         {
-            if (background.A > 0)
-            {
-                Parent.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
-            }
+            base.Draw(frameTime);
 
             for (var idx = 0; idx < children.Count; ++idx)
             {

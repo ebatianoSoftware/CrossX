@@ -8,6 +8,9 @@ namespace CrossX.Forms.Controls
     public abstract class Control : ObservableDataModel
     {
         public string Id { get; internal set; }
+        public Color4 Background { get => background; set => SetProperty(ref background, value); }
+        private Color4 background = Color4.Transparent;
+
         public Length Width { get => width; set => SetProperty(ref width, value); }
         public Length Height { get => height; set => SetProperty(ref height, value); }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
@@ -172,6 +175,12 @@ namespace CrossX.Forms.Controls
 
         public virtual void Update(TimeSpan frameTime) {}
 
-        public virtual void Draw(TimeSpan frameTime) {}
+        public virtual void Draw(TimeSpan frameTime) 
+        {
+            if (background.A > 0)
+            {
+                Parent.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
+            }
+        }
     }
 }
