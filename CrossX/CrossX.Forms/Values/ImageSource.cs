@@ -11,6 +11,12 @@ namespace CrossX.Forms.Values
             Texture = texture;
         }
 
+        public ImageSource(Texture2D texture)
+        {
+            Texture = texture;
+            SourceRect = new Rectangle(0,0,texture.Width, texture.Height);
+        }
+
         public Rectangle SourceRect { get; }
         public Texture2D Texture { get; }
     }

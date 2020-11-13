@@ -55,7 +55,7 @@ namespace CrossX.Forms
             navigationView = servicesProvider.GetService<NavigationView>();
 
             var defaultConverters = servicesProvider.GetService<IDefaultConverters>();
-            RegisterConverters(defaultConverters);
+            RegisterConverters(defaultConverters, objectFactory);
 
             if (!contentManager.CanLoadContent<Texture2D>()) contentManager.SetContentLoader(objectFactory.Create<TextureLoader>());
             if (!contentManager.CanLoadContent<Sound>()) contentManager.SetContentLoader(objectFactory.Create<SoundLoader>());
@@ -65,7 +65,7 @@ namespace CrossX.Forms
             formsStartup.Run();
         }
 
-        private static void RegisterConverters(IDefaultConverters defaultConverters)
+        private static void RegisterConverters(IDefaultConverters defaultConverters, IObjectFactory objectFactory )
         {
             defaultConverters.RegisterConverter<string, TextSource>(new StringToTextSourceConverter());
             defaultConverters.RegisterConverter<StringBuilder, TextSource>(new StringBuilderToTextSourceConverter());
@@ -77,6 +77,8 @@ namespace CrossX.Forms
             defaultConverters.RegisterConverter<string, Color4>(new StringToColorConverter());
             defaultConverters.RegisterConverter<float, Length>(new UniversalConverter<float, Length>( o=>new Length(0, o)));
             defaultConverters.RegisterConverter<float, GridLength>(new UniversalConverter<float, GridLength>(o => new GridLength(GridLengthMode.Value, o)));
+
+            defaultConverters.RegisterConverter<string, ImageSource>(objectFactory.Create<StringToImageSourceConverter>());
         }
 
         public void Draw(TimeSpan frameTime)

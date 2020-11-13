@@ -84,7 +84,7 @@ namespace CrossX.Forms.View
                     else
                     {
                         var converter = defaultConverters.FindConverter(typeof(string), prop.PropertyType);
-                        if (converter == null) throw new InvalidProgramException();
+                        if (converter == null) throw new InvalidProgramException($"Cannot find converter string->{prop.PropertyType.Name}");
                         value = converter.Convert(valueStr);
                     }
 
