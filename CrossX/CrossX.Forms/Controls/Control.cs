@@ -120,7 +120,7 @@ namespace CrossX.Forms.Controls
             sizeWithMargins = new Vector2(size.X + margin.Left + margin.Right, size.Y + margin.Top + margin.Bottom);
         }
 
-        public Vector2 CalculatePosition(RectangleF clientArea, Vector2 size)
+        public virtual Vector2 CalculatePosition(RectangleF clientArea, Vector2 size)
         {
             clientArea = ClientAreaWithMargin(clientArea);
 
