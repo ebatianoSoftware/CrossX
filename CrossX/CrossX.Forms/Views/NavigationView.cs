@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 
-namespace CrossX.Forms.View
+namespace CrossX.Forms.Views
 {
     internal class NavigationView : INavigation
     {
@@ -63,7 +63,7 @@ namespace CrossX.Forms.View
             var node = LoadViewForVm(vm);
 
             var view = objectFactory.Create<View>(vm);
-            view.Root = view.Load(node.Nodes[0], view);
+            view.Root = view.Load(node.Nodes[0]);
             view.InvalidateLayout();
 
             foreach (var cv in views)

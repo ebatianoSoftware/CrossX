@@ -22,9 +22,9 @@ namespace CrossX.Forms.Controls
             Stretch = Stretch.Uniform;
         }
 
-        public override void Draw(TimeSpan frameTime)
+        protected override void OnDraw(TimeSpan frameTime)
         {
-            base.Draw(frameTime);
+            base.OnDraw(frameTime);
             if (Source.Texture == null) return;
 
             var rect = Source.SourceRect;

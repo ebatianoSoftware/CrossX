@@ -1,11 +1,12 @@
-﻿using CrossX.Forms.Values;
+﻿using CrossX.Forms.Binding;
+using CrossX.Forms.Values;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace CrossX.Forms.Controls
 {
-    public abstract class Control : ObservableDataModel
+    public abstract class Control : ObservableDataModel, IDisposable
     {
         public string Id { get; internal set; }
         public Color4 Background { get => background; set => SetProperty(ref background, value); }
@@ -16,12 +17,23 @@ namespace CrossX.Forms.Controls
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Margin Margin { get => margin; set => SetProperty(ref margin, value); }
+        public bool IsVisible { get => isVisible; set => SetProperty(ref isVisible, value); }
 
         public float ActualWidth { get => actualWidth; private set => SetProperty(ref actualWidth, value); }
         public float ActualHeight { get => actualHeight; private set => SetProperty(ref actualHeight, value); }
-
         public float ActualX { get => actualX; private set => SetProperty(ref actualX, value); }
         public float ActualY { get => actualY; private set => SetProperty(ref actualY, value); }
+        public virtual object DataContext
+        {
+            get => dataContext;
+            set
+            {
+                if (SetProperty(ref dataContext, value))
+                {
+                    RecreateBindings();
+                }
+            }
+        }
 
         public bool ShouldCalculateLayout { get; protected set; }
         public IControlParent Parent { get; }
@@ -37,12 +49,22 @@ namespace CrossX.Forms.Controls
         private Margin margin = Margin.Zero;
 
         private Dictionary<string, object> customProperties;
+        private object dataContext;
+        private bool isVisible = true;
+
+        public BindingService BindingService { get; }
 
         protected RectangleF ClientArea => new RectangleF(actualX, actualY, actualWidth, actualHeight);
 
         protected Control(IControlParent parent)
         {
             Parent = parent;
+            BindingService = parent.ObjectFactory.Create<BindingService>(this);
+        }
+
+        public virtual void RecreateBindings()
+        {
+            BindingService.RecreateValues();
         }
 
         protected override void OnPropertyChanged(string name)
@@ -140,8 +162,8 @@ namespace CrossX.Forms.Controls
             var pw = width.Value + clientArea.Width * width.Percent;
             var ph = height.Value + clientArea.Height * height.Percent;
 
-            if (horizontalAlignment == Alignment.Stretch) pw = clientArea.Width;
-            if (verticalAlignment == Alignment.Stretch) ph = clientArea.Height;
+            if (horizontalAlignment == Alignment.Stretch && clientArea.Width >=0 ) pw = clientArea.Width;
+            if (verticalAlignment == Alignment.Stretch && clientArea.Height >= 0) ph = clientArea.Height;
 
             pw = Math.Max(0, pw);
             ph = Math.Max(0, ph);
@@ -159,7 +181,7 @@ namespace CrossX.Forms.Controls
 
         internal void SetCustomProperty(string name, object value)
         {
-            if(customProperties == null)
+            if (customProperties == null)
             {
                 customProperties = new Dictionary<string, object>();
             }
@@ -173,14 +195,25 @@ namespace CrossX.Forms.Controls
             return default;
         }
 
-        public virtual void Update(TimeSpan frameTime) {}
+        public virtual void Update(TimeSpan frameTime) { }
 
-        public virtual void Draw(TimeSpan frameTime) 
+        public void Draw(TimeSpan frameTime)
+        {
+            if (!IsVisible) return;
+            OnDraw(frameTime);
+        }
+
+        protected virtual void OnDraw(TimeSpan frameTime)
         {
             if (background.A > 0)
             {
                 Parent.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
             }
+        }
+
+        public virtual void Dispose()
+        {
+            BindingService.Dispose();
         }
     }
 }

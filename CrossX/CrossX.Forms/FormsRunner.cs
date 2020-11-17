@@ -4,10 +4,11 @@ using CrossX.Content.Loaders;
 using CrossX.Core;
 using CrossX.Forms.Controls;
 using CrossX.Forms.Converters;
+using CrossX.Forms.Converters.Arythmetic;
 using CrossX.Forms.Services;
 using CrossX.Forms.Styles;
 using CrossX.Forms.Values;
-using CrossX.Forms.View;
+using CrossX.Forms.Views;
 using CrossX.Graphics;
 using CrossX.Graphics2D.Text;
 using CrossX.IoC;
@@ -16,13 +17,14 @@ using System.Text;
 
 namespace CrossX.Forms
 {
-    public class FormsRunner<TServicesInitializer, TFormsStartup> : IApp where TFormsStartup: class, IFormsStartup where TServicesInitializer: class, IServicesInitializer
+    public class FormsRunner<TServicesInitializer, TFormsStartup> : IApp where TFormsStartup: class, IFormsAppContext where TServicesInitializer: class, IServicesInitializer
     {
         private readonly ScopeBuilder scopeBuilder;
         private readonly IGraphicsDevice graphicsDevice;
         private IObjectFactory objectFactory;
         private IServicesProvider servicesProvider;
         private NavigationView navigationView;
+        private Application application;
 
         public FormsRunner(IServicesProvider servicesProvider, IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
         {
@@ -38,11 +40,11 @@ namespace CrossX.Forms
             servicesInitializer.InitializeServices(scopeBuilder);
 
             scopeBuilder
-                .WithType<DefaultConverters>().As<IDefaultConverters>().AsSingleton()
+                .WithType<ConvertersService>().As<IConverters>().AsSingleton()
                 .WithType<StylesService>().As<IStylesService>().As<IStylesServiceEx>().AsSingleton()
                 .WithType<NavigationView>().As<INavigation>().AsSelf().AsSingleton()
                 .WithType<FontsContainer>().As<IFontsContainer>().As<IFontsLoader>().AsSingleton()
-                .WithType<Application>().As<IApplication>().AsSingleton();
+                .WithType<Application>().As<IApplication>().AsSelf().AsSingleton();
 
             if (!servicesProvider.TryResolveInstance(out IContentManager contentManager) && !scopeBuilder.HasRegisteredInstance(typeof(IContentManager)))
             {
@@ -54,8 +56,10 @@ namespace CrossX.Forms
             objectFactory = servicesProvider.GetService<IObjectFactory>();
             navigationView = servicesProvider.GetService<NavigationView>();
 
-            var defaultConverters = servicesProvider.GetService<IDefaultConverters>();
+            var defaultConverters = servicesProvider.GetService<IConverters>();
             RegisterConverters(defaultConverters, objectFactory);
+
+            application = servicesProvider.GetService<Application>();
 
             if (!contentManager.CanLoadContent<Texture2D>()) contentManager.SetContentLoader(objectFactory.Create<TextureLoader>());
             if (!contentManager.CanLoadContent<Sound>()) contentManager.SetContentLoader(objectFactory.Create<SoundLoader>());
@@ -65,7 +69,7 @@ namespace CrossX.Forms
             formsStartup.Run();
         }
 
-        private static void RegisterConverters(IDefaultConverters defaultConverters, IObjectFactory objectFactory )
+        private static void RegisterConverters(IConverters defaultConverters, IObjectFactory objectFactory )
         {
             defaultConverters.RegisterConverter<string, TextSource>(new StringToTextSourceConverter());
             defaultConverters.RegisterConverter<StringBuilder, TextSource>(new StringBuilderToTextSourceConverter());
@@ -77,8 +81,11 @@ namespace CrossX.Forms
             defaultConverters.RegisterConverter<string, Color4>(new StringToColorConverter());
             defaultConverters.RegisterConverter<float, Length>(new UniversalConverter<float, Length>( o=>new Length(0, o)));
             defaultConverters.RegisterConverter<float, GridLength>(new UniversalConverter<float, GridLength>(o => new GridLength(GridLengthMode.Value, o)));
-
             defaultConverters.RegisterConverter<string, ImageSource>(objectFactory.Create<StringToImageSourceConverter>());
+
+            var notConverter = new NotConverter();
+            defaultConverters.RegisterConverter("neg", notConverter);
+            defaultConverters.RegisterConverter("not", notConverter);
         }
 
         public void Draw(TimeSpan frameTime)
@@ -90,7 +97,9 @@ namespace CrossX.Forms
 
         public void Update(TimeSpan frameTime)
         {
+            application.RaiseBeforeUpdate(frameTime);
             navigationView.Update(frameTime);
+            application.RaiseAfterUpdate(frameTime);
         }
     }
 }

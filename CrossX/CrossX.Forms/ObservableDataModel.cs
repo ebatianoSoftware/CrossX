@@ -12,14 +12,15 @@ namespace CrossX.Forms
         protected void FirePropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         protected void FirePropertyChanging(string name) => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
 
-        protected virtual void SetProperty<T>(ref T property, T value, [CallerMemberName] string name = "")
+        protected virtual bool SetProperty<T>(ref T property, T value, [CallerMemberName] string name = "")
         {
-            if (EqualityComparer<T>.Default.Equals(value, property)) return;
+            if (EqualityComparer<T>.Default.Equals(value, property)) return false;
 
             PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
             property = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             OnPropertyChanged(name);
+            return true;
         }
 
         protected virtual void OnPropertyChanged(string name)

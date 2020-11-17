@@ -1,4 +1,5 @@
 ﻿using CrossX.Graphics2D;
+using CrossX.IoC;
 
 namespace CrossX.Forms.Controls
 {
@@ -7,6 +8,7 @@ namespace CrossX.Forms.Controls
         SpriteBatch SpriteBatch { get; }
         PrimitiveBatch PrimitiveBatch { get; }
         IControlsLoader ControlsLoader { get; }
+        IObjectFactory ObjectFactory { get; }
         void InvalidateLayout();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CrossX.Forms.Styles;
 using CrossX.Forms.Xml;
 using CrossX.IO;
+using System;
 using System.IO;
 using System.Xml;
 
@@ -11,11 +12,15 @@ namespace CrossX.Forms
         private readonly IStylesService stylesService;
         private readonly IFilesRepository filesRepository;
 
+        public event Action<TimeSpan> BeforeUpdate;
+        public event Action<TimeSpan> AfterUpdate;
+
         public Application(IStylesService stylesService, IFilesRepository filesRepository)
         {
             this.stylesService = stylesService;
             this.filesRepository = filesRepository;
         }
+
         public void LoadStyles(string name)
         {
             XNode node;
@@ -33,5 +38,8 @@ namespace CrossX.Forms
 
             }
         }
+
+        public void RaiseBeforeUpdate(TimeSpan time) => BeforeUpdate?.Invoke(time);
+        public void RaiseAfterUpdate(TimeSpan time) => AfterUpdate?.Invoke(time);
     }
 }

@@ -26,7 +26,6 @@
         public float[] ActualColumnWidth { get; }
         public float[] ActualColumnHeight { get; }
 
-        
         public Grid(IControlParent parent) : base(parent)
         {
         }

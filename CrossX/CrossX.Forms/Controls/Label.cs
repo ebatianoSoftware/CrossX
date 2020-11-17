@@ -15,7 +15,6 @@ namespace CrossX.Forms.Controls
         public TextAlignment TextAlignment { get => textAlignment; set => SetProperty(ref textAlignment, value); }
         public float FontSize { get => fontSize; set => SetProperty(ref fontSize, value); }
         public Color4 TextColor { get => textColor; set => SetProperty(ref textColor, value); }
-        public Color4 Background { get => background; set => SetProperty(ref background, value); }
 
         public TextSource Text { get => text; set => SetProperty(ref text, value); }
         private TextObject textObject;
@@ -23,7 +22,6 @@ namespace CrossX.Forms.Controls
         private float fontSize = 12;
         private TextAlignment textAlignment;
         private Color4 textColor = Color4.White;
-        private Color4 background;
         private FontStyle fontStyle = FontStyle.Regular;
         private readonly IFontsContainer fontsContainer;
 
@@ -102,15 +100,17 @@ namespace CrossX.Forms.Controls
             base.BeforeUpdate();
         }
 
-        public override void Draw(TimeSpan frameTime)
+        protected override void OnDraw(TimeSpan frameTime)
         {
-            if (background.A > 0)
-            {
-                Parent.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
-            }
+            base.OnDraw(frameTime);
 
             Parent.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
             Parent.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY), textColor);
+        }
+
+        public override void RecreateBindings()
+        {
+            base.RecreateBindings();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CrossX.Forms
 {
-    public interface IFormsStartup
+    public interface IFormsAppContext
     {
         void Load();
         void Run();
