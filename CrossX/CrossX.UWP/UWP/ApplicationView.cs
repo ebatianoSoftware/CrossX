@@ -22,6 +22,7 @@ namespace CrossX.UWP.UWP
         private UwpGamePads gamePads;
         private UwpKeyboard keyboard;
         private UwpMouse mouse;
+        private UwpTouchPanel touchPanel;
         private DxGraphicsDevice graphicsDevice;
         private Dispatcher dispatcher = new Dispatcher();
 
@@ -51,10 +52,12 @@ namespace CrossX.UWP.UWP
             gamePads = new UwpGamePads();
             keyboard = new UwpKeyboard(window);
             mouse = new UwpMouse(window);
+            touchPanel = new UwpTouchPanel(window);
 
             scopeBuilder
                 .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
                 .WithInstance(gamePads).As<IGamePads>()
+                .WithInstance(touchPanel).As<ITouchPanel>()
                 .WithInstance(keyboard).As<IKeyboard>()
                 .WithInstance(mouse).As<IMouse>()
                 .WithInstance(dispatcher).As<IDispatcher>();
@@ -93,6 +96,7 @@ namespace CrossX.UWP.UWP
 
                 keyboard.Update();
                 mouse.Update();
+                touchPanel.Update();
             }
 
             //stopWatch.Stop();

@@ -8,7 +8,6 @@ namespace CrossX.Forms.Controls
 {
     public abstract class Control : ObservableDataModel, IDisposable
     {
-        public string Id { get; internal set; }
         public Color4 Background { get => background; set => SetProperty(ref background, value); }
         private Color4 background = Color4.Transparent;
 
@@ -197,18 +196,38 @@ namespace CrossX.Forms.Controls
 
         public virtual void Update(TimeSpan frameTime) { }
 
-        public void Draw(TimeSpan frameTime)
+        public void Draw(TimeSpan frameTime, Color4 tintColor)
         {
             if (!IsVisible) return;
-            OnDraw(frameTime);
+            OnDraw(frameTime, tintColor);
         }
 
-        protected virtual void OnDraw(TimeSpan frameTime)
+        protected virtual void OnDraw(TimeSpan frameTime, Color4 tintColor)
         {
             if (background.A > 0)
             {
                 Parent.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
             }
+        }
+
+        public bool ProcessTouch(long id, TouchEvent evnt, Vector2 position)
+        {
+            if (!IsVisible && evnt != TouchEvent.Remove && evnt != TouchEvent.Up)
+            {
+                return false;
+            }
+
+            return OnTouch(id, evnt, position);
+        }
+
+        public virtual void OnPointerCaptured(long id, object capturedBy)
+        {
+
+        }
+
+        protected virtual bool OnTouch(long id, TouchEvent evnt, Vector2 position)
+        {
+            return false;
         }
 
         public virtual void Dispose()

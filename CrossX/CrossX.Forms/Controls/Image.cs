@@ -22,9 +22,9 @@ namespace CrossX.Forms.Controls
             Stretch = Stretch.Uniform;
         }
 
-        protected override void OnDraw(TimeSpan frameTime)
+        protected override void OnDraw(TimeSpan frameTime, Color4 tintColor)
         {
-            base.OnDraw(frameTime);
+            base.OnDraw(frameTime, tintColor);
             if (Source.Texture == null) return;
 
             var rect = Source.SourceRect;
@@ -71,7 +71,7 @@ namespace CrossX.Forms.Controls
                 rect.Height -= (int)Math.Ceiling(diff);
             }
 
-            Parent.SpriteBatch.DrawImage(Source.Texture, position, rect, Color4.White, scale, flags);
+            Parent.SpriteBatch.DrawImage(Source.Texture, position, rect, tintColor, scale, flags);
         }
 
         public override Vector2 CalculateSize(RectangleF clientArea, bool includeMargins)

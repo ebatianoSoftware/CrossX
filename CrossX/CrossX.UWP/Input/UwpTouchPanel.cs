@@ -1,166 +1,166 @@
-﻿//using EbatianoSoftware.CrossX.Input;
-//using EbatianoSoftware.CrossX.Input.Touch;
-//using EbatianoSoftware.CrossX.Primitives;
-//using System;
-//using System.Collections.Generic;
-//using Windows.Graphics.Display;
-//using Windows.UI.Core;
+﻿using CrossX;
+using CrossX.Input;
+using System;
+using System.Collections.Generic;
+using Windows.Graphics.Display;
+using Windows.UI.Core;
 
-//namespace EbatianoSoftware.CrossX.WindowsUniversal.Input
-//{
-//    internal class UwpTouchPanel : ITouchPanel
-//    {
-//        private readonly CoreWindow _window;
+namespace CrossX.WindowsUniversal.Input
+{
+    internal class UwpTouchPanel : ITouchPanel
+    {
+        private readonly CoreWindow _window;
 
-//        private readonly List<TouchPoint> _touchState = new List<TouchPoint>();
+        private readonly List<TouchPoint> _touchState = new List<TouchPoint>();
 
-//        public event Action<TouchPoint> PointerDown;
-//        public event Action<TouchPoint> PointerUp;
-//        public event Action<TouchPoint> PointerMove;
-//        public event Action<TouchPoint> PointerRemoved;
-//        public event Action<long, object> PointerCaptured;
+        public event Action<TouchPoint> PointerDown;
+        public event Action<TouchPoint> PointerUp;
+        public event Action<TouchPoint> PointerMove;
+        public event Action<TouchPoint> PointerRemoved;
+        public event Action<long, object> PointerCaptured;
 
-//        public void CapturePointer(long id, object capturedBy)
-//        {
-//            PointerCaptured?.Invoke(id, capturedBy);
-//        }
-//        private double RawPixelsPerViewPixel => DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+        public void CapturePointer(long id, object capturedBy)
+        {
+            PointerCaptured?.Invoke(id, capturedBy);
+        }
 
-//        private PointF PositionFromWindowPos(Windows.Foundation.Point pt)
-//        {
-//            return new PointF(pt.X, pt.Y) * RawPixelsPerViewPixel;
-//        }
+        private float RawPixelsPerViewPixel => (float)DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 
-//        public UwpTouchPanel(CoreWindow window)
-//        {
-//            _window = window;
-//            _window.PointerEntered += OnPointerEntered;
-//            _window.PointerExited += OnPointerExited;
-//            _window.PointerMoved += OnPointerMoved;
-//            _window.PointerPressed += OnPointerPressed;
-//            _window.PointerReleased += OnPointerReleased;
-//        }
+        private Vector2 PositionFromWindowPos(Windows.Foundation.Point pt)
+        {
+            return new Vector2((float)pt.X, (float)pt.Y) * RawPixelsPerViewPixel;
+        }
 
-//        private void OnPointerEntered(CoreWindow sender, PointerEventArgs args)
-//        {
-//            var pt = args.CurrentPoint;
-//            if (pt.IsInContact)
-//            {
-//                var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
-                
-//                if(index <= 0)
-//                {
-//                    index = _touchState.Count;
-//                    _touchState.Add(new TouchPoint
-//                    {
-//                        Id = pt.PointerId,
-//                        Position = PositionFromWindowPos(pt.Position),
-//                        State = KeyBtnState.Down
-//                    });
-//                }
-//            }
-//        }
+        public UwpTouchPanel(CoreWindow window)
+        {
+            _window = window;
+            _window.PointerEntered += OnPointerEntered;
+            _window.PointerExited += OnPointerExited;
+            _window.PointerMoved += OnPointerMoved;
+            _window.PointerPressed += OnPointerPressed;
+            _window.PointerReleased += OnPointerReleased;
+        }
 
-//        private void OnPointerExited(CoreWindow sender, PointerEventArgs args)
-//        {
-//            var pt = args.CurrentPoint;
-//            var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
+        private void OnPointerEntered(CoreWindow sender, PointerEventArgs args)
+        {
+            var pt = args.CurrentPoint;
+            if (pt.IsInContact)
+            {
+                var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
 
-//            if (index >= 0)
-//            {
-//                var ts = _touchState[index];
-//                _touchState.RemoveAt(index);
+                if (index <= 0)
+                {
+                    index = _touchState.Count;
+                    _touchState.Add(new TouchPoint
+                    {
+                        Id = pt.PointerId,
+                        Position = PositionFromWindowPos(pt.Position),
+                        State = KeyBtnState.Down
+                    });
+                }
+            }
+        }
 
-//                PointerRemoved?.Invoke(ts);
-//            }
-//        }
+        private void OnPointerExited(CoreWindow sender, PointerEventArgs args)
+        {
+            var pt = args.CurrentPoint;
+            var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
 
-//        private void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
-//        {
-//            var pt = args.CurrentPoint;
-//            if (pt.IsInContact)
-//            {
-//                var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
+            if (index >= 0)
+            {
+                var ts = _touchState[index];
+                _touchState.RemoveAt(index);
 
-//                if (index <= 0)
-//                {
-//                    index = _touchState.Count;
-//                    _touchState.Add(new TouchPoint { Id = pt.PointerId });
-//                }
+                PointerRemoved?.Invoke(ts);
+            }
+        }
 
-//                var ts = _touchState[index];
-//                ts.State = KeyBtnState.Down;
-//                ts.Position = PositionFromWindowPos(pt.Position);
+        private void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
+        {
+            var pt = args.CurrentPoint;
+            if (pt.IsInContact)
+            {
+                var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
 
-//                _touchState[index] = ts;
-//                PointerMove?.Invoke(ts);
-//            }
-//        }
+                if (index <= 0)
+                {
+                    index = _touchState.Count;
+                    _touchState.Add(new TouchPoint { Id = pt.PointerId });
+                }
 
-//        private void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
-//        {
-//            var pt = args.CurrentPoint;
-            
-//            var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
+                var ts = _touchState[index];
+                ts.State = KeyBtnState.Down;
+                ts.Position = PositionFromWindowPos(pt.Position);
 
-//            if (index <= 0)
-//            {
-//                index = _touchState.Count;
-//                _touchState.Add(new TouchPoint { Id = pt.PointerId });
-//            }
+                _touchState[index] = ts;
+                PointerMove?.Invoke(ts);
+            }
+        }
 
-//            var ts = _touchState[index];
-//            ts.State = KeyBtnState.JustPressed;
-//            ts.Position = PositionFromWindowPos(pt.Position);
-//            _touchState[index] = ts;
+        private void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
+        {
+            var pt = args.CurrentPoint;
 
-//            PointerDown?.Invoke(ts);
-//        }
+            var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
 
-//        private void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
-//        {
-//            var pt = args.CurrentPoint;
-            
-//            var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
+            if (index <= 0)
+            {
+                index = _touchState.Count;
+                _touchState.Add(new TouchPoint { Id = pt.PointerId });
+            }
 
-//            if (index >= 0)
-//            {
-//                var ts = _touchState[index];
-//                ts.State = KeyBtnState.JustReleased;
-//                ts.Position = PositionFromWindowPos(pt.Position);
+            var ts = _touchState[index];
+            ts.State = KeyBtnState.JustPressed;
+            ts.Position = PositionFromWindowPos(pt.Position);
+            _touchState[index] = ts;
 
-//                _touchState[index] = ts;
+            PointerDown?.Invoke(ts);
+        }
 
-//                PointerUp?.Invoke(ts);
-//            }
-//        }
+        private void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
+        {
+            var pt = args.CurrentPoint;
 
-//        public void Update()
-//        {
-//            for(var idx = 0; idx < _touchState.Count;)
-//            {
-//                var ts = _touchState[idx];
+            var index = _touchState.FindIndex(o => o.Id == pt.PointerId);
 
-//                if (ts.State == KeyBtnState.Up)
-//                {
-//                    PointerRemoved?.Invoke(ts);
-//                    _touchState.RemoveAt(idx);
-//                    continue;
-//                }
+            if (index >= 0)
+            {
+                var ts = _touchState[index];
+                ts.State = KeyBtnState.JustReleased;
+                ts.Position = PositionFromWindowPos(pt.Position);
 
-//                if (ts.State == KeyBtnState.JustReleased)
-//                {
-//                    ts.State = KeyBtnState.Up;
-//                }
+                _touchState[index] = ts;
 
-//                if (ts.State == KeyBtnState.JustPressed)
-//                {
-//                    ts.State = KeyBtnState.Down;
-//                }
+                PointerUp?.Invoke(ts);
+            }
+        }
 
-//                _touchState[idx] = ts;
-//                ++idx;
-//            }
-//        }
-//    }
-//}
+        public void Update()
+        {
+            for (var idx = 0; idx < _touchState.Count;)
+            {
+                var ts = _touchState[idx];
+
+                if (ts.State == KeyBtnState.Up)
+                {
+                    PointerRemoved?.Invoke(ts);
+                    _touchState.RemoveAt(idx);
+                    continue;
+                }
+
+                if (ts.State == KeyBtnState.JustReleased)
+                {
+                    ts.State = KeyBtnState.Up;
+                }
+
+                if (ts.State == KeyBtnState.JustPressed)
+                {
+                    ts.State = KeyBtnState.Down;
+                }
+
+                _touchState[idx] = ts;
+                ++idx;
+            }
+        }
+    }
+}

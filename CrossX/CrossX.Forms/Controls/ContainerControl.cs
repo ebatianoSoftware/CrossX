@@ -1,4 +1,5 @@
-﻿using CrossX.Graphics2D;
+﻿using CrossX.Forms.Values;
+using CrossX.Graphics2D;
 using CrossX.IoC;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,13 @@ namespace CrossX.Forms.Controls
             children.Add(control);
         }
 
-        protected override void OnDraw(TimeSpan frameTime)
+        protected override void OnDraw(TimeSpan frameTime, Color4 tintColor)
         {
-            base.OnDraw(frameTime);
+            base.OnDraw(frameTime, tintColor);
 
             for (var idx = 0; idx < children.Count; ++idx)
             {
-                children[idx].Draw(frameTime);
+                children[idx].Draw(frameTime, tintColor);
             }
         }
 
@@ -68,6 +69,25 @@ namespace CrossX.Forms.Controls
             for (var idx = 0; idx < children.Count; ++idx)
             {
                 children[idx].RecreateBindings();
+            }
+        }
+
+        protected override bool OnTouch(long id, TouchEvent evnt, Vector2 position)
+        {
+            for (var idx = 0; idx < children.Count; ++idx)
+            {
+                if (children[idx].ProcessTouch(id, evnt, position)) return true;
+            }
+
+            return base.OnTouch(id, evnt, position);
+        }
+
+        public override void OnPointerCaptured(long id, object capturedBy)
+        {
+            base.OnPointerCaptured(id, capturedBy);
+            for (var idx = 0; idx < children.Count; ++idx)
+            {
+                children[idx].OnPointerCaptured(id, capturedBy);
             }
         }
     }

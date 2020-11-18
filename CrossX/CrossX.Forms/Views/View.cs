@@ -1,10 +1,11 @@
 ﻿using CrossX.Forms.Binding;
 using CrossX.Forms.Controls;
 using CrossX.Forms.Converters;
-using CrossX.Forms.Styles;
+using CrossX.Forms.Values;
 using CrossX.Forms.Xml;
 using CrossX.Graphics;
 using CrossX.Graphics2D;
+using CrossX.Input;
 using CrossX.IoC;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace CrossX.Forms.Views
         private readonly IObjectFactory objectFactory;
 
         private readonly IConverters defaultConverters;
+        private readonly ITouchPanel touchPanel;
 
         public SpriteBatch SpriteBatch { get; }
 
@@ -43,7 +45,7 @@ namespace CrossX.Forms.Views
 
         private Dictionary<string, Control> controlsWithId = new Dictionary<string, Control>();
 
-        public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters defaultConverters, FormsViewModel viewModel)
+        public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters defaultConverters, ITouchPanel touchPanel, FormsViewModel viewModel)
         {
             SpriteBatch = objectFactory.Create<SpriteBatch>();
             PrimitiveBatch = objectFactory.Create<PrimitiveBatch>();
@@ -52,8 +54,25 @@ namespace CrossX.Forms.Views
             this.graphicsDevice = graphicsDevice;
             this.objectFactory = objectFactory;
             this.defaultConverters = defaultConverters;
+            this.touchPanel = touchPanel;
             ViewModel = viewModel;
+
+            touchPanel.PointerCaptured += TouchPanel_PointerCaptured;
+            touchPanel.PointerDown += TouchPanel_PointerDown;
+            touchPanel.PointerMove += TouchPanel_PointerMove;
+            touchPanel.PointerRemoved += TouchPanel_PointerRemoved;
+            touchPanel.PointerUp += TouchPanel_PointerUp;
         }
+
+        private void TouchPanel_PointerUp(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Up, point.Position);
+
+        private void TouchPanel_PointerRemoved(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Remove, point.Position);
+
+        private void TouchPanel_PointerMove(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Move, point.Position);
+
+        private void TouchPanel_PointerDown(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Down, point.Position);
+
+        private void TouchPanel_PointerCaptured(long id, object capturedBy) => Root.OnPointerCaptured(id, capturedBy);
 
         public Control Load(XNode node)
         {
@@ -66,11 +85,11 @@ namespace CrossX.Forms.Views
         {
             var type = TypeFromNode(node);
             var control = (Control)objectFactory.Create(type, parent);
-            control.Id = node.Attribute("Id");
+            var name = node.Attribute("meta:Name");
 
-            if (!string.IsNullOrEmpty(control.Id))
+            if (!string.IsNullOrEmpty(name))
             {
-                controlsWithId.Add(control.Id, control);
+                controlsWithId.Add(name, control);
             }
 
             foreach(var ns in node.Nodes)
@@ -186,7 +205,7 @@ namespace CrossX.Forms.Views
 
         public void Draw(TimeSpan frameTime)
         {
-            Root.Draw(frameTime);
+            Root.Draw(frameTime, Color4.White);
         }
 
         public void Update(TimeSpan frameTime)
@@ -235,6 +254,11 @@ namespace CrossX.Forms.Views
         public void Dispose()
         {
             Root.Dispose();
+            touchPanel.PointerCaptured -= TouchPanel_PointerCaptured;
+            touchPanel.PointerDown -= TouchPanel_PointerDown;
+            touchPanel.PointerMove -= TouchPanel_PointerMove;
+            touchPanel.PointerRemoved -= TouchPanel_PointerRemoved;
+            touchPanel.PointerUp -= TouchPanel_PointerUp;
         }
     }
 }

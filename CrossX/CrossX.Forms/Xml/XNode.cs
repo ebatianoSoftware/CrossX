@@ -105,7 +105,6 @@ namespace CrossX.Forms.Xml
                 while (reader.MoveToNextAttribute())
                 {
                     string key = reader.Name;
-
                     if (key.StartsWith("xmlns:", StringComparison.InvariantCulture))
                     {
                         key = key.Substring(6);
@@ -116,7 +115,6 @@ namespace CrossX.Forms.Xml
                         if (key.Contains(":"))
                         {
                             string[] vals = key.Split(':');
-
                             key = string.Format("{0}:{1}", namespaces[vals[0]], vals[1]);
                         }
 
