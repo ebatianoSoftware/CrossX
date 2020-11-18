@@ -16,7 +16,7 @@ using System.Reflection;
 
 namespace CrossX.Forms.Views
 {
-    internal class View: IControlParent, IControlsLoader, IDisposable
+    internal class View : ObservableDataModel, IControlParent, IControlsLoader, IDisposable
     {
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
@@ -25,14 +25,10 @@ namespace CrossX.Forms.Views
         private readonly ITouchPanel touchPanel;
 
         public SpriteBatch SpriteBatch { get; }
-
         public PrimitiveBatch PrimitiveBatch { get; }
-
         public IControlsLoader ControlsLoader => this;
         public Control Root { get; set; }
-
         public bool IsFinished { get; private set; }
-
         public FormsViewModel ViewModel { get; }
 
         public object DataContext => ViewModel;
@@ -44,6 +40,9 @@ namespace CrossX.Forms.Views
         private Size clientSize = Size.Empty;
 
         private Dictionary<string, Control> controlsWithId = new Dictionary<string, Control>();
+        
+        private bool isClosing;
+        public bool IsClosing { get => isClosing; private set => SetProperty(ref isClosing, value); }
 
         public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters defaultConverters, ITouchPanel touchPanel, FormsViewModel viewModel)
         {
@@ -70,11 +69,37 @@ namespace CrossX.Forms.Views
 
         private void TouchPanel_PointerMove(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Move, point.Position);
 
-        private void TouchPanel_PointerDown(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Down, point.Position);
+        private void TouchPanel_PointerDown(TouchPoint point)
+        {
+            // TODO: disable when transition in progress.
+            Root.ProcessTouch(point.Id, TouchEvent.Down, point.Position);
+        }
 
         private void TouchPanel_PointerCaptured(long id, object capturedBy) => Root.OnPointerCaptured(id, capturedBy);
 
-        public Control Load(XNode node)
+        public void LoadView(XNode node)
+        {
+            foreach(var cn in node.Nodes)
+            {
+                if(cn.Tag == "Page.Transitions")
+                {
+                    ParseTransitions(cn);
+                }
+                else
+                {
+                    if (Root != null) throw new InvalidDataException("Only one root control for page.");
+                    Root = Load(cn);
+                }
+            }
+            InvalidateLayout();
+        }
+
+        private void ParseTransitions(XNode cn)
+        {
+            
+        }
+
+        private Control Load(XNode node)
         {
             var control = Load(node, this);
             control.RecreateBindings();
@@ -92,7 +117,7 @@ namespace CrossX.Forms.Views
                 controlsWithId.Add(name, control);
             }
 
-            foreach(var ns in node.Nodes)
+            foreach (var ns in node.Nodes)
             {
                 if (control is ContainerControl cc)
                 {
@@ -106,8 +131,8 @@ namespace CrossX.Forms.Views
             if (!control.BindingService.Contains(nameof(Control.DataContext)) && parent is Control parentAsControl)
             {
                 control.BindingService.AddBinding(
-                    new BindingDesc(typeof(Control).GetProperty(nameof(Control.DataContext)), 
-                    new ParentSource(parentAsControl), 
+                    new BindingDesc(typeof(Control).GetProperty(nameof(Control.DataContext)),
+                    new ParentSource(parentAsControl),
                     nameof(Control.DataContext), null));
             }
 
@@ -117,14 +142,14 @@ namespace CrossX.Forms.Views
         private void LoadProperties(Control control, XNode node)
         {
             var type = control.GetType();
-            foreach(var attr in node.Attributes)
+            foreach (var attr in node.Attributes)
             {
                 var prop = type.GetProperty(attr, BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
-                if(prop != null)
+                if (prop != null)
                 {
                     var valueStr = node.Attribute(attr);
-                    
-                    if(ParseBinding(prop, control, valueStr, out var binding))
+
+                    if (ParseBinding(prop, control, valueStr, out var binding))
                     {
                         control.BindingService.AddBinding(binding);
                         continue;
@@ -132,11 +157,11 @@ namespace CrossX.Forms.Views
 
                     object value = null;
 
-                    if(prop.PropertyType.IsEnum)
+                    if (prop.PropertyType.IsEnum)
                     {
                         value = Enum.Parse(prop.PropertyType, valueStr, true);
                     }
-                    else if(prop.PropertyType == typeof(string))
+                    else if (prop.PropertyType == typeof(string))
                     {
                         value = valueStr;
                     }
@@ -160,12 +185,12 @@ namespace CrossX.Forms.Views
         {
             binding = null;
             if (!valueStr.StartsWith("{", StringComparison.OrdinalIgnoreCase)) return false;
-            
-            var parts = valueStr.Trim('{','}').Split('@');
+
+            var parts = valueStr.Trim('{', '}').Split('@');
             var source = ParseSource(parts.Length > 1 ? parts[1] : "", control);
 
             var nameParts = parts[0].Split(' ');
-            
+
             string name = nameParts[0];
             IValueConverter converter = null;
 
@@ -181,13 +206,13 @@ namespace CrossX.Forms.Views
 
         private IValueSource ParseSource(string str, Control control)
         {
-            if(str.StartsWith("ref:", StringComparison.Ordinal))
+            if (str.StartsWith("ref:", StringComparison.Ordinal))
             {
                 var id = str.Split(':')[1];
                 return new ControlFromIdSource(this, id);
             }
 
-            if(str.StartsWith("parent:", StringComparison.Ordinal))
+            if (str.StartsWith("parent:", StringComparison.Ordinal))
             {
                 var type = str.Split(':')[1];
                 if (!type.Contains(',')) type = type + ",CrossX.Forms";
@@ -210,11 +235,11 @@ namespace CrossX.Forms.Views
 
         public void Update(TimeSpan frameTime)
         {
-            if(clientSize != graphicsDevice.CurrentTargetSize)
+            if (clientSize != graphicsDevice.CurrentTargetSize)
             {
                 shouldCalculateLayout = true;
             }
-            if(shouldCalculateLayout)
+            if (shouldCalculateLayout)
             {
                 var screenSize = graphicsDevice.CurrentTargetSize;
                 var clientArea = new RectangleF(0, 0, screenSize.Width, screenSize.Height);

@@ -63,8 +63,7 @@ namespace CrossX.Forms.Views
             var node = LoadViewForVm(vm);
 
             var view = objectFactory.Create<View>(vm);
-            view.Root = view.Load(node.Nodes[0]);
-            view.InvalidateLayout();
+            view.LoadView(node);
 
             foreach (var cv in views)
             {
