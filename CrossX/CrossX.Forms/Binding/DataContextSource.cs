@@ -4,16 +4,16 @@ namespace CrossX.Forms.Binding
 {
     internal class DataContextSource : IValueSource
     {
-        public readonly Control control;
+        public readonly IObjectWithDataContext @object;
 
-        public DataContextSource(Control control)
+        public DataContextSource(IObjectWithDataContext @object)
         {
-            this.control = control;
+            this.@object = @object;
         }
 
         public object Resolve()
         {
-            return control.DataContext;
+            return @object.DataContext;
         }
     }
 }

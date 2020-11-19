@@ -38,8 +38,8 @@ namespace CrossX.WindowsUniversal.Input
             LeftThumbStick = new Vector2((float)reading.LeftThumbstickX, (float)reading.LeftThumbstickY);
             RightThumbStick = new Vector2((float)reading.RightThumbstickX, (float)reading.RightThumbstickY);
 
-            LeftTrigger = reading.LeftTrigger;
-            RightTrigger = reading.RightTrigger;
+            LeftTrigger = (float)reading.LeftTrigger;
+            RightTrigger = (float)reading.RightTrigger;
         }
 
         //public override void SetVibration(Vibration vibration)

@@ -9,9 +9,9 @@
 
         public Vector2 RightThumbStick { get; protected set; }
 
-        public double LeftTrigger { get; protected set; }
+        public float LeftTrigger { get; protected set; }
 
-        public double RightTrigger { get; protected set; }
+        public float RightTrigger { get; protected set; }
 
         protected GamePadButton PreviousButtonsDown { get; set; }
 

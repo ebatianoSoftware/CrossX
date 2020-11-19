@@ -68,17 +68,33 @@ namespace CrossX.Forms.Binding
                     npc.PropertyChanged += Npc_PropertyChanged;
                 }
 
-                var propInfo = sources[idx]?.GetType().GetProperty(binding.Name);
-                sourceProperties[idx] = propInfo;
-
-                if (propInfo != null)
+                if (string.IsNullOrEmpty(binding.Name))
                 {
-                    var value = propInfo.GetValue(sources[idx]);
-                    if (ConvertValue(ref value, propInfo.PropertyType, binding.TargetProperty.PropertyType, binding.Converter))
+                    var value = sources[idx];
+                    if (value != null)
                     {
-                        binding.TargetProperty.SetValue(target, value);
+                        if (ConvertValue(ref value, value.GetType(), binding.TargetProperty.PropertyType, binding.Converter))
+                        {
+                            binding.TargetProperty.SetValue(target, value);
+                        }
                     }
                 }
+                else
+                {
+                    var propInfo = sources[idx]?.GetType().GetProperty(binding.Name);
+                    sourceProperties[idx] = propInfo;
+
+                    if (propInfo != null)
+                    {
+                        var value = propInfo.GetValue(sources[idx]);
+                        if (ConvertValue(ref value, propInfo.PropertyType, binding.TargetProperty.PropertyType, binding.Converter))
+                        {
+                            binding.TargetProperty.SetValue(target, value);
+                        }
+                    }
+                }
+
+                
             }
         }
 
@@ -115,7 +131,7 @@ namespace CrossX.Forms.Binding
                 return true;
             }
 
-            if (from != to)
+            if (from != to && !to.IsAssignableFrom(from))
             {
                 var converter = defaultConverters.FindConverter(from, to);
                 if (converter == null) return false;

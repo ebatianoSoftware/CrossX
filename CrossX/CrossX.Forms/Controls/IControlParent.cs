@@ -10,5 +10,6 @@ namespace CrossX.Forms.Controls
         IControlsLoader ControlsLoader { get; }
         IObjectFactory ObjectFactory { get; }
         void InvalidateLayout();
+        IFocusable Focus { get; set; }
     }
 }

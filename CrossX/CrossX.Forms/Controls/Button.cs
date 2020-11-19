@@ -5,12 +5,13 @@ using System.Windows.Input;
 
 namespace CrossX.Forms.Controls
 {
-    public class Button : Panel
+    public class Button : FocusablePanel
     {
         public TextSource Text { get => text; set => SetProperty(ref text, value); }
         public bool IsDown { get => isDown; private set => SetProperty(ref isDown, value); }
-        public bool IsFocused { get => isFocused; private set => SetProperty(ref isFocused, value); }
+        
         public bool IsEnabled { get => isEnabled; private set => SetProperty(ref isEnabled, value); }
+        public int PushAndExecuteTime { get => pushAndExecuteTime; set => SetProperty(ref pushAndExecuteTime, value); }
 
         public ICommand Command { get => command; set => SetProperty(ref command, value); }
         public object CommandParameter { get => commandParameter; set => SetProperty(ref commandParameter, value); }
@@ -20,13 +21,15 @@ namespace CrossX.Forms.Controls
         private bool isEnabled = true;
 
         private bool isDown;
-        private bool isFocused;
 
         private long? pointerId;
         private ICommand command;
         private object commandParameter;
 
         private ICommand oldCommand;
+
+        private float timeToExecute = 0;
+        private int pushAndExecuteTime = 100;
 
         protected bool CommandEnabled { get; private set; } = true;
 
@@ -38,12 +41,12 @@ namespace CrossX.Forms.Controls
         {
             base.OnPropertyChanged(name);
 
-            switch(name)
+            switch (name)
             {
                 case nameof(Command):
                 case nameof(CommandParameter):
 
-                    if(oldCommand != null)
+                    if (oldCommand != null)
                     {
                         oldCommand.CanExecuteChanged -= Command_CanExecuteChanged;
                     }
@@ -61,7 +64,9 @@ namespace CrossX.Forms.Controls
 
         protected override bool OnTouch(long id, TouchEvent evnt, Vector2 position)
         {
-            if(!IsEnabled && !CommandEnabled)
+            if (base.OnTouch(id, evnt, position)) return true;
+
+            if (!IsEnabled && !CommandEnabled)
             {
                 IsDown = false;
                 pointerId = null;
@@ -74,6 +79,8 @@ namespace CrossX.Forms.Controls
                     {
                         pointerId = id;
                         IsDown = true;
+                        Focus = this;
+                        return true;
                     }
                     break;
 
@@ -91,7 +98,7 @@ namespace CrossX.Forms.Controls
                     break;
 
                 case TouchEvent.Move:
-                    if(pointerId == id)
+                    if (pointerId == id)
                     {
                         IsDown = CheckPointerIn(position) && CommandEnabled;
                     }
@@ -124,6 +131,39 @@ namespace CrossX.Forms.Controls
         {
             var area = ClientArea;
             return area.Contains(new System.Drawing.PointF(position.X, position.Y));
+        }
+
+        public override bool OnUiButtonPressed(UiButton button)
+        {
+            if (button == UiButton.Select)
+            {
+                if (IsEnabled && CommandEnabled)
+                {
+                    timeToExecute = Math.Max(0.01f, (float)pushAndExecuteTime / 1000.0f);
+                    IsDown = true;
+                    return true;
+                }
+            }
+
+            return base.OnUiButtonPressed(button);
+        }
+
+        public override void Update(TimeSpan frameTime)
+        {
+            base.Update(frameTime);
+            if(timeToExecute > 0)
+            {
+                timeToExecute -= (float)frameTime.TotalSeconds;
+                if(timeToExecute <= 0)
+                {
+                    if (CommandEnabled)
+                    {
+                        Command?.Execute(CommandParameter);
+                    }
+                    timeToExecute = 0;
+                    IsDown = false;
+                }
+            }
         }
     }
 }

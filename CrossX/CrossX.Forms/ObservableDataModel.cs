@@ -9,8 +9,8 @@ namespace CrossX.Forms
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangingEventHandler PropertyChanging;
 
-        protected void FirePropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        protected void FirePropertyChanging(string name) => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
+        protected void FirePropertyChanged([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        protected void FirePropertyChanging([CallerMemberName] string name = "") => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
 
         protected virtual bool SetProperty<T>(ref T property, T value, [CallerMemberName] string name = "")
         {

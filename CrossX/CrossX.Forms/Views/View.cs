@@ -16,13 +16,14 @@ using System.Reflection;
 
 namespace CrossX.Forms.Views
 {
-    internal class View : ObservableDataModel, IControlParent, IControlsLoader, IDisposable
+    internal class View : ObservableDataModel, IObjectWithDataContext, IControlParent, IControlsLoader, IDisposable
     {
         private readonly IGraphicsDevice graphicsDevice;
         private readonly IObjectFactory objectFactory;
 
-        private readonly IConverters defaultConverters;
+        private readonly IConverters converters;
         private readonly ITouchPanel touchPanel;
+        private readonly IFormsInput formsInput;
 
         public SpriteBatch SpriteBatch { get; }
         public PrimitiveBatch PrimitiveBatch { get; }
@@ -40,11 +41,20 @@ namespace CrossX.Forms.Views
         private Size clientSize = Size.Empty;
 
         private Dictionary<string, Control> controlsWithId = new Dictionary<string, Control>();
-        
-        private bool isClosing;
-        public bool IsClosing { get => isClosing; private set => SetProperty(ref isClosing, value); }
 
-        public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters defaultConverters, ITouchPanel touchPanel, FormsViewModel viewModel)
+        private static readonly UiButton[] AllUiButtons = Enum.GetValues(typeof(UiButton)).Cast<UiButton>().ToArray();
+
+        public bool IsClosing { get => isClosing; private set => SetProperty(ref isClosing, value); }
+        public IFocusable Focus { get => focus; set => SetProperty(ref focus, value); }
+
+        private bool isClosing;
+        private IFocusable focus;
+
+        private readonly BindingService bindingService;
+
+        public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
+            IFormsInput formsInput,
+            FormsViewModel viewModel)
         {
             SpriteBatch = objectFactory.Create<SpriteBatch>();
             PrimitiveBatch = objectFactory.Create<PrimitiveBatch>();
@@ -52,8 +62,9 @@ namespace CrossX.Forms.Views
 
             this.graphicsDevice = graphicsDevice;
             this.objectFactory = objectFactory;
-            this.defaultConverters = defaultConverters;
+            this.converters = converters;
             this.touchPanel = touchPanel;
+            this.formsInput = formsInput;
             ViewModel = viewModel;
 
             touchPanel.PointerCaptured += TouchPanel_PointerCaptured;
@@ -61,6 +72,8 @@ namespace CrossX.Forms.Views
             touchPanel.PointerMove += TouchPanel_PointerMove;
             touchPanel.PointerRemoved += TouchPanel_PointerRemoved;
             touchPanel.PointerUp += TouchPanel_PointerUp;
+
+            bindingService = new BindingService(this, converters);
         }
 
         private void TouchPanel_PointerUp(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Up, point.Position);
@@ -79,9 +92,9 @@ namespace CrossX.Forms.Views
 
         public void LoadView(XNode node)
         {
-            foreach(var cn in node.Nodes)
+            foreach (var cn in node.Nodes)
             {
-                if(cn.Tag == "Page.Transitions")
+                if (cn.Tag == "Page.Transitions")
                 {
                     ParseTransitions(cn);
                 }
@@ -91,12 +104,16 @@ namespace CrossX.Forms.Views
                     Root = Load(cn);
                 }
             }
+
+            LoadProperties(this, node, bindingService, (n, o) => { });
+            bindingService.RecreateValues();
+
             InvalidateLayout();
         }
 
         private void ParseTransitions(XNode cn)
         {
-            
+
         }
 
         private Control Load(XNode node)
@@ -139,9 +156,9 @@ namespace CrossX.Forms.Views
             return control;
         }
 
-        private void LoadProperties(Control control, XNode node)
+        private void LoadProperties(IObjectWithDataContext target, XNode node, BindingService bindingService, Action<string, object> setCustomProperty)
         {
-            var type = control.GetType();
+            var type = target.GetType();
             foreach (var attr in node.Attributes)
             {
                 var prop = type.GetProperty(attr, BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
@@ -149,9 +166,9 @@ namespace CrossX.Forms.Views
                 {
                     var valueStr = node.Attribute(attr);
 
-                    if (ParseBinding(prop, control, valueStr, out var binding))
+                    if (ParseBinding(prop, target, valueStr, out var binding))
                     {
-                        control.BindingService.AddBinding(binding);
+                        bindingService.AddBinding(binding);
                         continue;
                     }
 
@@ -167,27 +184,32 @@ namespace CrossX.Forms.Views
                     }
                     else
                     {
-                        var converter = defaultConverters.FindConverter(typeof(string), prop.PropertyType);
+                        var converter = converters.FindConverter(typeof(string), prop.PropertyType);
                         if (converter == null) throw new InvalidProgramException($"Cannot find converter string->{prop.PropertyType.Name}");
                         value = converter.Convert(valueStr);
                     }
 
-                    prop.SetValue(control, value);
+                    prop.SetValue(target, value);
                 }
                 else
                 {
-                    control.SetCustomProperty(attr, node.Attribute(attr));
+                    setCustomProperty?.Invoke(attr, node.Attribute(attr));
                 }
             }
         }
 
-        private bool ParseBinding(PropertyInfo prop, Control control, string valueStr, out BindingDesc binding)
+        private void LoadProperties(Control control, XNode node)
+        {
+            LoadProperties(control, node, control.BindingService, (n, o) => control.SetCustomProperty(n, o));
+        }
+
+        private bool ParseBinding(PropertyInfo prop, IObjectWithDataContext target, string valueStr, out BindingDesc binding)
         {
             binding = null;
             if (!valueStr.StartsWith("{", StringComparison.OrdinalIgnoreCase)) return false;
 
             var parts = valueStr.Trim('{', '}').Split('@');
-            var source = ParseSource(parts.Length > 1 ? parts[1] : "", control);
+            var source = ParseSource(parts.Length > 1 ? parts[1] : "", target);
 
             var nameParts = parts[0].Split(' ');
 
@@ -197,14 +219,14 @@ namespace CrossX.Forms.Views
             if (nameParts.Length > 1)
             {
                 name = nameParts[1];
-                converter = defaultConverters.FindConverter(nameParts[0]);
+                converter = converters.FindConverter(nameParts[0]);
             }
 
             binding = new BindingDesc(prop, source, name, converter);
             return true;
         }
 
-        private IValueSource ParseSource(string str, Control control)
+        private IValueSource ParseSource(string str, IObjectWithDataContext target)
         {
             if (str.StartsWith("ref:", StringComparison.Ordinal))
             {
@@ -217,15 +239,23 @@ namespace CrossX.Forms.Views
                 var type = str.Split(':')[1];
                 if (!type.Contains(',')) type = type + ",CrossX.Forms";
 
-                return new ParentSource(control, Type.GetType(type));
+                if (target is Control control)
+                {
+                    return new ParentSource(control, Type.GetType(type));
+                }
+                throw new InvalidOperationException("Cannot set parent source to no control elements.");
             }
 
             if (str.StartsWith("parent", StringComparison.Ordinal))
             {
-                return new ParentSource(control);
+                if (target is Control control)
+                {
+                    return new ParentSource(control);
+                }
+                throw new InvalidOperationException("Cannot set parent source to no control elements.");
             }
 
-            return new DataContextSource(control);
+            return new DataContextSource(target);
         }
 
         public void Draw(TimeSpan frameTime)
@@ -250,7 +280,33 @@ namespace CrossX.Forms.Views
                 shouldCalculateLayout = false;
             }
             Root.BeforeUpdate();
+
+            ProcessUiButtons();
+
             Root.Update(frameTime);
+        }
+
+        private void ProcessUiButtons()
+        {
+            // Disable when transition in progress
+            var focusable = Focus;
+
+            for (var idx = 0; idx < AllUiButtons.Length; ++idx)
+            {
+                var btn = AllUiButtons[idx];
+                var state = formsInput.GetUiButtonState(btn);
+
+                switch (state)
+                {
+                    case KeyBtnState.JustPressed:
+                        if (focusable?.OnUiButtonPressed(btn) ?? false) return;
+                        break;
+
+                    case KeyBtnState.JustReleased:
+                        if (focusable?.OnUiButtonReleased(btn) ?? false) return;
+                        break;
+                }
+            }
         }
 
         public object FindControl(string id)

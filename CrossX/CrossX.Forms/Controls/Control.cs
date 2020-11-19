@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace CrossX.Forms.Controls
 {
-    public abstract class Control : ObservableDataModel, IDisposable
+    public abstract class Control : ObservableDataModel, IDisposable, IObjectWithDataContext
     {
         public Color4 Background { get => background; set => SetProperty(ref background, value); }
         private Color4 background = Color4.Transparent;

@@ -15,6 +15,20 @@ namespace CrossX.Forms.Controls
         public IControlsLoader ControlsLoader => Parent.ControlsLoader;
         public IObjectFactory ObjectFactory => Parent.ObjectFactory;
 
+        public IFocusable Focus 
+        { 
+            get => Parent.Focus;
+            set
+            {
+                if (Parent.Focus != value)
+                {
+                    FirePropertyChanging();
+                    Parent.Focus = value;
+                    FirePropertyChanged();
+                }
+            }
+        }
+
         protected readonly List<Control> children = new List<Control>();
 
         protected ContainerControl(IControlParent parent) : base(parent)
@@ -74,7 +88,7 @@ namespace CrossX.Forms.Controls
 
         protected override bool OnTouch(long id, TouchEvent evnt, Vector2 position)
         {
-            for (var idx = 0; idx < children.Count; ++idx)
+            for (var idx = children.Count-1; idx >= 0; --idx)
             {
                 if (children[idx].ProcessTouch(id, evnt, position)) return true;
             }
