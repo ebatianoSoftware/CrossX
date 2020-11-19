@@ -55,6 +55,9 @@ namespace CrossX.Forms.Controls
                 case nameof(FontStyle):
                     shouldUpdateText = true;
                     break;
+
+                case nameof(DataContext):
+                    break;
             }
         }
 

@@ -22,7 +22,7 @@ namespace CrossX.Forms.Controls
         public float ActualHeight { get => actualHeight; private set => SetProperty(ref actualHeight, value); }
         public float ActualX { get => actualX; private set => SetProperty(ref actualX, value); }
         public float ActualY { get => actualY; private set => SetProperty(ref actualY, value); }
-        public virtual object DataContext
+        public object DataContext
         {
             get => dataContext;
             set

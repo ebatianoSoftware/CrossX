@@ -277,7 +277,7 @@ namespace CrossX.Graphics2D.Text
                     var offset = calculate(lineWidth, width);
 
                     var firstIndex = line == 0 ? 0 : partsBuffer[page, line - 1];
-                    for (var idx = firstIndex; idx < lastIndex; ++idx)
+                    for (var idx = firstIndex; idx < lastIndex && idx < vert.Count; ++idx)
                     {
                         var vertex = vert[idx];
                         vertex.Position += new Vector2(offset, 0);

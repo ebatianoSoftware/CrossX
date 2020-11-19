@@ -13,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace CrossX.Forms.Views
 {
@@ -32,6 +33,8 @@ namespace CrossX.Forms.Views
         public bool IsFinished { get; private set; }
         public FormsViewModel ViewModel { get; }
 
+        public ICommand UiButtonCommand { get => uiButtonCommand; set => SetProperty(ref uiButtonCommand, value); }
+
         public object DataContext => ViewModel;
 
         public IObjectFactory ObjectFactory { get; }
@@ -49,7 +52,7 @@ namespace CrossX.Forms.Views
 
         private bool isClosing;
         private IFocusable focus;
-
+        private ICommand uiButtonCommand;
         private readonly BindingService bindingService;
 
         public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
@@ -107,7 +110,6 @@ namespace CrossX.Forms.Views
 
             LoadProperties(this, node, bindingService, (n, o) => { });
             bindingService.RecreateValues();
-
             InvalidateLayout();
         }
 
@@ -145,12 +147,12 @@ namespace CrossX.Forms.Views
 
             LoadProperties(control, node);
 
-            if (!control.BindingService.Contains(nameof(Control.DataContext)) && parent is Control parentAsControl)
+            if (!control.BindingService.Contains(nameof(IObjectWithDataContext.DataContext)))
             {
                 control.BindingService.AddBinding(
-                    new BindingDesc(typeof(Control).GetProperty(nameof(Control.DataContext)),
-                    new ParentSource(parentAsControl),
-                    nameof(Control.DataContext), null));
+                    new BindingDesc(typeof(Control).GetProperty(nameof(IObjectWithDataContext.DataContext), BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty),
+                    new ParentSource(control),
+                    nameof(IObjectWithDataContext.DataContext), null));
             }
 
             return control;
@@ -300,6 +302,7 @@ namespace CrossX.Forms.Views
                 {
                     case KeyBtnState.JustPressed:
                         if (focusable?.OnUiButtonPressed(btn) ?? false) return;
+                        UiButtonCommand?.Execute(btn);
                         break;
 
                     case KeyBtnState.JustReleased:

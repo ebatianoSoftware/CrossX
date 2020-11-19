@@ -62,7 +62,7 @@ namespace CrossX.Forms.Binding
             {
                 var binding = bindingDescs[idx];
                 sources[idx] = binding.Source.Resolve();
-                
+
                 if (sources[idx] is INotifyPropertyChanged npc)
                 {
                     npc.PropertyChanged += Npc_PropertyChanged;
@@ -89,12 +89,10 @@ namespace CrossX.Forms.Binding
                         var value = propInfo.GetValue(sources[idx]);
                         if (ConvertValue(ref value, propInfo.PropertyType, binding.TargetProperty.PropertyType, binding.Converter))
                         {
-                            binding.TargetProperty.SetValue(target, value);
+                            binding.TargetProperty.SetValue(target, value);   
                         }
                     }
                 }
-
-                
             }
         }
 
