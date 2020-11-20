@@ -17,6 +17,8 @@ namespace CrossX.Forms.UiHosts
 
         public Rectangle TargetRect => new Rectangle(0, 0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height);
 
+        public float ScaleToPixel => 1;
+
         public void BeginDraw()
         {
             graphicsDevice.Clear(Color4.Black);

@@ -11,5 +11,6 @@ namespace CrossX.Forms
         void EndDraw();
         Vector2 ScreenToUiUnits(Vector2 screenPoint);
         ITransform2D Transform2D { get; }
+        float ScaleToPixel { get; }
     }
 }

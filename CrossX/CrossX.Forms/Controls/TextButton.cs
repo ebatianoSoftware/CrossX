@@ -18,12 +18,14 @@ namespace CrossX.Forms.Controls
 
         public Color4 DisabledColor { get => disabledColor; set => SetProperty(ref disabledColor, value); }
 
+        public Margin Padding { get => padding; set => SetProperty(ref padding, value); }
+
         private string font = "";
         private float fontSize = 12;
         private TextAlignment textAlignment;
         private FontStyle fontStyle = FontStyle.Regular;
         private readonly IFontsContainer fontsContainer;
-
+        private readonly IUiHost uiHost;
         private bool shouldUpdateText = true;
 
         private TextObject textObject;
@@ -32,9 +34,13 @@ namespace CrossX.Forms.Controls
         private Color4 downColor = Color4.LightGray;
         private Color4 disabledColor = Color4.Gray;
 
-        public TextButton(IControlParent parent, IFontsContainer fontsContainer, IControlServices services) : base(parent, services)
+        private float scaleToPixel = 1;
+        private Margin padding = Margin.Zero;
+
+        public TextButton(IControlParent parent, IFontsContainer fontsContainer, IControlServices services, IUiHost uiHost) : base(parent, services)
         {
             this.fontsContainer = fontsContainer;
+            this.uiHost = uiHost;
             VerticalAlignment = Alignment.Start;
             HorizontalAlignment = Alignment.Start;
             TextAlignment = TextAlignment.Center;
@@ -58,12 +64,16 @@ namespace CrossX.Forms.Controls
 
                 case nameof(DataContext):
                     break;
+
+                case nameof(Padding):
+                    Parent.InvalidateLayout();
+                    break;
             }
         }
 
         private void UpdateText()
         {
-            var fontObj = fontsContainer.Find(font, fontSize, fontStyle);
+            var fontObj = fontsContainer.Find(font, fontSize * scaleToPixel, fontStyle);
             if (textObject == null)
             {
                 textObject = TextObjectFactory.Instance.CreateText(fontObj, new TextSource("@"), fontSize);
@@ -86,11 +96,13 @@ namespace CrossX.Forms.Controls
             if (Width.IsAuto && HorizontalAlignment != Alignment.Stretch)
             {
                 size.X = textObject?.Size.X ?? size.X;
+                size.X += padding.Left + padding.Right;
             }
 
             if (Height.IsAuto && VerticalAlignment != Alignment.Stretch)
             {
                 size.Y = textObject?.Size.Y ?? size.Y;
+                size.Y += padding.Top + padding.Bottom;
             }
 
             return size;
@@ -98,6 +110,12 @@ namespace CrossX.Forms.Controls
 
         public override void BeforeUpdate()
         {
+            if (uiHost.ScaleToPixel != scaleToPixel)
+            {
+                shouldUpdateText = true;
+                scaleToPixel = uiHost.ScaleToPixel;
+            }
+
             if (shouldUpdateText)
             {
                 UpdateText();
@@ -113,11 +131,11 @@ namespace CrossX.Forms.Controls
             var color = (IsEnabled && CommandEnabled) ? (IsDown ? downColor : (IsFocused ? focusedColor : normalColor)) : disabledColor;
 
             Services.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
-            
-            var size = textObject.Size;
-            var offsetY = (ActualHeight - size.Y) / 2;
 
-            Services.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY + offsetY), color * tintColor);
+            var size = textObject.Size;
+            var offsetY = (ActualHeight - padding.Top - padding.Bottom - size.Y) / 2;
+
+            Services.SpriteBatch.DrawText(textObject, new Vector2(ActualX + padding.Left, ActualY + offsetY + padding.Top), color * tintColor);
         }
 
         public override void AddChild(Control control)

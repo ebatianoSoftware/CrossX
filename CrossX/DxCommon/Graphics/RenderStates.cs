@@ -161,6 +161,7 @@ namespace CrossX.DxCommon.Graphics
                 IsDepthClipEnabled = false,
                 IsFrontCounterClockwise = true,
                 IsMultisampleEnabled = true,
+                ForcedSampleCount = 4,
                 IsScissorEnabled = false,
                 SlopeScaledDepthBias = 0,
             };

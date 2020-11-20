@@ -21,13 +21,16 @@ namespace CrossX.Forms.Controls
         private Color4 textColor = Color4.White;
         private FontStyle fontStyle = FontStyle.Regular;
         private readonly IFontsContainer fontsContainer;
+        private readonly IUiHost uiHost;
         private TextSource text;
 
         private bool shouldUpdateText = true;
+        private float scaleToPixel = 1;
 
-        public Label(IControlParent parent, IFontsContainer fontsContainer, IControlServices services) : base(parent, services)
+        public Label(IControlParent parent, IFontsContainer fontsContainer, IControlServices services, IUiHost uiHost) : base(parent, services)
         {
             this.fontsContainer = fontsContainer;
+            this.uiHost = uiHost;
             VerticalAlignment = Alignment.Start;
             HorizontalAlignment = Alignment.Start;
         }
@@ -52,7 +55,7 @@ namespace CrossX.Forms.Controls
 
         private void UpdateText()
         {
-            var fontObj = fontsContainer.Find(font, fontSize, fontStyle);
+            var fontObj = fontsContainer.Find(font, fontSize * scaleToPixel, fontStyle);
             if (textObject == null)
             {
                 textObject = TextObjectFactory.Instance.CreateText(fontObj, new TextSource("@"), fontSize);
@@ -87,6 +90,12 @@ namespace CrossX.Forms.Controls
 
         public override void BeforeUpdate()
         {
+            if(uiHost.ScaleToPixel != scaleToPixel)
+            {
+                shouldUpdateText = true;
+                scaleToPixel = uiHost.ScaleToPixel;
+            }
+
             if (shouldUpdateText)
             {
                 UpdateText();

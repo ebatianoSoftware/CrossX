@@ -52,6 +52,7 @@ namespace CrossX.UWP.Graphics
             {
                 device = defaultDevice.QueryInterface<SdxDevice1>();
             }
+
             // SwapChain description
             var desc = new SwapChainDescription1
             {
@@ -63,9 +64,10 @@ namespace CrossX.UWP.Graphics
                 Usage = Usage.BackBuffer | Usage.RenderTargetOutput,
                 BufferCount = 2,
                 Scaling = Scaling.None,
-                Flags = SwapChainFlags.AllowModeSwitch,
+                Flags = SwapChainFlags.None,
                 SwapEffect = SwapEffect.FlipSequential,
             };
+
             // Once the desired swap chain description is configured, it must be created on the same adapter as our D3D Device
             // First, retrieve the underlying DXGI Device from the D3D Device.
             // Creates the swap chain
@@ -76,7 +78,14 @@ namespace CrossX.UWP.Graphics
                 // Creates a SwapChain from a CoreWindow pointer
                 using (var comWindow = new ComObject(coreWindow))
                 {
-                    return new SwapChain1(dxgiFactory2, dxgiDevice2, comWindow, ref desc);
+                    try
+                    {
+                        return new SwapChain1(dxgiFactory2, dxgiDevice2, comWindow, ref desc);
+                    }
+                    catch(Exception ex)
+                    {
+                        throw;
+                    }
                 }
             }
         }
