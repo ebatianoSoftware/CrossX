@@ -185,7 +185,10 @@ namespace CrossX.Forms.Controls
         {
             foreach(var node in nodes)
             {
-                stateTransitions.Add(Parent.TransitionsManager.CreateStateTransition(node.Attribute("Key"), node.Attribute("Property")));
+                var transition = Parent.TransitionsManager.CreateStateTransition(node.Attribute("Key"), node.Attribute("Property"));
+                var state = (bool)GetType().GetProperty(transition.Name).GetValue(this);
+                transition.State = state;
+                stateTransitions.Add(transition);
             }
         }
 

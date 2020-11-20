@@ -9,6 +9,7 @@ namespace CrossX.Forms.Transitions
         private readonly bool inverted;
 
         private readonly Transform[] transforms;
+        private bool firstUpdate = true;
 
         public bool State { get; set; }
         public string Name { get; }
@@ -23,8 +24,14 @@ namespace CrossX.Forms.Transitions
 
         public void Update(Vector2 origin, TimeSpan dt, out Matrix transform, out Color4 tint)
         {
-            var sign = inverted ^ State ? 1 : -1;
+            if (firstUpdate)
+            {
+                value = inverted ^ State ? 1 : 0;
+                firstUpdate = false;
+            }
 
+            var sign = inverted ^ State ? 1 : -1;
+            
             value += (float)dt.TotalSeconds / duration * sign;
             value = Math.Min(1, Math.Max(0, value));
 

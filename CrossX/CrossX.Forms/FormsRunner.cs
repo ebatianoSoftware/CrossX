@@ -80,6 +80,7 @@ namespace CrossX.Forms
             defaultConverters.RegisterConverter<string, Length>(new StringToLengthConverter());
             defaultConverters.RegisterConverter<string, float>(new StringToFloatConverter());
             defaultConverters.RegisterConverter<string, Margin>(new StringToMarginConverter());
+            defaultConverters.RegisterConverter<string, bool>(new StringToBoolConverter());
             defaultConverters.RegisterConverter<string, GridLength[]>(new StringToGridRowColumnDefinitionsConverter());
             defaultConverters.RegisterConverter<string, Color4>(StringToColorConverter.Instance);
             defaultConverters.RegisterConverter<float, Length>(new UniversalConverter<float, Length>( o=>new Length(0, o)));
