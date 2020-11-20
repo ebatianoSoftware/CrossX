@@ -9,6 +9,8 @@ namespace CrossX.Forms.Controls
         PrimitiveBatch PrimitiveBatch { get; }
         IControlsLoader ControlsLoader { get; }
         IObjectFactory ObjectFactory { get; }
+        ITransitionsManager TransitionsManager { get; }
+        ITransform2D Transform2D { get; }
         void InvalidateLayout();
         IFocusable Focus { get; set; }
     }

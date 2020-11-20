@@ -1,5 +1,7 @@
 ﻿using CrossX.Forms.Binding;
+using CrossX.Forms.Transitions;
 using CrossX.Forms.Values;
+using CrossX.Forms.Xml;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -47,13 +49,18 @@ namespace CrossX.Forms.Controls
         private Alignment verticalAlignment = Alignment.Stretch;
         private Margin margin = Margin.Zero;
 
+        private Matrix currentTransform = Matrix.Identity;
+
         private Dictionary<string, object> customProperties;
         private object dataContext;
         private bool isVisible = true;
-
         public BindingService BindingService { get; }
-
         protected RectangleF ClientArea => new RectangleF(actualX, actualY, actualWidth, actualHeight);
+
+        public Transition Transition { get; protected set; }
+
+        private Dictionary<string, string> transitions = new Dictionary<string, string>();
+        private List<StateTransition> stateTransitions = new List<StateTransition>();
 
         protected Control(IControlParent parent)
         {
@@ -83,6 +90,15 @@ namespace CrossX.Forms.Controls
                 case nameof(VerticalAlignment):
                     ShouldCalculateLayout = true;
                     break;
+            }
+
+            for(var idx =0; idx < stateTransitions.Count; ++idx)
+            {
+                if(stateTransitions[idx].Name == name)
+                {
+                    var state = (bool)GetType().GetProperty(name).GetValue(this);
+                    stateTransitions[idx].State = state;
+                }
             }
         }
         public virtual void BeforeUpdate()
@@ -151,6 +167,36 @@ namespace CrossX.Forms.Controls
             return new Vector2(px, py);
         }
 
+        public virtual void ParseSpecial(string kind, XNode node)
+        {
+            switch(kind)
+            {
+                case "Transitions":
+                    ParseTransitions(node.Nodes);
+                    break;
+
+                case "StateTransitions":
+                    ParseStateTransitions(node.Nodes);
+                    break;
+            }
+        }
+
+        private void ParseStateTransitions(List<XNode> nodes)
+        {
+            foreach(var node in nodes)
+            {
+                stateTransitions.Add(Parent.TransitionsManager.CreateStateTransition(node.Attribute("Key"), node.Attribute("Property")));
+            }
+        }
+
+        private void ParseTransitions(List<XNode> nodes)
+        {
+            foreach(var node in nodes)
+            {
+                transitions.Add(node.Attribute("Event"), node.Attribute("Key"));
+            }
+        }
+
         public virtual Vector2 CalculateSize(RectangleF clientArea, bool includeMargins)
         {
             if (includeMargins)
@@ -198,8 +244,52 @@ namespace CrossX.Forms.Controls
 
         public void Draw(TimeSpan frameTime, Color4 tintColor)
         {
-            if (!IsVisible) return;
-            OnDraw(frameTime, tintColor);
+            bool visiblityTransition = false;
+
+            var useTransitions = Transition != null || stateTransitions.Count > 0;
+
+            currentTransform = Matrix.Identity;
+            if (useTransitions)
+            {
+                Color4 tint = Color4.White;
+                var center = new Vector2( actualX + actualWidth / 2, actualY + actualHeight / 2 );
+                for (var idx = 0; idx < stateTransitions.Count; ++idx)
+                {
+                    var trans = stateTransitions[idx];
+                    trans.Update(center, frameTime, out var tt, out var tc);
+                    currentTransform *= tt;
+                    tint *= tc;
+
+                    if(trans.Name == nameof(IsVisible))
+                    {
+                        visiblityTransition = true;
+                    }
+                }
+
+                if(Transition != null)
+                {
+                    Transition.Update(center, frameTime, out var tt, out var tc);
+                    currentTransform *= tt;
+                    tint *= tc;
+                }
+                
+                tintColor *= tint;
+
+                if (currentTransform == Matrix.Identity) useTransitions = false;
+                else Parent.Transform2D.Push(currentTransform);
+            }
+
+            if (!IsVisible && !visiblityTransition) return;
+
+            if (tintColor.A > 0)
+            {
+                OnDraw(frameTime, tintColor);
+            }
+
+            if(useTransitions)
+            {
+                Parent.Transform2D.Pop();
+            }
         }
 
         protected virtual void OnDraw(TimeSpan frameTime, Color4 tintColor)
@@ -216,6 +306,8 @@ namespace CrossX.Forms.Controls
             {
                 return false;
             }
+
+            position = Vector2.Transform(position, Matrix.Invert(currentTransform));
 
             return OnTouch(id, evnt, position);
         }

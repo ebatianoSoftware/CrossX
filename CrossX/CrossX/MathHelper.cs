@@ -107,16 +107,8 @@ namespace CrossX
 
         public static float SmoothStep(float value1, float value2, float amount)
         {
-            // It is expected that 0 < amount < 1
-            // If amount < 0, return value1
-            // If amount > 1, return value2
-#if(USE_FARSEER)
-            float result = SilverSpriteMathHelper.Clamp(amount, 0f, 1f);
-            result = SilverSpriteMathHelper.Hermite(value1, 0f, value2, 0f, result);
-#else
             float result = MathHelper.Clamp(amount, 0f, 1f);
             result = MathHelper.Hermite(value1, 0f, value2, 0f, result);
-#endif
             return result;
         }
 

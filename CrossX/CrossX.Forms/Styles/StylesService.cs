@@ -24,10 +24,10 @@ namespace CrossX.Forms.Styles
 
         public void ApplyStyle(XNode node)
         {
-            if (node.HasAttribute("Class"))
+            if (node.HasAttribute("meta:Class"))
             {
-                var names = node.Attribute("Class").Split(',', ' ');
-                node.RemoveAttribute("Class");
+                var names = node.Attribute("meta:Class").Split(',', ' ');
+                node.RemoveAttribute("meta:Class");
 
                 foreach (var name in names)
                 {
@@ -45,6 +45,11 @@ namespace CrossX.Forms.Styles
             if(styles.TryGetValue(typeName, out var style2))
             {
                 ApplyStyle(node, style2);
+            }
+
+            foreach(var cn in node.Nodes)
+            {
+                ApplyStyle(cn);
             }
         }
 
@@ -80,6 +85,8 @@ namespace CrossX.Forms.Styles
                 var nn = newNode.AddChildNode(cn.Tag, cn.Namespace);
                 CopyNode(nn, cn);
             }
+
+            ApplyStyle(newNode);
         }
 
         public void LoadStyles(string path)

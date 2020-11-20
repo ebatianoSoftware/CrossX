@@ -8,7 +8,11 @@ namespace CrossX.Forms.Converters
 
     internal class StringToColorConverter : IValueConverter
     {
+        public static readonly StringToColorConverter Instance = new StringToColorConverter();
+
         private static readonly Dictionary<string, Color4> PredefinedColors = new Dictionary<string, Color4>();
+
+        private StringToColorConverter() { }
 
         static StringToColorConverter()
         {

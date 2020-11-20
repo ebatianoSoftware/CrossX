@@ -14,8 +14,9 @@ namespace CrossX.Forms.Controls
         public PrimitiveBatch PrimitiveBatch => Parent.PrimitiveBatch;
         public IControlsLoader ControlsLoader => Parent.ControlsLoader;
         public IObjectFactory ObjectFactory => Parent.ObjectFactory;
-
-        public IFocusable Focus 
+        public ITransitionsManager TransitionsManager => Parent.TransitionsManager;
+        public ITransform2D Transform2D => Parent.Transform2D;
+        public IFocusable Focus
         { 
             get => Parent.Focus;
             set
@@ -28,6 +29,8 @@ namespace CrossX.Forms.Controls
                 }
             }
         }
+
+        
 
         protected readonly List<Control> children = new List<Control>();
 

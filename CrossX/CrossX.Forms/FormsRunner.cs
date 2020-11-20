@@ -7,6 +7,7 @@ using CrossX.Forms.Converters;
 using CrossX.Forms.Converters.Arythmetic;
 using CrossX.Forms.Services;
 using CrossX.Forms.Styles;
+using CrossX.Forms.Transitions;
 using CrossX.Forms.Values;
 using CrossX.Forms.Views;
 using CrossX.Graphics;
@@ -43,6 +44,7 @@ namespace CrossX.Forms
                 .WithType<ConvertersService>().As<IConverters>().AsSingleton()
                 .WithType<StylesService>().As<IStylesService>().As<IStylesServiceEx>().AsSingleton()
                 .WithType<NavigationView>().As<INavigation>().AsSelf().AsSingleton()
+                .WithType<TransitionsManager>().As<ITransitionsManager>().AsSingleton()
                 .WithType<FormsInputService>().As<IFormsInputMapping>().As<IFormsInput>().AsSingleton()
                 .WithType<FontsContainer>().As<IFontsContainer>().As<IFontsLoader>().AsSingleton()
                 .WithType<Application>().As<IApplication>().AsSelf().AsSingleton();
@@ -79,7 +81,7 @@ namespace CrossX.Forms
             defaultConverters.RegisterConverter<string, float>(new StringToFloatConverter());
             defaultConverters.RegisterConverter<string, Margin>(new StringToMarginConverter());
             defaultConverters.RegisterConverter<string, GridLength[]>(new StringToGridRowColumnDefinitionsConverter());
-            defaultConverters.RegisterConverter<string, Color4>(new StringToColorConverter());
+            defaultConverters.RegisterConverter<string, Color4>(StringToColorConverter.Instance);
             defaultConverters.RegisterConverter<float, Length>(new UniversalConverter<float, Length>( o=>new Length(0, o)));
             defaultConverters.RegisterConverter<float, GridLength>(new UniversalConverter<float, GridLength>(o => new GridLength(GridLengthMode.Value, o)));
             defaultConverters.RegisterConverter<string, ImageSource>(objectFactory.Create<StringToImageSourceConverter>());

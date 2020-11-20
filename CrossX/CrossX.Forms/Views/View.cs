@@ -1,6 +1,7 @@
 ﻿using CrossX.Forms.Binding;
 using CrossX.Forms.Controls;
 using CrossX.Forms.Converters;
+using CrossX.Forms.Helpers;
 using CrossX.Forms.Values;
 using CrossX.Forms.Xml;
 using CrossX.Graphics;
@@ -50,24 +51,31 @@ namespace CrossX.Forms.Views
         public bool IsClosing { get => isClosing; private set => SetProperty(ref isClosing, value); }
         public IFocusable Focus { get => focus; set => SetProperty(ref focus, value); }
 
+        public ITransitionsManager TransitionsManager { get; }
+
+        public ITransform2D Transform2D { get; }
+
         private bool isClosing;
         private IFocusable focus;
         private ICommand uiButtonCommand;
         private readonly BindingService bindingService;
 
         public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
-            IFormsInput formsInput,
+            IFormsInput formsInput, ITransitionsManager transitionsManager, 
             FormsViewModel viewModel)
         {
-            SpriteBatch = objectFactory.Create<SpriteBatch>();
-            PrimitiveBatch = objectFactory.Create<PrimitiveBatch>();
+            Transform2D = objectFactory.Create<Transform2D>();
+            SpriteBatch = objectFactory.Create<SpriteBatch>(Transform2D);
+            PrimitiveBatch = objectFactory.Create<PrimitiveBatch>(Transform2D);
             ObjectFactory = objectFactory;
-
+            TransitionsManager = transitionsManager;
+            
             this.graphicsDevice = graphicsDevice;
             this.objectFactory = objectFactory;
             this.converters = converters;
             this.touchPanel = touchPanel;
             this.formsInput = formsInput;
+            
             ViewModel = viewModel;
 
             touchPanel.PointerCaptured += TouchPanel_PointerCaptured;
@@ -97,25 +105,13 @@ namespace CrossX.Forms.Views
         {
             foreach (var cn in node.Nodes)
             {
-                if (cn.Tag == "Page.Transitions")
-                {
-                    ParseTransitions(cn);
-                }
-                else
-                {
-                    if (Root != null) throw new InvalidDataException("Only one root control for page.");
-                    Root = Load(cn);
-                }
+                if (Root != null) throw new InvalidDataException("Only one root control for page.");
+                Root = Load(cn);
             }
 
             LoadProperties(this, node, bindingService, (n, o) => { });
             bindingService.RecreateValues();
             InvalidateLayout();
-        }
-
-        private void ParseTransitions(XNode cn)
-        {
-
         }
 
         private Control Load(XNode node)
@@ -127,7 +123,7 @@ namespace CrossX.Forms.Views
 
         public Control Load(XNode node, IControlParent parent)
         {
-            var type = TypeFromNode(node);
+            var type = XmlHelpers.TypeFromNode(node);
             var control = (Control)objectFactory.Create(type, parent);
             var name = node.Attribute("meta:Name");
 
@@ -138,7 +134,12 @@ namespace CrossX.Forms.Views
 
             foreach (var ns in node.Nodes)
             {
-                if (control is ContainerControl cc)
+                if(ns.Tag.Contains('.'))
+                {
+                    var kind = ns.Tag.Split('.')[1];
+                    control.ParseSpecial(kind, ns);
+                }
+                else  if (control is ContainerControl cc)
                 {
                     cc.AddChild(Load(ns, cc));
                 }
@@ -321,13 +322,6 @@ namespace CrossX.Forms.Views
         public void Close()
         {
             IsFinished = true;
-        }
-
-        private Type TypeFromNode(XNode node)
-        {
-            var ns = node.Namespace.Replace("clr-namespace:", "").Split(',');
-            var name = node.Tag;
-            return Type.GetType(ns[0] + '.' + name + ',' + ns[1]);
         }
 
         public void InvalidateLayout()
