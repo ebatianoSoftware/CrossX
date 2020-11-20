@@ -10,7 +10,7 @@ namespace CrossX.Graphics2D
         private readonly Stack<Matrix> stack = new Stack<Matrix>();
         private readonly IGraphicsDevice graphicsDevice;
 
-        private Transform2D(IGraphicsDevice graphicsDevice)
+        public Transform2D(IGraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
         }

@@ -26,7 +26,7 @@
         public float[] ActualColumnWidth { get; }
         public float[] ActualColumnHeight { get; }
 
-        public Grid(IControlParent parent) : base(parent)
+        public Grid(IControlParent parent, IControlServices services) : base(parent, services)
         {
         }
 

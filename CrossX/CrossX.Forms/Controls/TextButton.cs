@@ -32,7 +32,7 @@ namespace CrossX.Forms.Controls
         private Color4 downColor = Color4.LightGray;
         private Color4 disabledColor = Color4.Gray;
 
-        public TextButton(IControlParent parent, IFontsContainer fontsContainer) : base(parent)
+        public TextButton(IControlParent parent, IFontsContainer fontsContainer, IControlServices services) : base(parent, services)
         {
             this.fontsContainer = fontsContainer;
             VerticalAlignment = Alignment.Start;
@@ -112,12 +112,12 @@ namespace CrossX.Forms.Controls
 
             var color = (IsEnabled && CommandEnabled) ? (IsDown ? downColor : (IsFocused ? focusedColor : normalColor)) : disabledColor;
 
-            Parent.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
+            Services.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
             
             var size = textObject.Size;
             var offsetY = (ActualHeight - size.Y) / 2;
 
-            Parent.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY + offsetY), color * tintColor);
+            Services.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY + offsetY), color * tintColor);
         }
 
         public override void AddChild(Control control)

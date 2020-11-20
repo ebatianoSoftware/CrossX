@@ -38,6 +38,7 @@ namespace CrossX.Forms.Controls
 
         public bool ShouldCalculateLayout { get; protected set; }
         public IControlParent Parent { get; }
+        public IControlServices Services { get; }
 
         private Length width = Length.Auto;
         private Length height = Length.Auto;
@@ -62,10 +63,11 @@ namespace CrossX.Forms.Controls
         private Dictionary<string, string> transitions = new Dictionary<string, string>();
         private List<StateTransition> stateTransitions = new List<StateTransition>();
 
-        protected Control(IControlParent parent)
+        protected Control(IControlParent parent, IControlServices services)
         {
             Parent = parent;
-            BindingService = parent.ObjectFactory.Create<BindingService>(this);
+            Services = services;
+            BindingService = Services.ObjectFactory.Create<BindingService>(this);
         }
 
         public virtual void RecreateBindings()
@@ -185,7 +187,7 @@ namespace CrossX.Forms.Controls
         {
             foreach(var node in nodes)
             {
-                var transition = Parent.TransitionsManager.CreateStateTransition(node.Attribute("Key"), node.Attribute("Property"));
+                var transition = Services.TransitionsManager.CreateStateTransition(node.Attribute("Key"), node.Attribute("Property"));
                 var state = (bool)GetType().GetProperty(transition.Name).GetValue(this);
                 transition.State = state;
                 stateTransitions.Add(transition);
@@ -279,7 +281,7 @@ namespace CrossX.Forms.Controls
                 tintColor *= tint;
 
                 if (currentTransform == Matrix.Identity) useTransitions = false;
-                else Parent.Transform2D.Push(currentTransform);
+                else Services.Transform2D.Push(currentTransform);
             }
 
             if (!IsVisible && !visiblityTransition) return;
@@ -291,7 +293,7 @@ namespace CrossX.Forms.Controls
 
             if(useTransitions)
             {
-                Parent.Transform2D.Pop();
+                Services.Transform2D.Pop();
             }
         }
 
@@ -299,7 +301,7 @@ namespace CrossX.Forms.Controls
         {
             if (background.A > 0)
             {
-                Parent.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
+                Services.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
             }
         }
 

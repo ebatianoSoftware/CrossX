@@ -18,9 +18,9 @@ using System.Windows.Input;
 
 namespace CrossX.Forms.Views
 {
-    internal class View : ObservableDataModel, IObjectWithDataContext, IControlParent, IControlsLoader, IDisposable
+    internal class View : ObservableDataModel, IObjectWithDataContext, IControlParent, IControlServices, IControlsLoader, IDisposable
     {
-        private readonly IGraphicsDevice graphicsDevice;
+        private readonly IUiHost uiHost;
         private readonly IObjectFactory objectFactory;
 
         private readonly IConverters converters;
@@ -60,17 +60,17 @@ namespace CrossX.Forms.Views
         private ICommand uiButtonCommand;
         private readonly BindingService bindingService;
 
-        public View(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
+        public View(IUiHost uiHost, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
             IFormsInput formsInput, ITransitionsManager transitionsManager, 
             FormsViewModel viewModel)
         {
-            Transform2D = objectFactory.Create<Transform2D>();
+            Transform2D = uiHost.Transform2D;
             SpriteBatch = objectFactory.Create<SpriteBatch>(Transform2D);
             PrimitiveBatch = objectFactory.Create<PrimitiveBatch>(Transform2D);
             ObjectFactory = objectFactory;
             TransitionsManager = transitionsManager;
             
-            this.graphicsDevice = graphicsDevice;
+            this.uiHost = uiHost;
             this.objectFactory = objectFactory;
             this.converters = converters;
             this.touchPanel = touchPanel;
@@ -87,17 +87,18 @@ namespace CrossX.Forms.Views
             bindingService = new BindingService(this, converters);
         }
 
-        private void TouchPanel_PointerUp(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Up, point.Position);
+        private void TouchPanel_PointerUp(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Up, CalculateTouchPosition(point.Position));
 
-        private void TouchPanel_PointerRemoved(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Remove, point.Position);
+        private void TouchPanel_PointerRemoved(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Remove, CalculateTouchPosition(point.Position));
 
-        private void TouchPanel_PointerMove(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Move, point.Position);
+        private void TouchPanel_PointerMove(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Move, CalculateTouchPosition(point.Position));
 
         private void TouchPanel_PointerDown(TouchPoint point)
         {
-            // TODO: disable when transition in progress.
-            Root.ProcessTouch(point.Id, TouchEvent.Down, point.Position);
+            Root.ProcessTouch(point.Id, TouchEvent.Down, CalculateTouchPosition(point.Position));
         }
+
+        private Vector2 CalculateTouchPosition(Vector2 point) => uiHost.ScreenToUiUnits(point);
 
         private void TouchPanel_PointerCaptured(long id, object capturedBy) => Root.OnPointerCaptured(id, capturedBy);
 
@@ -124,7 +125,7 @@ namespace CrossX.Forms.Views
         public Control Load(XNode node, IControlParent parent)
         {
             var type = XmlHelpers.TypeFromNode(node);
-            var control = (Control)objectFactory.Create(type, parent);
+            var control = (Control)objectFactory.Create(type, parent, this);
             var name = node.Attribute("meta:Name");
 
             if (!string.IsNullOrEmpty(name))
@@ -268,14 +269,14 @@ namespace CrossX.Forms.Views
 
         public void Update(TimeSpan frameTime)
         {
-            if (clientSize != graphicsDevice.CurrentTargetSize)
+            if (clientSize != uiHost.TargetRect.Size)
             {
                 shouldCalculateLayout = true;
             }
             if (shouldCalculateLayout)
             {
-                var screenSize = graphicsDevice.CurrentTargetSize;
-                var clientArea = new RectangleF(0, 0, screenSize.Width, screenSize.Height);
+                var screenSize = uiHost.TargetRect.Size;
+                var clientArea = uiHost.TargetRect;
                 Root.CalculateSizeWithMargins(clientArea, out var size, out var _);
                 var position = Root.CalculatePosition(clientArea, size);
                 Root.PositionControl(position, size);

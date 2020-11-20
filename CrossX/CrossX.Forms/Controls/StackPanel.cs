@@ -8,7 +8,7 @@ namespace CrossX.Forms.Controls
         private Orientation orientation = Orientation.Vertical;
         public Orientation Orientation { get => orientation; set => SetProperty( ref orientation, value); }
 
-        public StackPanel(IControlParent parent) : base(parent)
+        public StackPanel(IControlParent parent, IControlServices services) : base(parent, services)
         {
         }
 

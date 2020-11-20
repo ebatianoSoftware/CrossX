@@ -25,7 +25,7 @@ namespace CrossX.Forms.Controls
 
         private bool shouldUpdateText = true;
 
-        public Label(IControlParent parent, IFontsContainer fontsContainer) : base(parent)
+        public Label(IControlParent parent, IFontsContainer fontsContainer, IControlServices services) : base(parent, services)
         {
             this.fontsContainer = fontsContainer;
             VerticalAlignment = Alignment.Start;
@@ -99,8 +99,8 @@ namespace CrossX.Forms.Controls
         {
             base.OnDraw(frameTime, tintColor);
 
-            Parent.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
-            Parent.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY), textColor * tintColor);
+            Services.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
+            Services.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY), textColor * tintColor);
         }
     }
 }

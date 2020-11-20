@@ -33,7 +33,7 @@ namespace CrossX.Forms.Controls
 
         protected bool CommandEnabled { get; private set; } = true;
 
-        public Button(IControlParent parent) : base(parent)
+        public Button(IControlParent parent, IControlServices services) : base(parent, services)
         {
         }
 

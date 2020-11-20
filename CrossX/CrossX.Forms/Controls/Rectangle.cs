@@ -2,7 +2,7 @@
 {
     public class Rectangle : Control
     {
-        public Rectangle(IControlParent parent) : base(parent)
+        public Rectangle(IControlParent parent, IControlServices services) : base(parent, services)
         {
         }
     }

@@ -1,6 +1,4 @@
 ﻿using CrossX.Forms.Values;
-using CrossX.Graphics2D;
-using CrossX.IoC;
 using System;
 using System.Collections.Generic;
 
@@ -10,12 +8,6 @@ namespace CrossX.Forms.Controls
     {
         public IEnumerable<Control> Children => children;
 
-        public SpriteBatch SpriteBatch => Parent.SpriteBatch;
-        public PrimitiveBatch PrimitiveBatch => Parent.PrimitiveBatch;
-        public IControlsLoader ControlsLoader => Parent.ControlsLoader;
-        public IObjectFactory ObjectFactory => Parent.ObjectFactory;
-        public ITransitionsManager TransitionsManager => Parent.TransitionsManager;
-        public ITransform2D Transform2D => Parent.Transform2D;
         public IFocusable Focus
         { 
             get => Parent.Focus;
@@ -30,11 +22,9 @@ namespace CrossX.Forms.Controls
             }
         }
 
-        
-
         protected readonly List<Control> children = new List<Control>();
 
-        protected ContainerControl(IControlParent parent) : base(parent)
+        protected ContainerControl(IControlParent parent, IControlServices services) : base(parent, services)
         {
         }
 

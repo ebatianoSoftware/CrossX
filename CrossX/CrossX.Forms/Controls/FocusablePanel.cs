@@ -18,7 +18,7 @@ namespace CrossX.Forms.Controls
         public bool IsFocused { get => isFocused; private set => SetProperty(ref isFocused, value); }
         private bool isFocused;
 
-        public FocusablePanel(IControlParent parent) : base(parent)
+        public FocusablePanel(IControlParent parent, IControlServices services) : base(parent, services)
         {
         }
 

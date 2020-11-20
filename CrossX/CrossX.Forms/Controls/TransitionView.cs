@@ -4,7 +4,7 @@
     {
         
 
-        public TransitionView(IControlParent parent) : base(parent)
+        public TransitionView(IControlParent parent, IControlServices services) : base(parent, services)
         {
 
         }

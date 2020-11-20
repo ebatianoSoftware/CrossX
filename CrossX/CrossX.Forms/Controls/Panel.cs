@@ -5,7 +5,7 @@ namespace CrossX.Forms.Controls
 {
     public class Panel : ContainerControl
     {
-        public Panel(IControlParent parent) : base(parent)
+        public Panel(IControlParent parent, IControlServices services) : base(parent, services)
         {
         }
 

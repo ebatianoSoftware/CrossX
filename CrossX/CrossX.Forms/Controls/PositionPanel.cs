@@ -11,7 +11,7 @@ namespace CrossX.Forms.Controls
         private Length x;
         private Length y;
 
-        public PositionPanel(IControlParent parent) : base(parent)
+        public PositionPanel(IControlParent parent, IControlServices services) : base(parent, services)
         {
             HorizontalAlignment = Alignment.Center;
             VerticalAlignment = Alignment.Center;

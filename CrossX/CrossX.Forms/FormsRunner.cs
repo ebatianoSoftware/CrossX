@@ -8,6 +8,7 @@ using CrossX.Forms.Converters.Arythmetic;
 using CrossX.Forms.Services;
 using CrossX.Forms.Styles;
 using CrossX.Forms.Transitions;
+using CrossX.Forms.UiHosts;
 using CrossX.Forms.Values;
 using CrossX.Forms.Views;
 using CrossX.Graphics;
@@ -26,6 +27,7 @@ namespace CrossX.Forms
         private IServicesProvider servicesProvider;
         private NavigationView navigationView;
         private Application application;
+        private IUiHost uiHost;
 
         public FormsRunner(IServicesProvider servicesProvider, IGraphicsDevice graphicsDevice, IObjectFactory objectFactory)
         {
@@ -53,6 +55,12 @@ namespace CrossX.Forms
             {
                 contentManager = new ContentManager();
                 scopeBuilder.WithInstance(contentManager).As<IContentManager>();
+            }
+
+            if (!servicesProvider.TryResolveInstance(out uiHost) && !scopeBuilder.HasRegisteredInstance(typeof(IUiHost)))
+            {
+                uiHost = new TransparentUiHost(graphicsDevice);
+                scopeBuilder.WithInstance(uiHost).As<IUiHost>();
             }
 
             servicesProvider = scopeBuilder.Build();
@@ -94,9 +102,9 @@ namespace CrossX.Forms
 
         public void Draw(TimeSpan frameTime)
         {
-            graphicsDevice.Clear(Color4.Black);
+            uiHost.BeginDraw();
             navigationView.Draw(frameTime);
-            graphicsDevice.Present();
+            uiHost.EndDraw();
         }
 
         public void Update(TimeSpan frameTime)

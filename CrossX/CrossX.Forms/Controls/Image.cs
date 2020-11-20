@@ -15,7 +15,7 @@ namespace CrossX.Forms.Controls
         public Stretch Stretch { get => stretch; set => SetProperty(ref stretch, value); }
         public SpriteFlags Flags { get => flags; set => SetProperty(ref flags, value); }
 
-        public Image(IControlParent parent) : base(parent)
+        public Image(IControlParent parent, IControlServices services) : base(parent, services)
         {
             HorizontalAlignment = Alignment.Start;
             VerticalAlignment = Alignment.Start;
@@ -71,7 +71,7 @@ namespace CrossX.Forms.Controls
                 rect.Height -= (int)Math.Ceiling(diff);
             }
 
-            Parent.SpriteBatch.DrawImage(Source.Texture, position, rect, tintColor, scale, flags);
+            Services.SpriteBatch.DrawImage(Source.Texture, position, rect, tintColor, scale, flags);
         }
 
         public override Vector2 CalculateSize(RectangleF clientArea, bool includeMargins)
