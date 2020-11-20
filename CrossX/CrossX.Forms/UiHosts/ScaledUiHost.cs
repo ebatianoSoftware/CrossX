@@ -36,7 +36,7 @@ namespace CrossX.Forms.UiHosts
             this.objectFactory = objectFactory;
             Transform2D = new Transform2D(graphicsDevice);
 
-            aaSamples = Math.Max(1, Math.Min(4, parameters.AaSamples));
+            aaSamples = Math.Max(1, Math.Min(6, parameters.AaSamples));
 
             calculateScale = parameters.CalculateScale;
             CalculateScale();
@@ -101,7 +101,7 @@ namespace CrossX.Forms.UiHosts
             if (renderTarget != null)
             {
                 graphicsDevice.Clear(Color4.Black);
-                spriteBatch.TextureFilter = TextureFilter.Linear;
+                spriteBatch.TextureFilter = TextureFilter.Anisotropic;
                 spriteBatch.DrawImage(renderTarget, new RectangleF(0,0,graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height), null, Color4.White);
                 spriteBatch.Flush();
             }

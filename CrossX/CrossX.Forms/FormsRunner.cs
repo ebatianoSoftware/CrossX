@@ -46,6 +46,7 @@ namespace CrossX.Forms
                 .WithType<ConvertersService>().As<IConverters>().AsSingleton()
                 .WithType<StylesService>().As<IStylesService>().As<IStylesServiceEx>().AsSingleton()
                 .WithType<NavigationView>().As<INavigation>().AsSelf().AsSingleton()
+                .WithType<FormsSounds>().As<IFormsSounds>().AsSingleton()
                 .WithType<TransitionsManager>().As<ITransitionsManager>().AsSingleton()
                 .WithType<FormsInputService>().As<IFormsInputMapping>().As<IFormsInput>().AsSingleton()
                 .WithType<FontsContainer>().As<IFontsContainer>().As<IFontsLoader>().AsSingleton()

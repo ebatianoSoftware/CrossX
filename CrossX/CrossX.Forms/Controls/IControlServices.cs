@@ -11,5 +11,6 @@ namespace CrossX.Forms.Controls
         IObjectFactory ObjectFactory { get; }
         ITransitionsManager TransitionsManager { get; }
         ITransform2D Transform2D { get; }
+        IFormsSounds Sounds { get; }
     }
 }

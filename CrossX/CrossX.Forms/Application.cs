@@ -12,6 +12,9 @@ namespace CrossX.Forms
         private readonly IStylesService stylesService;
         private readonly IFilesRepository filesRepository;
 
+        public TimeSpan TotalTime { get; private set; } = TimeSpan.Zero;
+        public TimeSpan DeltaTime { get; private set; } = TimeSpan.Zero;
+
         public event Action<TimeSpan> BeforeUpdate;
         public event Action<TimeSpan> AfterUpdate;
 
@@ -39,7 +42,12 @@ namespace CrossX.Forms
             }
         }
 
-        public void RaiseBeforeUpdate(TimeSpan time) => BeforeUpdate?.Invoke(time);
+        public void RaiseBeforeUpdate(TimeSpan time)
+        {
+            TotalTime += time;
+            DeltaTime = time;
+            BeforeUpdate?.Invoke(time);
+        }
         public void RaiseAfterUpdate(TimeSpan time) => AfterUpdate?.Invoke(time);
     }
 }

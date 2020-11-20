@@ -80,6 +80,7 @@ namespace CrossX.Forms.Controls
                         pointerId = id;
                         IsDown = true;
                         Focus = this;
+                        Services.Sounds.Focus?.Play();
                         return true;
                     }
                     break;
@@ -92,6 +93,7 @@ namespace CrossX.Forms.Controls
 
                         if (CheckPointerIn(position) && IsEnabled && CommandEnabled)
                         {
+                            Services.Sounds.Select?.Play();
                             Command?.Execute(CommandParameter);
                         }
                     }
@@ -148,9 +150,9 @@ namespace CrossX.Forms.Controls
             return base.OnUiButtonPressed(button);
         }
 
-        public override void Update(TimeSpan frameTime)
+        protected override void OnUpdate(TimeSpan frameTime)
         {
-            base.Update(frameTime);
+            base.OnUpdate(frameTime);
             if(timeToExecute > 0)
             {
                 timeToExecute -= (float)frameTime.TotalSeconds;
@@ -158,12 +160,18 @@ namespace CrossX.Forms.Controls
                 {
                     if (CommandEnabled)
                     {
+                        Services.Sounds.Select?.Play();
                         Command?.Execute(CommandParameter);
                     }
                     timeToExecute = 0;
                     IsDown = false;
                 }
             }
+        }
+
+        protected override void OnDraw(TimeSpan frameTime, Color4 tintColor)
+        {
+            base.OnDraw(frameTime, tintColor);
         }
     }
 }

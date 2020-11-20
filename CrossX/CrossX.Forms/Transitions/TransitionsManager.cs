@@ -58,7 +58,20 @@ namespace CrossX.Forms.Transitions
 
         private void ParseTransition(XNode node)
         {
-            
+            var key = node.Attribute("Key");
+            var attr = new XNodeAttributes(node);
+
+            var duration = (float)attr.AsInt32("Duration", 100) / 1000.0f;
+            var inverted = attr.AsBoolean("Inverted");
+
+            var transforms = new Transform[node.Nodes.Count];
+
+            for (var idx = 0; idx < node.Nodes.Count; ++idx)
+            {
+                transforms[idx] = ParseTransform(node.Nodes[idx]);
+            }
+
+            transitions.Add(key, new Transition(key, duration, inverted, transforms));
         }
 
         private void ParseStateTransition(XNode node)

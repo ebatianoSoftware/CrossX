@@ -7,6 +7,9 @@ namespace CrossX.Forms
         event Action<TimeSpan> BeforeUpdate;
         event Action<TimeSpan> AfterUpdate;
 
+        TimeSpan TotalTime { get; }
+        TimeSpan DeltaTime { get; }
+
         void LoadStyles(string name);
     }
 }

@@ -8,6 +8,21 @@ namespace CrossX.Forms.Controls
     {
         public IEnumerable<Control> Children => children;
 
+        public override bool TransitionInProgress
+        {
+            get
+            {
+                if (Transition != null) return true;
+
+                for(var idx=0; idx < children.Count; ++idx)
+                {
+                    if (children[idx].TransitionInProgress) return true;
+                }
+
+                return false;
+            }
+        }
+
         public IFocusable Focus
         { 
             get => Parent.Focus;
@@ -43,7 +58,7 @@ namespace CrossX.Forms.Controls
             }
         }
 
-        public override void Update(TimeSpan frameTime)
+        protected override void OnUpdate(TimeSpan frameTime)
         {
             for (var idx = 0; idx < children.Count; ++idx)
             {
@@ -95,6 +110,16 @@ namespace CrossX.Forms.Controls
             for (var idx = 0; idx < children.Count; ++idx)
             {
                 children[idx].OnPointerCaptured(id, capturedBy);
+            }
+        }
+
+        public override void TriggerEvent(string name)
+        {
+            base.TriggerEvent(name);
+
+            for(var idx =0; idx < children.Count; ++idx)
+            {
+                children[idx].TriggerEvent(name);
             }
         }
     }

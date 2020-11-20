@@ -36,7 +36,9 @@ namespace CrossX.Forms.Views
             viewModel.SetNavigation(this);
 
             viewModels.Push(viewModel);
-            AddView(viewModel);
+
+            views.LastOrDefault()?.Close(false);
+            AddView(viewModel, false);
         }
 
         private XNode LoadViewForVm(FormsViewModel vm)
@@ -58,17 +60,12 @@ namespace CrossX.Forms.Views
             return node;
         }
 
-        private void AddView(FormsViewModel vm)
+        private void AddView(FormsViewModel vm, bool fromBackNavigation)
         {
             var node = LoadViewForVm(vm);
 
             var view = objectFactory.Create<View>(vm);
-            view.LoadView(node);
-
-            foreach (var cv in views)
-            {
-                cv.Close();
-            }
+            view.LoadView(node, fromBackNavigation);
             views.Add(view);
         }
 
@@ -82,39 +79,56 @@ namespace CrossX.Forms.Views
 
         public void Update(TimeSpan frameTime)
         {
-            for(var idx =0; idx < views.Count; )
+            for(var idx =0; idx < views.Count; ++idx)
             {
-                if(views[idx].IsFinished)
+                views[idx].Update(frameTime);
+            }
+
+            for(var idx =0; idx < views.Count;)
+            {
+                if (views[idx].IsFinished)
                 {
                     views.RemoveAt(idx);
                     continue;
                 }
-                views[idx].Update(frameTime);
-                ++idx;
+                idx++;
             }
         }
 
         public void NavigatePopup<TViewModel>(params object[] args) where TViewModel : FormsViewModel
         {
             popupNavigations.Push(views.Last().ViewModel);
-            Navigate<TViewModel>(args);
+
+            var viewModel = objectFactory.Create<TViewModel>();
+            viewModel.SetNavigation(this);
+
+            viewModels.Push(viewModel);
+            AddView(viewModel, false);
         }
 
         public void FinishPopup()
         {
             var noPopupVm = popupNavigations.Count > 0 ? popupNavigations.Pop() : null;
+
             while(viewModels.Peek() != noPopupVm)
             {
-                NavigateBack();
+                NavigateBackVm();
             }
+            views.LastOrDefault()?.Close(true);
         }
 
         public void NavigateBack()
         {
+            views.LastOrDefault()?.Close(true);
+            NavigateBackVm();
+            AddView(viewModels.Peek(), true);
+        }
+
+        private void NavigateBackVm()
+        {
             var noPopupVm = popupNavigations.Count > 0 ? popupNavigations.Pop() : null;
             viewModels.Pop();
             if (viewModels.Peek() == noPopupVm) popupNavigations.Pop();
-
         }
     }
 }

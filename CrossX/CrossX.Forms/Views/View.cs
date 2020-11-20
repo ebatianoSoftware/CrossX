@@ -55,27 +55,29 @@ namespace CrossX.Forms.Views
 
         public ITransform2D Transform2D { get; }
 
+        public IFormsSounds Sounds { get; }
+
         private bool isClosing;
         private IFocusable focus;
         private ICommand uiButtonCommand;
         private readonly BindingService bindingService;
 
         public View(IUiHost uiHost, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
-            IFormsInput formsInput, ITransitionsManager transitionsManager, 
-            FormsViewModel viewModel)
+            IFormsInput formsInput, ITransitionsManager transitionsManager,
+            FormsViewModel viewModel, IFormsSounds sounds)
         {
             Transform2D = uiHost.Transform2D;
             SpriteBatch = objectFactory.Create<SpriteBatch>(Transform2D);
             PrimitiveBatch = objectFactory.Create<PrimitiveBatch>(Transform2D);
             ObjectFactory = objectFactory;
             TransitionsManager = transitionsManager;
-            
+
             this.uiHost = uiHost;
             this.objectFactory = objectFactory;
             this.converters = converters;
             this.touchPanel = touchPanel;
             this.formsInput = formsInput;
-            
+
             ViewModel = viewModel;
 
             touchPanel.PointerCaptured += TouchPanel_PointerCaptured;
@@ -85,6 +87,7 @@ namespace CrossX.Forms.Views
             touchPanel.PointerUp += TouchPanel_PointerUp;
 
             bindingService = new BindingService(this, converters);
+            Sounds = sounds;
         }
 
         private void TouchPanel_PointerUp(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Up, CalculateTouchPosition(point.Position));
@@ -95,6 +98,7 @@ namespace CrossX.Forms.Views
 
         private void TouchPanel_PointerDown(TouchPoint point)
         {
+            if (Root.TransitionInProgress) return;
             Root.ProcessTouch(point.Id, TouchEvent.Down, CalculateTouchPosition(point.Position));
         }
 
@@ -102,7 +106,7 @@ namespace CrossX.Forms.Views
 
         private void TouchPanel_PointerCaptured(long id, object capturedBy) => Root.OnPointerCaptured(id, capturedBy);
 
-        public void LoadView(XNode node)
+        public void LoadView(XNode node, bool fromBackNavigation)
         {
             foreach (var cn in node.Nodes)
             {
@@ -113,6 +117,7 @@ namespace CrossX.Forms.Views
             LoadProperties(this, node, bindingService, (n, o) => { });
             bindingService.RecreateValues();
             InvalidateLayout();
+            Root.TriggerEvent(fromBackNavigation ? "ViewBackNavigateTo" : "ViewNavigateTo");
         }
 
         private Control Load(XNode node)
@@ -284,15 +289,18 @@ namespace CrossX.Forms.Views
                 shouldCalculateLayout = false;
             }
             Root.BeforeUpdate();
-
             ProcessUiButtons();
-
             Root.Update(frameTime);
+
+            if (IsClosing)
+            {
+                IsFinished = !Root.TransitionInProgress;
+            }
         }
 
         private void ProcessUiButtons()
         {
-            // Disable when transition in progress
+            if (Root.TransitionInProgress) return;
             var focusable = Focus;
 
             for (var idx = 0; idx < AllUiButtons.Length; ++idx)
@@ -320,9 +328,13 @@ namespace CrossX.Forms.Views
             return control;
         }
 
-        public void Close()
+        public void Close(bool backNavigation)
         {
-            IsFinished = true;
+            if (IsClosing) return;
+
+            IsClosing = true;
+            Root.TriggerEvent(backNavigation ? "ViewBackNavigateFrom" : "ViewNavigateFrom");
+            IsFinished = !Root.TransitionInProgress;
         }
 
         public void InvalidateLayout()

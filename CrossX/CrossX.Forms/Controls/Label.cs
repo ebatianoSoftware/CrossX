@@ -108,6 +108,8 @@ namespace CrossX.Forms.Controls
         {
             base.OnDraw(frameTime, tintColor);
 
+            if (textObject == null) UpdateText();
+
             Services.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
             Services.SpriteBatch.DrawText(textObject, new Vector2(ActualX, ActualY), textColor * tintColor);
         }

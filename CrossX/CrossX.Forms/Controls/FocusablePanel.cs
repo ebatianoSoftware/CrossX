@@ -30,6 +30,7 @@ namespace CrossX.Forms.Controls
                     if (moveLeft != null)
                     {
                         Focus = moveLeft;
+                        Services.Sounds.Focus?.Play();
                         return true;
                     }
                     break;
@@ -38,6 +39,7 @@ namespace CrossX.Forms.Controls
                     if (moveRight != null)
                     {
                         Focus = moveRight;
+                        Services.Sounds.Focus?.Play();
                         return true;
                     }
                     break;
@@ -46,6 +48,7 @@ namespace CrossX.Forms.Controls
                     if (moveDown != null)
                     {
                         Focus = moveDown;
+                        Services.Sounds.Focus?.Play();
                         return true;
                     }
                     break;
@@ -54,6 +57,7 @@ namespace CrossX.Forms.Controls
                     if (moveUp != null)
                     {
                         Focus = moveUp;
+                        Services.Sounds.Focus?.Play();
                         return true;
                     }
                     break;
@@ -72,9 +76,9 @@ namespace CrossX.Forms.Controls
             return false;
         }
 
-        public override void Update(TimeSpan frameTime)
+        protected override void OnUpdate(TimeSpan frameTime)
         {
-            base.Update(frameTime);
+            base.OnUpdate(frameTime);
             IsFocused = (Focus == this);
         }
     }

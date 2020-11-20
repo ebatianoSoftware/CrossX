@@ -60,6 +60,8 @@ namespace CrossX.Forms.Controls
 
         public Transition Transition { get; protected set; }
 
+        public virtual bool TransitionInProgress => Transition != null;
+
         private Dictionary<string, string> transitions = new Dictionary<string, string>();
         private List<StateTransition> stateTransitions = new List<StateTransition>();
 
@@ -245,7 +247,12 @@ namespace CrossX.Forms.Controls
             return default;
         }
 
-        public virtual void Update(TimeSpan frameTime) { }
+        public void Update(TimeSpan frameTime)
+        {
+            OnUpdate(frameTime);
+        }
+
+        protected virtual void OnUpdate(TimeSpan frameTime) { }
 
         public void Draw(TimeSpan frameTime, Color4 tintColor)
         {
@@ -276,6 +283,11 @@ namespace CrossX.Forms.Controls
                     Transition.Update(center, frameTime, out var tt, out var tc);
                     currentTransform *= tt;
                     tint *= tc;
+
+                    if(Transition.IsFinished)
+                    {
+                        Transition = null;
+                    }
                 }
                 
                 tintColor *= tint;
@@ -325,6 +337,14 @@ namespace CrossX.Forms.Controls
         protected virtual bool OnTouch(long id, TouchEvent evnt, Vector2 position)
         {
             return false;
+        }
+
+        public virtual void TriggerEvent(string name)
+        {
+            if(transitions.TryGetValue(name, out var key))
+            {
+                Transition = Services.TransitionsManager.CreateTransition(key, name);
+            }
         }
 
         public virtual void Dispose()

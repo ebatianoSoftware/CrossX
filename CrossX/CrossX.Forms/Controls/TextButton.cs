@@ -128,8 +128,8 @@ namespace CrossX.Forms.Controls
         {
             base.OnDraw(frameTime, tintColor);
 
+            if (textObject == null) UpdateText();
             var color = (IsEnabled && CommandEnabled) ? (IsDown ? downColor : (IsFocused ? focusedColor : normalColor)) : disabledColor;
-
             Services.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
 
             var size = textObject.Size;

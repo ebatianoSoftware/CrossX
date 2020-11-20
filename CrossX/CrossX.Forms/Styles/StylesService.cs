@@ -63,12 +63,15 @@ namespace CrossX.Forms.Styles
                 }
             }
 
-            foreach(var cn in style.Content)
+            if (style.Content != null)
             {
-                if( null == node.Nodes.Find( o=>o.Tag == cn.Tag && o.Namespace == cn.Namespace))
+                foreach (var cn in style.Content)
                 {
-                    var newNode = node.AddChildNode(cn.Tag, cn.Namespace);
-                    CopyNode(newNode, cn);
+                    if (null == node.Nodes.Find(o => o.Tag == cn.Tag && o.Namespace == cn.Namespace && cn.Tag.Contains(".")))
+                    {
+                        var newNode = node.AddChildNode(cn.Tag, cn.Namespace);
+                        CopyNode(newNode, cn);
+                    }
                 }
             }
         }
