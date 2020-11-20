@@ -7,6 +7,7 @@ namespace CrossX.Forms.UiHosts
     public class TransparentUiHost : IUiHost
     {
         private readonly IGraphicsDevice graphicsDevice;
+        public ITransform2D Transform2D { get; }
 
         public TransparentUiHost(IGraphicsDevice graphicsDevice)
         {
@@ -15,8 +16,6 @@ namespace CrossX.Forms.UiHosts
         }
 
         public Rectangle TargetRect => new Rectangle(0, 0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height);
-
-        public ITransform2D Transform2D { get; }
 
         public void BeginDraw()
         {
@@ -32,6 +31,11 @@ namespace CrossX.Forms.UiHosts
         public Vector2 ScreenToUiUnits(Vector2 screenPoint)
         {
             return screenPoint;
+        }
+
+        public void Update()
+        {
+            
         }
     }
 }

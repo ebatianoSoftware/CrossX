@@ -40,7 +40,7 @@ namespace CrossX.Forms
         public void LoadContent()
         {
             var servicesInitializer = objectFactory.Create<TServicesInitializer>();
-            servicesInitializer.InitializeServices(scopeBuilder);
+            servicesInitializer.InitializeServices(scopeBuilder, servicesProvider);
 
             scopeBuilder
                 .WithType<ConvertersService>().As<IConverters>().AsSingleton()
@@ -59,13 +59,13 @@ namespace CrossX.Forms
 
             if (!servicesProvider.TryResolveInstance(out uiHost) && !scopeBuilder.HasRegisteredInstance(typeof(IUiHost)))
             {
-                uiHost = new TransparentUiHost(graphicsDevice);
-                scopeBuilder.WithInstance(uiHost).As<IUiHost>();
+                scopeBuilder.WithType<TransparentUiHost>().As<IUiHost>().AsSingleton();
             }
 
             servicesProvider = scopeBuilder.Build();
             objectFactory = servicesProvider.GetService<IObjectFactory>();
             navigationView = servicesProvider.GetService<NavigationView>();
+            uiHost = servicesProvider.GetService<IUiHost>();
 
             var defaultConverters = servicesProvider.GetService<IConverters>();
             RegisterConverters(defaultConverters, objectFactory);
@@ -109,6 +109,7 @@ namespace CrossX.Forms
 
         public void Update(TimeSpan frameTime)
         {
+            uiHost.Update();
             application.RaiseBeforeUpdate(frameTime);
             navigationView.Update(frameTime);
             application.RaiseAfterUpdate(frameTime);

@@ -5,6 +5,7 @@ namespace CrossX.Forms
 {
     public interface IUiHost
     {
+        void Update();
         void BeginDraw();
         Rectangle TargetRect { get; }
         void EndDraw();
