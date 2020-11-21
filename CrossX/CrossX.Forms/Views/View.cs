@@ -106,7 +106,7 @@ namespace CrossX.Forms.Views
 
         private void TouchPanel_PointerCaptured(long id, object capturedBy) => Root.OnPointerCaptured(id, capturedBy);
 
-        public void LoadView(XNode node, bool fromBackNavigation)
+        public void LoadView(XNode node, string @event)
         {
             foreach (var cn in node.Nodes)
             {
@@ -117,7 +117,7 @@ namespace CrossX.Forms.Views
             LoadProperties(this, node, bindingService, (n, o) => { });
             bindingService.RecreateValues();
             InvalidateLayout();
-            Root.TriggerEvent(fromBackNavigation ? "ViewBackNavigateTo" : "ViewNavigateTo");
+            Root.TriggerEvent(@event);
         }
 
         private Control Load(XNode node)
@@ -328,12 +328,12 @@ namespace CrossX.Forms.Views
             return control;
         }
 
-        public void Close(bool backNavigation)
+        public void Close(string @event)
         {
             if (IsClosing) return;
 
             IsClosing = true;
-            Root.TriggerEvent(backNavigation ? "ViewBackNavigateFrom" : "ViewNavigateFrom");
+            Root.TriggerEvent(@event);
             IsFinished = !Root.TransitionInProgress;
         }
 

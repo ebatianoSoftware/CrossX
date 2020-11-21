@@ -37,7 +37,6 @@ namespace CrossX.Audio.Decoders
             catch { }
 
             bytes = 0;
-            if (reader.IsEndOfStream) return false;
             if (count == 0) return false;
 
             for (var idx = 0; idx < count; idx++)

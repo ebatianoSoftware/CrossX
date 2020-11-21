@@ -13,6 +13,11 @@ namespace CrossX.Forms.Views
 {
     internal class NavigationView : INavigation
     {
+        private const string ViewBackNavigateTo = "ViewBackNavigateTo";
+        private const string ViewNavigateFrom = "ViewNavigateFrom";
+        private const string ViewNavigateTo = "ViewNavigateTo";
+        private const string ViewBackNavigateFrom = "ViewBackNavigateFrom";
+
         private readonly IFilesRepository filesRepository;
         private readonly IObjectFactory objectFactory;
         private readonly IStylesServiceEx stylesService;
@@ -30,15 +35,15 @@ namespace CrossX.Forms.Views
             this.stylesService = stylesService;
         }
 
-        public void Navigate<TViewModel>(params object[] args) where TViewModel: FormsViewModel
+        public void Navigate<TViewModel>(NavigationParameters parameters = null, params object[] args) where TViewModel : FormsViewModel
         {
             var viewModel = objectFactory.Create<TViewModel>();
             viewModel.SetNavigation(this);
 
             viewModels.Push(viewModel);
 
-            views.LastOrDefault()?.Close(false);
-            AddView(viewModel, false);
+            views.LastOrDefault()?.Close(parameters?.NavigationFromEvent ?? ViewNavigateFrom);
+            AddView(viewModel, parameters?.NavigationToEvent ?? ViewNavigateTo);
         }
 
         private XNode LoadViewForVm(FormsViewModel vm)
@@ -60,12 +65,12 @@ namespace CrossX.Forms.Views
             return node;
         }
 
-        private void AddView(FormsViewModel vm, bool fromBackNavigation)
+        private void AddView(FormsViewModel vm, string @event)
         {
             var node = LoadViewForVm(vm);
 
             var view = objectFactory.Create<View>(vm);
-            view.LoadView(node, fromBackNavigation);
+            view.LoadView(node, @event);
             views.Add(view);
         }
 
@@ -95,18 +100,19 @@ namespace CrossX.Forms.Views
             }
         }
 
-        public void NavigatePopup<TViewModel>(params object[] args) where TViewModel : FormsViewModel
+        public void NavigatePopup<TViewModel>(NavigationParameters parameters = null, params object[] args) where TViewModel : FormsViewModel
         {
             popupNavigations.Push(views.Last().ViewModel);
 
             var viewModel = objectFactory.Create<TViewModel>();
             viewModel.SetNavigation(this);
 
+
             viewModels.Push(viewModel);
-            AddView(viewModel, false);
+            AddView(viewModel, parameters?.NavigationToEvent ?? ViewNavigateTo);
         }
 
-        public void FinishPopup()
+        public void FinishPopup(string closeEvent = null)
         {
             var noPopupVm = popupNavigations.Count > 0 ? popupNavigations.Pop() : null;
 
@@ -114,14 +120,14 @@ namespace CrossX.Forms.Views
             {
                 NavigateBackVm();
             }
-            views.LastOrDefault()?.Close(true);
+            views.LastOrDefault()?.Close(closeEvent ?? ViewBackNavigateFrom);
         }
 
-        public void NavigateBack()
+        public void NavigateBack(NavigationParameters parameters = null)
         {
-            views.LastOrDefault()?.Close(true);
+            views.LastOrDefault()?.Close(parameters?.NavigationFromEvent ?? ViewBackNavigateFrom);
             NavigateBackVm();
-            AddView(viewModels.Peek(), true);
+            AddView(viewModels.Peek(), parameters?.NavigationToEvent ?? ViewBackNavigateTo);
         }
 
         private void NavigateBackVm()
@@ -129,6 +135,16 @@ namespace CrossX.Forms.Views
             var noPopupVm = popupNavigations.Count > 0 ? popupNavigations.Pop() : null;
             viewModels.Pop();
             if (viewModels.Peek() == noPopupVm) popupNavigations.Pop();
+        }
+
+        public void Clear(string closeEvent = null)
+        {
+            popupNavigations.Clear();
+            viewModels.Clear();
+            foreach(var view in views)
+            {
+                view.Close(closeEvent ?? ViewNavigateFrom);
+            }
         }
     }
 }

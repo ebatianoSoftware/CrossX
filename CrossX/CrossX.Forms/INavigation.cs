@@ -2,9 +2,10 @@
 {
     public interface INavigation
     {
-        void Navigate<TViewModel>(params object[] args) where TViewModel : FormsViewModel;
-        void NavigatePopup<TViewModel>(params object[] args) where TViewModel : FormsViewModel;
-        void NavigateBack();
-        void FinishPopup();
+        void Navigate<TViewModel>(NavigationParameters parameters = null, params object[] args) where TViewModel : FormsViewModel;
+        void NavigatePopup<TViewModel>(NavigationParameters parameters = null, params object[] args) where TViewModel : FormsViewModel;
+        void NavigateBack(NavigationParameters parameters = null);
+        void FinishPopup(string closeEvent = null);
+        void Clear(string closeEvent = null);
     }
 }

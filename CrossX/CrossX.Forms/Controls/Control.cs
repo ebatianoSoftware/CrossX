@@ -313,7 +313,7 @@ namespace CrossX.Forms.Controls
         {
             if (background.A > 0)
             {
-                Services.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background);
+                Services.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background * tintColor);
             }
         }
 
