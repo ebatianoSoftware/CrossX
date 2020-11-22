@@ -11,15 +11,13 @@ namespace CrossX.Forms.Controls
     public abstract class Control : ObservableDataModel, IDisposable, IObjectWithDataContext
     {
         public Color4 Background { get => background; set => SetProperty(ref background, value); }
-        private Color4 background = Color4.Transparent;
-
+        public bool SmoothBackground { get => smoothBackground; set => SetProperty(ref smoothBackground, value); }
         public Length Width { get => width; set => SetProperty(ref width, value); }
         public Length Height { get => height; set => SetProperty(ref height, value); }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Margin Margin { get => margin; set => SetProperty(ref margin, value); }
         public bool IsVisible { get => isVisible; set => SetProperty(ref isVisible, value); }
-
         public float ActualWidth { get => actualWidth; private set => SetProperty(ref actualWidth, value); }
         public float ActualHeight { get => actualHeight; private set => SetProperty(ref actualHeight, value); }
         public float ActualX { get => actualX; private set => SetProperty(ref actualX, value); }
@@ -40,6 +38,7 @@ namespace CrossX.Forms.Controls
         public IControlParent Parent { get; }
         public IControlServices Services { get; }
 
+        private Color4 background = Color4.Transparent;
         private Length width = Length.Auto;
         private Length height = Length.Auto;
         private float actualWidth;
@@ -64,6 +63,7 @@ namespace CrossX.Forms.Controls
 
         private Dictionary<string, string> transitions = new Dictionary<string, string>();
         private List<StateTransition> stateTransitions = new List<StateTransition>();
+        private bool smoothBackground;
 
         protected Control(IControlParent parent, IControlServices services)
         {
@@ -96,9 +96,9 @@ namespace CrossX.Forms.Controls
                     break;
             }
 
-            for(var idx =0; idx < stateTransitions.Count; ++idx)
+            for (var idx = 0; idx < stateTransitions.Count; ++idx)
             {
-                if(stateTransitions[idx].Name == name)
+                if (stateTransitions[idx].Name == name)
                 {
                     var state = (bool)GetType().GetProperty(name).GetValue(this);
                     stateTransitions[idx].State = state;
@@ -173,7 +173,7 @@ namespace CrossX.Forms.Controls
 
         public virtual void ParseSpecial(string kind, XNode node)
         {
-            switch(kind)
+            switch (kind)
             {
                 case "Transitions":
                     ParseTransitions(node.Nodes);
@@ -187,7 +187,7 @@ namespace CrossX.Forms.Controls
 
         private void ParseStateTransitions(List<XNode> nodes)
         {
-            foreach(var node in nodes)
+            foreach (var node in nodes)
             {
                 var transition = Services.TransitionsManager.CreateStateTransition(node.Attribute("Key"), node.Attribute("Property"));
                 var state = (bool)GetType().GetProperty(transition.Name).GetValue(this);
@@ -198,7 +198,7 @@ namespace CrossX.Forms.Controls
 
         private void ParseTransitions(List<XNode> nodes)
         {
-            foreach(var node in nodes)
+            foreach (var node in nodes)
             {
                 transitions.Add(node.Attribute("Event"), node.Attribute("Key"));
             }
@@ -214,7 +214,7 @@ namespace CrossX.Forms.Controls
             var pw = width.Value + clientArea.Width * width.Percent;
             var ph = height.Value + clientArea.Height * height.Percent;
 
-            if (horizontalAlignment == Alignment.Stretch && clientArea.Width >=0 ) pw = clientArea.Width;
+            if (horizontalAlignment == Alignment.Stretch && clientArea.Width >= 0) pw = clientArea.Width;
             if (verticalAlignment == Alignment.Stretch && clientArea.Height >= 0) ph = clientArea.Height;
 
             pw = Math.Max(0, pw);
@@ -264,7 +264,7 @@ namespace CrossX.Forms.Controls
             if (useTransitions)
             {
                 Color4 tint = Color4.White;
-                var center = new Vector2( actualX + actualWidth / 2, actualY + actualHeight / 2 );
+                var center = new Vector2(actualX + actualWidth / 2, actualY + actualHeight / 2);
                 for (var idx = 0; idx < stateTransitions.Count; ++idx)
                 {
                     var trans = stateTransitions[idx];
@@ -272,24 +272,24 @@ namespace CrossX.Forms.Controls
                     currentTransform *= tt;
                     tint *= tc;
 
-                    if(trans.Name == nameof(IsVisible))
+                    if (trans.Name == nameof(IsVisible))
                     {
                         visiblityTransition = true;
                     }
                 }
 
-                if(Transition != null)
+                if (Transition != null)
                 {
                     Transition.Update(center, frameTime, out var tt, out var tc);
                     currentTransform *= tt;
                     tint *= tc;
 
-                    if(Transition.IsFinished)
+                    if (Transition.IsFinished)
                     {
                         Transition = null;
                     }
                 }
-                
+
                 tintColor *= tint;
 
                 if (currentTransform == Matrix.Identity) useTransitions = false;
@@ -303,7 +303,7 @@ namespace CrossX.Forms.Controls
                 OnDraw(frameTime, tintColor);
             }
 
-            if(useTransitions)
+            if (useTransitions)
             {
                 Services.Transform2D.Pop();
             }
@@ -313,7 +313,14 @@ namespace CrossX.Forms.Controls
         {
             if (background.A > 0)
             {
-                Services.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background * tintColor);
+                if (smoothBackground)
+                {
+                    Services.SpriteBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background * tintColor);
+                }
+                else
+                {
+                    Services.PrimitiveBatch.DrawRect(new RectangleF(ActualX, ActualY, ActualWidth, ActualHeight), background * tintColor);
+                }
             }
         }
 
@@ -341,7 +348,7 @@ namespace CrossX.Forms.Controls
 
         public virtual void TriggerEvent(string name)
         {
-            if(transitions.TryGetValue(name, out var key))
+            if (transitions.TryGetValue(name, out var key))
             {
                 Transition = Services.TransitionsManager.CreateTransition(key, name);
             }

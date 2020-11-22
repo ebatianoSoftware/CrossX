@@ -88,7 +88,7 @@ namespace CrossX.Forms.UiHosts
         public void BeginDraw()
         {
             if (renderTarget != null) graphicsDevice.SetRenderTarget(renderTarget);
-            graphicsDevice.Clear(Color4.Blue);
+            graphicsDevice.Clear(Color4.Black);
 
             Transform2D.Push(Matrix.CreateScale(new Vector3(ScaleToPixel, ScaleToPixel, 1)));
         }

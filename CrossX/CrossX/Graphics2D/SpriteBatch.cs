@@ -1,4 +1,5 @@
-﻿using CrossX.Graphics;
+﻿using CrossX.Data;
+using CrossX.Graphics;
 using CrossX.Graphics.Effects;
 using CrossX.Graphics2D.Text;
 using CrossX.IoC;
@@ -22,6 +23,8 @@ namespace CrossX.Graphics2D
         private TextureFilter textureFilter = TextureFilter.Linear;
         private TextureMode textureMode = TextureMode.WrapU | TextureMode.WrapV;
         private BlendMode blendMode = BlendMode.AlphaBlend;
+
+        private Texture2D whiteTexture;
 
         public TextureFilter TextureFilter
         {
@@ -56,6 +59,12 @@ namespace CrossX.Graphics2D
         {
             this.graphicsDevice = graphicsDevice;
             this.transform2D = transform2D;
+
+            using (var stream = typeof(SpriteBatch).Assembly.GetManifestResourceStream("CrossX.Graphics2D.Assets.White9.png"))
+            {
+                whiteTexture = objectFactory.Create<Texture2D>(stream);
+            }
+
             graphicsDevice.FlushRequest += GraphicsDevice_FlushRequest;
 
             vertexBuffer = objectFactory.Create<VertexBuffer>(new VertexBufferCreationOptions
@@ -74,6 +83,7 @@ namespace CrossX.Graphics2D
         public void Dispose()
         {
             Flush();
+            whiteTexture.Dispose();
             vertexBuffer.Dispose();
             graphicsDevice.FlushRequest -= GraphicsDevice_FlushRequest;
         }
@@ -232,6 +242,69 @@ namespace CrossX.Graphics2D
                     AddVertex(vertex.Position + position, vertex.TextureCoordinate, color);
                 }
             }
+        }
+
+        private struct ARect
+        {
+            public float Left;
+            public float Right;
+            public float Top;
+            public float Bottom;
+
+            public ARect(float l, float t, float r, float b)
+            {
+                Left = l;
+                Top = t;
+                Right = r;
+                Bottom = b;
+            }
+        }
+
+        public void DrawRect(RectangleF rect, Color4 color)
+        {
+            graphicsDevice.Flush(this);
+            SetTexture(whiteTexture);
+
+            var a = 2f / 8f;
+            var b = 6f / 8f;
+
+            // TopLeft
+            AddRect(new RectangleF(rect.Left - 1, rect.Top - 1, 2, 2), color, new ARect(0, 0, a, a));
+
+            // Top
+            AddRect(new RectangleF(rect.Left + 1, rect.Top - 1, rect.Width - 2, 2), color, new ARect(a, 0, b, a));
+
+            // TopRight
+            AddRect(new RectangleF(rect.Right - 1, rect.Top - 1, 2, 2), color, new ARect(b, 0, 1, a));
+
+            // Left
+            AddRect(new RectangleF(rect.Left - 1, rect.Top + 1, 2, rect.Height - 2), color, new ARect(0, a, a, b));
+
+            // Middle
+            AddRect(new RectangleF(rect.Left + 1, rect.Top + 1, rect.Width - 2, rect.Height - 2), color, new ARect(a, a, b, b));
+
+            // Right
+            AddRect(new RectangleF(rect.Right - 1, rect.Top + 1, 2, rect.Height - 2), color, new ARect(b, a, 1, b));
+
+            // Bottom
+            AddRect(new RectangleF(rect.Left + 1, rect.Bottom - 1, rect.Width - 2, 2), color, new ARect(a, b, b, 1));
+
+            // BottomLeft
+            AddRect(new RectangleF(rect.Left - 1, rect.Bottom - 1, 2, 2), color, new ARect(0, b, a, 1));
+
+            // BottomRight
+            AddRect(new RectangleF(rect.Right - 1, rect.Bottom - 1, 2, 2), color, new ARect(b, b, 1, 1));
+        }
+
+        private void AddRect(RectangleF targetRect, Color4 color, ARect tex)
+        {
+            AddVertex(new Vector2(targetRect.Left, targetRect.Top), new Vector2(tex.Left, tex.Top), color);
+            AddVertex(new Vector2(targetRect.Left, targetRect.Bottom), new Vector2(tex.Left, tex.Bottom), color);
+            AddVertex(new Vector2(targetRect.Right, targetRect.Bottom), new Vector2(tex.Right, tex.Bottom), color);
+
+            AddVertex(new Vector2(targetRect.Left, targetRect.Top), new Vector2(tex.Left, tex.Top), color);
+            AddVertex(new Vector2(targetRect.Right, targetRect.Bottom), new Vector2(tex.Right, tex.Bottom), color);
+            AddVertex(new Vector2(targetRect.Right, targetRect.Top), new Vector2(tex.Right, tex.Top), color);
         }
 
         private void SetTexture(Texture2D texture)
