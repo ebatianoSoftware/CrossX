@@ -107,7 +107,6 @@ namespace CrossX.Forms.Views
             var viewModel = objectFactory.Create<TViewModel>();
             viewModel.SetNavigation(this);
 
-
             viewModels.Push(viewModel);
             AddView(viewModel, parameters?.NavigationToEvent ?? ViewNavigateTo);
         }
@@ -133,7 +132,7 @@ namespace CrossX.Forms.Views
         private void NavigateBackVm()
         {
             var noPopupVm = popupNavigations.Count > 0 ? popupNavigations.Pop() : null;
-            viewModels.Pop();
+            viewModels.Pop().Dispose();
             if (viewModels.Peek() == noPopupVm) popupNavigations.Pop();
         }
 
@@ -144,6 +143,7 @@ namespace CrossX.Forms.Views
             foreach(var view in views)
             {
                 view.Close(closeEvent ?? ViewNavigateFrom);
+                view.ViewModel.Dispose();
             }
         }
     }

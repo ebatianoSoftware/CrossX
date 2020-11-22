@@ -88,6 +88,8 @@ namespace CrossX.Forms.Views
 
             bindingService = new BindingService(this, converters);
             Sounds = sounds;
+
+            viewModel.CallNavigateTo();
         }
 
         private void TouchPanel_PointerUp(TouchPoint point) => Root.ProcessTouch(point.Id, TouchEvent.Up, CalculateTouchPosition(point.Position));
@@ -335,6 +337,7 @@ namespace CrossX.Forms.Views
             IsClosing = true;
             Root.TriggerEvent(@event);
             IsFinished = !Root.TransitionInProgress;
+            ViewModel.CallNavigateFrom();
         }
 
         public void InvalidateLayout()

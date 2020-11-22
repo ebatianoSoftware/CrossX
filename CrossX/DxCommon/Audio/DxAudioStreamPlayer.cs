@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace CrossX.DxCommon.Audio
 {
-    internal class DxAudioStreamPlayer : AudioStreamPlayer, IDisposable
+    internal class DxAudioStreamPlayer : AudioStreamPlayer
     {
         private WaveFormat format;
         private readonly IAudioStream stream;
@@ -119,7 +119,7 @@ namespace CrossX.DxCommon.Audio
             SubmitBuffersIfNeeded();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             if (disposed) return;
 
