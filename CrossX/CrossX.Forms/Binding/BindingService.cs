@@ -36,6 +36,25 @@ namespace CrossX.Forms.Binding
             return bindingDescs.FirstOrDefault(o => o.TargetProperty.Name == propertyName) != null;
         }
 
+        public bool TrySetValue(string propertyName, object value)
+        {
+            // TODO: Add converter support
+            var desc = bindingDescs.FirstOrDefault(o => o.TargetProperty.Name == propertyName);
+            if (desc == null) return false;
+
+            if (!desc.TargetProperty.CanWrite) return false;
+
+            var index = bindingDescs.IndexOf(desc);
+            
+            var prop = sourceProperties[index];
+            if (prop == null || !prop.CanWrite) return false;
+
+            if (prop.PropertyType != value.GetType()) return false;
+
+            prop.SetValue(sources[index], value);
+            return true;
+        }
+
         private void DetachSources()
         {
             for (var idx = 0; idx < sources.Length; ++idx)

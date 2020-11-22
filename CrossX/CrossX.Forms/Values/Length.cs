@@ -19,5 +19,7 @@
             Percent = percent;
             Value = value;
         }
+
+        public float Calculate(float size) => Value + Percent * size;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CrossX.Forms.Values;
 using System;
+using System.Windows.Input;
 
 namespace CrossX.Forms.Controls
 {
@@ -15,8 +16,13 @@ namespace CrossX.Forms.Controls
         public IFocusable MoveUpTo { get => moveUp; set => SetProperty(ref moveUp, value); }
         public IFocusable MoveDownTo { get => moveDown; set => SetProperty(ref moveDown, value); }
 
+        public ICommand LeftCommand { get => leftCommand; set => SetProperty(ref leftCommand, value); }
+        public ICommand RightCommand { get => rightCommand; set => SetProperty(ref rightCommand, value); }
+
         public bool IsFocused { get => isFocused; private set => SetProperty(ref isFocused, value); }
         private bool isFocused;
+        private ICommand leftCommand;
+        private ICommand rightCommand;
 
         public FocusablePanel(IControlParent parent, IControlServices services) : base(parent, services)
         {

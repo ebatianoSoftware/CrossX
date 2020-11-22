@@ -37,6 +37,8 @@ namespace CrossX.Forms.Controls
         private float scaleToPixel = 1;
         private Margin padding = Margin.Zero;
 
+        protected Color4 CurrentTextColor => (IsEnabled && CommandEnabled) ? (IsDown ? downColor : (IsFocused ? focusedColor : normalColor)) : disabledColor;
+
         public TextButton(IControlParent parent, IFontsContainer fontsContainer, IControlServices services, IUiHost uiHost) : base(parent, services)
         {
             this.fontsContainer = fontsContainer;
@@ -129,7 +131,7 @@ namespace CrossX.Forms.Controls
             base.OnDraw(frameTime, tintColor);
 
             if (textObject == null) UpdateText();
-            var color = (IsEnabled && CommandEnabled) ? (IsDown ? downColor : (IsFocused ? focusedColor : normalColor)) : disabledColor;
+            var color = CurrentTextColor;
             Services.SpriteBatch.TextureFilter = Graphics.TextureFilter.Anisotropic;
 
             var size = textObject.Size;
@@ -140,7 +142,7 @@ namespace CrossX.Forms.Controls
 
         public override void AddChild(Control control)
         {
-            throw new InvalidOperationException("TextButton cannot have children");
+            throw new InvalidOperationException("TextButton cannot have child controls.");
         }
     }
 }

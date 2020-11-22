@@ -168,10 +168,5 @@ namespace CrossX.Forms.Controls
                 }
             }
         }
-
-        protected override void OnDraw(TimeSpan frameTime, Color4 tintColor)
-        {
-            base.OnDraw(frameTime, tintColor);
-        }
     }
 }
