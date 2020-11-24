@@ -4,17 +4,29 @@ namespace CrossX.Audio
 {    
     internal class SoundSettings : ISoundSettings
     {
-        private double volume = 1;
+        private float soundVolume = 1;
+        private float musicVolume = 1;
 
-        public double Volume 
+        public float SoundVolume 
         { 
-            get => volume; 
+            get => soundVolume; 
             set
             {
-                volume = value;
+                soundVolume = value;
                 ParametersChanged?.Invoke();
             }
         }
+
+        public float MusicVolume
+        {
+            get => musicVolume;
+            set
+            {
+                musicVolume = value;
+                ParametersChanged?.Invoke();
+            }
+        }
+
         public event Action ParametersChanged;
     }
 }

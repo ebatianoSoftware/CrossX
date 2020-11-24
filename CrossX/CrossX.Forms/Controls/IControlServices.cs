@@ -1,4 +1,5 @@
 ﻿using CrossX.Graphics2D;
+using CrossX.Input;
 using CrossX.IoC;
 
 namespace CrossX.Forms.Controls
@@ -12,5 +13,7 @@ namespace CrossX.Forms.Controls
         ITransitionsManager TransitionsManager { get; }
         ITransform2D Transform2D { get; }
         IFormsSounds Sounds { get; }
+        CursorType CursorType { set; }
+        IMouse Mouse { get; }
     }
 }

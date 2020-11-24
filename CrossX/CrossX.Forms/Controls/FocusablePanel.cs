@@ -36,6 +36,7 @@ namespace CrossX.Forms.Controls
                     if (moveLeft != null)
                     {
                         Focus = moveLeft;
+                        Focus.OnFocusFromButton(button);
                         Services.Sounds.Focus?.Play();
                         return true;
                     }
@@ -45,6 +46,7 @@ namespace CrossX.Forms.Controls
                     if (moveRight != null)
                     {
                         Focus = moveRight;
+                        Focus.OnFocusFromButton(button);
                         Services.Sounds.Focus?.Play();
                         return true;
                     }
@@ -54,6 +56,7 @@ namespace CrossX.Forms.Controls
                     if (moveDown != null)
                     {
                         Focus = moveDown;
+                        Focus.OnFocusFromButton(button);
                         Services.Sounds.Focus?.Play();
                         return true;
                     }
@@ -63,6 +66,7 @@ namespace CrossX.Forms.Controls
                     if (moveUp != null)
                     {
                         Focus = moveUp;
+                        Focus.OnFocusFromButton(button);
                         Services.Sounds.Focus?.Play();
                         return true;
                     }
@@ -70,6 +74,14 @@ namespace CrossX.Forms.Controls
             }
 
             return false;
+        }
+
+        public void OnFocusFromButton(UiButton uiButton)
+        {
+            if(!IsVisible)
+            {
+                OnUiButtonPressed(uiButton);
+            }
         }
 
         public bool OnUiButtonReleased(UiButton button)

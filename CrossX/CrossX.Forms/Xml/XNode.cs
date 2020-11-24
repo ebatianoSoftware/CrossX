@@ -172,6 +172,12 @@ namespace CrossX.Forms.Xml
             attributes.Add(name, value);
         }
 
+        public void WriteAttribute(string name, string value)
+        {
+            if (value == null) return;
+            attributes[name] = value;
+        }
+
         public XNode EnucleateAttributes(string attribPrefix)
         {
             var node = new XNode(parent, LineNumber);

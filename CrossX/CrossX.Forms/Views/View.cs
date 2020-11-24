@@ -10,6 +10,7 @@ using CrossX.Input;
 using CrossX.IoC;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace CrossX.Forms.Views
         private readonly IConverters converters;
         private readonly ITouchPanel touchPanel;
         private readonly IFormsInput formsInput;
+        public  IMouse Mouse { get; }
 
         public SpriteBatch SpriteBatch { get; }
         public PrimitiveBatch PrimitiveBatch { get; }
@@ -56,6 +58,7 @@ namespace CrossX.Forms.Views
         public ITransform2D Transform2D { get; }
 
         public IFormsSounds Sounds { get; }
+        public CursorType CursorType { private get; set; }
 
         private bool isClosing;
         private IFocusable focus;
@@ -64,7 +67,7 @@ namespace CrossX.Forms.Views
 
         public View(IUiHost uiHost, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
             IFormsInput formsInput, ITransitionsManager transitionsManager,
-            FormsViewModel viewModel, IFormsSounds sounds)
+            FormsViewModel viewModel, IFormsSounds sounds, IMouse mouse)
         {
             Transform2D = uiHost.Transform2D;
             SpriteBatch = objectFactory.Create<SpriteBatch>(Transform2D);
@@ -88,7 +91,7 @@ namespace CrossX.Forms.Views
 
             bindingService = new BindingService(this, converters);
             Sounds = sounds;
-
+            Mouse = mouse;
             viewModel.CallNavigateTo();
         }
 
@@ -104,7 +107,7 @@ namespace CrossX.Forms.Views
             Root.ProcessTouch(point.Id, TouchEvent.Down, CalculateTouchPosition(point.Position));
         }
 
-        private Vector2 CalculateTouchPosition(Vector2 point) => uiHost.ScreenToUiUnits(point);
+        private Vector2 CalculateTouchPosition(Vector2 point) => point;
 
         private void TouchPanel_PointerCaptured(long id, object capturedBy) => Root.OnPointerCaptured(id, capturedBy);
 
@@ -272,6 +275,7 @@ namespace CrossX.Forms.Views
         public void Draw(TimeSpan frameTime)
         {
             Root.Draw(frameTime, Color4.White);
+            Mouse.Cursor = CursorType;
         }
 
         public void Update(TimeSpan frameTime)

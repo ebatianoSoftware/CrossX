@@ -30,6 +30,7 @@ namespace CrossX.Forms.Controls
 
                 for (var idx = 0; idx < children.Count; ++idx)
                 {
+                    if (!children[idx].LayoutVisible) continue;
                     children[idx].CalculateSizeWithMargins(RectangleF.Empty, out var _, out var sizeWithMargins);
                     panelSize.X = MathHelper.Max(panelSize.X, sizeWithMargins.X);
                 }
@@ -41,6 +42,7 @@ namespace CrossX.Forms.Controls
 
                 for (var idx = 0; idx < children.Count; ++idx)
                 {
+                    if (!children[idx].LayoutVisible) continue;
                     children[idx].CalculateSizeWithMargins(RectangleF.Empty, out var _, out var sizeWithMargins);
                     panelSize.Y = MathHelper.Max(panelSize.Y, sizeWithMargins.Y);
                 }

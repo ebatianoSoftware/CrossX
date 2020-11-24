@@ -2,8 +2,10 @@
 using CrossX.Forms.Transitions;
 using CrossX.Forms.Values;
 using CrossX.Forms.Xml;
+using CrossX.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace CrossX.Forms.Controls
@@ -49,21 +51,26 @@ namespace CrossX.Forms.Controls
         private Alignment verticalAlignment = Alignment.Stretch;
         private Margin margin = Margin.Zero;
 
-        private Matrix currentTransform = Matrix.Identity;
+        protected Matrix CurrentTransform { get; private set; } = Matrix.Identity;
 
         private Dictionary<string, object> customProperties;
         private object dataContext;
         private bool isVisible = true;
         public BindingService BindingService { get; }
         protected RectangleF ClientArea => new RectangleF(actualX, actualY, actualWidth, actualHeight);
-
         public Transition Transition { get; protected set; }
 
+        public CursorType Cursor { get => cursor; set => SetProperty(ref cursor, value); }
         public virtual bool TransitionInProgress => Transition != null;
 
         private Dictionary<string, string> transitions = new Dictionary<string, string>();
         private List<StateTransition> stateTransitions = new List<StateTransition>();
         private bool smoothBackground;
+        private bool layoutVisible;
+
+        private CursorType cursor = CursorType.Arrow;
+
+        public bool LayoutVisible { get => layoutVisible; private set => SetProperty(ref layoutVisible, value); }
 
         protected Control(IControlParent parent, IControlServices services)
         {
@@ -92,6 +99,9 @@ namespace CrossX.Forms.Controls
                 case nameof(Margin):
                 case nameof(HorizontalAlignment):
                 case nameof(VerticalAlignment):
+                case nameof(LayoutVisible):
+                case nameof(IsVisible):
+                    Parent.InvalidateLayout();
                     ShouldCalculateLayout = true;
                     break;
             }
@@ -260,28 +270,28 @@ namespace CrossX.Forms.Controls
 
             var useTransitions = Transition != null || stateTransitions.Count > 0;
 
-            currentTransform = Matrix.Identity;
             if (useTransitions)
             {
+                var transform = Matrix.Identity;
                 Color4 tint = Color4.White;
                 var center = new Vector2(actualX + actualWidth / 2, actualY + actualHeight / 2);
                 for (var idx = 0; idx < stateTransitions.Count; ++idx)
                 {
                     var trans = stateTransitions[idx];
                     trans.Update(center, frameTime, out var tt, out var tc);
-                    currentTransform *= tt;
+                    transform *= tt;
                     tint *= tc;
 
                     if (trans.Name == nameof(IsVisible))
                     {
-                        visiblityTransition = true;
+                        visiblityTransition = tint.A > 0;
                     }
                 }
 
                 if (Transition != null)
                 {
                     Transition.Update(center, frameTime, out var tt, out var tc);
-                    currentTransform *= tt;
+                    transform *= tt;
                     tint *= tc;
 
                     if (Transition.IsFinished)
@@ -292,14 +302,22 @@ namespace CrossX.Forms.Controls
 
                 tintColor *= tint;
 
-                if (currentTransform == Matrix.Identity) useTransitions = false;
-                else Services.Transform2D.Push(currentTransform);
+                if (transform == Matrix.Identity) useTransitions = false;
+                else Services.Transform2D.Push(transform);
             }
 
-            if (!IsVisible && !visiblityTransition) return;
+            CurrentTransform = Services.Transform2D.Transform;
+
+            LayoutVisible = IsVisible || visiblityTransition;
+            if (!LayoutVisible) return;
 
             if (tintColor.A > 0)
             {
+                var position = Vector2.Transform(Services.Mouse.Position, Matrix.Invert(CurrentTransform));
+                if (ClientArea.Contains(position.X, position.Y))
+                {
+                    Services.CursorType = Cursor;
+                }
                 OnDraw(frameTime, tintColor);
             }
 
@@ -330,9 +348,6 @@ namespace CrossX.Forms.Controls
             {
                 return false;
             }
-
-            position = Vector2.Transform(position, Matrix.Invert(currentTransform));
-
             return OnTouch(id, evnt, position);
         }
 

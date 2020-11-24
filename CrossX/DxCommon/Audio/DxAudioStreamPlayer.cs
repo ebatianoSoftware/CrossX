@@ -14,11 +14,14 @@ namespace CrossX.DxCommon.Audio
     internal class DxAudioStreamPlayer : AudioStreamPlayer
     {
         private WaveFormat format;
+        private readonly ISoundSettings soundSettings;
         private readonly IAudioStream stream;
         private readonly IDispatcher dispatcher;
         private SourceVoice voice;
         private bool disposed;
         private bool loop;
+
+        private float volume;
 
         private Queue<byte[]> submitedBuffers = new Queue<byte[]>();
         private readonly ObjectPool<byte[]> arraysPool = new ObjectPool<byte[]>();
@@ -27,17 +30,21 @@ namespace CrossX.DxCommon.Audio
         { 
             get
             {
-                voice.GetVolume(out var vol);
-                return vol;
+                return volume;
             }
 
-            set => voice.SetVolume(value);
+            set
+            {
+                volume = value;
+                voice.SetVolume(volume * soundSettings.MusicVolume);
+            }
         }
 
         public override event Action Finished;
 
-        public DxAudioStreamPlayer(DxAudioManager audioManager, IAudioStream stream, IDispatcher dispatcher)
+        public DxAudioStreamPlayer(DxAudioManager audioManager, ISoundSettings soundSettings, IAudioStream stream, IDispatcher dispatcher)
         {
+            this.soundSettings = soundSettings;
             this.stream = stream;
             this.dispatcher = dispatcher;
 
@@ -45,10 +52,15 @@ namespace CrossX.DxCommon.Audio
 
             format = new WaveFormat(stream.SampleRate, stream.BitRate, stream.Channels);
             voice = new SourceVoice(audioManager.Xaudio2, format);
-            
-            voice.SetVolume(1);
+
+            Volume = 1;
             voice.BufferEnd += Voice_BufferEnd;
+
+            soundSettings.ParametersChanged += SoundSettings_ParametersChanged;
+
         }
+
+        private void SoundSettings_ParametersChanged() => Volume = volume;
 
         private void Voice_BufferEnd(IntPtr id)
         {
@@ -127,7 +139,7 @@ namespace CrossX.DxCommon.Audio
             Reset();
 
             voice.BufferEnd -= Voice_BufferEnd;
-
+            soundSettings.ParametersChanged -= SoundSettings_ParametersChanged;
             var voiceToDestroy = voice;
 
             voice = null;

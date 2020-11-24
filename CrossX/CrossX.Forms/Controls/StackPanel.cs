@@ -70,6 +70,8 @@ namespace CrossX.Forms.Controls
 
             foreach (var child in children)
             {
+                if (!child.LayoutVisible) continue;
+
                 if (orientation == Orientation.Horizontal)
                     width -= child.Margin.Left + child.Margin.Right;
                 else height -= child.Margin.Top + child.Margin.Bottom;
@@ -77,6 +79,8 @@ namespace CrossX.Forms.Controls
 
             foreach (var child in children)
             {
+                if (!child.LayoutVisible) continue;
+
                 if (orientation == Orientation.Horizontal)
                 {
                     clientArea.Height = width - child.Margin.Top - child.Margin.Bottom;

@@ -109,19 +109,19 @@ namespace CrossX.Forms.UiHosts
             graphicsDevice.Present();
         }
 
-        public Vector2 ScreenToUiUnits(Vector2 screenPoint)
-        {
-            var size = graphicsDevice.Size;
+        //public Vector2 ScreenToUiUnits(Vector2 screenPoint)
+        //{
+        //    var size = graphicsDevice.Size;
 
-            var scaleX = (float)TargetRect.Width / (float)size.Width;
-            var scaleY = (float)TargetRect.Height / (float)size.Height;
+        //    var scaleX = (float)TargetRect.Width / (float)size.Width;
+        //    var scaleY = (float)TargetRect.Height / (float)size.Height;
 
-            var point = screenPoint;
+        //    var point = screenPoint;
 
-            point.X *= scaleX;
-            point.Y *= scaleY;
+        //    point.X *= scaleX;
+        //    point.Y *= scaleY;
 
-            return point;
-        }
+        //    return point;
+        //}
     }
 }

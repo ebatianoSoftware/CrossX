@@ -1,4 +1,5 @@
 ﻿using CrossX.Forms.Attributes;
+using CrossX.Forms.Services;
 using CrossX.Forms.Styles;
 using CrossX.Forms.Xml;
 using CrossX.IO;
@@ -21,6 +22,7 @@ namespace CrossX.Forms.Views
         private readonly IFilesRepository filesRepository;
         private readonly IObjectFactory objectFactory;
         private readonly IStylesServiceEx stylesService;
+        private readonly IXmlFlagsService xmlFlagsService;
         private List<View> views = new List<View>();
 
         private Stack<FormsViewModel> popupNavigations = new Stack<FormsViewModel>();
@@ -28,11 +30,12 @@ namespace CrossX.Forms.Views
 
         private Dictionary<Type, XNode> preloadedNodes = new Dictionary<Type, XNode>();
 
-        public NavigationView(IFilesRepository filesRepository, IObjectFactory objectFactory, IStylesServiceEx stylesService)
+        public NavigationView(IFilesRepository filesRepository, IObjectFactory objectFactory, IStylesServiceEx stylesService, IXmlFlagsService xmlFlagsService)
         {
             this.filesRepository = filesRepository;
             this.objectFactory = objectFactory;
             this.stylesService = stylesService;
+            this.xmlFlagsService = xmlFlagsService;
         }
 
         public void Navigate<TViewModel>(NavigationParameters parameters = null, params object[] args) where TViewModel : FormsViewModel
@@ -57,6 +60,7 @@ namespace CrossX.Forms.Views
             {
                 var xmlReader = XmlReader.Create(stream);
                 node = XNode.ReadXml(xmlReader);
+                xmlFlagsService.Apply(node);
                 stylesService.ApplyStyle(node);
             }
             if (node.Tag != "Page") throw new InvalidOperationException();

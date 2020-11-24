@@ -45,6 +45,7 @@ namespace CrossX.Forms
             scopeBuilder
                 .WithType<ConvertersService>().As<IConverters>().AsSingleton()
                 .WithType<StylesService>().As<IStylesService>().As<IStylesServiceEx>().AsSingleton()
+                .WithType<XmlFlagsService>().As<IXmlFlagsService>().AsSingleton()
                 .WithType<NavigationView>().As<INavigation>().AsSelf().AsSingleton()
                 .WithType<FormsSounds>().As<IFormsSounds>().AsSingleton()
                 .WithType<TransitionsManager>().As<ITransitionsManager>().AsSingleton()

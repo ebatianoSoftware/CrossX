@@ -9,7 +9,7 @@ namespace CrossX.Forms.Controls
     {
         public TextSource Text { get => text; set => SetProperty(ref text, value); }
         public bool IsDown { get => isDown; private set => SetProperty(ref isDown, value); }
-        
+        public bool IsToggled { get => isToggled; set => SetProperty(ref isToggled, value); }
         public bool IsEnabled { get => isEnabled; private set => SetProperty(ref isEnabled, value); }
         public int PushAndExecuteTime { get => pushAndExecuteTime; set => SetProperty(ref pushAndExecuteTime, value); }
 
@@ -30,11 +30,13 @@ namespace CrossX.Forms.Controls
 
         private float timeToExecute = 0;
         private int pushAndExecuteTime = 100;
+        private bool isToggled;
 
         protected bool CommandEnabled { get; private set; } = true;
 
         public Button(IControlParent parent, IControlServices services) : base(parent, services)
         {
+            Cursor = Input.CursorType.Hand;
         }
 
         protected override void OnPropertyChanged(string name)
@@ -66,7 +68,7 @@ namespace CrossX.Forms.Controls
         {
             if (base.OnTouch(id, evnt, position)) return true;
 
-            if (!IsEnabled && !CommandEnabled)
+            if (!IsEnabled && !CommandEnabled || !IsVisible)
             {
                 IsDown = false;
                 pointerId = null;
@@ -93,6 +95,7 @@ namespace CrossX.Forms.Controls
 
                         if (CheckPointerIn(position) && IsEnabled && CommandEnabled)
                         {
+                            Toggle();
                             Services.Sounds.Select?.Play();
                             Command?.Execute(CommandParameter);
                         }
@@ -131,6 +134,8 @@ namespace CrossX.Forms.Controls
 
         private bool CheckPointerIn(Vector2 position)
         {
+            position = Vector2.Transform(position, Matrix.Invert(CurrentTransform));
+
             var area = ClientArea;
             return area.Contains(new System.Drawing.PointF(position.X, position.Y));
         }
@@ -150,14 +155,26 @@ namespace CrossX.Forms.Controls
             return base.OnUiButtonPressed(button);
         }
 
+        protected void Toggle()
+        {
+            if (!BindingService.Contains(nameof(IsToggled)))
+            {
+                IsToggled = !IsToggled;
+                return;
+            }
+
+            BindingService.TrySetValue(nameof(IsToggled), !IsToggled);
+        }
+
         protected override void OnUpdate(TimeSpan frameTime)
         {
             base.OnUpdate(frameTime);
-            if(timeToExecute > 0)
+            if (timeToExecute > 0)
             {
                 timeToExecute -= (float)frameTime.TotalSeconds;
-                if(timeToExecute <= 0)
+                if (timeToExecute <= 0)
                 {
+                    Toggle();
                     if (CommandEnabled)
                     {
                         Services.Sounds.Select?.Play();

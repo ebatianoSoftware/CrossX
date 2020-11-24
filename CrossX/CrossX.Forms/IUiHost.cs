@@ -9,7 +9,7 @@ namespace CrossX.Forms
         void BeginDraw();
         Rectangle TargetRect { get; }
         void EndDraw();
-        Vector2 ScreenToUiUnits(Vector2 screenPoint);
+        //Vector2 ScreenToUiUnits(Vector2 screenPoint);
         ITransform2D Transform2D { get; }
         float ScaleToPixel { get; }
     }

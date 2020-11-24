@@ -4,7 +4,8 @@ namespace CrossX.Audio
 {
     public interface ISoundSettings
     {
-        double Volume { get; set; }
+        float SoundVolume { get; set; }
+        float MusicVolume { get; set; }
         event Action ParametersChanged;
     }
 }

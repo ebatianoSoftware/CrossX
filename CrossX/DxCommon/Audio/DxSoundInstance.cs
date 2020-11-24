@@ -78,7 +78,7 @@ namespace CrossX.DxCommon.Audio
 
         public void ApplyParameters()
         {
-            var volume = (float)(soundSettings.Volume * Volume);
+            var volume = (float)(soundSettings.SoundVolume * Volume);
             float dopplerFactor = 1;
             if (audioListener != null && audioEmitter != null)
             {

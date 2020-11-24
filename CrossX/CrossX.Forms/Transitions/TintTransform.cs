@@ -17,7 +17,7 @@ namespace CrossX.Forms.Transitions
             transformation = Matrix.Identity;
             color = new Color4
             {
-                Rf = (1-timeNormalized) + timeNormalized * Tint.Rf,
+                Rf = (1 - timeNormalized) + timeNormalized * Tint.Rf,
                 Gf = (1 - timeNormalized) + timeNormalized * Tint.Gf,
                 Bf = (1 - timeNormalized) + timeNormalized * Tint.Bf,
                 Af = (1 - timeNormalized) + timeNormalized * Tint.Af

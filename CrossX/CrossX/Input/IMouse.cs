@@ -24,5 +24,6 @@ namespace CrossX.Input
         event MouseEvent MouseMove;
         event MouseEvent MouseEnter;
         event Action MouseLeave;
+        CursorType Cursor { get; set; }
     }
 }

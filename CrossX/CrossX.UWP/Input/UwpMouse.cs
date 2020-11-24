@@ -4,6 +4,8 @@
 
 using CrossX.Input;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
 
@@ -24,6 +26,8 @@ namespace CrossX.WindowsUniversal.Input
         public event MouseEvent MouseMove;
         public event MouseEvent MouseEnter;
         public event Action MouseLeave;
+
+        private readonly Dictionary<CursorType,CoreCursor> cursors = new Dictionary<CursorType,CoreCursor>();
 
         private double RawPixelsPerViewPixel => DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 
@@ -51,8 +55,34 @@ namespace CrossX.WindowsUniversal.Input
         }
 
         public float WheelDelta { get; private set; }
+        public CursorType Cursor 
+        { 
+            get => cursor;
+            set
+            {
+                if (cursor == value) return;
+
+                cursor = value;
+
+                if (value == CursorType.None)
+                {
+                    coreWindow.PointerCursor = null;
+                }
+                else
+                {
+                    if(!cursors.TryGetValue(value, out var coreCursor))
+                    {
+                        coreCursor = new CoreCursor((CoreCursorType)value, 0);
+                        cursors.Add(value, coreCursor);
+                    }
+
+                    coreWindow.PointerCursor = coreCursor;
+                }
+            }
+        }
 
         private MouseButtons lastButton;
+        private CursorType cursor;
 
         public UwpMouse(CoreWindow window)
         {
