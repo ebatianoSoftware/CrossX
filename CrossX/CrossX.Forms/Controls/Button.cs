@@ -1,5 +1,6 @@
 ﻿using CrossX.Forms.Values;
 using CrossX.Graphics2D.Text;
+using CrossX.Input;
 using System;
 using System.Windows.Input;
 
@@ -31,6 +32,8 @@ namespace CrossX.Forms.Controls
         private float timeToExecute = 0;
         private int pushAndExecuteTime = 100;
         private bool isToggled;
+
+        private Matrix pushTransform;
 
         protected bool CommandEnabled { get; private set; } = true;
 
@@ -66,8 +69,6 @@ namespace CrossX.Forms.Controls
 
         protected override bool OnTouch(long id, TouchEvent evnt, Vector2 position)
         {
-            if (base.OnTouch(id, evnt, position)) return true;
-
             if (!IsEnabled && !CommandEnabled || !IsVisible)
             {
                 IsDown = false;
@@ -79,6 +80,7 @@ namespace CrossX.Forms.Controls
                 case TouchEvent.Down:
                     if (CheckPointerIn(position) && !pointerId.HasValue && CommandEnabled)
                     {
+                        pushTransform = Matrix.Invert(CurrentTransform);
                         pointerId = id;
                         IsDown = true;
                         Focus = this;
@@ -93,7 +95,7 @@ namespace CrossX.Forms.Controls
                         pointerId = null;
                         IsDown = false;
 
-                        if (CheckPointerIn(position) && IsEnabled && CommandEnabled)
+                        if (CheckPointerIn(position, pushTransform) && IsEnabled && CommandEnabled)
                         {
                             Toggle();
                             Services.Sounds.Select?.Play();
@@ -102,11 +104,35 @@ namespace CrossX.Forms.Controls
                     }
                     break;
 
+                case TouchEvent.Idle:
+
+                    if (CheckPointerIn(position))
+                    {
+                        Services.CursorType = CursorType.Hand;
+                        return true;
+                    }
+
+                    if(IsDown && CheckPointerIn(position, pushTransform))
+                    {
+                        Services.CursorType = CursorType.Hand;
+                        return true;
+                    }
+                    break;
+                    
+
                 case TouchEvent.Move:
+
                     if (pointerId == id)
                     {
-                        IsDown = CheckPointerIn(position) && CommandEnabled;
+                        IsDown = CheckPointerIn(position, pushTransform) && CommandEnabled;
                     }
+
+                    if (IsDown || CheckPointerIn(position))
+                    {
+                        Services.CursorType = CursorType.Hand;
+                        return true;
+                    }
+
                     break;
 
                 case TouchEvent.Remove:
@@ -132,9 +158,9 @@ namespace CrossX.Forms.Controls
             }
         }
 
-        private bool CheckPointerIn(Vector2 position)
+        private bool CheckPointerIn(Vector2 position, Matrix transform)
         {
-            position = Vector2.Transform(position, Matrix.Invert(CurrentTransform));
+            position = Vector2.Transform(position, transform);
 
             var area = ClientArea;
             return area.Contains(new System.Drawing.PointF(position.X, position.Y));
@@ -169,6 +195,7 @@ namespace CrossX.Forms.Controls
         protected override void OnUpdate(TimeSpan frameTime)
         {
             base.OnUpdate(frameTime);
+
             if (timeToExecute > 0)
             {
                 timeToExecute -= (float)frameTime.TotalSeconds;

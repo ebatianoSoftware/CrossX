@@ -1,4 +1,5 @@
 ﻿using CrossX.Forms.Values;
+using CrossX.Input;
 using System.Drawing;
 
 namespace CrossX.Forms.Controls
@@ -49,6 +50,24 @@ namespace CrossX.Forms.Controls
             }
 
             return panelSize;
+        }
+
+        protected override bool OnTouch(long id, TouchEvent evnt, Vector2 position)
+        {
+            if (base.OnTouch(id, evnt, position)) return true;
+
+            switch (evnt)
+            {
+                case TouchEvent.Move:
+                case TouchEvent.Idle:
+                    if (CheckPointerIn(position))
+                    {
+                        return true;
+                    }
+                    break;
+            }
+
+            return false;
         }
     }
 }

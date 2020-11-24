@@ -143,6 +143,14 @@ namespace CrossX.Forms.Controls
             return clientArea;
         }
 
+        protected bool CheckPointerIn(Vector2 position)
+        {
+            position = Vector2.Transform(position, Matrix.Invert(CurrentTransform));
+
+            var area = ClientArea;
+            return area.Contains(new PointF(position.X, position.Y));
+        }
+
         public void CalculateSizeWithMargins(RectangleF clientArea, out Vector2 size, out Vector2 sizeWithMargins)
         {
             size = CalculateSize(clientArea, true);
@@ -313,11 +321,6 @@ namespace CrossX.Forms.Controls
 
             if (tintColor.A > 0)
             {
-                var position = Vector2.Transform(Services.Mouse.Position, Matrix.Invert(CurrentTransform));
-                if (ClientArea.Contains(position.X, position.Y))
-                {
-                    Services.CursorType = Cursor;
-                }
                 OnDraw(frameTime, tintColor);
             }
 

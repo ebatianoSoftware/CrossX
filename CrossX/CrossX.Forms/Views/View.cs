@@ -275,7 +275,6 @@ namespace CrossX.Forms.Views
         public void Draw(TimeSpan frameTime)
         {
             Root.Draw(frameTime, Color4.White);
-            Mouse.Cursor = CursorType;
         }
 
         public void Update(TimeSpan frameTime)
@@ -296,7 +295,10 @@ namespace CrossX.Forms.Views
             }
             Root.BeforeUpdate();
             ProcessUiButtons();
+            CursorType = CursorType.Arrow;
+            Root.ProcessTouch(0, TouchEvent.Idle, Mouse.Position);
             Root.Update(frameTime);
+            Mouse.Cursor = CursorType;
 
             if (IsClosing)
             {

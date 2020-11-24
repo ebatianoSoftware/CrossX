@@ -6,6 +6,7 @@
         Down,
         Move,
         Remove,
-        Capture
+        Capture,
+        Idle
     }
 }

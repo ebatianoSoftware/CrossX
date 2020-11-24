@@ -16,6 +16,17 @@ namespace CrossX.Graphics2D
 
         private int currentIndex = 0;
         private BlendMode blendMode = BlendMode.AlphaBlend;
+        private bool lines;
+
+        private bool Lines 
+        { 
+            get => lines;
+            set
+            {
+                if (lines != value) Flush();
+                lines = value;
+            }
+        }
 
         public BlendMode BlendMode
         {
@@ -75,15 +86,15 @@ namespace CrossX.Graphics2D
             basicShader.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
-            
+
             var dc = graphicsDevice.DepthClip;
             var bm = graphicsDevice.BlendMode;
-            
+
             graphicsDevice.BlendMode = BlendMode;
             graphicsDevice.DepthClip = false;
-            
-            graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, currentIndex);
-            
+
+            graphicsDevice.DrawPrimitives(lines ? PrimitiveType.LineList : PrimitiveType.TriangleList, 0, currentIndex);
+
             graphicsDevice.DepthClip = dc;
             graphicsDevice.BlendMode = bm;
 
@@ -93,6 +104,7 @@ namespace CrossX.Graphics2D
         public void DrawRect(RectangleF targetRect, Color4 color)
         {
             graphicsDevice.Flush(this);
+            Lines = false;
 
             AddVertex(new Vector2(targetRect.Left, targetRect.Top), color);
             AddVertex(new Vector2(targetRect.Left, targetRect.Bottom), color);
@@ -116,7 +128,7 @@ namespace CrossX.Graphics2D
         public void DrawOval(RectangleF targetRect, Color4 color, int steps = 0)
         {
             graphicsDevice.Flush(this);
-
+            Lines = false;
             var center = new Vector2(targetRect.X + targetRect.Width / 2, targetRect.Y + targetRect.Height / 2);
             var radX = targetRect.Width / 2;
             var radY = targetRect.Height / 2;
@@ -142,6 +154,15 @@ namespace CrossX.Graphics2D
             }
         }
 
+        public void DrawLine(Vector2 p1, Vector2 p2, Color4 color)
+        {
+            graphicsDevice.Flush(this);
+            Lines = true;
+
+            AddVertex(p1, color);
+            AddVertex(p2, color);
+        }
+
         private void AddVertex(Vector2 position, Color4 color)
         {
             buffer[currentIndex++] = new VertexPC
@@ -150,7 +171,8 @@ namespace CrossX.Graphics2D
                 Color = color
             };
 
-            if (currentIndex % 3 == 0 && currentIndex + 3 >= buffer.Length)
+            int c = lines ? 2 : 3;
+            if (currentIndex % c == 0 && currentIndex + c >= buffer.Length)
             {
                 Flush();
             }

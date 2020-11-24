@@ -54,12 +54,27 @@ namespace CrossX.UWP.UWP
             mouse = new UwpMouse(window);
             touchPanel = new UwpTouchPanel(window);
 
+            var featuresFlags = new FeaturesFlags();
+            featuresFlags.Add("UWP");
+            
+            if(Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily.Contains("Xbox"))
+            {
+                featuresFlags.Add("XBOX");
+                featuresFlags.Add("CONSOLE");
+            }
+            else if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily.Contains("Windows"))
+            {
+                featuresFlags.Add("WINDOWS");
+                featuresFlags.Add("DESKTOP");
+            }
+
             scopeBuilder
                 .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
                 .WithInstance(gamePads).As<IGamePads>()
                 .WithInstance(touchPanel).As<ITouchPanel>()
                 .WithInstance(keyboard).As<IKeyboard>()
                 .WithInstance(mouse).As<IMouse>()
+                .WithInstance(featuresFlags).As<IFeaturesFlags>()
                 .WithInstance(dispatcher).As<IDispatcher>();
 
             serviceProvider = scopeBuilder.Build();

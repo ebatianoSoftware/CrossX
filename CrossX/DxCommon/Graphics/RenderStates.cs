@@ -157,7 +157,7 @@ namespace CrossX.DxCommon.Graphics
                 DepthBias = 0,
                 DepthBiasClamp = 0,
                 FillMode = FillMode.Solid,
-                IsAntialiasedLineEnabled = false,
+                IsAntialiasedLineEnabled = true,
                 IsDepthClipEnabled = false,
                 IsFrontCounterClockwise = true,
                 IsMultisampleEnabled = false,

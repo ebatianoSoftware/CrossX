@@ -1,4 +1,5 @@
-﻿using CrossX.Forms.Xml;
+﻿using CrossX.Core;
+using CrossX.Forms.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,13 @@ namespace CrossX.Forms.Services
 {
     internal class XmlFlagsService : IXmlFlagsService
     {
-        private readonly HashSet<string> flags = new HashSet<string>();
-
+        private readonly IFeaturesFlags featuresFlags;
         private List<string> attrToRemove = new List<string>();
         private List<Tuple<string, string>> attrToAdd = new List<Tuple<string, string>>();
 
-        public XmlFlagsService()
+        public XmlFlagsService(IFeaturesFlags featuresFlags)
         {
+            this.featuresFlags = featuresFlags;
         }
 
         public void Apply(XNode node)
@@ -30,7 +31,7 @@ namespace CrossX.Forms.Services
 
                     attrToRemove.Add(attr);
 
-                    if (flags.Intersect(test).Count() == test.Length)
+                    if (featuresFlags.Flags.Intersect(test).Count() == test.Length)
                     {
                         attrToAdd.Add(Tuple.Create(name, value));
                     }
