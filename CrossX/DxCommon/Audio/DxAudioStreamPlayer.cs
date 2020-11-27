@@ -64,7 +64,11 @@ namespace CrossX.DxCommon.Audio
 
         private void Voice_BufferEnd(IntPtr id)
         {
-            arraysPool.Return(submitedBuffers.Dequeue());
+            if (submitedBuffers.Count > 0)
+            {
+                arraysPool.Return(submitedBuffers.Dequeue());
+            }
+
             SubmitBuffersIfNeeded();
 
             if (voice.State.BuffersQueued == 0)
@@ -135,11 +139,12 @@ namespace CrossX.DxCommon.Audio
         {
             if (disposed) return;
 
-            Pause();
-            Reset();
-
             voice.BufferEnd -= Voice_BufferEnd;
             soundSettings.ParametersChanged -= SoundSettings_ParametersChanged;
+
+            Pause();
+            Reset();
+            
             var voiceToDestroy = voice;
 
             voice = null;

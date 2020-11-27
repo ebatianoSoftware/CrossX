@@ -1,11 +1,15 @@
 ﻿using CrossX.Async;
 using CrossX.Core;
+using CrossX.Diagnostics;
 using CrossX.DxCommon.Graphics;
 using CrossX.Graphics;
 using CrossX.Input;
+using CrossX.IO;
 using CrossX.IoC;
 using CrossX.UWP.Graphics;
+using CrossX.UWP.IO;
 using CrossX.WindowsUniversal.Input;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -25,6 +29,8 @@ namespace CrossX.UWP.UWP
         private UwpTouchPanel touchPanel;
         private DxGraphicsDevice graphicsDevice;
         private Dispatcher dispatcher = new Dispatcher();
+
+        private AppStats AppStats { get; } = new AppStats();
 
         public ApplicationView(ScopeBuilder scopeBuilder, object appParameters)
         {
@@ -46,7 +52,7 @@ namespace CrossX.UWP.UWP
 
         public void SetWindow(CoreWindow window)
         {
-            graphicsDevice = new DxGraphicsDevice();
+            graphicsDevice = new DxGraphicsDevice(AppStats);
             graphicsDevice.Initialize(new UwpWindow(window), false);
 
             gamePads = new UwpGamePads();
@@ -75,7 +81,9 @@ namespace CrossX.UWP.UWP
                 .WithInstance(keyboard).As<IKeyboard>()
                 .WithInstance(mouse).As<IMouse>()
                 .WithInstance(featuresFlags).As<IFeaturesFlags>()
-                .WithInstance(dispatcher).As<IDispatcher>();
+                .WithInstance(dispatcher).As<IDispatcher>()
+                .WithInstance(AppStats).As<IAppStats>()
+                .WithType<Storage>().As<IStorage>().AsSingleton();
 
             serviceProvider = scopeBuilder.Build();
             
@@ -92,6 +100,9 @@ namespace CrossX.UWP.UWP
             var stopWatch = Stopwatch.StartNew();
             var lastTime = stopWatch.Elapsed;
 
+            var fpses = new float[20];
+            var fpsIndex = 0;
+
             while (true)
             {
                 CoreWindow.GetForCurrentThread().Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
@@ -101,6 +112,17 @@ namespace CrossX.UWP.UWP
                 var current = stopWatch.Elapsed;
                 var ellapsed = current - lastTime;
                 lastTime = current;
+
+                fpses[fpsIndex] = 1.0f / (float)Math.Max(0.000000001, ellapsed.TotalSeconds);
+                fpsIndex = (fpsIndex + 1) % 20;
+
+                float fps = 0.0f;
+                for(var idx =0; idx < 20; ++idx)
+                {
+                    fps += fpses[idx];
+                }
+                fps /= 20.0f;
+                AppStats.Fps = fps;
 
                 gamePads.Update();
 

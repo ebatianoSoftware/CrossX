@@ -49,25 +49,13 @@ namespace CrossX
 
         #region Properties
 
-        public static Vector2 Zero
-        {
-            get { return zeroVector; }
-        }
+        public static Vector2 Zero => zeroVector;
 
-        public static Vector2 One
-        {
-            get { return unitVector; }
-        }
+        public static Vector2 One => unitVector;
 
-        public static Vector2 UnitX
-        {
-            get { return unitXVector; }
-        }
+        public static Vector2 UnitX => unitXVector;
 
-        public static Vector2 UnitY
-        {
-            get { return unitYVector; }
-        }
+        public static Vector2 UnitY => unitYVector;
 
         #endregion Properties
 

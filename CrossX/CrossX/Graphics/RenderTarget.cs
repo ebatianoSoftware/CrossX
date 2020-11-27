@@ -6,7 +6,7 @@ using System;
 
 namespace CrossX.Graphics
 {
-    public abstract class RenderTarget: Texture2D
+    public abstract class RenderTarget : Texture2D
     {
     }
 }

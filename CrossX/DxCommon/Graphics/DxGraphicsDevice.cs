@@ -15,6 +15,7 @@ using Texture2D = SharpDX.Direct3D11.Texture2D;
 using CrossX.DxCommon.Helpers;
 using CrossX.DxCommon.Graphics.Shaders;
 using CrossX.Graphics.Shaders;
+using CrossX.Diagnostics;
 
 namespace CrossX.DxCommon.Graphics
 {
@@ -37,6 +38,8 @@ namespace CrossX.DxCommon.Graphics
         public SdxDevice1 D3dDevice => d3dDevice;
 
         public RenderTarget RenderTarget { get; private set; }
+
+        private AppStats AppStats { get; }
 
         //public Rect ClipArea { get; set; }
         public Size Size => new Size(width, height);
@@ -94,6 +97,11 @@ namespace CrossX.DxCommon.Graphics
         }
 
         public IDxShader CurrentShader { get; internal set; }
+
+        public DxGraphicsDevice(AppStats appStats)
+        {
+            AppStats = appStats;
+        }
 
         public void Initialize(ITargetWindow window, bool fullscreen)
         {
@@ -158,6 +166,12 @@ namespace CrossX.DxCommon.Graphics
             Flush(this);
             D3dContext.Flush();
             swapChain.Present(1, PresentFlags.None);
+
+            AppStats.TotalDrawCallsLastFrame = AppStats.CurrentDrawCallsInFrame;
+            AppStats.TotalVerticesLastFrame = AppStats.CurrentVerticesInFrame;
+
+            AppStats.CurrentVerticesInFrame = 0;
+            AppStats.CurrentDrawCallsInFrame = 0;
         }
 
         public void Clear(Color4 color)
@@ -241,6 +255,8 @@ namespace CrossX.DxCommon.Graphics
             PrepareRender(primitiveType);
             var context = D3dDevice.ImmediateContext1;
             context.Draw(vertexCount, vertexStart);
+            AppStats.CurrentDrawCallsInFrame++;
+            AppStats.CurrentVerticesInFrame += vertexCount;
         }
 
         public void DrawIndexedPrimitives(PrimitiveType primitiveType, int indexStart, int indexCount)
@@ -248,6 +264,8 @@ namespace CrossX.DxCommon.Graphics
             PrepareRender(primitiveType);
             var context = D3dDevice.ImmediateContext1;
             context.DrawIndexed(indexCount, indexStart, 0);
+            AppStats.CurrentDrawCallsInFrame++;
+            AppStats.CurrentVerticesInFrame += indexCount;
         }
 
         public void SetShader(Shader shader)
@@ -272,6 +290,8 @@ namespace CrossX.DxCommon.Graphics
         public void Flush(object sender)
         {
             FlushRequest?.Invoke(sender, EventArgs.Empty);
+            var context = D3dDevice.ImmediateContext1;
+            context.Flush();
         }
 
         #region IDisposable Support

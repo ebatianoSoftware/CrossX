@@ -29,6 +29,8 @@ namespace CrossX.Graphics3D
             NormalMap = normal;
             SpecularMap = specular;
 
+            Material = slice.Material;
+
             if (slice.Indices2 != null)
             {
                 var buffer = objectFactory.Create<IndexBuffer2>(slice.Indices2.Length);

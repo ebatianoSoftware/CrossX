@@ -3,6 +3,7 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using CrossX.Data;
+using CrossX.IO;
 using CrossX.Media.Formats;
 using SharpDX;
 using SharpDX.Direct3D11;
@@ -124,6 +125,19 @@ namespace CrossX.DxCommon.Graphics
 
         public DxTexture(DxGraphicsDevice graphicsDevice, Stream stream, IRawLoader<RawImage> loader = null) 
             : this(graphicsDevice, loader?.FromStream(stream) ?? ImagesFormat.Instance.FromStream(stream), false)
+        {
+        }
+
+        public DxTexture(DxGraphicsDevice graphicsDevice, string path, IFilesRepository filesRepository, IRawLoader<RawImage> loader = null)
+            : this(graphicsDevice, new Func<RawImage>(()=>
+            {
+                RawImage image;
+                using (var stream = filesRepository.Open(path))
+                {
+                    image = loader?.FromStream(stream) ?? ImagesFormat.Instance.FromStream(stream);
+                }
+                return image;
+            }).Invoke(), false)
         {
         }
 

@@ -50,7 +50,6 @@ namespace CrossX.Forms.Controls
         private Alignment horizontalAlignment = Alignment.Stretch;
         private Alignment verticalAlignment = Alignment.Stretch;
         private Margin margin = Margin.Zero;
-
         protected Matrix CurrentTransform { get; private set; } = Matrix.Identity;
 
         private Dictionary<string, object> customProperties;
