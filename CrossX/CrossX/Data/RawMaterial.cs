@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace CrossX.Data
 {
@@ -10,8 +11,23 @@ namespace CrossX.Data
         public string SpecularMap { get; }
         public Color4 Ambient { get; }
         public Color4 Diffuse { get; }
+
         public Color4 Specular { get; }
         public float SpecularExponent { get; }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(DiffuseMap ?? "");
+            writer.Write(NormalMap ?? "");
+            writer.Write(SpecularMap ?? "");
+            writer.Write(SpecularExponent);
+
+            writer.Write(Ambient.ToInt32());
+            writer.Write(Diffuse.ToInt32());
+            writer.Write(Specular.ToInt32());
+        }
+
+        
 
         public RawMaterial(string name, string diffuseMap, string normalMap, string specularMap, Color4 ambient, Color4 diffuse, Color4 specular, float specularExponent)
         {
