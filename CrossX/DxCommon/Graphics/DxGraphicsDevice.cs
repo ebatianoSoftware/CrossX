@@ -165,7 +165,7 @@ namespace CrossX.DxCommon.Graphics
         {
             Flush(this);
             D3dContext.Flush();
-            swapChain.Present(1, PresentFlags.None);
+            swapChain.Present(0, PresentFlags.None);
 
             AppStats.TotalDrawCallsLastFrame = AppStats.CurrentDrawCallsInFrame;
             AppStats.TotalVerticesLastFrame = AppStats.CurrentVerticesInFrame;

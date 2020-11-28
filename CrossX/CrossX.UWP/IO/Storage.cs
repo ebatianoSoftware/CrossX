@@ -10,14 +10,14 @@ namespace CrossX.UWP.IO
     {
         public async Task<Stream> OpenRead(string name)
         {
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder storageFolder = KnownFolders.PicturesLibrary;
             StorageFile sampleFile = await storageFolder.GetFileAsync(name);
             return await sampleFile.OpenStreamForReadAsync();
         }
 
         public async Task<Stream> OpenWrite(string name)
         {
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder storageFolder = KnownFolders.PicturesLibrary;
             StorageFile sampleFile = await storageFolder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
             return await sampleFile.OpenStreamForWriteAsync();
         }
