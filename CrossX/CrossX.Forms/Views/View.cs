@@ -4,13 +4,11 @@ using CrossX.Forms.Converters;
 using CrossX.Forms.Helpers;
 using CrossX.Forms.Values;
 using CrossX.Forms.Xml;
-using CrossX.Graphics;
 using CrossX.Graphics2D;
 using CrossX.Input;
 using CrossX.IoC;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -27,6 +25,8 @@ namespace CrossX.Forms.Views
         private readonly IConverters converters;
         private readonly ITouchPanel touchPanel;
         private readonly IFormsInput formsInput;
+        private readonly NavigationView navigation;
+
         public  IMouse Mouse { get; }
 
         public SpriteBatch SpriteBatch { get; }
@@ -66,7 +66,7 @@ namespace CrossX.Forms.Views
         private readonly BindingService bindingService;
 
         public View(IUiHost uiHost, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
-            IFormsInput formsInput, ITransitionsManager transitionsManager,
+            IFormsInput formsInput, ITransitionsManager transitionsManager, NavigationView navigation,
             FormsViewModel viewModel, IFormsSounds sounds, IMouse mouse)
         {
             Transform2D = uiHost.Transform2D;
@@ -74,7 +74,7 @@ namespace CrossX.Forms.Views
             PrimitiveBatch = objectFactory.Create<PrimitiveBatch>(Transform2D);
             ObjectFactory = objectFactory;
             TransitionsManager = transitionsManager;
-
+            this.navigation = navigation;
             this.uiHost = uiHost;
             this.objectFactory = objectFactory;
             this.converters = converters;
@@ -308,7 +308,9 @@ namespace CrossX.Forms.Views
 
         private void ProcessUiButtons()
         {
+            if (!navigation.IsTop(this)) return;
             if (Root.TransitionInProgress) return;
+
             var focusable = Focus;
 
             for (var idx = 0; idx < AllUiButtons.Length; ++idx)

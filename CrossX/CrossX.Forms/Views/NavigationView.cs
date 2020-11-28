@@ -40,7 +40,7 @@ namespace CrossX.Forms.Views
 
         public void Navigate<TViewModel>(NavigationParameters parameters = null, params object[] args) where TViewModel : FormsViewModel
         {
-            var viewModel = objectFactory.Create<TViewModel>();
+            var viewModel = objectFactory.Create<TViewModel>(args);
             viewModel.SetNavigation(this);
 
             viewModels.Push(viewModel);
@@ -73,7 +73,7 @@ namespace CrossX.Forms.Views
         {
             var node = LoadViewForVm(vm);
 
-            var view = objectFactory.Create<View>(vm);
+            var view = objectFactory.Create<View>(this, vm);
             view.LoadView(node, @event);
             views.Add(view);
         }
@@ -108,7 +108,7 @@ namespace CrossX.Forms.Views
         {
             popupNavigations.Push(views.Last().ViewModel);
 
-            var viewModel = objectFactory.Create<TViewModel>();
+            var viewModel = objectFactory.Create<TViewModel>(args);
             viewModel.SetNavigation(this);
 
             viewModels.Push(viewModel);
@@ -149,6 +149,15 @@ namespace CrossX.Forms.Views
                 view.Close(closeEvent ?? ViewNavigateFrom);
                 view.ViewModel.Dispose();
             }
+        }
+
+        public bool IsTop(FormsViewModel viewModel)
+        {
+            return viewModels.Count > 0 && viewModels.Peek() == viewModel;
+        }
+        public bool IsTop(View view)
+        {
+            return views.LastOrDefault() == view;
         }
     }
 }

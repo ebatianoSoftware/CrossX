@@ -7,5 +7,6 @@
         void NavigateBack(NavigationParameters parameters = null);
         void FinishPopup(string closeEvent = null);
         void Clear(string closeEvent = null);
+        bool IsTop(FormsViewModel viewModel);
     }
 }

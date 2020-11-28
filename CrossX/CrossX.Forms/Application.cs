@@ -38,7 +38,6 @@ namespace CrossX.Forms
             foreach(var cn in node.Nodes)
             {
                 if(cn.Tag != "Style") throw new InvalidDataException();
-
             }
         }
 

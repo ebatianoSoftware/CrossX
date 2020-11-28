@@ -1,6 +1,8 @@
-﻿namespace CrossX.Data
+﻿using System;
+
+namespace CrossX.Data
 {
-    public class RawMaterial
+    public class RawMaterial: IEquatable<RawMaterial>
     {
         public string Name { get; }
         public string DiffuseMap { get; }
@@ -21,6 +23,32 @@
             SpecularMap = specularMap;
             Specular = specular;
             SpecularExponent = specularExponent;
+        }
+
+        public bool Equals(RawMaterial other)
+        {
+            return other.Diffuse == Diffuse &&
+                   other.Ambient == Ambient &&
+                   other.Specular == Specular &&
+                   other.SpecularExponent == SpecularExponent &&
+                   DiffuseMap == DiffuseMap &&
+                   NormalMap == NormalMap &&
+                   SpecularMap == SpecularMap;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is RawMaterial rm)
+            {
+                return rm.Equals(this);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Diffuse.GetHashCode() ^ Ambient.GetHashCode() ^ Specular.GetHashCode() ^ SpecularExponent.GetHashCode() ^
+                   NormalMap?.GetHashCode() ?? 0 ^ SpecularMap?.GetHashCode() ?? 0 ^ DiffuseMap?.GetHashCode() ?? 0;
         }
     }
 }
