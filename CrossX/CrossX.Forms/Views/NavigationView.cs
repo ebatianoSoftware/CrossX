@@ -97,6 +97,7 @@ namespace CrossX.Forms.Views
             {
                 if (views[idx].IsFinished)
                 {
+                    views[idx].Dispose();
                     views.RemoveAt(idx);
                     continue;
                 }
@@ -143,11 +144,15 @@ namespace CrossX.Forms.Views
         public void Clear(string closeEvent = null)
         {
             popupNavigations.Clear();
+            foreach(var vm in viewModels)
+            {
+                vm.Dispose();
+            }
+
             viewModels.Clear();
             foreach(var view in views)
             {
                 view.Close(closeEvent ?? ViewNavigateFrom);
-                view.ViewModel.Dispose();
             }
         }
 
