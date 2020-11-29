@@ -40,7 +40,7 @@ namespace CrossX.IoC
 
                         foreach (var par in parameters)
                         {
-                            if (param == null) continue;
+                            if (par == null || param == null) continue;
                             if (param.ParameterType.IsAssignableFrom(par.GetType()))
                             {
                                 arguments[idx] = par;

@@ -28,10 +28,12 @@ namespace CrossX.Content
             // TODO: Proper exception
             if (!CanLoadContent<TContent>()) throw new InvalidProgramException();
 
-            if(!contentEntries.TryGetValue(GetKey<TContent>(path), out var obj))
+            var key = GetKey<TContent>(path);
+            if (!contentEntries.TryGetValue(key, out var obj))
             {
                 var loadObj = ((IContentLoader<TContent>)loaders[typeof(TContent)]).LoadContent(path);
                 obj = new ContentEntry(loadObj);
+                contentEntries.Add(key, obj);
             }
 
             if (!obj.Consumers.Contains(consumer))

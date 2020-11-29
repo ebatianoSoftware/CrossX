@@ -11,7 +11,6 @@ namespace CrossX.Data
         public string SpecularMap { get; }
         public Color4 Ambient { get; }
         public Color4 Diffuse { get; }
-
         public Color4 Specular { get; }
         public float SpecularExponent { get; }
 

@@ -36,7 +36,7 @@ namespace CrossX.DxCommon.Audio
             set
             {
                 volume = value;
-                voice.SetVolume(volume * soundSettings.MusicVolume);
+                voice?.SetVolume(volume * soundSettings.MusicVolume);
             }
         }
 
@@ -114,19 +114,19 @@ namespace CrossX.DxCommon.Audio
 
         public override void Pause()
         {
-            voice.Stop();
+            voice?.Stop();
         }
 
         public override void Play(bool loop)
         {
             this.loop = loop;
             SubmitBuffersIfNeeded();
-            voice.Start();
+            voice?.Start();
         }
 
         public override void Reset()
         {
-            voice.FlushSourceBuffers();
+            voice?.FlushSourceBuffers();
             while(submitedBuffers.Count>0)
             {
                 arraysPool.Return(submitedBuffers.Dequeue());
