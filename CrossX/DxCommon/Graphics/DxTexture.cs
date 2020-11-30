@@ -118,23 +118,23 @@ namespace CrossX.DxCommon.Graphics
             }
         }
 
-        public DxTexture(DxGraphicsDevice graphicsDevice, Stream stream, bool generateMipMaps, IRawLoader<RawImage> loader = null) 
-            : this(graphicsDevice, loader?.FromStream(stream) ?? ImagesFormat.Instance.FromStream(null), generateMipMaps)
+        public DxTexture(DxGraphicsDevice graphicsDevice, Stream stream, bool generateMipMaps, IImageLoader loader = null) 
+            : this(graphicsDevice, loader?.FromStream(stream, true) ?? ImagesFormat.Instance.FromStream(stream, true), generateMipMaps)
         {
         }
 
-        public DxTexture(DxGraphicsDevice graphicsDevice, Stream stream, IRawLoader<RawImage> loader = null) 
-            : this(graphicsDevice, loader?.FromStream(stream) ?? ImagesFormat.Instance.FromStream(stream), false)
+        public DxTexture(DxGraphicsDevice graphicsDevice, Stream stream, IImageLoader loader = null) 
+            : this(graphicsDevice, loader?.FromStream(stream, true) ?? ImagesFormat.Instance.FromStream(stream, true), false)
         {
         }
 
-        public DxTexture(DxGraphicsDevice graphicsDevice, string path, IFilesRepository filesRepository, IRawLoader<RawImage> loader = null)
+        public DxTexture(DxGraphicsDevice graphicsDevice, string path, IFilesRepository filesRepository, IImageLoader loader = null)
             : this(graphicsDevice, new Func<RawImage>(()=>
             {
                 RawImage image;
                 using (var stream = filesRepository.Open(path))
                 {
-                    image = loader?.FromStream(stream) ?? ImagesFormat.Instance.FromStream(stream);
+                    image = loader?.FromStream(stream, true) ?? ImagesFormat.Instance.FromStream(stream, true);
                 }
                 return image;
             }).Invoke(), false)

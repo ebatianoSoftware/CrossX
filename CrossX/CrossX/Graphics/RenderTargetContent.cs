@@ -7,6 +7,7 @@ namespace CrossX.Graphics
     {
         Color = 1,
         Depth = 2,
-        Both = 3
+        Both = 3,
+        Hdr = 4
     }
 }

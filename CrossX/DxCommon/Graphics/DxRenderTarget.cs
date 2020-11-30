@@ -58,7 +58,7 @@ namespace CrossX.DxCommon.Graphics
                     ArraySize = 1,
                     BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget,
                     CpuAccessFlags = CpuAccessFlags.None,
-                    Format = Format.B8G8R8A8_UNorm,
+                    Format = creationOptions.Content.HasFlag(RenderTargetContent.Hdr) ? Format.R16G16B16A16_UNorm : Format.B8G8R8A8_UNorm,
                     Height = creationOptions.Height,
                     Width = creationOptions.Width,
                     MipLevels = 1,

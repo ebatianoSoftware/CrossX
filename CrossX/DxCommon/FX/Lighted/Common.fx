@@ -2,7 +2,8 @@
 struct DIR_LIGHT
 {
 	float4 dir: NORMAL;
-	float4 color: COLOR;
+	float4 diff: COLOR;
+	float4 spec: COLOR;
 };
 
 struct POINT_LIGHT
@@ -31,6 +32,7 @@ cbuffer PixelShaderData: register(b1)
 	float4 g_materialDiffuse;
 	float4 g_cameraPosition;
 	float4 g_specular;
+	float4 g_lightMask;
 	DIR_LIGHT g_directionalLights[2];
 };
 
@@ -65,11 +67,11 @@ LIGHT_RES CalculateDirLights(float4 pos, float4 normal)
 	for (int i = 0; i < 2; ++i)
 	{
 		DIR_LIGHT light = g_directionalLights[i];
-		if (light.color.a > 0.1f)
+		float saturation = saturate(dot(light.dir, normal));
+		if (light.diff.a > 0.1f)
 		{
-			float saturation = saturate(dot(light.dir, normal));
-			res.diff = res.diff + light.color * g_materialDiffuse * saturation;
-			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, light.dir) * saturation;
+			res.diff = res.diff + light.diff * g_materialDiffuse * saturation;
+			res.spec = res.spec + light.spec * CalculateSpecular(pos, normal, light.dir) * saturation;
 		}
 	}
 	return res;

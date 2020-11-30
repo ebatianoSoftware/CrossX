@@ -16,6 +16,7 @@ struct PS_IN
 
 float4x4 worldViewProj;
 float4 color;
+float4 bias;
 
 PS_IN VS(VS_IN input)
 {
@@ -29,5 +30,5 @@ PS_IN VS(VS_IN input)
 
 float4 PS(PS_IN input) : SV_Target
 {
-	return input.col;
+	return input.col + bias;
 }

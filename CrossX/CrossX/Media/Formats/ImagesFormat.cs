@@ -5,11 +5,16 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace CrossX.Media.Formats
 {
-    public sealed class ImagesFormat : IRawLoader<RawImage>
+    public sealed class ImagesFormat : IImageLoader
     {
-        public static readonly IRawLoader<RawImage> Instance = new ImagesFormat();
+        public static readonly IImageLoader Instance = new ImagesFormat();
 
         public RawImage FromStream(Stream stream)
+        {
+            return FromStream(stream, false);
+        }
+
+        public RawImage FromStream(Stream stream, bool premultiply)
         {
             var image = Image.Load<Rgba32>(stream);
             var data = new byte[image.Width * image.Height * 4];
@@ -23,13 +28,15 @@ namespace CrossX.Media.Formats
                 {
                     var pixel = pixelRowSpan[x];
 
-                    data[position++] = pixel.R;
-                    data[position++] = pixel.G;
-                    data[position++] = pixel.B;
+                    var mul = premultiply ? pixel.A / 255.0 : 1.0;
+
+                    data[position++] = (byte)(pixel.R * mul);
+                    data[position++] = (byte)(pixel.G * mul);
+                    data[position++] = (byte)(pixel.B * mul);
                     data[position++] = pixel.A;
                 }
             }
-            return new RawImage(image.Width, image.Height, data, PixelDataFormat.Format32bppRGBA);
+            return new RawImage(image.Width, image.Height, data, PixelDataFormat.Format32bppRGBA | (premultiply ? PixelDataFormat.Premultiplied : 0));
         }
     }
 }

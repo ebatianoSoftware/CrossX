@@ -7,5 +7,6 @@ namespace CrossX.Graphics3D.Light
     {
         public Vector4 Direction;
         public Vector4 Color;
+        public Vector4 Specular;
     }
 }

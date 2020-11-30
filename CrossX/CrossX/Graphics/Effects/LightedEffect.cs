@@ -24,6 +24,7 @@ namespace CrossX.Graphics.Effects
             public Vector4 MatDiffuse;
             public Vector4 CameraPosition;
             public Vector4 Specular;
+            public Vector4 LightMask;
             public DirectionalLight DirectionalLight0;
             public DirectionalLight DirectionalLight1;
         }
@@ -57,17 +58,19 @@ namespace CrossX.Graphics.Effects
         private Matrix worldMatrix;
         private readonly IGraphicsDevice graphicsDevice;
 
-        public Color4 AmbientColor { get; set; } = Color4.Black;
+        public Vector4 AmbientColor { get; set; } = Color4.Black;
         public Color4 MaterialDiffuseColor { get; set; } = Color4.White;
 
         public Vector3 CameraPosition { get; set; }
         public Vector4 SpecularColor { get; set; }
         public float SpecularExponent { get; set; }
-
         public Texture2D Texture { get; set; }
         public Texture2D SpecularTexture { get; set; }
         private Texture2D whiteTexture;
 
+        public float DiffuseLightMultiplier { get; set; } = 1;
+        public float DiffuseLightForce { get; set; }
+        public float ColorBias { get; set; }
         public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
         public void SetViewProjectionTransform(Matrix transform) => viewProjectionMatrix = transform;
 
@@ -179,6 +182,7 @@ namespace CrossX.Graphics.Effects
                 MatDiffuse = MaterialDiffuseColor,
                 CameraPosition = new Vector4(CameraPosition, 1),
                 Specular = new Vector4(SpecularColor.X, SpecularColor.Y, SpecularColor.Z, SpecularExponent),
+                LightMask = new Vector4(DiffuseLightMultiplier, DiffuseLightForce, ColorBias, 0),
                 DirectionalLight0 = directionalLights.Count > 0 ? directionalLights[0] : default,
                 DirectionalLight1 = directionalLights.Count > 1 ? directionalLights[1] : default
             };

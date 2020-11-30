@@ -274,6 +274,11 @@
       <Link>FX\Code\Lighted\Common.fx</Link>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\DxCommon\FX\DefaultPNT.fx">
+      <Link>FX\Code\DefaultPNT.fx</Link>
+    </Content>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
