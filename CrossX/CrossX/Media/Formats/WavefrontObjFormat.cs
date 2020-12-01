@@ -71,7 +71,7 @@ namespace CrossX.Media.Formats
             {
                 if(!materials.TryGetValue(sl.Key, out var material))
                 {
-                    material = new RawMaterial(sl.Key, null, null, null, Color4.Transparent, Color4.White, Color4.Transparent, Color4.Transparent, 1);
+                    material = new RawMaterial(sl.Key, null, null, null, Color4.Transparent, Color4.White, Color4.Transparent, Color4.Transparent, Color4.Black, 1);
                 }
                 slices[sliceIndex++] = new RawMeshSlice(material, sl.Value.ToArray());
             }
@@ -94,6 +94,7 @@ namespace CrossX.Media.Formats
                         FromObj(mat.DiffuseColor),
                         FromObj(mat.SpecularColor),
                         FromObj(mat.EmissiveColor),
+                        Color4.Black,
                         mat.SpecularExponent
                     );
 

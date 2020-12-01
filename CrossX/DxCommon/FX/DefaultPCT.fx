@@ -19,7 +19,6 @@ struct PS_IN
 float4x4 worldViewProj;
 float4 color;
 float4 bias;
-float4 onePixelSizeAndBlur;
 
 Texture2D<float4> colorTexture : register(t0);
 sampler colorTextureSampler : register(s0);
@@ -36,33 +35,5 @@ PS_IN VS(VS_IN input)
 
 float4 PS(PS_IN input) : SV_Target
 {
-	if (onePixelSizeAndBlur.w > 0)
-	{
-		float4 color = (float4)0;
-		float blurSize = onePixelSizeAndBlur.w;
-
-		float weight = 0;
-
-		for (float x = 1-blurSize; x < blurSize; x++)
-		{
-			for (float y = 1-blurSize; y < blurSize; y++)
-			{
-				float factor = max(0, blurSize - sqrt(x * x + y * y));
-				factor = factor / blurSize;
-				factor = factor * factor;
-
-				weight += factor * onePixelSizeAndBlur.z;
-				color = color + colorTexture.Sample(colorTextureSampler, input.tex + float2(onePixelSizeAndBlur.x * x, onePixelSizeAndBlur.y * y)) * factor;
-			}
-		}
-
-		color /= weight;
-
-		color.w = 1;
-		return color * input.col + bias;
-	}
-	else
-	{
-		return colorTexture.Sample(colorTextureSampler, input.tex) * input.col + bias;
-	}
+	return colorTexture.Sample(colorTextureSampler, input.tex) * input.col + bias;
 }

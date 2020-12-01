@@ -25,8 +25,10 @@ namespace CrossX.Graphics2D
 
         private Texture2D whiteTexture;
         private Vector4 colorBias = Vector4.Zero;
-        private int blur;
+        private int blur;        
         private float gloom;
+
+        public Matrix CurrentTransform => transform2D?.Transform ?? Matrix.Identity;
 
         public TextureFilter TextureFilter
         {
@@ -64,26 +66,6 @@ namespace CrossX.Graphics2D
             {
                 if (colorBias != value) Flush();
                 colorBias = value;
-            }
-        }
-
-        public int Blur
-        {
-            get => blur;
-            set
-            {
-                if (blur != value) Flush();
-                blur = value;
-            }
-        }
-
-        public float Gloom
-        {
-            get => gloom;
-            set
-            {
-                if (gloom != value) Flush();
-                gloom = value;
             }
         }
 
@@ -137,8 +119,6 @@ namespace CrossX.Graphics2D
             basicShader.Texture = currentTexture;
             basicShader.DiffuseColor = Color4.White;
             basicShader.Bias = ColorBias;
-            basicShader.Blur = Blur;
-            basicShader.Gloom = Gloom;
             basicShader.Sampler = (TextureSamplerDesc)((int)TextureFilter | (int)TextureMode);
 
             var vpm = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);

@@ -26,10 +26,12 @@ SOFTWARE.
 #endregion License
 
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace CrossX
 {
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vector3 : IEquatable<Vector3>
     {
         #region Private Fields

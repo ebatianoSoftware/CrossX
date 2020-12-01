@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace CrossX.Graphics.Effects
 {
-    public sealed class BasicEffect: IDisposable
+    public sealed class BasicEffect: Effect
     {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         struct ConstBuffer
@@ -15,18 +15,8 @@ namespace CrossX.Graphics.Effects
             public Vector4 Bias;
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct ConstBufferBlur
-        {
-            public Matrix Matrix;
-            public Vector4 Color;
-            public Vector4 Bias;
-            public Vector4 OnePixelSizeAndBlur;
-        }
-
         private Matrix viewProjectionMatrix;
         private Matrix worldMatrix;
-        private readonly IGraphicsDevice graphicsDevice;
 
         public float Alpha { get; set; } = 1;
         public Color4 DiffuseColor { get; set; } = Color4.White;
@@ -40,8 +30,6 @@ namespace CrossX.Graphics.Effects
 
         public TextureSamplerDesc Sampler { get; set; }
         public Vector4 Bias { get; set; }
-        public int Blur { get; set; }
-        public float Gloom { get; set; }
 
         private readonly VertexShader pcVertexShader;
         private readonly VertexShader ptVertexShader;
@@ -53,60 +41,22 @@ namespace CrossX.Graphics.Effects
         private readonly PixelShader pctPixelShader;
         private readonly PixelShader pntPixelShader;
 
-        public BasicEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository)
+        public BasicEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository): base(graphicsDevice, objectFactory, shadersRepository)
         {
             viewProjectionMatrix = Matrix.Identity;
             worldMatrix = Matrix.Identity;
-            this.graphicsDevice = graphicsDevice;
 
-            pcVertexShader = CreateVertexShader<ConstBuffer>("DefaultPC", VertexPC.Content, shadersRepository, objectFactory);
-            pctVertexShader = CreateVertexShader<ConstBufferBlur>("DefaultPCT", VertexPCT.Content, shadersRepository, objectFactory);
-            ptVertexShader = CreateVertexShader<ConstBuffer>("DefaultPT", VertexPT.Content, shadersRepository, objectFactory);
-            pntVertexShader = CreateVertexShader<ConstBuffer>("DefaultPNT", VertexPNT.Content, shadersRepository, objectFactory);
-
-            pcPixelShader = CreatePixelShader<ConstBuffer>("DefaultPC", shadersRepository, objectFactory);
-            pctPixelShader = CreatePixelShader<ConstBufferBlur>("DefaultPCT", shadersRepository, objectFactory);
-            ptPixelShader = CreatePixelShader<ConstBuffer>("DefaultPT", shadersRepository, objectFactory);
-            pntPixelShader = CreatePixelShader<ConstBuffer>("DefaultPNT", shadersRepository, objectFactory);
-        }
-
-        private VertexShader CreateVertexShader<TBuffer>(string name, VertexContent vertexContent, IShadersRepository repository, IObjectFactory objectFactory) where TBuffer: struct
-        {
             var assembly = graphicsDevice.GetType().Assembly;
-            name = assembly.FullName.Split(',')[0] + ".FX." + name;
 
-            var shader = repository.GetVertexShader(name);
-            if (shader != null) return shader;
+            pcVertexShader = CreateVertexShader<ConstBuffer>(assembly, "DefaultPC", VertexPC.Content);
+            pctVertexShader = CreateVertexShader<ConstBuffer>(assembly, "DefaultPCT", VertexPCT.Content);
+            ptVertexShader = CreateVertexShader<ConstBuffer>(assembly, "DefaultPT", VertexPT.Content);
+            pntVertexShader = CreateVertexShader<ConstBuffer>(assembly, "DefaultPNT", VertexPNT.Content);
 
-            shader = objectFactory.Create<VertexShader>(new CreateVertexShaderFromResource
-            {
-                Assembly = assembly,
-                Path = name,
-                VertexContent = vertexContent
-            });
-
-            repository.RegisterVertexShader(name, shader);
-            shader.CreateConstBuffer<TBuffer>(0);
-            return shader;
-        }
-
-        private PixelShader CreatePixelShader<TBuffer>(string name, IShadersRepository repository, IObjectFactory objectFactory) where TBuffer: struct
-        {
-            var assembly = graphicsDevice.GetType().Assembly;
-            name = assembly.FullName.Split(',')[0] + ".FX." + name;
-
-            var shader = repository.GetPixelShader(name);
-            if (shader != null) return shader;
-
-            shader = objectFactory.Create<PixelShader>(new CreatePixelShaderFromResource
-            {
-                Assembly = assembly,
-                Path = name
-            });
-
-            repository.RegisterPixelShader(name, shader);
-            shader.CreateConstBuffer<TBuffer>(0);
-            return shader;
+            pcPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPC");
+            pctPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPCT");
+            ptPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPT");
+            pntPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPNT");
         }
 
         public void Apply()
@@ -136,46 +86,24 @@ namespace CrossX.Graphics.Effects
             }
 
             var color = DiffuseColor * Alpha;
-
-            if (vs == pctVertexShader)
+            var consts = new ConstBuffer
             {
-                var consts = new ConstBufferBlur
-                {
-                    Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
-                    Color = color * Alpha,
-                    Bias = Bias,
-                    OnePixelSizeAndBlur = new Vector4(1.0f / Texture.Width, 1.0f / Texture.Height, Math.Max(0.05f, 1.01f - Gloom), Blur)
-                };
+                Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
+                Color = color * Alpha,
+                Bias = Bias
+            };
 
-                vs.SetConstData(0, ref consts);
-                ps.SetConstData(0, ref consts);
-            }
-            else
-            {
-                var consts = new ConstBuffer
-                {
-                    Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
-                    Color = color * Alpha,
-                    Bias = Bias
-                };
+            vs.SetConstData(0, ref consts);
+            ps.SetConstData(0, ref consts);
 
-                vs.SetConstData(0, ref consts);
-                ps.SetConstData(0, ref consts);
-            }
-
-            graphicsDevice.SetShader(vs);
-            graphicsDevice.SetShader(ps);
+            GraphicsDevice.SetShader(vs);
+            GraphicsDevice.SetShader(ps);
 
             if (TextureEnabled)
             {
-                graphicsDevice.SetPixelShaderSampler(0, Sampler);
-                graphicsDevice.SetPixelShaderTexture(0, Texture);
+                GraphicsDevice.SetPixelShaderSampler(0, Sampler);
+                GraphicsDevice.SetPixelShaderTexture(0, Texture);
             }
-        }
-
-        public void Dispose()
-        {
-            
         }
     }
 }

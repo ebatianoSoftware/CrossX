@@ -26,7 +26,7 @@ struct LIGHT_RES
 	float4 spec;
 };
 
-cbuffer PixelShaderData: register(b1)
+cbuffer PixelShaderData: register(b0)
 {
 	float4 g_ambientColor;
 	float4 g_materialDiffuse;
@@ -36,12 +36,12 @@ cbuffer PixelShaderData: register(b1)
 	DIR_LIGHT g_directionalLights[2];
 };
 
-cbuffer PointLights: register(b2)
+cbuffer PointLights: register(b1)
 {
 	POINT_LIGHT g_pointLights[8];
 }
 
-cbuffer SpotLights : register(b3)
+cbuffer SpotLights : register(b2)
 {
 	SPOT_LIGHT g_spotLights[8];
 }
