@@ -86,7 +86,6 @@ namespace CrossX.UWP.UWP
                 .WithType<Storage>().As<IStorage>().AsSingleton();
 
             serviceProvider = scopeBuilder.Build();
-            
             app = serviceProvider.GetService<IObjectFactory>().Create<TApp>(appParameters);
         }
 

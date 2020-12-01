@@ -1,6 +1,7 @@
 ﻿using CrossX.Core;
 using CrossX.IoC;
 using CrossX.UWP.UWP;
+using CrossX.DxCommon;
 using Windows.ApplicationModel.Core;
 
 namespace CrossX.UWP
@@ -18,8 +19,8 @@ namespace CrossX.UWP
         {
             var builder = new ScopeBuilder()
                 .WithParent(serviceProvider)
-                .RegisterUwpServices()
-                .RegisterUwpTypes();
+                .RegisterDirectXServices()
+                .RegisterDirectXTypes();
             
             CoreApplication.Run(new ViewSource<TApp>(builder, appParameters));
         }

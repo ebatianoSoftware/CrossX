@@ -179,6 +179,9 @@
     <Compile Include="..\DxCommon\Graphics\Shaders\IDxShader.cs">
       <Link>Graphics\DxCommon\Shaders\IDxShader.cs</Link>
     </Compile>
+    <Compile Include="..\DxCommon\RegisterServicesAndTypes.cs">
+      <Link>RegisterServicesAndTypes.cs</Link>
+    </Compile>
     <Compile Include="AppRunner.cs" />
     <Compile Include="Graphics\UwpWindow.cs" />
     <Compile Include="Input\UwpGamePad.cs" />
@@ -188,7 +191,6 @@
     <Compile Include="Input\UwpTouchPanel.cs" />
     <Compile Include="IO\Storage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisterServicesAndTypes.cs" />
     <Compile Include="UWP\ApplicationView.cs" />
     <Compile Include="UWP\ViewSource.cs" />
     <EmbeddedResource Include="Properties\CrossX.UWP.rd.xml" />

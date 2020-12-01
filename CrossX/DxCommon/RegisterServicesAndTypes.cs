@@ -6,11 +6,11 @@ using CrossX.Graphics;
 using CrossX.Graphics.Shaders;
 using CrossX.IoC;
 
-namespace CrossX.UWP
+namespace CrossX.DxCommon
 {
     internal static class RegisterServicesAndTypes
     {
-        public static ScopeBuilder RegisterUwpServices(this ScopeBuilder builder)
+        public static ScopeBuilder RegisterDirectXServices(this ScopeBuilder builder)
         {
             return builder
                 .WithType<SoundSettings>().As<ISoundSettings>().AsSingleton()
@@ -18,9 +18,8 @@ namespace CrossX.UWP
                 .WithType<ShadersRepository>().As<IShadersRepository>().AsSingleton();
         }
 
-        public static ScopeBuilder RegisterUwpTypes(this ScopeBuilder builder)
+        public static ScopeBuilder RegisterDirectXTypes(this ScopeBuilder builder)
         {
-            
             return builder
                     .WithType<DxTexture>().As<Texture2D>()
                     .WithType<DxVertexBuffer>().As<VertexBuffer>()

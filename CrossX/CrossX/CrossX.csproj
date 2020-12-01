@@ -30,7 +30,7 @@
     <_Parameter1>$(AssemblyName).UWP</_Parameter1>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-    <_Parameter1>$(AssemblyName).Windows</_Parameter1>
+    <_Parameter1>$(AssemblyName).WindowsDx</_Parameter1>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
     <_Parameter1>$(AssemblyName).MacOS</_Parameter1>

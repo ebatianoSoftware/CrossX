@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D67F09A7-CEEC-4A81-8F21-F5B3AE961B19}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CrossX.WindowsDx</RootNamespace>
+    <AssemblyName>CrossX.WindowsDx</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.XAudio2.4.2.0\lib\net45\SharpDX.XAudio2.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XInput, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.XInput.4.2.0\lib\net45\SharpDX.XInput.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\DxCommon\Audio\DxAudioEmitter.cs">
+      <Link>Audio\DxAudioEmitter.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxAudioListener.cs">
+      <Link>Audio\DxAudioListener.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxAudioManager.cs">
+      <Link>Audio\DxAudioManager.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxAudioStreamPlayer.cs">
+      <Link>Audio\DxAudioStreamPlayer.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxSound.cs">
+      <Link>Audio\DxSound.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\DxSoundInstance.cs">
+      <Link>Audio\DxSoundInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Audio\XAudio2Model.cs">
+      <Link>Audio\XAudio2Model.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxGraphicsDevice.cs">
+      <Link>Graphics\DxCommon\DxGraphicsDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxIndexBuffer2.cs">
+      <Link>Graphics\DxCommon\DxIndexBuffer2.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxRenderTarget.cs">
+      <Link>Graphics\DxCommon\DxRenderTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxTexture.cs">
+      <Link>Graphics\DxCommon\DxTexture.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\DxVertexBuffer.cs">
+      <Link>Graphics\DxCommon\DxVertexBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\GeometryExtensions.cs">
+      <Link>Graphics\DxCommon\GeometryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\IDxTexture.cs">
+      <Link>Graphics\DxCommon\IDxTexture.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\ITargetWindow.cs">
+      <Link>Graphics\DxCommon\ITargetWindow.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\RenderStates.cs">
+      <Link>Graphics\DxCommon\RenderStates.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\Shaders\DxPixelShader.cs">
+      <Link>Graphics\DxCommon\Shaders\DxPixelShader.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\Shaders\DxVertexShader.cs">
+      <Link>Graphics\DxCommon\Shaders\DxVertexShader.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\Graphics\Shaders\IDxShader.cs">
+      <Link>Graphics\DxCommon\Shaders\IDxShader.cs</Link>
+    </Compile>
+    <Compile Include="..\DxCommon\RegisterServicesAndTypes.cs">
+      <Link>RegisterServicesAndTypes.cs</Link>
+    </Compile>
+    <Compile Include="GraphicsMode.cs" />
+    <Compile Include="Input\Win32Gamepads.cs" />
+    <Compile Include="Input\Win32GamePadState.cs" />
+    <Compile Include="Input\Win32Keyboard.cs" />
+    <Compile Include="Input\Win32Mouse.cs" />
+    <Compile Include="IO\Storage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetWindow.cs" />
+    <Compile Include="AppRunner.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrossX\CrossX.csproj">
+      <Project>{7b1c3193-96dc-44c1-b232-2e8a7bd8080a}</Project>
+      <Name>CrossX</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.psbc">
+      <Link>FX\DefaultPC.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.vsbc">
+      <Link>FX\DefaultPC.vsbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPCT.psbc">
+      <Link>FX\DefaultPCT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPCT.vsbc">
+      <Link>FX\DefaultPCT.vsbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPNT.psbc">
+      <Link>FX\DefaultPNT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPNT.vsbc">
+      <Link>FX\DefaultPNT.vsbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPT.psbc">
+      <Link>FX\DefaultPT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPT.vsbc">
+      <Link>FX\DefaultPT.vsbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\LightedPNT.psbc">
+      <Link>FX\LightedPNT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\LightedPNT.vsbc">
+      <Link>FX\LightedPNT.vsbc</Link>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\DxCommon\FX\DefaultPC.fx">
+      <Link>FX\Code\DefaultPC.fx</Link>
+    </Content>
+    <Content Include="..\DxCommon\FX\DefaultPCT.fx">
+      <Link>FX\Code\DefaultPCT.fx</Link>
+    </Content>
+    <Content Include="..\DxCommon\FX\DefaultPNT.fx">
+      <Link>FX\Code\DefaultPNT.fx</Link>
+    </Content>
+    <Content Include="..\DxCommon\FX\DefaultPT.fx">
+      <Link>FX\Code\DefaultPT.fx</Link>
+    </Content>
+    <Content Include="..\DxCommon\FX\LightedPNT.fx">
+      <Link>FX\Code\LightedPNT.fx</Link>
+    </Content>
+    <Content Include="..\DxCommon\FX\Lighted\Common.fx">
+      <Link>FX\Code\Lighted\Common.fx</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
