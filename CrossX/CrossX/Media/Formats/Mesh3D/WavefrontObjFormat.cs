@@ -4,7 +4,7 @@ using JeremyAnsel.Media.WavefrontObj;
 using CrossX.Graphics;
 using System.Collections.Generic;
 
-namespace CrossX.Media.Formats
+namespace CrossX.Media.Formats.Mesh3D
 {
     public delegate Stream OpenMaterialFileDelegate(string name);
 
@@ -18,12 +18,12 @@ namespace CrossX.Media.Formats
         {
             var materials = new Dictionary<string, RawMaterial>();
 
-            
+
             var file = ObjFile.FromStream(stream);
 
-            if(openMaterialFile != null)
+            if (openMaterialFile != null)
             {
-                foreach(var lib in file.MaterialLibraries)
+                foreach (var lib in file.MaterialLibraries)
                 {
                     using (var stream2 = openMaterialFile(lib))
                     {
@@ -53,10 +53,10 @@ namespace CrossX.Media.Formats
                 var faces = file.Faces[idx];
                 var p1 = GetIndex(file, faces.Vertices[0], map, vertices);
 
-                for(var vi = 1; vi < faces.Vertices.Count-1; vi++)
+                for (var vi = 1; vi < faces.Vertices.Count - 1; vi++)
                 {
                     var p2 = GetIndex(file, faces.Vertices[vi], map, vertices);
-                    var p3 = GetIndex(file, faces.Vertices[vi+1], map, vertices);
+                    var p3 = GetIndex(file, faces.Vertices[vi + 1], map, vertices);
 
                     list.Add(p1);
                     list.Add(p2);
@@ -67,9 +67,9 @@ namespace CrossX.Media.Formats
             var slices = new RawMeshSlice[objSlices.Count];
             var sliceIndex = 0;
 
-            foreach(var sl in objSlices)
+            foreach (var sl in objSlices)
             {
-                if(!materials.TryGetValue(sl.Key, out var material))
+                if (!materials.TryGetValue(sl.Key, out var material))
                 {
                     material = new RawMaterial(sl.Key, null, null, null, Color4.Transparent, Color4.White, Color4.Transparent, Color4.Transparent, Color4.Black, 1);
                 }
@@ -83,7 +83,7 @@ namespace CrossX.Media.Formats
         {
             var objMat = ObjMaterialFile.FromStream(stream);
 
-            foreach(var mat in objMat.Materials)
+            foreach (var mat in objMat.Materials)
             {
                 var raw = new RawMaterial(
                         mat.Name,
@@ -125,10 +125,10 @@ namespace CrossX.Media.Formats
             var oNormals = file.VertexNormals;
             var oTexCoords = file.TextureVertices;
 
-            var normal = oNormals != null ? new Vector4(oNormals[tri.Normal-1].X, oNormals[tri.Normal - 1].Y, oNormals[tri.Normal-1].Z, 0) : Vector4.Zero;
-            var texCoord = oTexCoords != null ? new Vector2(oTexCoords[tri.Texture-1].X, 1-oTexCoords[tri.Texture-1].Y) : Vector2.Zero;
-            var position = new Vector4(oVert[tri.Vertex-1].Position.X, oVert[tri.Vertex-1].Position.Y, oVert[tri.Vertex-1].Position.Z, oVert[tri.Vertex-1].Position.W);
-            
+            var normal = oNormals != null ? new Vector4(oNormals[tri.Normal - 1].X, oNormals[tri.Normal - 1].Y, oNormals[tri.Normal - 1].Z, 0) : Vector4.Zero;
+            var texCoord = oTexCoords != null ? new Vector2(oTexCoords[tri.Texture - 1].X, 1 - oTexCoords[tri.Texture - 1].Y) : Vector2.Zero;
+            var position = new Vector4(oVert[tri.Vertex - 1].Position.X, oVert[tri.Vertex - 1].Position.Y, oVert[tri.Vertex - 1].Position.Z, oVert[tri.Vertex - 1].Position.W);
+
             return new VertexPNT
             {
                 Position = position,

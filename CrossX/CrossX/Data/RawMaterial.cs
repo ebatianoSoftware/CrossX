@@ -16,20 +16,6 @@ namespace CrossX.Data
         public Color4 Glow { get; }
         public float SpecularExponent { get; }
 
-        public void Save(BinaryWriter writer)
-        {
-            writer.Write(DiffuseMap ?? "");
-            writer.Write(NormalMap ?? "");
-            writer.Write(SpecularMap ?? "");
-            writer.Write(SpecularExponent);
-
-            writer.Write(Ambient.ToInt32());
-            writer.Write(Diffuse.ToInt32());
-            writer.Write(Specular.ToInt32());
-            writer.Write(Emissive.ToInt32());
-        }
-
-
         public RawMaterial(string name, string diffuseMap, string normalMap, string specularMap, Color4 ambient, Color4 diffuse, Color4 specular, Color4 emissive, Color4 glow, float specularExponent)
         {
             DiffuseMap = diffuseMap;
