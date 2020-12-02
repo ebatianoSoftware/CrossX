@@ -38,7 +38,7 @@ cbuffer PixelShaderData: register(b0)
 
 cbuffer PointLights: register(b1)
 {
-	POINT_LIGHT g_pointLights[8];
+	POINT_LIGHT g_pointLights[16];
 }
 
 cbuffer SpotLights : register(b2)
@@ -81,7 +81,7 @@ LIGHT_RES CalculatePointLights(float4 pos, float4 normal)
 {
 	LIGHT_RES res = (LIGHT_RES)0;
 
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < 16; ++i)
 	{
 		POINT_LIGHT light = g_pointLights[i];
 

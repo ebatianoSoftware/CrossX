@@ -1,5 +1,6 @@
 ﻿using CrossX.Async;
 using CrossX.Core;
+using CrossX.Data;
 using CrossX.Diagnostics;
 using CrossX.DxCommon;
 using CrossX.DxCommon.Graphics;
@@ -9,9 +10,11 @@ using CrossX.IO;
 using CrossX.IoC;
 using CrossX.Windows.Input;
 using CrossX.WindowsDx.IO;
+using CrossX.WindowsDx.Media;
 using SharpDX.Windows;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -49,6 +52,7 @@ namespace CrossX.WindowsDx
     public class AppRunner<TApp>: IDisposable where TApp: class, IApp
     {
         private readonly RenderForm renderForm;
+        private readonly GraphicsMode graphicsMode;
         private IServicesProvider servicesProvider;
         private object locker = new object();
         private IApp app;
@@ -68,7 +72,9 @@ namespace CrossX.WindowsDx
         private AppStats appStats = new AppStats();
         private Dispatcher dispatcher = new Dispatcher();
         private TargetWindow targetWindow;
-        
+        private int addX;
+        private int addY;
+
         public AppRunner(string windowTitle, GraphicsMode graphicsMode, IServicesProvider servicesProvider = null)
         {
             DpiHelper.SetDpiAwareness();
@@ -76,11 +82,11 @@ namespace CrossX.WindowsDx
             renderForm = new RenderForm(windowTitle);
             isActive = true;
 
-            //renderForm.AppActivated += OnActivated;
-            //renderForm.Activated += OnActivated;
+            renderForm.AppActivated += OnActivated;
+            renderForm.Activated += OnActivated;
 
-            //renderForm.AppDeactivated += OnDeactivated;
-            //renderForm.Deactivate += OnDeactivated;
+            renderForm.AppDeactivated += OnDeactivated;
+            renderForm.Deactivate += OnDeactivated;
 
             renderForm.KeyDown += KeyDown;
             renderForm.MinimizeBox = true;
@@ -88,27 +94,58 @@ namespace CrossX.WindowsDx
             renderForm.ShowInTaskbar = true;
 
             renderForm.MouseLeave += (o, e) => Cursor.Show();
-
             renderForm.FormBorderStyle = FormBorderStyle.FixedSingle;
             
             var clientSize = renderForm.ClientSize;
             var windowSize = renderForm.Size;
 
-            var addX = windowSize.Width - clientSize.Width;
-            var addY = windowSize.Height - clientSize.Height;
+            addX = windowSize.Width - clientSize.Width;
+            addY = windowSize.Height - clientSize.Height;
 
-            renderForm.Size = new System.Drawing.Size(addX + graphicsMode.Width, addY + graphicsMode.Height);
+            var maxSize = Screen.PrimaryScreen.WorkingArea.Size;
+            maxSize.Width -= addX;
+            maxSize.Height -= addY;
+
+            graphicsMode.WindowSize = new Size(
+                Math.Min(graphicsMode.WindowSize.Width, maxSize.Width),
+                Math.Min(graphicsMode.WindowSize.Height, maxSize.Height)
+                );
+
+            var size = graphicsMode.WindowSize;
+            renderForm.Size = new Size(addX + size.Width, addY + size.Height);
 
             targetWindow = new TargetWindow(renderForm);
-            this.servicesProvider = Initialize(targetWindow, graphicsMode.Fullscreen, servicesProvider);
-            
+            this.graphicsMode = graphicsMode;
+            this.servicesProvider = Initialize(targetWindow, false, servicesProvider);
+            dxGraphicsDevice.SetFullscreen(graphicsMode.Fullscreen);
+            renderForm.IsFullscreen = graphicsMode.Fullscreen;
+        }
+
+        private void OnDeactivated(object sender, EventArgs e)
+        {
+            graphicsMode.Fullscreen = false;
+            dxGraphicsDevice.SetFullscreen(false);
+            renderForm.IsFullscreen = false;
+            renderForm.Size = new Size(addX + graphicsMode.WindowSize.Width, addY + graphicsMode.WindowSize.Height);
+            renderForm.ShowInTaskbar = true;
+            renderForm.Show();
+            isActive = false;
+        }
+
+        private void OnActivated(object sender, EventArgs e)
+        {
+            isActive = true;
         }
 
         private void KeyDown(object sender, KeyEventArgs args)
         {
             if (args.KeyCode == Keys.F4)
             {
-                targetWindow.SetFullscreen(targetWindow.IsFullscreen);
+                graphicsMode.Fullscreen = !graphicsMode.Fullscreen;
+                dxGraphicsDevice.SetFullscreen(graphicsMode.Fullscreen);
+                renderForm.IsFullscreen = graphicsMode.Fullscreen;
+                renderForm.ShowInTaskbar = true;
+                renderForm.Show();
             }
         }
 
@@ -160,7 +197,7 @@ namespace CrossX.WindowsDx
             {
                 lock (locker)
                 {
-                    Monitor.Wait(locker, Math.Max(1, 10));
+                    Monitor.Wait(locker, Math.Max(1, 100));
                 }
             }
         }
@@ -192,6 +229,7 @@ namespace CrossX.WindowsDx
             featuresFlags.Add("DESKTOP");
 
             scopeBuilder
+                .WithType<GdiImagesLoader>().As<IImageLoader>().As<IRawLoader<RawImage>>().AsSingleton()
                 .WithInstance(dxGraphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
                 .WithInstance(win32GamePads).As<IGamePads>()
                 .WithInstance(win32Keyboard).As<IKeyboard>()
@@ -200,7 +238,6 @@ namespace CrossX.WindowsDx
                 .WithInstance(dispatcher).As<IDispatcher>()
                 .WithInstance(appStats).As<IAppStats>()
                 .WithType<Storage>().As<IStorage>().AsSingleton();
-
 
             return scopeBuilder.Build();
         }

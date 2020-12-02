@@ -1,5 +1,3 @@
-
-
 using CrossX.Async;
 using CrossX.Audio;
 using CrossX.Utils;
@@ -48,7 +46,7 @@ namespace CrossX.DxCommon.Audio
             this.stream = stream;
             this.dispatcher = dispatcher;
 
-            arraysPool.SetCustomFactory(() => new byte[524288]);
+            arraysPool.SetCustomFactory(() => new byte[262144]);
 
             format = new WaveFormat(stream.SampleRate, stream.BitRate, stream.Channels);
             voice = new SourceVoice(audioManager.Xaudio2, format);
@@ -57,7 +55,6 @@ namespace CrossX.DxCommon.Audio
             voice.BufferEnd += Voice_BufferEnd;
 
             soundSettings.ParametersChanged += SoundSettings_ParametersChanged;
-
         }
 
         private void SoundSettings_ParametersChanged() => Volume = volume;
@@ -79,7 +76,7 @@ namespace CrossX.DxCommon.Audio
 
         private void SubmitBuffersIfNeeded()
         {
-            while(voice.State.BuffersQueued < 2)
+            while(voice.State.BuffersQueued < 3)
             {
                 var data = arraysPool.Get();
 

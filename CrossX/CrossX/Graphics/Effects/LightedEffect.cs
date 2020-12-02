@@ -40,6 +40,14 @@ namespace CrossX.Graphics.Effects
             public PointLight PointLight5;
             public PointLight PointLight6;
             public PointLight PointLight7;
+            public PointLight PointLight8;
+            public PointLight PointLight9;
+            public PointLight PointLight10;
+            public PointLight PointLight11;
+            public PointLight PointLight12;
+            public PointLight PointLight13;
+            public PointLight PointLight14;
+            public PointLight PointLight15;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -112,7 +120,7 @@ namespace CrossX.Graphics.Effects
 
         public void AddLight(PointLight light)
         {
-            if (pointLights.Count >= 8) throw new Exception($"Max 8 point lights.");
+            if (pointLights.Count >= 15) throw new Exception($"Max 16 point lights.");
             pointLights.Add(light);
         }
 
@@ -158,7 +166,15 @@ namespace CrossX.Graphics.Effects
                 PointLight4 = pointLights.Count > 4 ? pointLights[4] : default,
                 PointLight5 = pointLights.Count > 5 ? pointLights[5] : default,
                 PointLight6 = pointLights.Count > 6 ? pointLights[6] : default,
-                PointLight7 = pointLights.Count > 7 ? pointLights[7] : default
+                PointLight7 = pointLights.Count > 7 ? pointLights[7] : default,
+                PointLight8 = pointLights.Count > 8 ? pointLights[8] : default,
+                PointLight9 = pointLights.Count > 9 ? pointLights[9] : default,
+                PointLight10 = pointLights.Count > 10 ? pointLights[10] : default,
+                PointLight11 = pointLights.Count > 11 ? pointLights[11] : default,
+                PointLight12 = pointLights.Count > 12 ? pointLights[12] : default,
+                PointLight13 = pointLights.Count > 13 ? pointLights[13] : default,
+                PointLight14 = pointLights.Count > 14 ? pointLights[14] : default,
+                PointLight15 = pointLights.Count > 15 ? pointLights[15] : default,
             };
             ps.SetConstData(1, ref psPointLightsData);
 

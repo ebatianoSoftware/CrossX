@@ -7,14 +7,10 @@ namespace CrossX.DxCommon.Graphics
 {
     internal interface ITargetWindow
     {
-        bool IsFullscreen { get; }
-
         event EventHandler<Size> SizeChanged;
 
         Size Size { get; }
 
         SwapChain1 CreateSwapChain(int width, int height, bool fullscreen, out SdxDevice1 device);
-
-        void SetFullscreen(bool fullscreen);
     }
 }

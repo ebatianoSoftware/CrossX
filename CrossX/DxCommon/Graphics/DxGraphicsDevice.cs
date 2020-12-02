@@ -54,7 +54,7 @@ namespace CrossX.DxCommon.Graphics
         private BlendState1 blendState;
         private BlendMode blendMode;
 
-        public bool DepthClip { get; set; }
+        public bool DepthClip { get; set; } = true;
 
         public BlendMode BlendMode
         {
@@ -97,6 +97,7 @@ namespace CrossX.DxCommon.Graphics
         }
 
         public IDxShader CurrentShader { get; internal set; }
+        public bool VerticalSync { get; set; }
 
         public DxGraphicsDevice(AppStats appStats)
         {
@@ -161,11 +162,17 @@ namespace CrossX.DxCommon.Graphics
             SetRenderTarget(null);
         }
 
+        public void SetFullscreen(bool fullscreen)
+        {
+            this.fullscreen = fullscreen;
+            swapChain.IsFullScreen = fullscreen;
+        }
+
         public void Present()
         {
             Flush(this);
             D3dContext.Flush();
-            swapChain.Present(0, PresentFlags.None);
+            swapChain.Present(VerticalSync ? 1 : 0, PresentFlags.None);
 
             AppStats.TotalDrawCallsLastFrame = AppStats.CurrentDrawCallsInFrame;
             AppStats.TotalVerticesLastFrame = AppStats.CurrentVerticesInFrame;
@@ -330,6 +337,7 @@ namespace CrossX.DxCommon.Graphics
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }

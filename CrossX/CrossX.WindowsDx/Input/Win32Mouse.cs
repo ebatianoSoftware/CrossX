@@ -43,8 +43,15 @@ namespace CrossX.Windows.Input
 
         public MouseCaps Caps => MouseCaps.LButton | MouseCaps.MButton | MouseCaps.RButton;
 
-        public CursorType Cursor { get; set; } = CursorType.Arrow;
-
+        public CursorType Cursor 
+        { 
+            get => cursor;
+            set
+            {
+                cursor = value;
+                //WinCursor.Hide();
+            }
+        }
         public event Action<TouchPoint> PointerDown;
         public event Action<TouchPoint> PointerUp;
         public event Action<TouchPoint> PointerMove;
@@ -63,7 +70,7 @@ namespace CrossX.Windows.Input
         }
 
         private MouseButtons previousMouseButtons = MouseButtons.None;
-
+        private CursorType cursor = CursorType.Arrow;
         private const long MouseTouchId = 1;
 
         public Win32Mouse(WinForm form)
@@ -141,7 +148,7 @@ namespace CrossX.Windows.Input
             bool isNowDown = FromMouseButtons(WinControl.MouseButtons).HasFlag(button);
             bool wasDown = previousMouseButtons.HasFlag(button);
 
-            return isNowDown ? (wasDown ? KeyBtnState.Down : KeyBtnState.JustPressed) 
+            return isNowDown ? (wasDown ? KeyBtnState.Down : KeyBtnState.JustPressed)
                              : (wasDown ? KeyBtnState.JustReleased : KeyBtnState.Up);
         }
 

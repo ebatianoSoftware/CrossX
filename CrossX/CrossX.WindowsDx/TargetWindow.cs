@@ -18,10 +18,6 @@ namespace CrossX.WindowsDx
         public event EventHandler<Size> SizeChanged;
         private Rectangle formBounds;
 
-        public bool IsFullscreen { get; private set; }
-
-        private bool disableSizeChangeEvent;
-
         public TargetWindow(Form form)
         {
             this.form = form;
@@ -31,7 +27,6 @@ namespace CrossX.WindowsDx
 
         private void Form_SizeChanged(object sender, EventArgs e)
         {
-            if (disableSizeChangeEvent) return;
             SizeChanged?.Invoke(sender, Size);
         }
 
@@ -45,10 +40,9 @@ namespace CrossX.WindowsDx
                 OutputHandle = form.Handle,
                 SampleDescription = new SampleDescription(1, 0),
                 SwapEffect = SwapEffect.Discard,
-                Usage = Usage.RenderTargetOutput
+                Usage = Usage.RenderTargetOutput,
+                Flags = SwapChainFlags.None
             };
-
-            IsFullscreen = fullscreen;
 
             // Create Device and SwapChain
             SwapChain swapChain;
@@ -70,42 +64,6 @@ namespace CrossX.WindowsDx
             {
                 return swapChain.QueryInterface<SwapChain1>();
             }
-        }
-
-        public void SetFullscreen(bool fullscreen)
-        {
-            if(fullscreen)
-            {
-                if(!IsFullscreen)
-                {
-                    disableSizeChangeEvent = true;
-                    formBounds = form.DesktopBounds;
-
-                    form.FormBorderStyle = FormBorderStyle.None;
-                    form.TopLevel = true;
-
-                    var screen = Screen.FromHandle(form.Handle);
-                    var screenBounds = screen.Bounds;
-                    form.SetBounds(screenBounds.X, screenBounds.Y, screenBounds.Width, screenBounds.Height, BoundsSpecified.All);
-                    disableSizeChangeEvent = false;
-
-                    SizeChanged?.Invoke(this, Size);
-                    IsFullscreen = true;
-                    return;
-                }
-                return;
-            }
-
-            disableSizeChangeEvent = true;
-            
-            form.FormBorderStyle = FormBorderStyle.FixedSingle;
-            form.TopMost = false;
-
-            form.SetBounds(formBounds.X, formBounds.Y, formBounds.Width, formBounds.Height, BoundsSpecified.All);
-
-            disableSizeChangeEvent = false;
-            SizeChanged?.Invoke(this, Size);
-            IsFullscreen = false;
         }
     }
 }

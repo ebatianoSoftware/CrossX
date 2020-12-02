@@ -8,6 +8,7 @@ namespace CrossX.Graphics
     {
         event EventHandler FlushRequest;
 
+        bool VerticalSync { get; set; }
         Size Size { get; }
         Size CurrentTargetSize { get; }
         BlendMode BlendMode { get; set; }

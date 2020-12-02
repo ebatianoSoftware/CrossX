@@ -136,6 +136,7 @@
     <Compile Include="Input\Win32Keyboard.cs" />
     <Compile Include="Input\Win32Mouse.cs" />
     <Compile Include="IO\Storage.cs" />
+    <Compile Include="Media\GdiImagesLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TargetWindow.cs" />
     <Compile Include="AppRunner.cs" />
