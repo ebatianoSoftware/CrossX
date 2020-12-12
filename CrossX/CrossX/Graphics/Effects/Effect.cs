@@ -1,5 +1,5 @@
 ﻿using CrossX.Graphics.Shaders;
-using CrossX.IoC;
+using S2IoC;
 using System;
 using System.Reflection;
 
@@ -16,6 +16,11 @@ namespace CrossX.Graphics.Effects
             GraphicsDevice = graphicsDevice;
             ObjectFactory = objectFactory;
             this.shadersRepository = shadersRepository;
+        }
+
+        protected VertexShader CreateVertexShader(Assembly assembly, string name, VertexContent vertexContent)
+        {
+            return CreateVertexShader(assembly, name, vertexContent, out var _);
         }
 
         protected VertexShader CreateVertexShader<TBuffer>(Assembly assembly, string name, VertexContent vertexContent) where TBuffer : struct
@@ -64,6 +69,11 @@ namespace CrossX.Graphics.Effects
                 shader.CreateConstBuffer<TBuffer3>(3);
             }
             return shader;
+        }
+
+        protected PixelShader CreatePixelShader(Assembly assembly, string name)
+        {
+            return CreatePixelShader(assembly, name, out var _);
         }
 
         protected PixelShader CreatePixelShader<TBuffer>(Assembly assembly, string name) where TBuffer : struct

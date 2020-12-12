@@ -5,19 +5,18 @@ using CrossX.DxCommon.Graphics;
 using CrossX.Graphics;
 using CrossX.Input;
 using CrossX.IO;
-using CrossX.IoC;
 using CrossX.UWP.Graphics;
 using CrossX.UWP.IO;
 using CrossX.WindowsUniversal.Input;
+using S2IoC;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
 namespace CrossX.UWP.UWP
 {
-    public class ApplicationView<TApp>: IFrameworkView where TApp: IApp
+    public class ApplicationView<TApp>: IPlatform, IFrameworkView where TApp: IApp
     {
         private readonly ScopeBuilder scopeBuilder;
         private readonly object appParameters;
@@ -29,6 +28,7 @@ namespace CrossX.UWP.UWP
         private UwpTouchPanel touchPanel;
         private DxGraphicsDevice graphicsDevice;
         private Dispatcher dispatcher = new Dispatcher();
+        private CoreWindow coreWindow;
 
         private AppStats AppStats { get; } = new AppStats();
 
@@ -52,6 +52,7 @@ namespace CrossX.UWP.UWP
 
         public void SetWindow(CoreWindow window)
         {
+            coreWindow = window;
             graphicsDevice = new DxGraphicsDevice(AppStats);
             graphicsDevice.Initialize(new UwpWindow(window), false);
 
@@ -75,6 +76,7 @@ namespace CrossX.UWP.UWP
             }
 
             scopeBuilder
+                .WithInstance(this).As<IPlatform>()
                 .WithInstance(graphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
                 .WithInstance(gamePads).As<IGamePads>()
                 .WithInstance(touchPanel).As<ITouchPanel>()
@@ -141,6 +143,11 @@ namespace CrossX.UWP.UWP
         public void Uninitialize()
         {
             
+        }
+
+        public void CloseApp()
+        {
+            coreWindow.Close();
         }
     }
 }

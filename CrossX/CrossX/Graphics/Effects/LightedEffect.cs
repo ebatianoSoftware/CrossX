@@ -1,36 +1,35 @@
 ﻿using CrossX.Data;
 using CrossX.Graphics.Shaders;
 using CrossX.Graphics3D.Light;
-using CrossX.IoC;
+using S2IoC;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace CrossX.Graphics.Effects
 {
-    public sealed class LightedEffect : Effect
+    public abstract class LightedEffect : Effect
     {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct VertexShaderConst
+        protected struct VertexShaderConst
         {
             public Matrix MatrixWorldViewProj;
             public Matrix MatrixWorld;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct BasicPixelShaderData
+        protected struct MaterialAndLightData
         {
             public Vector4 Ambient;
             public Vector4 MatDiffuse;
             public Vector4 CameraPosition;
             public Vector4 Specular;
-            public Vector4 LightMask;
             public DirectionalLight DirectionalLight0;
             public DirectionalLight DirectionalLight1;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct PointLightsData
+        protected struct PointLightsData
         {
             public PointLight PointLight0;
             public PointLight PointLight1;
@@ -51,7 +50,7 @@ namespace CrossX.Graphics.Effects
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct SpotLightsData
+        protected struct SpotLightsData
         {
             public SpotLight SpotLight0;
             public SpotLight SpotLight1;
@@ -59,11 +58,8 @@ namespace CrossX.Graphics.Effects
             public SpotLight SpotLight3;
         }
 
-        private readonly VertexShader pntVertexShader;
-        private readonly PixelShader pntPixelShader;
-
-        private Matrix viewProjectionMatrix;
-        private Matrix worldMatrix;
+        protected Matrix viewProjectionMatrix;
+        protected Matrix worldMatrix;
 
         public Vector4 AmbientColor { get; set; } = Color4.Black;
         public Color4 MaterialDiffuseColor { get; set; } = Color4.White;
@@ -73,19 +69,16 @@ namespace CrossX.Graphics.Effects
         public float SpecularExponent { get; set; }
         public Texture2D Texture { get; set; }
         public Texture2D SpecularTexture { get; set; }
-        private Texture2D whiteTexture;
+        protected readonly Texture2D whiteTexture;
 
-        public float DiffuseLightMultiplier { get; set; } = 1;
-        public float DiffuseLightForce { get; set; }
-        public float ColorBias { get; set; }
         public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
         public void SetViewProjectionTransform(Matrix transform) => viewProjectionMatrix = transform;
 
         public TextureSamplerDesc Sampler { get; set; }
 
-        private readonly List<PointLight> pointLights = new List<PointLight>();
-        private readonly List<SpotLight> spotLights = new List<SpotLight>();
-        private readonly List<DirectionalLight> directionalLights = new List<DirectionalLight>();
+        protected readonly List<PointLight> pointLights = new List<PointLight>();
+        protected readonly List<SpotLight> spotLights = new List<SpotLight>();
+        protected readonly List<DirectionalLight> directionalLights = new List<DirectionalLight>();
 
         public LightedEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository): base(graphicsDevice, objectFactory, shadersRepository)
         {
@@ -93,10 +86,6 @@ namespace CrossX.Graphics.Effects
             worldMatrix = Matrix.Identity;
 
             var assembly = graphicsDevice.GetType().Assembly;
-
-            pntVertexShader = CreateVertexShader<VertexShaderConst>(assembly, "LightedPNT", VertexPNT.Content);
-            pntPixelShader = CreatePixelShader<BasicPixelShaderData, PointLightsData>(assembly, "LightedPNT");
-
             whiteTexture = objectFactory.Create<Texture2D>(
                 new RawImage(1, 1, new byte[] 
                 { 
@@ -131,33 +120,30 @@ namespace CrossX.Graphics.Effects
             spotLights.Add(light);
         }
 
-        public void Apply()
+        public abstract void Apply();
+
+        public override void Dispose()
         {
-            VertexShader vs = pntVertexShader;
-            PixelShader ps = pntPixelShader;
+            base.Dispose();
+            whiteTexture?.Dispose();
+        }
 
-            var vsConsts = new VertexShaderConst
-            {
-                MatrixWorldViewProj = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
-                MatrixWorld = worldMatrix,
-            };
-
-            vs.SetConstData(0, ref vsConsts);
-
-            var psConsts = new BasicPixelShaderData
+        protected MaterialAndLightData GetMaterialAndLightsData()
+        {
+            return new MaterialAndLightData
             {
                 Ambient = AmbientColor,
                 MatDiffuse = MaterialDiffuseColor,
                 CameraPosition = new Vector4(CameraPosition, 1),
                 Specular = new Vector4(SpecularColor.X, SpecularColor.Y, SpecularColor.Z, SpecularExponent),
-                LightMask = new Vector4(DiffuseLightMultiplier, DiffuseLightForce, ColorBias, 0),
                 DirectionalLight0 = directionalLights.Count > 0 ? directionalLights[0] : default,
                 DirectionalLight1 = directionalLights.Count > 1 ? directionalLights[1] : default
             };
+        }
 
-            ps.SetConstData(0, ref psConsts);
-
-            var psPointLightsData = new PointLightsData
+        protected PointLightsData GetPointLightsData()
+        {
+            return new PointLightsData
             {
                 PointLight0 = pointLights.Count > 0 ? pointLights[0] : default,
                 PointLight1 = pointLights.Count > 1 ? pointLights[1] : default,
@@ -175,16 +161,7 @@ namespace CrossX.Graphics.Effects
                 PointLight13 = pointLights.Count > 13 ? pointLights[13] : default,
                 PointLight14 = pointLights.Count > 14 ? pointLights[14] : default,
                 PointLight15 = pointLights.Count > 15 ? pointLights[15] : default,
-            };
-            ps.SetConstData(1, ref psPointLightsData);
-
-            GraphicsDevice.SetShader(vs);
-            GraphicsDevice.SetShader(ps);
-
-            GraphicsDevice.SetPixelShaderSampler(0, Sampler);
-            GraphicsDevice.SetPixelShaderTexture(0, Texture);
-            GraphicsDevice.SetPixelShaderSampler(1, Sampler);
-            GraphicsDevice.SetPixelShaderTexture(1, SpecularTexture ?? whiteTexture);
+            }; 
         }
     }
 }

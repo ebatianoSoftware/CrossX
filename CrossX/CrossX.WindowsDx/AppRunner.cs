@@ -7,10 +7,10 @@ using CrossX.DxCommon.Graphics;
 using CrossX.Graphics;
 using CrossX.Input;
 using CrossX.IO;
-using CrossX.IoC;
 using CrossX.Windows.Input;
 using CrossX.WindowsDx.IO;
 using CrossX.WindowsDx.Media;
+using S2IoC;
 using SharpDX.Windows;
 using System;
 using System.Diagnostics;
@@ -49,7 +49,7 @@ namespace CrossX.WindowsDx
         }
     }
 
-    public class AppRunner<TApp>: IDisposable where TApp: class, IApp
+    public class AppRunner<TApp> : IPlatform, IDisposable where TApp : class, IApp
     {
         private readonly RenderForm renderForm;
         private readonly GraphicsMode graphicsMode;
@@ -229,6 +229,7 @@ namespace CrossX.WindowsDx
             featuresFlags.Add("DESKTOP");
 
             scopeBuilder
+                .WithInstance(this).As<IPlatform>()
                 .WithType<GdiImagesLoader>().As<IImageLoader>().As<IRawLoader<RawImage>>().AsSingleton()
                 .WithInstance(dxGraphicsDevice).As<IGraphicsDevice>().As<DxGraphicsDevice>()
                 .WithInstance(win32GamePads).As<IGamePads>()
@@ -240,6 +241,12 @@ namespace CrossX.WindowsDx
                 .WithType<Storage>().As<IStorage>().AsSingleton();
 
             return scopeBuilder.Build();
+        }
+
+        public void CloseApp()
+        {
+            renderForm.Close();
+            Environment.Exit(0);
         }
     }
 }

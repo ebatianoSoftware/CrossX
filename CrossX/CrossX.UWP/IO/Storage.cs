@@ -8,16 +8,35 @@ namespace CrossX.UWP.IO
 {
     internal class Storage : IStorage
     {
-        public async Task<Stream> OpenRead(string name)
+        public async Task<Stream> OpenRead(StorageSource source, string name)
         {
-            StorageFolder storageFolder = KnownFolders.PicturesLibrary;
+            StorageFolder storageFolder = SpecialFolderFromSource(source);
+
             StorageFile sampleFile = await storageFolder.GetFileAsync(name);
             return await sampleFile.OpenStreamForReadAsync();
         }
 
-        public async Task<Stream> OpenWrite(string name)
+        private StorageFolder SpecialFolderFromSource(StorageSource source)
         {
-            StorageFolder storageFolder = KnownFolders.PicturesLibrary;
+            switch(source)
+            {
+                case StorageSource.Documents:
+                    return KnownFolders.DocumentsLibrary;
+
+                case StorageSource.ApplicationData:
+                    return ApplicationData.Current.LocalFolder;
+
+                case StorageSource.ApplicationAssets:
+                    return ApplicationData.Current.LocalFolder;
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(source));
+        }
+
+        public async Task<Stream> OpenWrite(StorageSource source, string name)
+        {
+            StorageFolder storageFolder = SpecialFolderFromSource(source);
+
             StorageFile sampleFile = await storageFolder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
             return await sampleFile.OpenStreamForWriteAsync();
         }

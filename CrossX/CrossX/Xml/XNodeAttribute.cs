@@ -5,7 +5,7 @@
 using System;
 using System.Globalization;
 
-namespace CrossX.Forms.Xml
+namespace CrossX.Xml
 {
     public struct XNodeAttributes
     {
@@ -66,6 +66,28 @@ namespace CrossX.Forms.Xml
 
             if (!int.TryParse(parts[0].Trim(), out v1)) return false;
             if (!int.TryParse(parts[1].Trim(), out v2)) return false;
+            return true;
+        }
+
+        public bool Parse4Int(string name, out int v1, out int v2, out int v3, out int v4)
+        {
+            v1 = default;
+            v2 = default;
+            v3 = default;
+            v4 = default;
+
+            var text = node.Attribute(name);
+
+            if (text == null) return false;
+
+            var parts = text.Split(',');
+            if (parts.Length != 4) return false;
+
+            if (!int.TryParse(parts[0].Trim(), out v1)) return false;
+            if (!int.TryParse(parts[1].Trim(), out v2)) return false;
+            if (!int.TryParse(parts[2].Trim(), out v3)) return false;
+            if (!int.TryParse(parts[3].Trim(), out v4)) return false;
+
             return true;
         }
 

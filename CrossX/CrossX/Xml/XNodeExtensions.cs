@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace CrossX.Forms.Xml
+namespace CrossX.Xml
 {
     public static class XNodeExtensions
     {

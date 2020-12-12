@@ -18,7 +18,6 @@ struct PS_IN
 
 float4x4 worldViewProj;
 float4 color;
-float4 bias;
 
 Texture2D<float4> colorTexture : register(t0);
 sampler colorTextureSampler : register(s0);
@@ -35,5 +34,5 @@ PS_IN VS(VS_IN input)
 
 float4 PS(PS_IN input) : SV_Target
 {
-	return colorTexture.Sample(colorTextureSampler, input.tex) * input.col + bias;
+	return colorTexture.Sample(colorTextureSampler, input.tex) * input.col;
 }

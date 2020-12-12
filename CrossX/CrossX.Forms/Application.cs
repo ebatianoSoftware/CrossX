@@ -1,6 +1,6 @@
 ﻿using CrossX.Forms.Styles;
-using CrossX.Forms.Xml;
 using CrossX.IO;
+using CrossX.Xml;
 using System;
 using System.IO;
 using System.Xml;

@@ -1,6 +1,6 @@
 ﻿using CrossX.Audio;
 using CrossX.IO;
-using CrossX.IoC;
+using S2IoC;
 
 namespace CrossX.Content.Loaders
 {

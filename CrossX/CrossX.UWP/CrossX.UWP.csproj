@@ -199,6 +199,9 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
+    <PackageReference Include="S2IoC">
+      <Version>1.0.0</Version>
+    </PackageReference>
     <PackageReference Include="SharpDX">
       <Version>4.2.0</Version>
     </PackageReference>
@@ -250,6 +253,12 @@
     <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPNT.vsbc">
       <Link>FX\DefaultPNT.vsbc</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\VertexLightedPNT.psbc">
+      <Link>FX\VertexLightedPNT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\VertexLightedPNT.vsbc">
+      <Link>FX\VertexLightedPNT.vsbc</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\DxCommon\FX\Output\DefaultPC.psbc">
@@ -279,6 +288,9 @@
   <ItemGroup>
     <Content Include="..\DxCommon\FX\DefaultPNT.fx">
       <Link>FX\Code\DefaultPNT.fx</Link>
+    </Content>
+    <Content Include="..\DxCommon\FX\VertexLightedPNT.fx">
+      <Link>FX\Code\VertexLightedPNT.fx</Link>
     </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

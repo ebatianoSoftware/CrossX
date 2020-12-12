@@ -3,7 +3,7 @@ using CrossX.Core;
 using CrossX.Graphics;
 using CrossX.Graphics2D;
 using CrossX.Graphics2D.Text;
-using CrossX.IoC;
+using S2IoC;
 using CrossX.Media.Formats;
 using System;
 using System.Drawing;

@@ -1,7 +1,7 @@
 ﻿using CrossX.Graphics;
 using CrossX.Graphics2D.Text;
 using CrossX.IO;
-using CrossX.IoC;
+using S2IoC;
 using System;
 using System.Collections.Generic;
 using System.IO;

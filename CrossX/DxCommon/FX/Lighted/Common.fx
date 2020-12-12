@@ -26,13 +26,12 @@ struct LIGHT_RES
 	float4 spec;
 };
 
-cbuffer PixelShaderData: register(b0)
+cbuffer MaterialAndLightData: register(b0)
 {
 	float4 g_ambientColor;
 	float4 g_materialDiffuse;
 	float4 g_cameraPosition;
 	float4 g_specular;
-	float4 g_lightMask;
 	DIR_LIGHT g_directionalLights[2];
 };
 
@@ -98,5 +97,16 @@ LIGHT_RES CalculatePointLights(float4 pos, float4 normal)
 			res.spec = res.spec + light.color * CalculateSpecular(pos, normal, dir) * saturation;
 		}
 	}
+	return res;
+}
+
+LIGHT_RES CalculateLights(float4 pos, float4 normal)
+{
+	LIGHT_RES dir = CalculateDirLights(pos, normal);
+	LIGHT_RES pt = CalculatePointLights(pos, normal);
+
+	LIGHT_RES res = (LIGHT_RES)0;
+	res.diff = dir.diff + pt.diff;
+	res.spec = dir.spec + pt.spec;
 	return res;
 }

@@ -2,7 +2,7 @@
 using CrossX.Core;
 using CrossX.Graphics;
 using CrossX.Graphics.Effects;
-using CrossX.IoC;
+using S2IoC;
 using CrossX.Media.Formats;
 using System;
 

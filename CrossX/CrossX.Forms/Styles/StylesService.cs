@@ -1,5 +1,5 @@
-﻿using CrossX.Forms.Xml;
-using CrossX.IO;
+﻿using CrossX.IO;
+using CrossX.Xml;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;

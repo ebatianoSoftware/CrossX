@@ -29,5 +29,12 @@ namespace CrossX.Data
                 Indices2 = indices.Select(o => (ushort)o).ToArray();
             }
         }
+
+        public RawMeshSlice(RawMaterial material, ushort[] indices2, uint[] indices4)
+        {
+            Material = material;
+            Indices2 = indices2;
+            Indices4 = indices4;
+        }
     }
 }

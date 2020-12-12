@@ -1,8 +1,8 @@
 ﻿using CrossX.Core;
-using CrossX.IoC;
 using CrossX.UWP.UWP;
 using CrossX.DxCommon;
 using Windows.ApplicationModel.Core;
+using S2IoC;
 
 namespace CrossX.UWP
 {

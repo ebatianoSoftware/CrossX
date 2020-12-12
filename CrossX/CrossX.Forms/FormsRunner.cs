@@ -13,7 +13,7 @@ using CrossX.Forms.Values;
 using CrossX.Forms.Views;
 using CrossX.Graphics;
 using CrossX.Graphics2D.Text;
-using CrossX.IoC;
+using S2IoC;
 using System;
 using System.Text;
 
@@ -46,12 +46,12 @@ namespace CrossX.Forms
                 .WithType<ConvertersService>().As<IConverters>().AsSingleton()
                 .WithType<StylesService>().As<IStylesService>().As<IStylesServiceEx>().AsSingleton()
                 .WithType<XmlFlagsService>().As<IXmlFlagsService>().AsSingleton()
-                .WithType<NavigationView>().As<INavigation>().AsSelf().AsSingleton()
                 .WithType<FormsSounds>().As<IFormsSounds>().AsSingleton()
                 .WithType<TransitionsManager>().As<ITransitionsManager>().AsSingleton()
                 .WithType<FormsInputService>().As<IFormsInputMapping>().As<IFormsInput>().AsSingleton()
-                .WithType<FontsContainer>().As<IFontsContainer>().As<IFontsLoader>().AsSingleton()
-                .WithType<Application>().As<IApplication>().AsSelf().AsSingleton();
+                .WithType<NavigationView>().As<INavigation>().AsSelf().AsSingleton()
+                .WithType<Application>().As<IApplication>().AsSelf().AsSingleton()
+                .WithType<FontsContainer>().As<IFontsContainer>().As<IFontsLoader>().AsSingleton();
 
             if (!servicesProvider.TryResolveInstance(out IContentManager contentManager) && !scopeBuilder.HasRegisteredInstance(typeof(IContentManager)))
             {

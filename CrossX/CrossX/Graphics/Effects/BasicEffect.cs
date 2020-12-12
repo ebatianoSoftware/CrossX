@@ -1,5 +1,5 @@
 ﻿using CrossX.Graphics.Shaders;
-using CrossX.IoC;
+using S2IoC;
 using System;
 using System.Runtime.InteropServices;
 
@@ -12,7 +12,6 @@ namespace CrossX.Graphics.Effects
         {
             public Matrix Matrix;
             public Vector4 Color;
-            public Vector4 Bias;
         }
 
         private Matrix viewProjectionMatrix;
@@ -29,7 +28,6 @@ namespace CrossX.Graphics.Effects
         public bool VertexHasNormals { get; set; }
 
         public TextureSamplerDesc Sampler { get; set; }
-        public Vector4 Bias { get; set; }
 
         private readonly VertexShader pcVertexShader;
         private readonly VertexShader ptVertexShader;
@@ -53,10 +51,10 @@ namespace CrossX.Graphics.Effects
             ptVertexShader = CreateVertexShader<ConstBuffer>(assembly, "DefaultPT", VertexPT.Content);
             pntVertexShader = CreateVertexShader<ConstBuffer>(assembly, "DefaultPNT", VertexPNT.Content);
 
-            pcPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPC");
-            pctPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPCT");
-            ptPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPT");
-            pntPixelShader = CreatePixelShader<ConstBuffer>(assembly, "DefaultPNT");
+            pcPixelShader = CreatePixelShader(assembly, "DefaultPC");
+            pctPixelShader = CreatePixelShader(assembly, "DefaultPCT");
+            ptPixelShader = CreatePixelShader(assembly, "DefaultPT");
+            pntPixelShader = CreatePixelShader(assembly, "DefaultPNT");
         }
 
         public void Apply()
@@ -89,12 +87,10 @@ namespace CrossX.Graphics.Effects
             var consts = new ConstBuffer
             {
                 Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
-                Color = color * Alpha,
-                Bias = Bias
+                Color = color * Alpha
             };
 
             vs.SetConstData(0, ref consts);
-            ps.SetConstData(0, ref consts);
 
             GraphicsDevice.SetShader(vs);
             GraphicsDevice.SetShader(ps);

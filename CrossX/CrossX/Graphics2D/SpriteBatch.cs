@@ -1,8 +1,10 @@
 ﻿using CrossX.Graphics;
 using CrossX.Graphics.Effects;
+using CrossX.Graphics2D.Sprites;
 using CrossX.Graphics2D.Text;
-using CrossX.IoC;
+using S2IoC;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace CrossX.Graphics2D
@@ -24,9 +26,6 @@ namespace CrossX.Graphics2D
         private BlendMode blendMode = BlendMode.AlphaBlend;
 
         private Texture2D whiteTexture;
-        private Vector4 colorBias = Vector4.Zero;
-        private int blur;        
-        private float gloom;
 
         public Matrix CurrentTransform => transform2D?.Transform ?? Matrix.Identity;
 
@@ -56,16 +55,6 @@ namespace CrossX.Graphics2D
             {
                 if (blendMode != value) Flush();
                 blendMode = value;
-            }
-        }
-
-        public Vector4 ColorBias
-        {
-            get => colorBias;
-            set
-            {
-                if (colorBias != value) Flush();
-                colorBias = value;
             }
         }
 
@@ -118,7 +107,6 @@ namespace CrossX.Graphics2D
 
             basicShader.Texture = currentTexture;
             basicShader.DiffuseColor = Color4.White;
-            basicShader.Bias = ColorBias;
             basicShader.Sampler = (TextureSamplerDesc)((int)TextureFilter | (int)TextureMode);
 
             var vpm = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);
@@ -173,6 +161,17 @@ namespace CrossX.Graphics2D
             AddVertex(new Vector2(targetRect.Left, targetRect.Top), new Vector2(srcL, srcT), color);
             AddVertex(new Vector2(targetRect.Right, targetRect.Bottom), new Vector2(srcR, srcB), color);
             AddVertex(new Vector2(targetRect.Right, targetRect.Top), new Vector2(srcR, srcT), color);
+        }
+
+        public void DrawSprite(SpriteInstance instance, IDictionary<string, Texture2D> sheets, Vector2 position, Color4 color, SpriteFlags spriteFlags = SpriteFlags.None) 
+            => DrawSprite(instance, sheets, position, color, Vector2.One, 0, spriteFlags);
+
+        public void DrawSprite(SpriteInstance instance, IDictionary<string, Texture2D> sheets, Vector2 position, Color4 color, Vector2 scale, float rotation = 0, SpriteFlags spriteFlags = SpriteFlags.None)
+        {
+            var frame = instance.CurrentFrame;
+            if (frame == null) return;
+            var texture = sheets[instance.CurrentSequence.SpriteSheet];
+            DrawImage(texture, position, frame.SourceRect, color, scale, new Vector2(frame.Origin.X, frame.Origin.Y), rotation, spriteFlags);
         }
 
         public void DrawImage(Texture2D texture, Vector2 position, Rectangle? srcRect, Color4 color, Vector2 scale, SpriteFlags spriteFlags = SpriteFlags.None)

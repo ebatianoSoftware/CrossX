@@ -1,4 +1,4 @@
-﻿using CrossX.Forms.Xml;
+﻿using CrossX.Xml;
 
 namespace CrossX.Forms.Transitions
 {

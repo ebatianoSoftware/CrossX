@@ -8,7 +8,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 
-namespace CrossX.Forms.Xml
+namespace CrossX.Xml
 {
     public class XNode
     {
@@ -203,10 +203,14 @@ namespace CrossX.Forms.Xml
         {
             using (var stream = File.OpenRead(path))
             {
-                var reader = XmlReader.Create(stream);
-
-                return new XNode(reader, null, new Dictionary<string, string>());
+                return ReadXml(stream);
             }
+        }
+
+        public static XNode ReadXml(Stream stream)
+        {
+            var reader = XmlReader.Create(stream);
+            return ReadXml(reader);
         }
 
         public XNode this[string nodeName]

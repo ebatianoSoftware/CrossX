@@ -7,7 +7,7 @@
     <Version>0.1.0</Version>
     <Company>Sebastian Sejud IT</Company>
     <UserSecretsId>f3bfc1c7-46d0-4a82-bc91-1789212405eb</UserSecretsId>
-    <Authors>Sebastian Sejud IT</Authors>
+    <Authors>Sebastian Sejud</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="JeremyAnsel.Media.WavefrontObj" Version="2.0.19" />
     <PackageReference Include="NAudio.Vorbis" Version="1.2.0" />
+    <PackageReference Include="S2IoC" Version="1.0.0" />
     <PackageReference Include="SharpFNT" Version="2.0.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
   </ItemGroup>

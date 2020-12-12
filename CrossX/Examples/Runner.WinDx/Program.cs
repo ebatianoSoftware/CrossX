@@ -22,8 +22,7 @@ namespace Runner.WinDx
             {
                 AllowResize = false,
                 Fullscreen = false,
-                Width = 1280,
-                Height = 720
+                WindowSize = new System.Drawing.Size(1280,720)
             });
             runner.Run();
         }

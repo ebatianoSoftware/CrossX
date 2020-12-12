@@ -8,10 +8,11 @@ using CrossX.Graphics2D.Text;
 using CrossX.Graphics3D;
 using CrossX.Graphics3D.Light;
 using CrossX.Input;
-using CrossX.IoC;
+using S2IoC;
 using CrossX.Media.Formats;
 using System;
 using System.Text;
+using CrossX.Media.Formats.Mesh3D;
 
 namespace T06.StaticMesh
 {
@@ -63,7 +64,7 @@ namespace T06.StaticMesh
                 }));
             }
 
-            lightedEffect = objectFactory.Create<LightedEffect>();
+            lightedEffect = objectFactory.Create<LightedEffectPP>();
             mesh = objectFactory.Create<Mesh>(rawMesh, new LoadTextureDelegate(LoadTexture));
 
             using (var stream = typeof(T06_MeshApp).Assembly.GetManifestResourceStream("T06.StaticMesh.Font.fnt"))

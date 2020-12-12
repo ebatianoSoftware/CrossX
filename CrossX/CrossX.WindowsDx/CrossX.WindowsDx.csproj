@@ -33,6 +33,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="S2IoC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\S2IoC.1.0.0\lib\netstandard2.0\S2IoC.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
@@ -179,6 +182,12 @@
     <EmbeddedResource Include="..\DxCommon\FX\Output\LightedPNT.vsbc">
       <Link>FX\LightedPNT.vsbc</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\VertexLightedPNT.psbc">
+      <Link>FX\VertexLightedPNT.psbc</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\DxCommon\FX\Output\VertexLightedPNT.vsbc">
+      <Link>FX\VertexLightedPNT.vsbc</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +208,9 @@
     </Content>
     <Content Include="..\DxCommon\FX\Lighted\Common.fx">
       <Link>FX\Code\Lighted\Common.fx</Link>
+    </Content>
+    <Content Include="..\DxCommon\FX\VertexLightedPNT.fx">
+      <Link>FX\Code\VertexLightedPNT.fx</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

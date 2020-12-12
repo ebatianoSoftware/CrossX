@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Sebastian Sejud</Authors>
+    <Company>Sebastian Sejud IT</Company>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Xml\" />
+    <PackageReference Include="S2IoC" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

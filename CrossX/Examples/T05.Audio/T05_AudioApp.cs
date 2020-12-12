@@ -4,7 +4,7 @@ using CrossX.Audio.Decoders;
 using CrossX.Core;
 using CrossX.Graphics;
 using CrossX.Graphics2D;
-using CrossX.IoC;
+using S2IoC;
 using System;
 
 namespace T05.Audio

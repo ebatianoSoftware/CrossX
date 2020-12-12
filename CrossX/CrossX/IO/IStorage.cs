@@ -5,7 +5,7 @@ namespace CrossX.IO
 {
     public interface IStorage
     {
-        Task<Stream> OpenWrite(string name);
-        Task<Stream> OpenRead(string name);
+        Task<Stream> OpenWrite(StorageSource source, string name);
+        Task<Stream> OpenRead(StorageSource source, string name);
     }
 }

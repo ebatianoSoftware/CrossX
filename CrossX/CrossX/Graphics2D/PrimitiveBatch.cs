@@ -1,6 +1,6 @@
 ﻿using CrossX.Graphics;
 using CrossX.Graphics.Effects;
-using CrossX.IoC;
+using S2IoC;
 using System;
 using System.Drawing;
 

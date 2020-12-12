@@ -1,9 +1,9 @@
 ﻿using CrossX.Forms.Attributes;
 using CrossX.Forms.Services;
 using CrossX.Forms.Styles;
-using CrossX.Forms.Xml;
 using CrossX.IO;
-using CrossX.IoC;
+using CrossX.Xml;
+using S2IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;

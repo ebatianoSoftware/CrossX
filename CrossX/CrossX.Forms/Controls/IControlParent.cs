@@ -1,5 +1,5 @@
 ﻿using CrossX.Graphics2D;
-using CrossX.IoC;
+using S2IoC;
 
 namespace CrossX.Forms.Controls
 {
