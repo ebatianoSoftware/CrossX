@@ -1,7 +1,7 @@
 ﻿using CrossX.Data;
 using CrossX.Graphics.Shaders;
 using CrossX.Graphics3D.Light;
-using S2IoC;
+using XxIoC;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

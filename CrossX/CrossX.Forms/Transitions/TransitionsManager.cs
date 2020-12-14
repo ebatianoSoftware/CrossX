@@ -1,7 +1,7 @@
 ﻿using CrossX.Forms.Helpers;
 using CrossX.Xml;
 using CrossX.IO;
-using S2IoC;
+using XxIoC;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;

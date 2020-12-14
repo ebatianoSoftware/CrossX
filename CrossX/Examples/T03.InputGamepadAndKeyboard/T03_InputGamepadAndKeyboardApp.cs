@@ -3,7 +3,7 @@ using CrossX.Core;
 using CrossX.Graphics;
 using CrossX.Graphics.Effects;
 using CrossX.Input;
-using S2IoC;
+using XxIoC;
 using System;
 
 namespace T03.InputGamepadAndKeyboard

@@ -1,5 +1,5 @@
 ﻿using CrossX.Graphics.Shaders;
-using S2IoC;
+using XxIoC;
 
 namespace CrossX.Graphics.Effects
 {

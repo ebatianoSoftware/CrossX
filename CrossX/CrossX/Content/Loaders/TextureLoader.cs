@@ -1,6 +1,6 @@
 ﻿using CrossX.Graphics;
 using CrossX.IO;
-using S2IoC;
+using XxIoC;
 
 namespace CrossX.Content.Loaders
 {

@@ -10,7 +10,7 @@ using CrossX.IO;
 using CrossX.Windows.Input;
 using CrossX.WindowsDx.IO;
 using CrossX.WindowsDx.Media;
-using S2IoC;
+using XxIoC;
 using SharpDX.Windows;
 using System;
 using System.Diagnostics;

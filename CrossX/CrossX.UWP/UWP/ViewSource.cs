@@ -1,5 +1,5 @@
 ﻿using CrossX.Core;
-using S2IoC;
+using XxIoC;
 using Windows.ApplicationModel.Core;
 
 namespace CrossX.UWP.UWP

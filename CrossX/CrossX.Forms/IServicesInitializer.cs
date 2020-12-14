@@ -1,4 +1,4 @@
-﻿using S2IoC;
+﻿using XxIoC;
 
 namespace CrossX.Forms
 {

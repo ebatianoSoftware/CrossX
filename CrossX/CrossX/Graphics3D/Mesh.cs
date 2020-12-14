@@ -1,6 +1,6 @@
 ﻿using CrossX.Data;
 using CrossX.Graphics;
-using S2IoC;
+using XxIoC;
 using System;
 using System.Collections.Generic;
 

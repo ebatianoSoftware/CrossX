@@ -4,7 +4,7 @@ using CrossX.DxCommon.Graphics;
 using CrossX.DxCommon.Graphics.Shaders;
 using CrossX.Graphics;
 using CrossX.Graphics.Shaders;
-using S2IoC;
+using XxIoC;
 
 namespace CrossX.DxCommon
 {

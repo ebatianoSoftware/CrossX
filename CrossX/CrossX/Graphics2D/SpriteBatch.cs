@@ -2,7 +2,7 @@
 using CrossX.Graphics.Effects;
 using CrossX.Graphics2D.Sprites;
 using CrossX.Graphics2D.Text;
-using S2IoC;
+using XxIoC;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

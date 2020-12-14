@@ -6,7 +6,7 @@ using CrossX.Forms.Values;
 using CrossX.Graphics2D;
 using CrossX.Input;
 using CrossX.Xml;
-using S2IoC;
+using XxIoC;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

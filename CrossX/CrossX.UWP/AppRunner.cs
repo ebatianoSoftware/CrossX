@@ -2,7 +2,7 @@
 using CrossX.UWP.UWP;
 using CrossX.DxCommon;
 using Windows.ApplicationModel.Core;
-using S2IoC;
+using XxIoC;
 
 namespace CrossX.UWP
 {

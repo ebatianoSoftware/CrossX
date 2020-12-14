@@ -1,4 +1,4 @@
-﻿// MIT License - Copyright © ebatianoSoftware
+﻿// MIT License - Copyright © Sebastian Sejud
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 

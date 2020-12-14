@@ -13,7 +13,7 @@ using CrossX.Forms.Values;
 using CrossX.Forms.Views;
 using CrossX.Graphics;
 using CrossX.Graphics2D.Text;
-using S2IoC;
+using XxIoC;
 using System;
 using System.Text;
 

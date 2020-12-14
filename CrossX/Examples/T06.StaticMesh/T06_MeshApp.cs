@@ -8,7 +8,7 @@ using CrossX.Graphics2D.Text;
 using CrossX.Graphics3D;
 using CrossX.Graphics3D.Light;
 using CrossX.Input;
-using S2IoC;
+using XxIoC;
 using CrossX.Media.Formats;
 using System;
 using System.Text;

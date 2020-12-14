@@ -1,6 +1,6 @@
 ﻿using CrossX.Graphics2D;
 using CrossX.Input;
-using S2IoC;
+using XxIoC;
 
 namespace CrossX.Forms.Controls
 {

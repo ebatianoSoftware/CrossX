@@ -8,7 +8,7 @@ using CrossX.IO;
 using CrossX.UWP.Graphics;
 using CrossX.UWP.IO;
 using CrossX.WindowsUniversal.Input;
-using S2IoC;
+using XxIoC;
 using System;
 using System.Diagnostics;
 using Windows.ApplicationModel.Core;

@@ -3,7 +3,7 @@ using CrossX.Forms.Services;
 using CrossX.Forms.Styles;
 using CrossX.IO;
 using CrossX.Xml;
-using S2IoC;
+using XxIoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,7 +2,7 @@
 using CrossX.Core;
 using CrossX.Graphics;
 using CrossX.Graphics.Effects;
-using S2IoC;
+using XxIoC;
 using System;
 
 namespace T01.SimpleTriangle
