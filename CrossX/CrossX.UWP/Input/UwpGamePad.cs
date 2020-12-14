@@ -4,6 +4,7 @@
 
 using CrossX;
 using CrossX.Input;
+using System.Numerics;
 using Windows.Gaming.Input;
 
 namespace CrossX.WindowsUniversal.Input

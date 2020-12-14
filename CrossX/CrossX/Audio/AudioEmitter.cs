@@ -1,4 +1,6 @@
-﻿namespace CrossX.Audio
+﻿using System.Numerics;
+
+namespace CrossX.Audio
 {
     public abstract class AudioEmitter
     {

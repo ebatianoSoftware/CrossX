@@ -5,6 +5,7 @@
 using CrossX.Graphics;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Graphics2D.Text
 {

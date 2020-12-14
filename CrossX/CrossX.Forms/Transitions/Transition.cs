@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace CrossX.Forms.Transitions
 {
@@ -22,7 +23,7 @@ namespace CrossX.Forms.Transitions
             this.inverted = inverted;
         }
 
-        public void Update(Vector2 origin, TimeSpan dt, out Matrix transform, out Color4 tint)
+        public void Update(Vector2 origin, TimeSpan dt, out Matrix4x4 transform, out Color4 tint)
         {
             time += (float)dt.TotalSeconds / duration;
             if(time >= 1)
@@ -31,7 +32,7 @@ namespace CrossX.Forms.Transitions
             }
 
             tint = Color4.White;
-            transform = Matrix.Identity;
+            transform = Matrix4x4.Identity;
 
             var factor = inverted ? (1 - time) : time;
 

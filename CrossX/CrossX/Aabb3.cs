@@ -1,4 +1,6 @@
-﻿namespace CrossX
+﻿using System.Numerics;
+
+namespace CrossX
 {
     public struct Aabb3
     {

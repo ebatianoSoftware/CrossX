@@ -1,6 +1,7 @@
 ﻿using CrossX.Graphics;
 using CrossX.Graphics2D;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Forms.UiHosts
 {

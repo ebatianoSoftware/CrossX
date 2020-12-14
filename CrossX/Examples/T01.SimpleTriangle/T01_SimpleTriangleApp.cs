@@ -4,6 +4,7 @@ using CrossX.Graphics;
 using CrossX.Graphics.Effects;
 using XxIoC;
 using System;
+using System.Numerics;
 
 namespace T01.SimpleTriangle
 {

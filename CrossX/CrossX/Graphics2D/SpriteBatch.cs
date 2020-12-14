@@ -6,6 +6,7 @@ using XxIoC;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Graphics2D
 {
@@ -27,7 +28,7 @@ namespace CrossX.Graphics2D
 
         private Texture2D whiteTexture;
 
-        public Matrix CurrentTransform => transform2D?.Transform ?? Matrix.Identity;
+        public Matrix4x4 CurrentTransform => transform2D?.Transform ?? Matrix4x4.Identity;
 
         public TextureFilter TextureFilter
         {
@@ -109,10 +110,10 @@ namespace CrossX.Graphics2D
             basicShader.DiffuseColor = Color4.White;
             basicShader.Sampler = (TextureSamplerDesc)((int)TextureFilter | (int)TextureMode);
 
-            var vpm = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);
+            var vpm = Matrix4x4.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);
 
             basicShader.SetViewProjectionTransform(vpm);
-            basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix.Identity);
+            basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix4x4.Identity);
             basicShader.Apply();
 
             graphicsDevice.SetVertexBuffer(vertexBuffer);
@@ -225,10 +226,11 @@ namespace CrossX.Graphics2D
 
             if (Math.Abs(rotation) > float.Epsilon)
             {
-                tarTL = Vector2.RotateAround(tarTL, position, rotation);
-                tarTR = Vector2.RotateAround(tarTR, position, rotation);
-                tarBL = Vector2.RotateAround(tarBL, position, rotation);
-                tarBR = Vector2.RotateAround(tarBR, position, rotation);
+                // TODO: implement rotation
+                //tarTL = Vector2.RotateAround(tarTL, position, rotation);
+                //tarTR = Vector2.RotateAround(tarTR, position, rotation);
+                //tarBL = Vector2.RotateAround(tarBL, position, rotation);
+                //tarBR = Vector2.RotateAround(tarBR, position, rotation);
             }
 
             AddVertex(new Vector2(tarTL.X, tarTL.Y), new Vector2(srcL, srcT), color);

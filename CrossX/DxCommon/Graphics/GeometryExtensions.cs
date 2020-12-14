@@ -5,18 +5,19 @@
 
 using CrossX.Graphics;
 using SharpDX.Direct3D;
+using SharpDX.Mathematics.Interop;
 using System;
-
+using System.Numerics;
 using DxMatrix = SharpDX.Mathematics.Interop.RawMatrix;
 
 namespace CrossX.DxCommon.Helpers
 {
     public static class GeometryExtensions
     {
-        public static DxMatrix ToRawMatrix(this Matrix matrix)
+        public static DxMatrix ToRawMatrix(this Matrix4x4 matrix)
         {
             var mat = new DxMatrix();
-            matrix = Matrix.Transpose(matrix);
+            matrix = Matrix4x4.Transpose(matrix);
 
             mat.M11 = matrix.M11;
             mat.M12 = matrix.M12;
@@ -37,6 +38,8 @@ namespace CrossX.DxCommon.Helpers
 
             return mat;
         }
+
+        public static RawVector3 ToRawVector(this Vector3 vec) => new RawVector3(vec.X, vec.Y, vec.Z);
 
         public static PrimitiveTopology PrimitiveTopologyFromPrimitiveType(PrimitiveType primitiveType)
         {

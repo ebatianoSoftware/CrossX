@@ -6,6 +6,7 @@ using CrossX.Graphics;
 using CrossX.Graphics2D;
 using XxIoC;
 using System;
+using System.Numerics;
 
 namespace T05.Audio
 {
@@ -49,8 +50,8 @@ namespace T05.Audio
             emitter = objectFactory.Create<AudioEmitter>();
             listener = objectFactory.Create<AudioListener>();
 
-            emitter.Forward = Vector3.Backward;
-            emitter.Up = Vector3.Up;
+            emitter.Forward = Vector3.UnitZ;
+            emitter.Up = Vector3.UnitY;
             emitter.Rolloff = 0.1f;
             emitter.MinDistance = 0.01f;
             emitter.MaxDistance = 12;
@@ -67,7 +68,7 @@ namespace T05.Audio
 
             primitiveBatch.DrawCircle(new Vector2(graphicsDevice.Size.Width / 2, graphicsDevice.Size.Height / 2), 50, Color4.White);
 
-            var vector = Vector2.Rotate(new Vector2(0, 1), angle) * 200;
+            var vector = new Vector2(0, 1).Rotate(angle) * 200;
             var center = new Vector2(graphicsDevice.Size.Width / 2, graphicsDevice.Size.Height / 2);
             
             primitiveBatch.DrawCircle(center, 50, Color4.White);
@@ -80,7 +81,7 @@ namespace T05.Audio
         {
             angle += (float)frameTime.TotalSeconds;
             var oldPos = emitter.Position;
-            emitter.Position = Vector3.Transform(new Vector3(0, 0, 5), Matrix.CreateRotationY(angle));
+            emitter.Position = Vector3.Transform(new Vector3(0, 0, 5), Matrix4x4.CreateRotationY(angle));
             var velocity = (emitter.Position - oldPos) / (float)frameTime.TotalSeconds;
             emitter.Velocity = velocity;
         }

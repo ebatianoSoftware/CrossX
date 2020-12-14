@@ -2,6 +2,7 @@
 using XxIoC;
 using System;
 using System.Runtime.InteropServices;
+using System.Numerics;
 
 namespace CrossX.Graphics.Effects
 {
@@ -10,18 +11,18 @@ namespace CrossX.Graphics.Effects
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         struct ConstBuffer
         {
-            public Matrix Matrix;
+            public Matrix4x4 Matrix4x4;
             public Vector4 Color;
         }
 
-        private Matrix viewProjectionMatrix;
-        private Matrix worldMatrix;
+        private Matrix4x4 viewProjectionMatrix;
+        private Matrix4x4 worldMatrix;
 
         public float Alpha { get; set; } = 1;
         public Color4 DiffuseColor { get; set; } = Color4.White;
         public Texture2D Texture { get; set; }
-        public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
-        public void SetViewProjectionTransform(Matrix transform) => viewProjectionMatrix = transform;
+        public void SetWorldTransform(Matrix4x4 transform) => worldMatrix = transform;
+        public void SetViewProjectionTransform(Matrix4x4 transform) => viewProjectionMatrix = transform;
 
         public bool VertexColorEnabled { get; set; }
         public bool TextureEnabled { get; set; }
@@ -41,8 +42,8 @@ namespace CrossX.Graphics.Effects
 
         public BasicEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository): base(graphicsDevice, objectFactory, shadersRepository)
         {
-            viewProjectionMatrix = Matrix.Identity;
-            worldMatrix = Matrix.Identity;
+            viewProjectionMatrix = Matrix4x4.Identity;
+            worldMatrix = Matrix4x4.Identity;
 
             var assembly = graphicsDevice.GetType().Assembly;
 
@@ -86,7 +87,7 @@ namespace CrossX.Graphics.Effects
             var color = DiffuseColor * Alpha;
             var consts = new ConstBuffer
             {
-                Matrix = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
+                Matrix4x4 = Matrix4x4.Multiply(worldMatrix, viewProjectionMatrix),
                 Color = color * Alpha
             };
 

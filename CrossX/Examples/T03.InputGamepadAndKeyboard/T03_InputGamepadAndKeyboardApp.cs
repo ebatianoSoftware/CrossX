@@ -5,6 +5,7 @@ using CrossX.Graphics.Effects;
 using CrossX.Input;
 using XxIoC;
 using System;
+using System.Numerics;
 
 namespace T03.InputGamepadAndKeyboard
 {
@@ -91,12 +92,12 @@ namespace T03.InputGamepadAndKeyboard
             graphicsDevice.Clear(Color4.Black);
             
             var worldMatrix =
-                Matrix.CreateScale(100) *
-                Matrix.CreateRotationY(rotation) *
-                Matrix.CreateTranslation(graphicsDevice.Size.Width / 2 + offset.X, graphicsDevice.Size.Height / 2 + offset.Y, 0);
+                Matrix4x4.CreateScale(100) *
+                Matrix4x4.CreateRotationY(rotation) *
+                Matrix4x4.CreateTranslation(graphicsDevice.Size.Width / 2 + offset.X, graphicsDevice.Size.Height / 2 + offset.Y, 0);
             basicEffect.SetWorldTransform(worldMatrix);
 
-            var viewProjMatrix = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Size.Width, graphicsDevice.Size.Height, 0, 0.1f, 10);
+            var viewProjMatrix = Matrix4x4.CreateOrthographicOffCenter(0, graphicsDevice.Size.Width, graphicsDevice.Size.Height, 0, 0.1f, 10);
             basicEffect.SetViewProjectionTransform(viewProjMatrix);
             basicEffect.DiffuseColor = Color4.White;
             basicEffect.Apply();
@@ -109,8 +110,8 @@ namespace T03.InputGamepadAndKeyboard
             var pos = mouse.Position;
 
             worldMatrix =
-                Matrix.CreateScale(size) *
-                Matrix.CreateTranslation(new Vector3(pos, 0));
+                Matrix4x4.CreateScale(size) *
+                Matrix4x4.CreateTranslation(new Vector3(pos, 0));
             basicEffect.SetWorldTransform(worldMatrix);
 
             basicEffect.DiffuseColor = (mouse.GetButtonState(MouseButtons.Left).HasFlag(KeyBtnState.Down) ? Color4.LightCoral : Color4.White) *

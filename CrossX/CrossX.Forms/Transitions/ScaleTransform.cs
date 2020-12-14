@@ -1,4 +1,5 @@
 ﻿using CrossX.Xml;
+using System.Numerics;
 
 namespace CrossX.Forms.Transitions
 {
@@ -12,13 +13,13 @@ namespace CrossX.Forms.Transitions
             Scale = new Vector2((float)x, (float)y);
         }
 
-        protected override void CalculateTransform(Vector2 origin, float timeNormalized, out Matrix transformation, out Color4 color)
+        protected override void CalculateTransform(Vector2 origin, float timeNormalized, out Matrix4x4 transformation, out Color4 color)
         {
             var scale = Vector2.One * (1 - timeNormalized) + Scale * timeNormalized;
             transformation =
-                Matrix.CreateTranslation(-origin.X, -origin.Y, 0) *
-                Matrix.CreateScale(scale.X, scale.Y, 1) *
-                Matrix.CreateTranslation(origin.X, origin.Y, 0);
+                Matrix4x4.CreateTranslation(-origin.X, -origin.Y, 0) *
+                Matrix4x4.CreateScale(scale.X, scale.Y, 1) *
+                Matrix4x4.CreateTranslation(origin.X, origin.Y, 0);
             color = Color4.White;
         }
     }

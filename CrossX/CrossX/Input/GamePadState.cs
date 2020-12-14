@@ -1,4 +1,8 @@
-﻿namespace CrossX.Input
+﻿
+
+using System.Numerics;
+
+namespace CrossX.Input
 {
     public abstract class GamePadState
     {

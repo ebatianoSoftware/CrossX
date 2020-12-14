@@ -1,4 +1,5 @@
 ﻿using CrossX.Xml;
+using System.Numerics;
 
 namespace CrossX.Forms.Transitions
 {
@@ -11,11 +12,11 @@ namespace CrossX.Forms.Transitions
             inverted = attributes.AsBoolean("Inverted");
         }
 
-        public void Calculate(Vector2 origin, float timeNormalized, out Matrix transformation, out Color4 color)
+        public void Calculate(Vector2 origin, float timeNormalized, out Matrix4x4 transformation, out Color4 color)
         {
             CalculateTransform(origin, inverted ? (1-timeNormalized) : timeNormalized, out transformation, out color);
         }
 
-        protected abstract void CalculateTransform(Vector2 origin, float timeNormalized, out Matrix transformation, out Color4 color);
+        protected abstract void CalculateTransform(Vector2 origin, float timeNormalized, out Matrix4x4 transformation, out Color4 color);
     }
 }

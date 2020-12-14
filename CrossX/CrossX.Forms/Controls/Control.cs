@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Forms.Controls
 {
@@ -50,7 +51,7 @@ namespace CrossX.Forms.Controls
         private Alignment horizontalAlignment = Alignment.Stretch;
         private Alignment verticalAlignment = Alignment.Stretch;
         private Margin margin = Margin.Zero;
-        protected Matrix CurrentTransform { get; private set; } = Matrix.Identity;
+        protected Matrix4x4 CurrentTransform { get; private set; } = Matrix4x4.Identity;
 
         private Dictionary<string, object> customProperties;
         private object dataContext;
@@ -144,7 +145,8 @@ namespace CrossX.Forms.Controls
 
         protected bool CheckPointerIn(Vector2 position)
         {
-            position = Vector2.Transform(position, Matrix.Invert(CurrentTransform));
+            Matrix4x4.Invert(CurrentTransform, out var inverted);
+            position = Vector2.Transform(position, inverted);
 
             var area = ClientArea;
             return area.Contains(new PointF(position.X, position.Y));
@@ -279,7 +281,7 @@ namespace CrossX.Forms.Controls
 
             if (useTransitions)
             {
-                var transform = Matrix.Identity;
+                var transform = Matrix4x4.Identity;
                 Color4 tint = Color4.White;
                 var center = new Vector2(actualX + actualWidth / 2, actualY + actualHeight / 2);
                 for (var idx = 0; idx < stateTransitions.Count; ++idx)
@@ -309,7 +311,7 @@ namespace CrossX.Forms.Controls
 
                 tintColor *= tint;
 
-                if (transform == Matrix.Identity) useTransitions = false;
+                if (transform == Matrix4x4.Identity) useTransitions = false;
                 else Services.Transform2D.Push(transform);
             }
 

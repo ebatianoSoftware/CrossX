@@ -3,6 +3,7 @@ using CrossX.Graphics.Effects;
 using XxIoC;
 using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Graphics2D
 {
@@ -79,9 +80,9 @@ namespace CrossX.Graphics2D
 
             basicShader.DiffuseColor = Color4.White;
 
-            var vpm = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);
+            var vpm = Matrix4x4.CreateOrthographicOffCenter(0, graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height, 0, 0.1f, 10);
             basicShader.SetViewProjectionTransform(vpm);
-            basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix.Identity);
+            basicShader.SetWorldTransform(transform2D?.Transform ?? Matrix4x4.Identity);
 
             basicShader.Apply();
 

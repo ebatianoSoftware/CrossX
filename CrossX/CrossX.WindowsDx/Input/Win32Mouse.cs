@@ -5,6 +5,7 @@ using WinForm = System.Windows.Forms.Form;
 using WinCursor = System.Windows.Forms.Cursor;
 using WinControl = System.Windows.Forms.Control;
 using WinMouseButtons = System.Windows.Forms.MouseButtons;
+using System.Numerics;
 
 namespace CrossX.Windows.Input
 {

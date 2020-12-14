@@ -1,13 +1,14 @@
 ﻿using CrossX.Graphics;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace CrossX.Graphics2D
 {
     public class Transform2D : ITransform2D
     {
-        public Matrix Transform => stack.Count > 0 ? stack.Peek() : Matrix.Identity;
+        public Matrix4x4 Transform => stack.Count > 0 ? stack.Peek() : Matrix4x4.Identity;
 
-        private readonly Stack<Matrix> stack = new Stack<Matrix>();
+        private readonly Stack<Matrix4x4> stack = new Stack<Matrix4x4>();
         private readonly IGraphicsDevice graphicsDevice;
 
         public Transform2D(IGraphicsDevice graphicsDevice)
@@ -27,7 +28,7 @@ namespace CrossX.Graphics2D
             stack.Pop();
         }
 
-        public void Push(Matrix transform)
+        public void Push(Matrix4x4 transform)
         {
             graphicsDevice.Flush(this);
             stack.Push(transform * Transform);

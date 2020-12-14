@@ -1,5 +1,6 @@
 ﻿using CrossX.Forms.Values;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Forms.Controls
 {

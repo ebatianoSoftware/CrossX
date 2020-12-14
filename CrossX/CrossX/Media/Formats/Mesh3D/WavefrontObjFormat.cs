@@ -3,6 +3,7 @@ using System.IO;
 using JeremyAnsel.Media.WavefrontObj;
 using CrossX.Graphics;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace CrossX.Media.Formats.Mesh3D
 {

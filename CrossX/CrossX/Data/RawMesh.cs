@@ -1,4 +1,6 @@
 ﻿using CrossX.Graphics;
+using System;
+using System.Numerics;
 
 namespace CrossX.Data
 {
@@ -21,13 +23,13 @@ namespace CrossX.Data
             {
                 var pos = vertices[idx].Position;
 
-                max.X = MathHelper.Max(max.X, pos.X);
-                max.Y = MathHelper.Max(max.Y, pos.Y);
-                max.Z = MathHelper.Max(max.Z, pos.Z);
+                max.X = Math.Max(max.X, pos.X);
+                max.Y = Math.Max(max.Y, pos.Y);
+                max.Z = Math.Max(max.Z, pos.Z);
 
-                min.X = MathHelper.Min(min.X, pos.X);
-                min.Y = MathHelper.Min(min.Y, pos.Y);
-                min.Z = MathHelper.Min(min.Z, pos.Z);
+                min.X = Math.Min(min.X, pos.X);
+                min.Y = Math.Min(min.Y, pos.Y);
+                min.Z = Math.Min(min.Z, pos.Z);
             }
 
             Bounds = new Aabb3(min, max);

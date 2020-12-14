@@ -5,6 +5,7 @@ using CrossX.Graphics.Effects;
 using XxIoC;
 using CrossX.Media.Formats;
 using System;
+using System.Numerics;
 
 namespace T02.Textures
 {
@@ -73,11 +74,12 @@ namespace T02.Textures
             basicEffect.Texture = texture;
             basicEffect.VertexHasNormals = true;
 
-            var projView = Matrix.CreateLookAt(
-                    new Vector3(1, 1, 1).Normalized() * 2,
+            
+            var projView = Matrix4x4.CreateLookAt(
+                    Vector3.Normalize(new Vector3(1, 1, 1)) * 2,
                     Vector3.Zero,
-                    Vector3.Up) *
-                    Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 0.1f, 1000f);
+                    Vector3.UnitY) *
+                    Matrix4x4.CreatePerspectiveFieldOfView((float)Math.PI / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 0.1f, 1000f);
 
             basicEffect.SetViewProjectionTransform(projView);
 

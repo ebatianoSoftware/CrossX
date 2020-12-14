@@ -3,7 +3,9 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
+
 
 namespace CrossX
 {

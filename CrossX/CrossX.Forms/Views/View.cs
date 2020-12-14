@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
+using System.Numerics;
 
 namespace CrossX.Forms.Views
 {

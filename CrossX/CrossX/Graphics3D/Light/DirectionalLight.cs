@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
+
 
 namespace CrossX.Graphics3D.Light
 {

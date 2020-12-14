@@ -1,5 +1,6 @@
 ﻿using SharpDX.X3DAudio;
 using System;
+using System.Numerics;
 
 namespace CrossX.DxCommon.Audio
 {
@@ -40,10 +41,10 @@ namespace CrossX.DxCommon.Audio
 
             var vec = dxEmitter.Position - dxListener.Position;
 
-            var factor = Vector3.Dot(dxListener.Forward.Normalized(), vec.Normalized());
+            var factor = Vector3.Dot( Vector3.Normalize(dxListener.Forward), Vector3.Normalize(vec));
             vol *= (factor + 1.5f) / 2.5f;
 
-            var pan = vector.Normalized().X;
+            var pan = Vector3.Normalize(vector).X;
 
             var left = 0.5 - pan / 2.2;
             var right = 0.5 + pan / 2.2;

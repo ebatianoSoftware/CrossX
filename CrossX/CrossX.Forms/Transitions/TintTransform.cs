@@ -1,5 +1,6 @@
 ﻿using CrossX.Forms.Converters;
 using CrossX.Xml;
+using System.Numerics;
 
 namespace CrossX.Forms.Transitions
 {
@@ -12,9 +13,9 @@ namespace CrossX.Forms.Transitions
             Tint = (Color4)StringToColorConverter.Instance.Convert(attributes.AsString("Tint"));
         }
 
-        protected override void CalculateTransform(Vector2 origin, float timeNormalized, out Matrix transformation, out Color4 color)
+        protected override void CalculateTransform(Vector2 origin, float timeNormalized, out Matrix4x4 transformation, out Color4 color)
         {
-            transformation = Matrix.Identity;
+            transformation = Matrix4x4.Identity;
             color = new Color4
             {
                 Rf = (1 - timeNormalized) + timeNormalized * Tint.Rf,

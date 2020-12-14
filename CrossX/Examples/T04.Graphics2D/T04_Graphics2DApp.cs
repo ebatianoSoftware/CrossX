@@ -7,6 +7,7 @@ using XxIoC;
 using CrossX.Media.Formats;
 using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace T04.Graphics2D
 {

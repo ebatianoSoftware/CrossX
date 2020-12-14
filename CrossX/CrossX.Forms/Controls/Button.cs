@@ -2,6 +2,7 @@
 using CrossX.Graphics2D.Text;
 using CrossX.Input;
 using System;
+using System.Numerics;
 using System.Windows.Input;
 
 namespace CrossX.Forms.Controls
@@ -33,7 +34,7 @@ namespace CrossX.Forms.Controls
         private int pushAndExecuteTime = 100;
         private bool isToggled;
 
-        private Matrix pushTransform;
+        private Matrix4x4 pushTransform;
 
         protected bool CommandEnabled { get; private set; } = true;
 
@@ -80,7 +81,8 @@ namespace CrossX.Forms.Controls
                 case TouchEvent.Down:
                     if (CheckPointerIn(position) && !pointerId.HasValue && CommandEnabled)
                     {
-                        pushTransform = Matrix.Invert(CurrentTransform);
+                        Matrix4x4.Invert(CurrentTransform, out var inversion);
+                        pushTransform = inversion;
                         pointerId = id;
                         IsDown = true;
                         Focus = this;
@@ -158,7 +160,7 @@ namespace CrossX.Forms.Controls
             }
         }
 
-        private bool CheckPointerIn(Vector2 position, Matrix transform)
+        private bool CheckPointerIn(Vector2 position, Matrix4x4 transform)
         {
             position = Vector2.Transform(position, transform);
 

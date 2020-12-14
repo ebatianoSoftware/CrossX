@@ -3,6 +3,7 @@ using CrossX.Graphics2D;
 using XxIoC;
 using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Forms.UiHosts
 {
@@ -90,7 +91,7 @@ namespace CrossX.Forms.UiHosts
             if (renderTarget != null) graphicsDevice.SetRenderTarget(renderTarget);
             graphicsDevice.Clear(Color4.Black);
 
-            Transform2D.Push(Matrix.CreateScale(new Vector3(ScaleToPixel, ScaleToPixel, 1)));
+            Transform2D.Push(Matrix4x4.CreateScale(new Vector3(ScaleToPixel, ScaleToPixel, 1)));
         }
 
         public void EndDraw()

@@ -1,6 +1,8 @@
 ﻿using CrossX.Forms.Values;
 using CrossX.Input;
+using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Forms.Controls
 {
@@ -33,7 +35,7 @@ namespace CrossX.Forms.Controls
                 {
                     if (!children[idx].LayoutVisible) continue;
                     children[idx].CalculateSizeWithMargins(RectangleF.Empty, out var _, out var sizeWithMargins);
-                    panelSize.X = MathHelper.Max(panelSize.X, sizeWithMargins.X);
+                    panelSize.X = Math.Max(panelSize.X, sizeWithMargins.X);
                 }
             }
 
@@ -45,7 +47,7 @@ namespace CrossX.Forms.Controls
                 {
                     if (!children[idx].LayoutVisible) continue;
                     children[idx].CalculateSizeWithMargins(RectangleF.Empty, out var _, out var sizeWithMargins);
-                    panelSize.Y = MathHelper.Max(panelSize.Y, sizeWithMargins.Y);
+                    panelSize.Y = Math.Max(panelSize.Y, sizeWithMargins.Y);
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿using CrossX.Data;
 using CrossX.Graphics;
 using System.IO;
+using System.Numerics;
 
 namespace CrossX.Media.Formats
 {

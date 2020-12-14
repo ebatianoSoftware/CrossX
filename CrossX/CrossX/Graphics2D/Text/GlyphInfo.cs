@@ -3,6 +3,7 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Graphics2D.Text
 {

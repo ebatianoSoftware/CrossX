@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using CrossX.Audio;
 using SharpDX.Mathematics.Interop;
 using SharpDX.X3DAudio;
@@ -8,7 +9,7 @@ namespace CrossX.DxCommon.Audio
 {
     static class DxConvert
     {
-        public static RawVector3 ToRawVector(this Vector3 point) => new RawVector3((float)point.X, (float)point.Y, (float)point.Z);
+        public static RawVector3 ToRawVector(this Vector3 point) => new RawVector3(point.X, point.Y, point.Z);
         public static Vector3 ToVector3(this RawVector3 vector) => new Vector3(vector.X, vector.Y, vector.Z);
     }
 
@@ -23,8 +24,8 @@ namespace CrossX.DxCommon.Audio
 
         public readonly Listener Listener = new Listener
         {
-            OrientTop = Vector3.Up.ToRawVector(),
-            OrientFront = Vector3.Forward.ToRawVector()
+            OrientTop = new RawVector3(0,1,0),
+            OrientFront = new RawVector3(0,0,1)
         };
 
         protected void SetProperty<T>(ref T prop, T value)

@@ -1,4 +1,5 @@
 ﻿using CrossX.Graphics.Shaders;
+using System.Numerics;
 using XxIoC;
 
 namespace CrossX.Graphics.Effects
@@ -24,7 +25,7 @@ namespace CrossX.Graphics.Effects
 
             var vsConsts = new VertexShaderConst
             {
-                MatrixWorldViewProj = Matrix.Multiply(worldMatrix, viewProjectionMatrix),
+                MatrixWorldViewProj = Matrix4x4.Multiply(worldMatrix, viewProjectionMatrix),
                 MatrixWorld = worldMatrix,
             };
 

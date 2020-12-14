@@ -2,6 +2,7 @@
 using CrossX.Graphics2D;
 using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Forms.Controls
 {

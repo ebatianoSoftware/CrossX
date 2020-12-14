@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace CrossX.Forms.Transitions
 {
@@ -22,7 +23,7 @@ namespace CrossX.Forms.Transitions
             this.inverted = inverted;
         }
 
-        public void Update(Vector2 origin, TimeSpan dt, out Matrix transform, out Color4 tint)
+        public void Update(Vector2 origin, TimeSpan dt, out Matrix4x4 transform, out Color4 tint)
         {
             if (firstUpdate)
             {
@@ -36,7 +37,7 @@ namespace CrossX.Forms.Transitions
             value = Math.Min(1, Math.Max(0, value));
 
             tint = Color4.White;
-            transform = Matrix.Identity;
+            transform = Matrix4x4.Identity;
 
             for (var idx = 0; idx < transforms.Length; ++idx)
             {

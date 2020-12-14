@@ -1,7 +1,9 @@
 using CrossX.Audio;
+using CrossX.DxCommon.Helpers;
 using SharpDX.X3DAudio;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace CrossX.DxCommon.Audio
 {

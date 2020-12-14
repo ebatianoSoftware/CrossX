@@ -13,6 +13,7 @@ using CrossX.Media.Formats;
 using System;
 using System.Text;
 using CrossX.Media.Formats.Mesh3D;
+using System.Numerics;
 
 namespace T06.StaticMesh
 {
@@ -124,27 +125,27 @@ namespace T06.StaticMesh
             graphicsDevice.Clear(Color4.Black);
 
             lightedEffect.SetWorldTransform(
-                Matrix.CreateTranslation(-mesh.Bounds.Center)// *
-                //Matrix.CreateFromYawPitchRoll(yaw, 0, pitch)
+                Matrix4x4.CreateTranslation(-mesh.Bounds.Center)// *
+                //Matrix4x4.CreateFromYawPitchRoll(yaw, 0, pitch)
                 );
 
-            var dist = MathHelper.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2.5f;
+            var dist = Math.Max(mesh.Bounds.Width, mesh.Bounds.Height) * 2.5f;
 
             var cameraPos = new Vector3(1, 1, -1).Normalized() * dist;
             var lpos = cameraPos;
 
             cameraPos = Vector3.Transform(cameraPos,
-                Matrix.CreateFromYawPitchRoll(-yaw, -pitch, 0));
+                Matrix4x4.CreateFromYawPitchRoll(-yaw, -pitch, 0));
 
             lpos = Vector3.Transform(cameraPos,
-                Matrix.CreateRotationY(rotation2)
+                Matrix4x4.CreateRotationY(rotation2)
                 );
 
-            var projView = Matrix.CreateLookAt(
+            var projView = Matrix4x4.CreateLookAt(
                     cameraPos,
                     Vector3.Zero,
-                    Vector3.Up) *
-                    Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 1f, dist * 1.5f);
+                    Vector3.UnitY) *
+                    Matrix4x4.CreatePerspectiveFieldOfView((float)Math.PI / 3f, (float)graphicsDevice.CurrentTargetSize.Width / graphicsDevice.CurrentTargetSize.Height, 1f, dist * 1.5f);
 
             lightedEffect.Reset();
 
@@ -153,13 +154,13 @@ namespace T06.StaticMesh
 
             lightedEffect.AddLight(new DirectionalLight
             {
-                Direction = new Vector3(-0.3f, -1, 0).Normalized(),
+                Direction = new Vector4(new Vector3(-0.3f, -1, 0).Normalized(), 0),
                 Color = new Color4(255, 255, 224)
             });
 
             lightedEffect.AddLight(new DirectionalLight
             {
-                Direction = new Vector3(0.3f, 1, 0).Normalized(),
+                Direction = new Vector4(new Vector3(0.3f, 1, 0).Normalized(), 0),
                 Color = new Color4(64, 16, 0)
             });
 

@@ -6,6 +6,7 @@ using SharpFNT;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace CrossX.Graphics2D.Text

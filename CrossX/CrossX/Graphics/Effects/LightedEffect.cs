@@ -5,6 +5,7 @@ using XxIoC;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Numerics;
 
 namespace CrossX.Graphics.Effects
 {
@@ -13,8 +14,8 @@ namespace CrossX.Graphics.Effects
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         protected struct VertexShaderConst
         {
-            public Matrix MatrixWorldViewProj;
-            public Matrix MatrixWorld;
+            public Matrix4x4 MatrixWorldViewProj;
+            public Matrix4x4 MatrixWorld;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -58,8 +59,8 @@ namespace CrossX.Graphics.Effects
             public SpotLight SpotLight3;
         }
 
-        protected Matrix viewProjectionMatrix;
-        protected Matrix worldMatrix;
+        protected Matrix4x4 viewProjectionMatrix;
+        protected Matrix4x4 worldMatrix;
 
         public Vector4 AmbientColor { get; set; } = Color4.Black;
         public Color4 MaterialDiffuseColor { get; set; } = Color4.White;
@@ -71,8 +72,8 @@ namespace CrossX.Graphics.Effects
         public Texture2D SpecularTexture { get; set; }
         protected readonly Texture2D whiteTexture;
 
-        public void SetWorldTransform(Matrix transform) => worldMatrix = transform;
-        public void SetViewProjectionTransform(Matrix transform) => viewProjectionMatrix = transform;
+        public void SetWorldTransform(Matrix4x4 transform) => worldMatrix = transform;
+        public void SetViewProjectionTransform(Matrix4x4 transform) => viewProjectionMatrix = transform;
 
         public TextureSamplerDesc Sampler { get; set; }
 
@@ -82,8 +83,8 @@ namespace CrossX.Graphics.Effects
 
         public LightedEffect(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, IShadersRepository shadersRepository): base(graphicsDevice, objectFactory, shadersRepository)
         {
-            viewProjectionMatrix = Matrix.Identity;
-            worldMatrix = Matrix.Identity;
+            viewProjectionMatrix = Matrix4x4.Identity;
+            worldMatrix = Matrix4x4.Identity;
 
             var assembly = graphicsDevice.GetType().Assembly;
             whiteTexture = objectFactory.Create<Texture2D>(

@@ -5,6 +5,7 @@
 using CrossX.Input;
 using CrossX;
 using SharpDX.XInput;
+using System.Numerics;
 
 namespace CrossX.Windows.Input
 {

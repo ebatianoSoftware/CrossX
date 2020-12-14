@@ -2,6 +2,7 @@
 using CrossX.Input;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
 
