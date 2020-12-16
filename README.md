@@ -20,4 +20,4 @@ If you are interested in contributing fixes or features to CrossX, do not hesita
 For bigger improvements you can contact me.
 
 ## License
-The CrossX project is under the [MIT](https://opensource.org/licenses/MIT) License. See the [LICENSE](LICENSE.txt) file for more details. Third-party libraries used by CrossX are under their own licenses. Please refer to those libraries for details on the license they use.
+The CrossX project is under the [MIT](https://opensource.org/licenses/MIT) License. See the [LICENSE](LICENSE) file for more details. Third-party libraries used by CrossX are under their own licenses. Please refer to those libraries for details on the license they use.
