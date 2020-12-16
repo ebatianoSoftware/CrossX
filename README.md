@@ -1,10 +1,4 @@
-CrossX
-==========
-:toc:
-:toc-placement: preamble
-:toclevels: 2
-
-{empty}
+# CrossX
 
 ## Description
 
