@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>CrossX.WindowsDx</id>
+    <version>0.1.0</version>
+    <title>CorssX.WindowsDx</title>
+    <authors>Sebastian Sejud</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/ebatiano/CrossX</projectUrl>
+    <description>CrossX package for Windows using DirectX.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Sebastian Sejud</copyright>
+    <tags>CrossX Windows DirectX</tags>
+    <dependencies>
+      <dependency id="CrossX" version="0.1.0" />
+  </dependencies>
+  </metadata>
+</package>

@@ -72,8 +72,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="XxIoC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\XxIoC.1.0.0\lib\netstandard2.0\XxIoC.dll</HintPath>
+    <Reference Include="XxIoC, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XxIoC.1.0.1\lib\netstandard2.0\XxIoC.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -195,27 +195,27 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\DxCommon\FX\DefaultPC.fx">
+    <None Include="..\DxCommon\FX\DefaultPC.fx">
       <Link>FX\Code\DefaultPC.fx</Link>
-    </Content>
-    <Content Include="..\DxCommon\FX\DefaultPCT.fx">
+    </None>
+    <None Include="..\DxCommon\FX\DefaultPCT.fx">
       <Link>FX\Code\DefaultPCT.fx</Link>
-    </Content>
-    <Content Include="..\DxCommon\FX\DefaultPNT.fx">
+    </None>
+    <None Include="..\DxCommon\FX\DefaultPNT.fx">
       <Link>FX\Code\DefaultPNT.fx</Link>
-    </Content>
-    <Content Include="..\DxCommon\FX\DefaultPT.fx">
+    </None>
+    <None Include="..\DxCommon\FX\DefaultPT.fx">
       <Link>FX\Code\DefaultPT.fx</Link>
-    </Content>
-    <Content Include="..\DxCommon\FX\LightedPNT.fx">
+    </None>
+    <None Include="..\DxCommon\FX\LightedPNT.fx">
       <Link>FX\Code\LightedPNT.fx</Link>
-    </Content>
-    <Content Include="..\DxCommon\FX\Lighted\Common.fx">
+    </None>
+    <None Include="..\DxCommon\FX\Lighted\Common.fx">
       <Link>FX\Code\Lighted\Common.fx</Link>
-    </Content>
-    <Content Include="..\DxCommon\FX\VertexLightedPNT.fx">
+    </None>
+    <None Include="..\DxCommon\FX\VertexLightedPNT.fx">
       <Link>FX\Code\VertexLightedPNT.fx</Link>
-    </Content>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
 using System.Numerics;
+using CrossX.Graphics;
 
 namespace CrossX.Forms.Views
 {
@@ -28,7 +29,7 @@ namespace CrossX.Forms.Views
         private readonly IFormsInput formsInput;
         private readonly NavigationView navigation;
 
-        public  IMouse Mouse { get; }
+        public IMouse Mouse { get; }
 
         public SpriteBatch SpriteBatch { get; }
         public PrimitiveBatch PrimitiveBatch { get; }
@@ -42,6 +43,9 @@ namespace CrossX.Forms.Views
         public object DataContext => ViewModel;
 
         public IObjectFactory ObjectFactory { get; }
+
+        public TextureFilter TextureFilter { get => textureFilter; set => SetProperty(ref textureFilter, value); }
+
 
         private bool shouldCalculateLayout;
 
@@ -64,6 +68,7 @@ namespace CrossX.Forms.Views
         private bool isClosing;
         private IFocusable focus;
         private ICommand uiButtonCommand;
+        private TextureFilter textureFilter;
         private readonly BindingService bindingService;
 
         public View(IUiHost uiHost, IObjectFactory objectFactory, IConverters converters, ITouchPanel touchPanel,
@@ -146,12 +151,12 @@ namespace CrossX.Forms.Views
 
             foreach (var ns in node.Nodes)
             {
-                if(ns.Tag.Contains('.'))
+                if (ns.Tag.Contains('.'))
                 {
                     var kind = ns.Tag.Split('.')[1];
                     control.ParseSpecial(kind, ns);
                 }
-                else  if (control is ContainerControl cc)
+                else if (control is ContainerControl cc)
                 {
                     cc.AddChild(Load(ns, cc));
                 }
@@ -275,6 +280,7 @@ namespace CrossX.Forms.Views
 
         public void Draw(TimeSpan frameTime)
         {
+            SpriteBatch.TextureFilter = uiHost.DesiredTextureFilter;
             Root.Draw(frameTime, Color4.White);
         }
 

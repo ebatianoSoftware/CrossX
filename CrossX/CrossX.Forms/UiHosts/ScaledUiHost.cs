@@ -12,6 +12,8 @@ namespace CrossX.Forms.UiHosts
         public class Parameters
         {
             public Func<Vector2, float> CalculateScale;
+            public TextureFilter DesiredTextureFilter = TextureFilter.Linear;
+            public TextureFilter ScalingFilter = TextureFilter.Linear;
             public int AaSamples = 1;
         }
 
@@ -28,16 +30,21 @@ namespace CrossX.Forms.UiHosts
         private readonly int aaSamples;
 
         private RenderTarget renderTarget;
-
         private SpriteBatch spriteBatch;
+        private TextureFilter filter;
+
+        public TextureFilter DesiredTextureFilter { get; }
 
         public ScaledUiHost(IGraphicsDevice graphicsDevice, IObjectFactory objectFactory, Parameters parameters)
         {
             this.graphicsDevice = graphicsDevice;
             this.objectFactory = objectFactory;
+
+            DesiredTextureFilter = parameters.DesiredTextureFilter;
             Transform2D = new Transform2D(graphicsDevice);
 
             aaSamples = Math.Max(1, Math.Min(6, parameters.AaSamples));
+            filter = parameters.ScalingFilter;
 
             calculateScale = parameters.CalculateScale;
             CalculateScale();
@@ -102,27 +109,12 @@ namespace CrossX.Forms.UiHosts
             if (renderTarget != null)
             {
                 graphicsDevice.Clear(Color4.Black);
-                spriteBatch.TextureFilter = TextureFilter.Anisotropic;
+                spriteBatch.TextureFilter = filter;
                 spriteBatch.DrawImage(renderTarget, new RectangleF(0,0,graphicsDevice.CurrentTargetSize.Width, graphicsDevice.CurrentTargetSize.Height), null, Color4.White);
                 spriteBatch.Flush();
             }
 
             graphicsDevice.Present();
         }
-
-        //public Vector2 ScreenToUiUnits(Vector2 screenPoint)
-        //{
-        //    var size = graphicsDevice.Size;
-
-        //    var scaleX = (float)TargetRect.Width / (float)size.Width;
-        //    var scaleY = (float)TargetRect.Height / (float)size.Height;
-
-        //    var point = screenPoint;
-
-        //    point.X *= scaleX;
-        //    point.Y *= scaleY;
-
-        //    return point;
-        //}
     }
 }

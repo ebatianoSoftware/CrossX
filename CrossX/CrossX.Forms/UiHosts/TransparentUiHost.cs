@@ -10,6 +10,8 @@ namespace CrossX.Forms.UiHosts
         private readonly IGraphicsDevice graphicsDevice;
         public ITransform2D Transform2D { get; }
 
+        
+
         public TransparentUiHost(IGraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
@@ -20,6 +22,8 @@ namespace CrossX.Forms.UiHosts
 
         public float ScaleToPixel => 1;
 
+        public TextureFilter DesiredTextureFilter { get; set; }
+
         public void BeginDraw()
         {
             graphicsDevice.Clear(Color4.Black);
@@ -29,11 +33,6 @@ namespace CrossX.Forms.UiHosts
         {
             Transform2D.Clear();
             graphicsDevice.Present();
-        }
-
-        public Vector2 ScreenToUiUnits(Vector2 screenPoint)
-        {
-            return screenPoint;
         }
 
         public void Update()

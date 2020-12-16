@@ -286,12 +286,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\DxCommon\FX\DefaultPNT.fx">
+    <None Include="..\DxCommon\FX\DefaultPNT.fx">
       <Link>FX\Code\DefaultPNT.fx</Link>
-    </Content>
-    <Content Include="..\DxCommon\FX\VertexLightedPNT.fx">
+    </None>
+    <None Include="..\DxCommon\FX\VertexLightedPNT.fx">
       <Link>FX\Code\VertexLightedPNT.fx</Link>
-    </Content>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
