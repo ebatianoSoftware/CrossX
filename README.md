@@ -7,8 +7,8 @@ Cross platform application framework for creating games and simulations. Fully m
 CrossX.Forms is CrossX based MVVM UI framework for quick and easy App/Game graphic interface development.
 
 ## Supported Platforms
-* [*] Universal Windows Platform
-* [*] Windows
+* [X] Universal Windows Platform
+* [X] Windows
 * [ ] iOS
 * [ ] Android
 * [ ] Mac OS
