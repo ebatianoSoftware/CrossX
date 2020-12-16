@@ -97,7 +97,7 @@ namespace CrossX.DxCommon.Graphics
         }
 
         public IDxShader CurrentShader { get; internal set; }
-        public bool VerticalSync { get; set; }
+        public bool VerticalSync { get; set; } = true;
 
         public DxGraphicsDevice(AppStats appStats)
         {

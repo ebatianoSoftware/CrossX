@@ -18,9 +18,13 @@ namespace CrossX.UWP
         public void Run<TAppParameters>(TAppParameters appParameters)
         {
             var builder = new ScopeBuilder()
-                .WithParent(serviceProvider)
                 .RegisterDirectXServices()
                 .RegisterDirectXTypes();
+
+            if(serviceProvider != null)
+            {
+                builder.WithParent(serviceProvider);
+            }
             
             CoreApplication.Run(new ViewSource<TApp>(builder, appParameters));
         }
