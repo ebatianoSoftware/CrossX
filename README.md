@@ -2,7 +2,7 @@
 
 ## Description
 
-Cross platform application framework for creating games and simulations. Fully managed .NET with .NET Standard core allows you to develop games superfast and efficiently with minimized effort for every platform setup.
+Cross platform application framework for creating games and simulations. Fully managed .NET with .NET Standard 2.1 core allows you to develop games superfast and efficiently with minimized effort for every platform setup.
 
 `CrossX.Forms` is `CrossX` based MVVM UI framework for quick and easy App/Game graphic interface development.
 
