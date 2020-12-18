@@ -5,7 +5,7 @@
     <Authors>Sebastian Sejud</Authors>
     <Company>Sebastian Sejud IT</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.2</Version>
+    <Version>0.1.7</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

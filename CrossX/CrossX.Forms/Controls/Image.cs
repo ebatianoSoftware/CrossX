@@ -1,4 +1,5 @@
 ﻿using CrossX.Forms.Values;
+using CrossX.Graphics;
 using CrossX.Graphics2D;
 using System;
 using System.Drawing;
@@ -15,6 +16,7 @@ namespace CrossX.Forms.Controls
         public ImageSource Source { get => source; set => SetProperty(ref source, value); }
         public Stretch Stretch { get => stretch; set => SetProperty(ref stretch, value); }
         public SpriteFlags Flags { get => flags; set => SetProperty(ref flags, value); }
+        public TextureFilter StretchFilter { get; set; } = TextureFilter.Default;
 
         public Image(IControlParent parent, IControlServices services) : base(parent, services)
         {
@@ -72,7 +74,12 @@ namespace CrossX.Forms.Controls
                 rect.Height -= (int)Math.Ceiling(diff);
             }
 
+            var currentTextureFilter = Services.SpriteBatch.TextureFilter;
+            var textureFilter = StretchFilter == TextureFilter.Default ? currentTextureFilter : StretchFilter;
+
+            Services.SpriteBatch.TextureFilter = textureFilter;
             Services.SpriteBatch.DrawImage(Source.Texture, position, rect, tintColor, scale, flags);
+            Services.SpriteBatch.TextureFilter = currentTextureFilter;
         }
 
         public override Vector2 CalculateSize(RectangleF clientArea, bool includeMargins)

@@ -94,7 +94,7 @@ namespace CrossX.WindowsDx
             renderForm.ShowInTaskbar = true;
 
             renderForm.MouseLeave += (o, e) => Cursor.Show();
-            renderForm.FormBorderStyle = FormBorderStyle.FixedSingle;
+            renderForm.FormBorderStyle = graphicsMode.AllowResize ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
             
             var clientSize = renderForm.ClientSize;
             var windowSize = renderForm.Size;

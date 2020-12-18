@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace CrossX.Forms.UiHosts
 {
-    public class ScaledUiHost: IUiHost
+    public class ScaledUiHost : IUiHost
     {
         public class Parameters
         {
@@ -65,6 +65,8 @@ namespace CrossX.Forms.UiHosts
                 return new Rectangle(0, 0, (int)Math.Ceiling(currentTargetSize.Width / ScaleToPixel), (int)Math.Ceiling(currentTargetSize.Height / ScaleToPixel));
             }
         }
+
+        public Matrix4x4 WindowToCanvasTransform => Matrix4x4.Identity;
 
         public void Update()
         {

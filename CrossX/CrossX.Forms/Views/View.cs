@@ -113,7 +113,7 @@ namespace CrossX.Forms.Views
             Root.ProcessTouch(point.Id, TouchEvent.Down, CalculateTouchPosition(point.Position));
         }
 
-        private Vector2 CalculateTouchPosition(Vector2 point) => point;
+        private Vector2 CalculateTouchPosition(Vector2 point) => Vector2.Transform(point, uiHost.WindowToCanvasTransform);
 
         private void TouchPanel_PointerCaptured(long id, object capturedBy) => Root.OnPointerCaptured(id, capturedBy);
 

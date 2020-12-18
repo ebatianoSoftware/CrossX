@@ -10,8 +10,8 @@ namespace CrossX.Forms.UiHosts
         private readonly IGraphicsDevice graphicsDevice;
         public ITransform2D Transform2D { get; }
 
-        
 
+        public Matrix4x4 WindowToCanvasTransform => Matrix4x4.Identity;
         public TransparentUiHost(IGraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>0.1.0</Version>
+    <Version>0.1.3</Version>
     <Company>Sebastian Sejud IT</Company>
     <UserSecretsId>f3bfc1c7-46d0-4a82-bc91-1789212405eb</UserSecretsId>
     <Authors>Sebastian Sejud</Authors>

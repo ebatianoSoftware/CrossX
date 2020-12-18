@@ -86,7 +86,7 @@ namespace CrossX.Forms.Controls
                         pointerId = id;
                         IsDown = true;
                         Focus = this;
-                        Services.Sounds.Focus?.Play();
+                        Services.Sounds.PushButton?.Play();
                         return true;
                     }
                     break;
@@ -175,6 +175,7 @@ namespace CrossX.Forms.Controls
                 if (IsEnabled && CommandEnabled)
                 {
                     timeToExecute = Math.Max(0.01f, (float)pushAndExecuteTime / 1000.0f);
+                    Services.Sounds.PushButton?.Play();
                     IsDown = true;
                     return true;
                 }

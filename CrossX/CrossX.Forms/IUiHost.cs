@@ -1,6 +1,7 @@
 ﻿using CrossX.Graphics;
 using CrossX.Graphics2D;
 using System.Drawing;
+using System.Numerics;
 
 namespace CrossX.Forms
 {
@@ -13,5 +14,6 @@ namespace CrossX.Forms
         ITransform2D Transform2D { get; }
         float ScaleToPixel { get; }
         TextureFilter DesiredTextureFilter { get; }
+        Matrix4x4 WindowToCanvasTransform { get; }
     }
 }

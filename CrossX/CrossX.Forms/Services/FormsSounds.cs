@@ -6,5 +6,6 @@ namespace CrossX.Forms.Services
     {
         public Sound Focus { get; set; }
         public Sound Select { get; set; }
+        public Sound PushButton { get; set; }
     }
 }
