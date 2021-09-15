@@ -11,7 +11,7 @@ namespace CrossX.Framework.Async
 
         private ConcurrentQueue<AutoResetEvent> events = new ConcurrentQueue<AutoResetEvent>();
 
-        public void BeginInvoke(Action action)
+        public virtual void BeginInvoke(Action action)
         {
             queue.Enqueue(action);
         }
@@ -37,6 +37,14 @@ namespace CrossX.Framework.Async
                 events.Enqueue(evnt);
                 return result;
             });
+        }
+
+        public void Process()
+        {
+            while(queue.TryDequeue(out var action))
+            {
+                action.Invoke();
+            }
         }
     }
 }

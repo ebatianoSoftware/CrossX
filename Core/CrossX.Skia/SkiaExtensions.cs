@@ -1,4 +1,5 @@
 ﻿using CrossX.Framework;
+using CrossX.Framework.Graphics;
 using SkiaSharp;
 using System.Numerics;
 
@@ -14,20 +15,6 @@ namespace CrossX.Skia
         public static SKRectI ToSkiaI(this Rectangle rect) => new SKRectI(rect.X, rect.Y, rect.Right, rect.Bottom);
         public static SKMatrix ToSkia(this Matrix3x2 matrix) => new SKMatrix(matrix.M11, matrix.M21, matrix.M31, matrix.M12, matrix.M22, matrix.M32, 0, 0, 1);
         public static Matrix3x2 ToNumerics(this SKMatrix matrix) => new Matrix3x2(matrix.ScaleX, matrix.SkewY, matrix.SkewX, matrix.ScaleY, matrix.TransX, matrix.TransY);
-        public static SKFontStyleWeight ToSkia(this FontWeight weight)
-        {
-            switch (weight)
-            {
-                case FontWeight.Thin:
-                    return SKFontStyleWeight.ExtraLight;
-
-                case FontWeight.Light:
-                    return SKFontStyleWeight.Light;
-
-                case FontWeight.Bold:
-                    return SKFontStyleWeight.Bold;
-            }
-            return SKFontStyleWeight.Normal;
-        }
+        public static SKFontStyleWeight ToSkia(this FontWeight weight) => (SKFontStyleWeight)weight;
     }
 }

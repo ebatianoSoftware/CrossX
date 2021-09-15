@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CrossX.Framework
+namespace CrossX.Framework.Graphics
 {
     [Flags]
     public enum TextAlign

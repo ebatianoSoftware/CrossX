@@ -12,7 +12,7 @@ namespace CrossX.WindowsForms
         private readonly ISkiaCanvas skiaCanvas;
         private readonly ICoreApplication app;
 
-        private bool appRunned = false;
+        private readonly MainLoop mainLoop;
 
         public MainForm(ICoreApplication app, IServicesProvider servicesProvider = null)
         {
@@ -24,32 +24,29 @@ namespace CrossX.WindowsForms
                 .WithParent(servicesProvider)
                 .WithSkia();
 
+            mainLoop = new MainLoop(app, skglControl.Invalidate, scopeBuilder, true);
+
             var services = scopeBuilder.Build();
             var factory = services.GetService<IObjectFactory>();
             skiaCanvas = factory.Create<ISkiaCanvas>();
 
             skglControl.PaintSurface += SkglControl_PaintSurface;
-
             app.Initialize(services);
             this.app = app;
+
+            skglControl.Invalidate();
         }
 
         private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs args)
         {
             skiaCanvas.Prepare(args.Surface.Canvas, args.BackendRenderTarget.Width, args.BackendRenderTarget.Height);
-            
-            if(!appRunned)
-            {
-                appRunned = true;
-                app.Run(skiaCanvas.Canvas);
-            }
-
-            app.Render();
+            mainLoop.OnPaintSurface(skiaCanvas.Canvas);
         }
 
         protected override void OnHandleDestroyed(EventArgs args)
         {
             base.OnHandleDestroyed(args);
+            mainLoop.Finish();
             skiaCanvas.Canvas.Dispose();
         }
     }
