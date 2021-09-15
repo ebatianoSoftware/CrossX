@@ -39,82 +39,65 @@ namespace CrossX.Skia.Graphics
         public override int SaveState() => skCanvas.Save();
         public override void Transform(Matrix3x2 transform) => skCanvas.SetMatrix((transform * skCanvas.TotalMatrix.ToNumerics()).ToSkia());
 
-        public Vector2 CalculateTargetPosition(Font font, string line, RectangleF target, TextAlign textAlign, out Vector2 size)
+        private Vector2 CalculateTargetPosition(Font font, string line, RectangleF target, TextAlign textAlign, FontMeasure fontMeasure, out SizeF size)
         {
             var skiaFont = (SkiaFont)font;
 
             var skPaint = skiaFont.SKPaint;
             skPaint.IsStroke = false;
-            var width = skPaint.MeasureText(line);
 
-            var skRect = new SKRect();
-            skPaint.MeasureText("X", ref skRect);
-
-            var height = skRect.Height;
+            size = font.MeasureText(line, fontMeasure);
             float positionX = target.X;
 
-            size = new Vector2(width, height);
+            
 
             switch (textAlign & (TextAlign.Left | TextAlign.Center | TextAlign.Right))
             {
                 case TextAlign.Right:
-                    positionX = target.Right - width;
+                    positionX = target.Right - size.Width;
                     break;
 
                 case TextAlign.Center:
-                    positionX = target.Center.X - width / 2;
+                    positionX = target.Center.X - size.Width / 2;
                     break;
             }
 
-            float positionY = target.Top + height;
+            float positionY = target.Top;
 
             switch (textAlign & (TextAlign.Top | TextAlign.Middle | TextAlign.Bottom))
             {
                 case TextAlign.Bottom:
-                    positionY = target.Bottom;
+                    positionY = target.Bottom - size.Height;
                     break;
 
                 case TextAlign.Middle:
-                    positionY = target.Center.Y - skRect.Top / 2;
+                    positionY = target.Center.Y - size.Height / 2;
                     break;
             }
 
-            return new Vector2(positionX, positionY - height);
-        }
-
-        public override float DrawText(string text, Font font, Vector2 position, Color color, float calculatedHeight = 0)
-        {
-            if (font == null) return 0;
-
-            var skiaFont = (SkiaFont)font;
-            var skPaint = skiaFont.SKPaint;
-            skPaint.IsStroke = false;
-            skPaint.Color = color.ToSkia();
-
-            if (calculatedHeight == 0)
+            var offsetY = size.Height;
+            if (fontMeasure == FontMeasure.Extended)
             {
-                var skRect = new SKRect();
-                skPaint.MeasureText("X", ref skRect);
-                calculatedHeight = skRect.Height;
+                offsetY = skiaFont.SKFont.Size;
             }
 
-            var size = skPaint.MeasureText(text);
-            skCanvas.DrawText(text, position.X, position.Y + calculatedHeight, skPaint);
-            return size;
+            return new Vector2(positionX, positionY + offsetY);
         }
 
-        public override Vector2 DrawText(string line, Font font, RectangleF target, TextAlign textAlign, Color color)
+        public override Vector2 DrawText(string line, Font font, RectangleF target, TextAlign textAlign, Color color, FontMeasure fontMeasure = FontMeasure.Extended)
         {
             if (font == null) return Vector2.Zero;
             var skiaFont = (SkiaFont)font;
 
-            var position = CalculateTargetPosition(font, line, target, textAlign, out var size);
+            var position = CalculateTargetPosition(font, line, target, textAlign, fontMeasure, out var size);
 
             var skPaint = skiaFont.SKPaint;
             skPaint.IsStroke = false;
             skPaint.Color = color.ToSkia();
 
-            skCanvas.DrawText(line, position.X, position.Y + size.Y, skPaint);
+            
+
+            skCanvas.DrawText(line, position.X, position.Y, skPaint);
             return size;
         }
 

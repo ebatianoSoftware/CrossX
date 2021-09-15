@@ -16,7 +16,6 @@ namespace CrossX.Framework.Graphics
         public abstract void ClipRect(RectangleF clip);
         public abstract void Clear(Color color);
         public abstract void DrawTriangles(VertexBuffer vertexBuffer, Image image);
-        public abstract Vector2 DrawText(string text, Font font, RectangleF target, TextAlign align, Color color);
-        public abstract float DrawText(string text, Font font, Vector2 position, Color color, float calculatedHeight = 0);
+        public abstract Vector2 DrawText(string text, Font font, RectangleF target, TextAlign align, Color color, FontMeasure fontMeasure = FontMeasure.Extended);
     }
 }

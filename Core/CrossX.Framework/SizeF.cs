@@ -13,6 +13,8 @@ namespace CrossX.Framework
             Height = height;
         }
 
+        public static readonly SizeF Zero = new SizeF(0, 0);
+
         public static implicit operator Vector2(SizeF size) => new Vector2(size.Width, size.Height);
         public static implicit operator SizeF(Vector2 size) => new SizeF(size.X, size.Y);
     }

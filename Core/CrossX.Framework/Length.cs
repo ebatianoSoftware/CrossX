@@ -11,14 +11,10 @@
         private readonly int rest;
 
         public bool IsAuto => rest < 0;
-
-
-
         public float Calculate(float onePixelInUnit, float size = 0, float oneRest = 0)
         {
             return rest * oneRest + percent * size + units + pixels * onePixelInUnit;
         }
-
         public override bool Equals(object other)
         {
             if (other is Length len)
