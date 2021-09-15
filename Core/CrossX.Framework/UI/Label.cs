@@ -10,8 +10,8 @@ namespace CrossX.Framework.UI
         private float fontSize = 10;
         private FontWeight fontWeight = FontWeight.Normal;
         private bool italic;
-        private HorizontalTextAlignment horizontalTextAlign = HorizontalTextAlignment.Center;
-        private VerticalTextAlignment verticalTextAlign = VerticalTextAlignment.Middle;
+        private Alignment horizontalTextAlign = Alignment.Center;
+        private Alignment verticalTextAlign = Alignment.Center;
         private Color textColor = Color.Black;
         private FontMeasure fontMeasure = FontMeasure.Extended;
         private readonly IFontManager fontManager;
@@ -23,8 +23,8 @@ namespace CrossX.Framework.UI
         public FontWeight FontWeight { get => fontWeight; set => SetProperty(ref fontWeight, value); }
         public bool Italic { get => italic; set => SetProperty(ref italic, value); }
 
-        public HorizontalTextAlignment HorizontalTextAlignment { get => horizontalTextAlign; set => SetProperty(ref horizontalTextAlign, value); }
-        public VerticalTextAlignment VerticalTextAlignment { get => verticalTextAlign; set => SetProperty(ref verticalTextAlign, value); }
+        public Alignment HorizontalTextAlignment { get => horizontalTextAlign; set => SetProperty(ref horizontalTextAlign, value); }
+        public Alignment VerticalTextAlignment { get => verticalTextAlign; set => SetProperty(ref verticalTextAlign, value); }
 
         public FontMeasure FontMeasure { get => fontMeasure; set => SetProperty(ref fontMeasure, value); }
 
@@ -39,7 +39,7 @@ namespace CrossX.Framework.UI
         {
             base.OnRender(canvas);
             var font = fontManager.FindFont(FontFamily, FontSize, FontWeight, Italic);
-            canvas.DrawText(Text, font, ScreenBounds, (TextAlign)VerticalTextAlignment | (TextAlign)HorizontalTextAlignment, TextColor, FontMeasure);
+            canvas.DrawText(Text, font, ScreenBounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), TextColor, FontMeasure);
         }
 
         public override SizeF CalculateSize(SizeF parentSize)

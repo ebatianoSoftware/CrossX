@@ -13,18 +13,4 @@ namespace CrossX.Framework.Graphics
         Bottom = 8
     }
 
-    public enum HorizontalTextAlignment
-    {
-        Left = TextAlign.Left,
-        Center = TextAlign.Center,
-        Right = TextAlign.Right
-    }
-
-    public enum VerticalTextAlignment
-    {
-        Top = TextAlign.Top,
-        Middle = TextAlign.Middle,
-        Bottom = TextAlign.Bottom
-    }
-
 }

@@ -2,7 +2,6 @@ using CrossX.Framework;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.UI;
-using CrossX.Framework.UI.Containers;
 using CrossX.WindowsForms;
 using System;
 
@@ -39,8 +38,8 @@ namespace Example.Windows
                     l.Margin = new Thickness(0, 0, 100, 0);
                     l.HorizontalAlignment = Alignment.Center;
                     l.VerticalAlignment = Alignment.Center;
-                    l.HorizontalTextAlignment = HorizontalTextAlignment.Left;
-                    l.VerticalTextAlignment = VerticalTextAlignment.Bottom;
+                    l.HorizontalTextAlignment = Alignment.Start;
+                    l.VerticalTextAlignment = Alignment.End;
                     l.Height = 100;
                     l.Width = 500;
                     l.FontMeasure = FontMeasure.Extended;

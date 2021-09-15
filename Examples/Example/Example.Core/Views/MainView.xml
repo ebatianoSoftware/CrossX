@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <FrameLayout
-  xmlns="clr-namespace:CrossX.Framework.UI;CrossX.Framework"
-  BackgroundColor="DarkSlateGray">
-  <Label Id="label" Text="Test!" Font="Default" FontWeight="Bold" TextColor="White"
-         HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+  xmlns="https://ebatiano.me/CrossX.Framework.UI"
+  BackgroundColor="Black">
+  <Label Id="label" Text="Test!" FontFamily="Default" FontSize="30" FontWeight="Bold" TextColor="White"
+         HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Middle"/>
+  <Label/>
 </FrameLayout>
