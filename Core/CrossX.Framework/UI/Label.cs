@@ -1,7 +1,7 @@
 ﻿using CrossX.Framework.Graphics;
 using System;
 
-namespace CrossX.Framework.UI.Controls
+namespace CrossX.Framework.UI
 {
     public class Label : View
     {

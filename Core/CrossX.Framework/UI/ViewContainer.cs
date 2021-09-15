@@ -1,6 +1,6 @@
 ﻿using CrossX.Framework.Graphics;
 
-namespace CrossX.Framework.UI.Containers
+namespace CrossX.Framework.UI
 {
     public abstract class ViewContainer : View
     {
@@ -9,12 +9,12 @@ namespace CrossX.Framework.UI.Containers
 
         public ChildrenCollection Children { get; }
 
-        public Thickness Padding 
-        { 
+        public Thickness Padding
+        {
             get => padding;
             set
             {
-                if(SetProperty(ref padding, value))
+                if (SetProperty(ref padding, value))
                 {
                     InvalidateLayout();
                 }

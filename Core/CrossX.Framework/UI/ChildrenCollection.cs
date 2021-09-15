@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace CrossX.Framework.UI.Containers
+namespace CrossX.Framework.UI
 {
-    public class ChildrenCollection: ObservableCollection<View>
+    public class ChildrenCollection : ObservableCollection<View>
     {
         private readonly ViewContainer owner;
 
