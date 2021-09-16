@@ -1,4 +1,4 @@
-﻿using XxSchema.Contracts;
+﻿using Xx;
 
 namespace CrossX.Framework.Meta
 {

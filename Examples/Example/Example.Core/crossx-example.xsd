@@ -18,7 +18,7 @@
   <xsd:complexType name="System.Object" />
   <xsd:complexType name="Example.Core.Controls.LabelEx">
     <xsd:complexContent>
-      <xsd:extension base="aa:CrossX.Framework.UI.Label">
+      <xsd:extension base="aa:CrossX.Framework.UI.Controls.Label">
         <xsd:attribute type="aa:CrossX.Framework.Color" name="NewColor" />
       </xsd:extension>
     </xsd:complexContent>

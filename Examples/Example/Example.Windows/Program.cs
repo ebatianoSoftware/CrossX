@@ -1,6 +1,7 @@
 using CrossX.Framework;
 using CrossX.Framework.Core;
-using CrossX.Framework.UI;
+using CrossX.Framework.UI.Containers;
+using CrossX.Framework.UI.Controls;
 using CrossX.WindowsForms;
 using System;
 

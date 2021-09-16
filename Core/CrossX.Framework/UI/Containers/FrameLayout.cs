@@ -1,8 +1,5 @@
-﻿using XxSchema.Contracts;
-
-namespace CrossX.Framework.UI
+﻿namespace CrossX.Framework.UI.Containers
 {
-    [XxSchemaExport(typeof(View))]
     public class FrameLayout : ViewContainer
     {
         public override void RecalculateLayout()

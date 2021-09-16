@@ -1,7 +1,9 @@
 ﻿using CrossX.Framework.Graphics;
+using Xx;
 
-namespace CrossX.Framework.UI
+namespace CrossX.Framework.UI.Containers
 {
+    [XxSchemaExport(typeof(View))]
     public abstract class ViewContainer : View
     {
         private bool layoutInvalid;

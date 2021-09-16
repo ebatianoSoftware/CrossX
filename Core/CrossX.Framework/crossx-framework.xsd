@@ -281,23 +281,12 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.ViewContainer">
+  <xsd:complexType name="CrossX.Framework.UI.Controls.Button">
     <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.View">
-        <xsd:attribute type="xx:CrossX.Framework.Thickness" name="Padding" />
-      </xsd:extension>
+      <xsd:extension base="xx:CrossX.Framework.UI.View"></xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.FrameLayout">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.ViewContainer">
-        <xsd:sequence>
-          <xsd:any maxOccurs="unbounded" minOccurs="0" />
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Label">
+  <xsd:complexType name="CrossX.Framework.UI.Controls.Label">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.View">
         <xsd:attribute type="xsd:string" name="Text" />
@@ -312,17 +301,76 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:element name="FrameLayout">
+  <xsd:complexType name="CrossX.Framework.UI.Controls.ProgressBar">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="xsd:float" name="MaxValue" />
+        <xsd:attribute type="xsd:float" name="Progress" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.TextBox">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="xsd:string" name="Text" />
+        <xsd:attribute type="xsd:string" name="FontFamily" />
+        <xsd:attribute type="xsd:float" name="FontSize" />
+        <xsd:attribute type="xx:CrossX.Framework.FontWeight" name="FontWeight" />
+        <xsd:attribute type="xsd:boolean" name="Italic" />
+        <xsd:attribute type="xx:CrossX.Framework.Alignment" name="HorizontalTextAlignment" />
+        <xsd:attribute type="xx:CrossX.Framework.Alignment" name="VerticalTextAlignment" />
+        <xsd:attribute type="xx:CrossX.Framework.Color" name="TextColor" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.ViewContainer">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="xx:CrossX.Framework.Thickness" name="Padding" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.FrameLayout">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Containers.ViewContainer">
+        <xsd:sequence>
+          <xsd:any maxOccurs="unbounded" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Button">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.FrameLayout" />
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="Label">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Label" />
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.Label" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ProgressBar">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.ProgressBar" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="TextBox">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBox" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="FrameLayout">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.FrameLayout" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

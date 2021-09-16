@@ -1,4 +1,4 @@
-﻿namespace XxSchema.Contracts
+﻿namespace Xx
 {
     public abstract class XxShemaInfo
     {

@@ -1,14 +1,13 @@
 ﻿using System;
 
-namespace XxSchema.Contracts
+namespace Xx
 {
-    public class XxSchemaPatternAttribute: Attribute
+    public class XxSchemaPatternAttribute : Attribute
     {
         public XxSchemaPatternAttribute(params string[] patterns)
         {
             Patterns = patterns;
         }
-
         public string[] Patterns { get; }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using CrossX.Framework.Graphics;
+using CrossX.Framework.UI.Containers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Xx;
 
 namespace CrossX.Framework.UI
 {
+    [XxSchemaExport]
     public abstract class View : INotifyPropertyChanged
     {
         private RectangleF bounds;

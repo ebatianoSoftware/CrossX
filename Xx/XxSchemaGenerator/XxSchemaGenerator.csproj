@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XxSchema.Contracts\XxSchema.Contracts.csproj" />
+    <ProjectReference Include="..\Xx\Xx.csproj" />
   </ItemGroup>
 
 </Project>

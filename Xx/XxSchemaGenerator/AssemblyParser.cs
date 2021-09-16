@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using XxSchema.Contracts;
+using Xx;
 
 namespace xxsgen
 {
@@ -54,9 +54,11 @@ namespace xxsgen
 
             foreach (var type in assembly.DefinedTypes)
             {
-                var ca = type.GetCustomAttribute<XxSchemaExport>();
+                if (type.IsAbstract) continue;
 
-                if(ca != null)
+                var ca = type.GetCustomAttribute<XxSchemaExport>();
+                
+                if (ca != null)
                 {
                     var ct = ParseComplexType(type.AsType(), ca);
                     ct.Exportable = true;
@@ -82,7 +84,6 @@ namespace xxsgen
 
                 if (property.GetCustomAttribute<XxSchemaBindable>() != null) bindable = true;
 
-
                 attributes.Add(new Attribute
                 {
                     Bindable = bindable,
@@ -93,7 +94,7 @@ namespace xxsgen
 
             var children = new List<ComplexType>();
 
-            if(ca?.ChildrenTypes != null)
+            if(ca?.ChildrenTypes != null && !type.IsAbstract)
             {
                 foreach(var cht in ca.ChildrenTypes)
                 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XxSchema.Contracts
+namespace Xx
 {
     public class XxSchemaBindable : Attribute
     {
