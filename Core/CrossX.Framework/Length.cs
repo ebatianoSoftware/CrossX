@@ -1,5 +1,8 @@
-﻿namespace CrossX.Framework
+﻿using XxSchema.Contracts;
+
+namespace CrossX.Framework
 {
+    [XxSchemaPattern(@"[A-Za-z][A-Za-z0-9-_]*")]
     public struct Length
     {
         public static readonly Length Auto = new Length(rest: -1);
@@ -11,10 +14,12 @@
         private readonly int rest;
 
         public bool IsAuto => rest < 0;
+
         public float Calculate(float onePixelInUnit, float size = 0, float oneRest = 0)
         {
             return rest * oneRest + percent * size + units + pixels * onePixelInUnit;
         }
+
         public override bool Equals(object other)
         {
             if (other is Length len)

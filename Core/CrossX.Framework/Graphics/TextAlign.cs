@@ -12,5 +12,4 @@ namespace CrossX.Framework.Graphics
         Middle = 4,
         Bottom = 8
     }
-
 }

@@ -1,0 +1,3 @@
+﻿<xsd:sequence>
+  <xsd:any maxOccurs="unbounded" minOccurs="0"/>
+</xsd:sequence>

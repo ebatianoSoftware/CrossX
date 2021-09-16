@@ -1,5 +1,8 @@
-﻿namespace CrossX.Framework.UI
+﻿using XxSchema.Contracts;
+
+namespace CrossX.Framework.UI
 {
+    [XxSchemaExport(typeof(View))]
     public class FrameLayout : ViewContainer
     {
         public override void RecalculateLayout()
@@ -16,7 +19,7 @@
                 var child = Children[idx];
                 var size = child.CalculateSize(bounds.Size);
                 var position = child.CalculatePosition(size, bounds.Size) + offset;
-                child.Bounds = new RectangleF(position, size);
+                child.SetBounds(new RectangleF(position, size));
             }
         }
     }

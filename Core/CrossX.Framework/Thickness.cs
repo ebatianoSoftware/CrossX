@@ -1,5 +1,8 @@
-﻿namespace CrossX.Framework
+﻿using XxSchema.Contracts;
+
+namespace CrossX.Framework
 {
+    [XxSchemaPattern(@"[-+]?[0-9]*\.?[0-9]+|[-+]?[0-9]*\.?[0-9]+[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+")]
     public struct Thickness
     {
         public static readonly Thickness Zero = new Thickness { Left = Length.Zero, Right = Length.Zero, Top = Length.Zero, Bottom = Length.Zero };

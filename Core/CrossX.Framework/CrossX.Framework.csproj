@@ -8,4 +8,14 @@
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tools\XxSchema.Contracts\XxSchema.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="UI\CrossX.Framework.UI.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
 </Project>

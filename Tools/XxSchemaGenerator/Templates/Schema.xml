@@ -1,0 +1,13 @@
+﻿<xsd:schema attributeFormDefault="unqualified"
+           targetNamespace="{TargetNamespace}"
+           elementFormDefault="qualified"
+{NamespaceAliases}>
+  {NamespaceImports}
+  {SimpleTypes}
+
+  <xsd:complexType name="System.Object"/>
+  
+  {ComplexTypes}
+  {Elements}
+</xsd:schema>
+

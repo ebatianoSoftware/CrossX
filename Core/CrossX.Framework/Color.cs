@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using XxSchema.Contracts;
 
 namespace CrossX.Framework
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [XxSchemaPattern(@"#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?")]
     public partial struct Color : IEquatable<Color>
     {
         public Color(long color)

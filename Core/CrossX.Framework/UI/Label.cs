@@ -1,8 +1,10 @@
 ﻿using CrossX.Framework.Graphics;
 using System;
+using XxSchema.Contracts;
 
 namespace CrossX.Framework.UI
 {
+    [XxSchemaExport]
     public class Label : View
     {
         private string text;

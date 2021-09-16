@@ -18,22 +18,9 @@ namespace CrossX.Framework.UI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public Id Id { get; set; }
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
-
-        public RectangleF Bounds
-        {
-            get => bounds;
-            set
-            {
-                if (bounds != value)
-                {
-                    bounds = value;
-                    OnPropertyChanged(nameof(ActualWidth));
-                    OnPropertyChanged(nameof(ActualHeight));
-                    RecalculateLayout();
-                }
-            }
-        }
+        public RectangleF Bounds => bounds;
 
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
@@ -123,6 +110,17 @@ namespace CrossX.Framework.UI
             }
 
             return new Vector2(x, y);
+        }
+
+        public void SetBounds(RectangleF newBounds)
+        {
+            if (bounds != newBounds)
+            {
+                bounds = newBounds;
+                OnPropertyChanged(nameof(ActualWidth));
+                OnPropertyChanged(nameof(ActualHeight));
+                RecalculateLayout();
+            }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
