@@ -3,7 +3,8 @@
   xmlns="https://crossx.support/Schemas/CrossX.Framework"
   xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
   BackgroundColor="Black">
-  <Label Id="label1" Text="Test!" FontFamily="Default" FontSize="30" FontWeight="Bold" TextColor="Black" Margin="10"
+  <Label Id="label1" Classes="DefaultLabel" Text="&#xe876;" FontFamily="Default" FontSize="30" FontWeight="Bold" TextColor="Black" Margin="10"
          HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
   
+  <Button Width="{Binding ActualHeight, Source: @label1}" Text="{Resource TestButtonText}" Command="{Binding TestCommand}" CommandParameter="{Binding Text, Source: Self}"/>
 </FrameLayout>

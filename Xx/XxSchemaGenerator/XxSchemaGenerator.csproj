@@ -18,11 +18,13 @@
     <None Remove="Templates\Import.xml" />
     <None Remove="Templates\Schema.xml" />
     <None Remove="Templates\SimpleType.xml" />
+    <None Remove="Templates\SpecificChildrenNode.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Templates\Alias.xml" />
     <EmbeddedResource Include="Templates\Attribute.xml" />
+    <EmbeddedResource Include="Templates\SpecificChildrenNode.xml" />
     <EmbeddedResource Include="Templates\ChildrenNode.xml" />
     <EmbeddedResource Include="Templates\ComplexType.xml" />
     <EmbeddedResource Include="Templates\Element.xml" />

@@ -2,15 +2,25 @@
 
 namespace Xx
 {
+    public enum XxChildrenMode
+    {
+        Zero,
+        MaxOne,
+        OnlyOne,
+        Multiple
+    }
+
     public class XxSchemaExport : Attribute
     {
         public XxSchemaExport() { }
 
-        public XxSchemaExport(params Type[] allowChildrenOfType)
+        public XxSchemaExport(XxChildrenMode childrenMode = XxChildrenMode.Zero, params Type[] childTypes)
         {
-            ChildrenTypes = allowChildrenOfType;
+            ChildTypes = childTypes;
+            ChildrenMode = childrenMode;
         }
 
-        public Type[] ChildrenTypes { get; }
+        public Type[] ChildTypes { get; }
+        public XxChildrenMode ChildrenMode { get; }
     }
 }

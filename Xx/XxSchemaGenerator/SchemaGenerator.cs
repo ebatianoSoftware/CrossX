@@ -29,6 +29,7 @@ namespace xxsgen
         private readonly string elementTemplate;
 
         private readonly string childrenNode;
+        private readonly string specificChildrenNode;
 
         public SchemaGenerator(string targetNamespace, IEnumerable<string> namespaces, IEnumerable<SimpleType> simpleTypes, IEnumerable<ComplexType> complexTypes)
         {
@@ -67,6 +68,7 @@ namespace xxsgen
             aliasTemplate = LoadFromAssembly("Templates.Alias.xml");
             emptyEnum = LoadFromAssembly("Templates.EmptyEnumeration.xml");
             childrenNode = LoadFromAssembly("Templates.ChildrenNode.xml");
+            specificChildrenNode = LoadFromAssembly("Templates.SpecificChildrenNode.xml");
             elementTemplate = LoadFromAssembly("Templates.Element.xml");
         }
 
@@ -163,10 +165,54 @@ namespace xxsgen
                 }
 
                 var children = "";
-
-                if(ct.Children != null && ct.Children.Length > 0)
+                if (ct.ChildrenMode != Xx.XxChildrenMode.Zero)
                 {
-                    children = childrenNode;
+                    
+                    string min = "0";
+                    string max = "unbounded";
+
+                    switch(ct.ChildrenMode)
+                    {
+                        case Xx.XxChildrenMode.MaxOne:
+                            max = "1";
+                            break;
+
+                        case Xx.XxChildrenMode.OnlyOne:
+                            max = "1";
+                            min = "1";
+                            break;
+                    }
+
+                    if (ct.ChildrenTypes?.Length > 0)
+                    {
+                        children = "";
+                        for(var idx =0; idx < ct.ChildrenTypes.Length; ++idx)
+                        {
+                            foreach (var complexType in complexTypes)
+                            {
+                                var child = ct.ChildrenTypes[idx];
+
+                                if (complexType == child || complexType.IsDerrivedFrom(child))
+                                {
+                                    if (complexType.Exportable)
+                                    {
+                                        var type = namespaceAliases[complexType.Namespace] + ':' + complexType.Name;
+                                        var name = complexType.Name.Split('.').Last();
+
+                                        children += specificChildrenNode.Replace("{type}", type).Replace("{name}", name);
+                                    }
+                                }
+                            }
+                        }
+
+                        children = childrenNode.Replace("{Children}", children);
+                    }
+                    else
+                    {
+                        children = childrenNode.Replace("{Children}", "<xsd:any/>");
+                    }
+
+                    children = children.Replace("{max}", max).Replace("{min}", min);
                 }
 
                 var attributes = "";

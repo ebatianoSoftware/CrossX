@@ -1,58 +1,35 @@
 ﻿using CrossX.Framework;
 using CrossX.Framework.Graphics;
 using SkiaSharp;
+using System.Linq;
 using System.Numerics;
 
 namespace CrossX.Skia.Graphics
 {
     internal class SkiaVertexBuffer : VertexBuffer
     {
-        private SKPoint[] positionBuffer;
-        private SKPoint[] textureBuffer;
-        private SKColor[] colorBuffer;
-
-        public SKPoint[] PositionBuffer { get => positionBuffer; }
-        public SKPoint[] TextureBuffer { get => textureBuffer; }
-        public SKColor[] ColorBuffer { get => colorBuffer; }
-
-
         public override int Length { get; }
 
-        public SkiaVertexBuffer(int length)
-        {
-            Length = length;
-        }
+        public SKVertices SKVertices { get; }
 
-        public override void SetColor(int index, Color color)
+        public SkiaVertexBuffer(Parameters parameters)
         {
-            Utils.AllocBuffer(ref colorBuffer, Length);
-            colorBuffer[index] = color.ToSkia();
-        }
-
-        public override void SetData(Vector2[] positions, Vector2[] texCoords, Color[] colors)
-        {
-            Utils.AllocBuffer(ref colorBuffer, Length);
-            Utils.AllocBuffer(ref positionBuffer, Length);
-            Utils.AllocBuffer(ref textureBuffer, Length);
-
-            for(var idx =0; idx < Length; ++idx)
+            Length = parameters.Positions.Length;
+            if (parameters.TextureCoordinates == null)
             {
-                positionBuffer[idx] = positions[idx].ToSkia();
-                textureBuffer[idx] = texCoords[idx].ToSkia();
-                colorBuffer[idx] = colors[idx].ToSkia();
+                SKVertices = SKVertices.CreateCopy(SKVertexMode.Triangles,
+                    parameters.Positions.Select(o => o.ToSkia()).ToArray(),
+                    parameters.Colors.Select(o => o.ToSkia()).ToArray()
+                    );
             }
-        }
-
-        public override void SetPosition(int index, Vector2 position)
-        {
-            Utils.AllocBuffer(ref positionBuffer, Length);
-            positionBuffer[index] = position.ToSkia();
-        }
-
-        public override void SetTexCoord(int index, Vector2 texCoord)
-        {
-            Utils.AllocBuffer(ref textureBuffer, Length);
-            textureBuffer[index] = texCoord.ToSkia();
+            else
+            {
+                SKVertices = SKVertices.CreateCopy(SKVertexMode.Triangles,
+                    parameters.Positions.Select(o => o.ToSkia()).ToArray(),
+                    parameters.TextureCoordinates.Select(o => o.ToSkia()).ToArray(),
+                    parameters.Colors.Select(o => o.ToSkia()).ToArray()
+                    );
+            }
         }
     }
 }

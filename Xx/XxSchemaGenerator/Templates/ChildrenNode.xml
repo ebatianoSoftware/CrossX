@@ -1,3 +1,3 @@
-﻿<xsd:sequence>
-  <xsd:any maxOccurs="unbounded" minOccurs="0"/>
-</xsd:sequence>
+﻿<xsd:choice minOccurs="{min}" maxOccurs="{max}">
+    {Children}
+</xsd:choice>

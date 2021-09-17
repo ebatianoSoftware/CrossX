@@ -8,6 +8,7 @@ namespace xxsgen
 {
     internal class AssemblyParser
     {
+        private const string bindablePattern = @"\{.*\}";
         private readonly Assembly assembly;
         Dictionary<Assembly, string> namespaces = new Dictionary<Assembly, string>();
 
@@ -16,13 +17,12 @@ namespace xxsgen
 
         public string TargetNamespace { get; private set; }
         public string SchemaOutputFile { get; private set; }
-        private bool allPropertiesBindable;
 
         public IEnumerable<SimpleType> SimpleTypes => simpleTypes;
         public IEnumerable<ComplexType> ComplexTypes => complexTypes;
         public IEnumerable<string> Namespaces => namespaces.Values;
 
-        private SimpleType anyType;
+        private SimpleType unknownType;
 
         public AssemblyParser(Assembly assembly)
         {
@@ -34,33 +34,31 @@ namespace xxsgen
             var shemaInfoType = assembly.DefinedTypes.FirstOrDefault(o => o.BaseType == typeof(XxShemaInfo));
 
             if (shemaInfoType == null) return false;
-            
+
             var info = (XxShemaInfo)Activator.CreateInstance(shemaInfoType);
 
             TargetNamespace = info.Namespace;
             SchemaOutputFile = info.SchemaOutputFile;
-            allPropertiesBindable = info.AllPropertiesBindable;
 
-            anyType = new SimpleType
+            unknownType = new SimpleType
             {
                 Type = null,
-                Name = "any",
+                Name = "unknown",
                 Namespace = TargetNamespace,
-                Patterns = new []{ ".*" },
+                Patterns = new[] { bindablePattern },
                 Values = new string[0]
             };
 
-            simpleTypes.Add(anyType);
+            simpleTypes.Add(unknownType);
 
             foreach (var type in assembly.DefinedTypes)
             {
                 if (type.IsAbstract) continue;
 
                 var ca = type.GetCustomAttribute<XxSchemaExport>();
-                
                 if (ca != null)
                 {
-                    var ct = ParseComplexType(type.AsType(), ca);
+                    var ct = FindComplexType(type.AsType());
                     ct.Exportable = true;
                 }
             }
@@ -74,15 +72,19 @@ namespace xxsgen
 
             var attributes = new List<Attribute>();
 
-            foreach(var property in properties)
+            var allPropertiesBindable = type.GetCustomAttribute<XxSchemaBindable>()?.Bindable ?? false;
+
+            foreach (var property in properties)
             {
                 if (property.GetSetMethod() == null) continue;
-
-                var st = FindSimpleType(property.PropertyType);
+                if (property.GetCustomAttribute<XxSchemaIgnore>() != null) continue;
 
                 bool bindable = allPropertiesBindable;
 
-                if (property.GetCustomAttribute<XxSchemaBindable>() != null) bindable = true;
+                var bindableAttr = property.GetCustomAttribute<XxSchemaBindable>();
+
+                if (bindableAttr != null) bindable = bindableAttr.Bindable;
+                var st = FindSimpleType(property.PropertyType, bindable);
 
                 attributes.Add(new Attribute
                 {
@@ -92,31 +94,34 @@ namespace xxsgen
                 });
             }
 
-            var children = new List<ComplexType>();
+            XxChildrenMode childrenMode = type.IsAbstract ? XxChildrenMode.Zero : ca?.ChildrenMode ?? XxChildrenMode.Zero;
 
-            if(ca?.ChildrenTypes != null && !type.IsAbstract)
+            ComplexType[] childTypes = null;
+
+            if(childrenMode != XxChildrenMode.Zero && ca?.ChildTypes?.Length > 0)
             {
-                foreach(var cht in ca.ChildrenTypes)
+                childTypes = new ComplexType[ca.ChildTypes.Length];
+
+                for(var idx =0; idx < childTypes.Length; ++idx)
                 {
-                    var child = FindComplexType(cht);
-                    children.Add(child);
+                    childTypes[idx] = FindComplexType(ca.ChildTypes[idx]);
                 }
             }
 
-            GetInfo(type, out var @namespace, out var name);
+            GetInfo(type, false, out var @namespace, out var name);
 
             var ct = new ComplexType
             {
                 Attributes = attributes.ToArray(),
                 Name = name,
                 Type = type,
-                Children = children.ToArray(),
+                ChildrenMode = childrenMode,
+                ChildrenTypes = childTypes,
                 Namespace = @namespace,
                 BaseType = FindComplexType(type.BaseType)
             };
 
             complexTypes.Add(ct);
-
             return ct;
         }
 
@@ -131,15 +136,33 @@ namespace xxsgen
             return ParseComplexType(type, ca);
         }
 
-        private SimpleType FindSimpleType(Type type)
+        private SimpleType FindSimpleType(Type type, bool bindable)
         {
-            GetInfo(type, out var @namespace, out var name);
+            if(!builtinTypes.ContainsKey(type) && (type.IsClass || type.IsInterface))
+            {
+                return unknownType;
+            }
 
-            var st = simpleTypes.FirstOrDefault( o=>o.Name == name && o.Namespace == @namespace);
+            GetInfo(type, bindable, out var @namespace, out var name);
+
+            var st = simpleTypes.FirstOrDefault(o => o.Name == name && o.Namespace == @namespace);
             if (st != null) return st;
 
             var patterns = type.GetCustomAttribute<XxSchemaPatternAttribute>()?.Patterns ?? Array.Empty<string>();
             var values = ParseConstValues(type);
+
+            if(builtinTypes.TryGetValue(type, out var tuple))
+            {
+                patterns = new[] { tuple.Item2 };
+                values = tuple.Item3;
+            }
+
+            if (bindable)
+            {
+                var list = patterns.ToList();
+                list.Add(bindablePattern);
+                patterns = list.ToArray();
+            }
 
             st = new SimpleType
             {
@@ -156,7 +179,7 @@ namespace xxsgen
 
         private string[] ParseConstValues(Type type)
         {
-            if(type.IsEnum)
+            if (type.IsEnum)
             {
                 return Enum.GetNames(type);
             }
@@ -165,9 +188,25 @@ namespace xxsgen
             return fields.Where(f => f.IsInitOnly).Select(o => o.Name).ToArray();
         }
 
-        private void GetInfo(Type type, out string @namespace, out string name)
+        private Dictionary<Type, Tuple<string, string, string[]>> builtinTypes = new Dictionary<Type, Tuple<string, string, string[]>>
         {
-            name = type.FullName;
+            {typeof(int), Tuple.Create("System.Int", "[0-9]+", Array.Empty<string>()) },
+            {typeof(float), Tuple.Create("System.Float", "[+-]?([0-9]*[.])?[0-9]+", Array.Empty<string>())},
+            {typeof(double), Tuple.Create("System.Float", "[+-]?([0-9]*[.])?[0-9]+", Array.Empty<string>())},
+            {typeof(string), Tuple.Create("System.String", ".*", Array.Empty<string>())},
+            {typeof(bool), Tuple.Create("System.Boolean", "", new[]{"True","False"})},
+        };
+
+        private void GetInfo(Type type, bool bindable, out string @namespace, out string name)
+        {
+            var bindablePostfix = bindable ? "-Bindable" : "";
+
+            name = type.FullName + bindablePostfix;
+            if(name.EndsWith("Element"))
+            {
+                name = name.Substring(0, name.Length - "Element".Length);
+            }
+
             if (namespaces.TryGetValue(type.Assembly, out var ns))
             {
                 @namespace = ns;
@@ -184,38 +223,14 @@ namespace xxsgen
                 return;
             }
 
-            @namespace = "http://www.w3.org/2001/XMLSchema";
-            if ( type == typeof(int))
+            if(builtinTypes.TryGetValue(type, out var tuple))
             {
-                name = "int";
+                name = tuple.Item1 + bindablePostfix;
+                @namespace = TargetNamespace;
                 return;
             }
 
-            if (type == typeof(float))
-            {
-                name = "float";
-                return;
-            }
-
-            if (type == typeof(double))
-            {
-                name = "double";
-                return;
-            }
-
-            if (type == typeof(string))
-            {
-                name = "string";
-                return;
-            }
-
-            if (type == typeof(bool))
-            {
-                name = "boolean";
-                return;
-            }
-
-            name = anyType.Name;
+            name = unknownType.Name;
             @namespace = TargetNamespace;
         }
     }

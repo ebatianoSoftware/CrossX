@@ -36,7 +36,7 @@ namespace CrossX.Framework.Core
         void ICoreApplication.Run(Size size)
         {
             StartApp(size);
-            MainView.SetBounds(new RectangleF(0, 0, size.Width, size.Height));
+            MainView.Bounds = new RectangleF(0, 0, size.Width, size.Height);
         }
 
         void ICoreApplication.DoRender(Canvas canvas) => Render(canvas);
@@ -50,7 +50,7 @@ namespace CrossX.Framework.Core
             var bounds = new RectangleF(0, 0, size.Width, size.Height);
             if (MainView.Bounds != bounds)
             {
-                MainView.SetBounds(bounds);
+                MainView.Bounds = bounds;
                 RedrawService.RequestRedraw();
             }
             MainView.Update((float)ellapsedTime.TotalSeconds);

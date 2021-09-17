@@ -8,6 +8,7 @@ using Xx;
 
 namespace CrossX.Framework.UI
 {
+    [XxSchemaBindable(true)]
     [XxSchemaExport]
     public abstract class View : INotifyPropertyChanged
     {
@@ -18,21 +19,41 @@ namespace CrossX.Framework.UI
         private Length height = Length.Auto;
         private Color backgroundColor = Color.Transparent;
         private Thickness margin = Thickness.Zero;
+        private bool visible;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public Id Id { get; set; }
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
-        public RectangleF Bounds => bounds;
 
+        [XxSchemaIgnore]
+        public RectangleF Bounds
+        {
+            get => bounds;
+
+            set
+            {
+                if (bounds != value)
+                {
+                    bounds = value;
+                    OnPropertyChanged(nameof(ActualWidth));
+                    OnPropertyChanged(nameof(ActualHeight));
+                    RecalculateLayout();
+                }
+            }
+        }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
-
         public Length Width { get => width; set => SetProperty(ref width, value); }
         public Length Height { get => height; set => SetProperty(ref height, value); }
         public Thickness Margin { get => margin; set => SetProperty(ref margin, value); }
         public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
 
+        [XxSchemaBindable(false)]
+        public Id Id { get; set; }
+
+        [XxSchemaBindable(false)]
+        public Classes Classes { get; set; }
+
+        public bool Visible { get => visible; set => SetProperty(ref visible, value); }
         public float ActualWidth => Bounds.Width;
         public float ActualHeight => Bounds.Height;
 
@@ -113,17 +134,6 @@ namespace CrossX.Framework.UI
             }
 
             return new Vector2(x, y);
-        }
-
-        public void SetBounds(RectangleF newBounds)
-        {
-            if (bounds != newBounds)
-            {
-                bounds = newBounds;
-                OnPropertyChanged(nameof(ActualWidth));
-                OnPropertyChanged(nameof(ActualHeight));
-                RecalculateLayout();
-            }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application
+  xmlns="https://crossx.support/Schemas/CrossX.Framework"
+  xmlns:ex="https://crossx.support/Schemas/CrossX.Example">
+
+  <Styles>
+    <Style Selector="Button">
+      <Setter Property="TextColor" Value="#c0c0c0"/>
+    </Style>
+  </Styles>
+  
+</Application>

@@ -31,7 +31,7 @@ namespace CrossX.Skia.Graphics
             skPaint.Color = Color.White.ToSkia();
             skPaint.Shader = img.SKShader;
 
-            skCanvas.DrawVertices(SKVertexMode.Triangles, vb.PositionBuffer, vb.TextureBuffer, vb.ColorBuffer, skPaint);
+            skCanvas.DrawVertices(vb.SKVertices, SKBlendMode.Multiply, skPaint);
         }
 
         public override void Restore() => skCanvas.Restore();
@@ -48,8 +48,6 @@ namespace CrossX.Skia.Graphics
 
             size = font.MeasureText(line, fontMeasure);
             float positionX = target.X;
-
-            
 
             switch (textAlign & (TextAlign.Left | TextAlign.Center | TextAlign.Right))
             {
@@ -95,12 +93,9 @@ namespace CrossX.Skia.Graphics
             skPaint.IsStroke = false;
             skPaint.Color = color.ToSkia();
 
-            
-
             skCanvas.DrawText(line, position.X, position.Y, skPaint);
             return size;
         }
-
 
         public override void FillRect(RectangleF rect, Color color)
         {

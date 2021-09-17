@@ -16,7 +16,7 @@
                 var child = Children[idx];
                 var size = child.CalculateSize(bounds.Size);
                 var position = child.CalculatePosition(size, bounds.Size) + offset;
-                child.SetBounds(new RectangleF(position, size));
+                child.Bounds = new RectangleF(position, size);
             }
         }
     }
