@@ -2,7 +2,7 @@
 
 namespace CrossX.Framework.Graphics
 {
-    public class Disposable : IDisposable
+    public abstract class Disposable : IDisposable
     {
         public bool IsDisposed { get; private set; }
 

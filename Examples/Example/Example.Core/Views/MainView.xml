@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <FrameLayout
-  xmlns="clr-namespace:CrossX.Framework.UI;CrossX.Framework"
-  BackgroundColor="DarkSlateGray">
-  <Label Id="label" Text="Test!" Font="Default" FontWeight="Bold" TextColor="White"
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
+  BackgroundColor="Black">
+  <Label Id="label1" Classes="DefaultLabel" Text="&#xe876;" FontFamily="Default" FontSize="30" FontWeight="Bold" TextColor="Black" Margin="10"
          HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+  
+  <Button Width="{Binding ActualHeight, Source: @label1}" Text="{Resource TestButtonText}" Command="{Binding TestCommand}" CommandParameter="{Binding Text, Source: Self}"/>
 </FrameLayout>

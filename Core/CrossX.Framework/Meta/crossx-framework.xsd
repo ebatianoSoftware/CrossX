@@ -1,0 +1,370 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework">
+  <xsd:simpleType name="unknown">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.String-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value=".*|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.Float-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[+-]?([0-9]*[.])?[0-9]+|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.FontWeight-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Invisible" />
+          <xsd:enumeration value="Thin" />
+          <xsd:enumeration value="ExtraLight" />
+          <xsd:enumeration value="Light" />
+          <xsd:enumeration value="Normal" />
+          <xsd:enumeration value="Medium" />
+          <xsd:enumeration value="SemiBold" />
+          <xsd:enumeration value="Bold" />
+          <xsd:enumeration value="ExtraBold" />
+          <xsd:enumeration value="Black" />
+          <xsd:enumeration value="ExtraBlack" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.Boolean-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="True" />
+          <xsd:enumeration value="False" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Alignment-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Start" />
+          <xsd:enumeration value="Center" />
+          <xsd:enumeration value="End" />
+          <xsd:enumeration value="Stretch" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Color-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Transparent" />
+          <xsd:enumeration value="AliceBlue" />
+          <xsd:enumeration value="AntiqueWhite" />
+          <xsd:enumeration value="Aqua" />
+          <xsd:enumeration value="Aquamarine" />
+          <xsd:enumeration value="Azure" />
+          <xsd:enumeration value="Beige" />
+          <xsd:enumeration value="Bisque" />
+          <xsd:enumeration value="Black" />
+          <xsd:enumeration value="BlanchedAlmond" />
+          <xsd:enumeration value="Blue" />
+          <xsd:enumeration value="BlueViolet" />
+          <xsd:enumeration value="Brown" />
+          <xsd:enumeration value="BurlyWood" />
+          <xsd:enumeration value="CadetBlue" />
+          <xsd:enumeration value="Chartreuse" />
+          <xsd:enumeration value="Chocolate" />
+          <xsd:enumeration value="Coral" />
+          <xsd:enumeration value="CornflowerBlue" />
+          <xsd:enumeration value="Cornsilk" />
+          <xsd:enumeration value="Crimson" />
+          <xsd:enumeration value="Cyan" />
+          <xsd:enumeration value="DarkBlue" />
+          <xsd:enumeration value="DarkCyan" />
+          <xsd:enumeration value="DarkGoldenrod" />
+          <xsd:enumeration value="DarkGray" />
+          <xsd:enumeration value="DarkGreen" />
+          <xsd:enumeration value="DarkKhaki" />
+          <xsd:enumeration value="DarkMagenta" />
+          <xsd:enumeration value="DarkOliveGreen" />
+          <xsd:enumeration value="DarkOrange" />
+          <xsd:enumeration value="DarkOrchid" />
+          <xsd:enumeration value="DarkRed" />
+          <xsd:enumeration value="DarkSalmon" />
+          <xsd:enumeration value="DarkSeaGreen" />
+          <xsd:enumeration value="DarkSlateBlue" />
+          <xsd:enumeration value="DarkSlateGray" />
+          <xsd:enumeration value="DarkTurquoise" />
+          <xsd:enumeration value="DarkViolet" />
+          <xsd:enumeration value="DeepPink" />
+          <xsd:enumeration value="DeepSkyBlue" />
+          <xsd:enumeration value="DimGray" />
+          <xsd:enumeration value="DodgerBlue" />
+          <xsd:enumeration value="Firebrick" />
+          <xsd:enumeration value="FloralWhite" />
+          <xsd:enumeration value="ForestGreen" />
+          <xsd:enumeration value="Fuchsia" />
+          <xsd:enumeration value="Gainsboro" />
+          <xsd:enumeration value="GhostWhite" />
+          <xsd:enumeration value="Gold" />
+          <xsd:enumeration value="Goldenrod" />
+          <xsd:enumeration value="Gray" />
+          <xsd:enumeration value="Green" />
+          <xsd:enumeration value="GreenYellow" />
+          <xsd:enumeration value="Honeydew" />
+          <xsd:enumeration value="HotPink" />
+          <xsd:enumeration value="IndianRed" />
+          <xsd:enumeration value="Indigo" />
+          <xsd:enumeration value="Ivory" />
+          <xsd:enumeration value="Khaki" />
+          <xsd:enumeration value="Lavender" />
+          <xsd:enumeration value="LavenderBlush" />
+          <xsd:enumeration value="LawnGreen" />
+          <xsd:enumeration value="LemonChiffon" />
+          <xsd:enumeration value="LightBlue" />
+          <xsd:enumeration value="LightCoral" />
+          <xsd:enumeration value="LightCyan" />
+          <xsd:enumeration value="LightGoldenrodYellow" />
+          <xsd:enumeration value="LightGray" />
+          <xsd:enumeration value="LightGreen" />
+          <xsd:enumeration value="LightPink" />
+          <xsd:enumeration value="LightSalmon" />
+          <xsd:enumeration value="LightSeaGreen" />
+          <xsd:enumeration value="LightSkyBlue" />
+          <xsd:enumeration value="LightSlateGray" />
+          <xsd:enumeration value="LightSteelBlue" />
+          <xsd:enumeration value="LightYellow" />
+          <xsd:enumeration value="Lime" />
+          <xsd:enumeration value="LimeGreen" />
+          <xsd:enumeration value="Linen" />
+          <xsd:enumeration value="Magenta" />
+          <xsd:enumeration value="Maroon" />
+          <xsd:enumeration value="MediumAquamarine" />
+          <xsd:enumeration value="MediumBlue" />
+          <xsd:enumeration value="MediumOrchid" />
+          <xsd:enumeration value="MediumPurple" />
+          <xsd:enumeration value="MediumSeaGreen" />
+          <xsd:enumeration value="MediumSlateBlue" />
+          <xsd:enumeration value="MediumSpringGreen" />
+          <xsd:enumeration value="MediumTurquoise" />
+          <xsd:enumeration value="MediumVioletRed" />
+          <xsd:enumeration value="MidnightBlue" />
+          <xsd:enumeration value="MintCream" />
+          <xsd:enumeration value="MistyRose" />
+          <xsd:enumeration value="Moccasin" />
+          <xsd:enumeration value="NavajoWhite" />
+          <xsd:enumeration value="Navy" />
+          <xsd:enumeration value="OldLace" />
+          <xsd:enumeration value="Olive" />
+          <xsd:enumeration value="OliveDrab" />
+          <xsd:enumeration value="Orange" />
+          <xsd:enumeration value="OrangeRed" />
+          <xsd:enumeration value="Orchid" />
+          <xsd:enumeration value="PaleGoldenrod" />
+          <xsd:enumeration value="PaleGreen" />
+          <xsd:enumeration value="PaleTurquoise" />
+          <xsd:enumeration value="PaleVioletRed" />
+          <xsd:enumeration value="PapayaWhip" />
+          <xsd:enumeration value="PeachPuff" />
+          <xsd:enumeration value="Peru" />
+          <xsd:enumeration value="Pink" />
+          <xsd:enumeration value="Plum" />
+          <xsd:enumeration value="PowderBlue" />
+          <xsd:enumeration value="Purple" />
+          <xsd:enumeration value="Red" />
+          <xsd:enumeration value="RosyBrown" />
+          <xsd:enumeration value="RoyalBlue" />
+          <xsd:enumeration value="SaddleBrown" />
+          <xsd:enumeration value="Salmon" />
+          <xsd:enumeration value="SandyBrown" />
+          <xsd:enumeration value="SeaGreen" />
+          <xsd:enumeration value="SeaShell" />
+          <xsd:enumeration value="Sienna" />
+          <xsd:enumeration value="Silver" />
+          <xsd:enumeration value="SkyBlue" />
+          <xsd:enumeration value="SlateBlue" />
+          <xsd:enumeration value="SlateGray" />
+          <xsd:enumeration value="Snow" />
+          <xsd:enumeration value="SpringGreen" />
+          <xsd:enumeration value="SteelBlue" />
+          <xsd:enumeration value="Tan" />
+          <xsd:enumeration value="Teal" />
+          <xsd:enumeration value="Thistle" />
+          <xsd:enumeration value="Tomato" />
+          <xsd:enumeration value="Turquoise" />
+          <xsd:enumeration value="Violet" />
+          <xsd:enumeration value="Wheat" />
+          <xsd:enumeration value="White" />
+          <xsd:enumeration value="WhiteSmoke" />
+          <xsd:enumeration value="Yellow" />
+          <xsd:enumeration value="YellowGreen" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?|#[\dA-Fa-f]{3}([\dA-Fa-f])?|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Length-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Auto" />
+          <xsd:enumeration value="Zero" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[-]?([0-9]*[.])?[0-9]+(px|%|\*)?|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Thickness-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Zero" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Name">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[A-Za-z_]{1}[A-Za-z0-9_]*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Classes">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[A-Za-z][A-Za-z0-9-_]*([ ]+[A-Za-z][A-Za-z0-9-_]*)*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.FontMeasure-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Strict" />
+          <xsd:enumeration value="Extended" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.Float">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[+-]?([0-9]*[.])?[0-9]+" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.String">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value=".*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.Int">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[0-9]+" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:complexType name="System.Object" />
+</xsd:schema>

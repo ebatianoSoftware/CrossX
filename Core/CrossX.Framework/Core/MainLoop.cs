@@ -49,8 +49,8 @@ namespace CrossX.Framework.Core
         private async Task Loop(CancellationToken cancellationToken)
         {
             _stopwatch.Start();
-
             coreApplication.Run(size);
+
             RequestRedraw();
 
             var lastUpdateTimeSpan = _stopwatch.Elapsed;

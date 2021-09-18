@@ -1,4 +1,4 @@
-﻿namespace CrossX.Framework.Graphics
+﻿namespace CrossX.Framework
 {
     public enum FontWeight
     {

@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>xxsgen</AssemblyName>
+    <RootNamespace>xxsgen</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Templates\Alias.xml" />
+    <None Remove="Templates\Attribute.xml" />
+    <None Remove="Templates\ChildrenNode.xml" />
+    <None Remove="Templates\ComplexType.xml" />
+    <None Remove="Templates\Element.xml" />
+    <None Remove="Templates\EmptyEnumeration.xml" />
+    <None Remove="Templates\Enumeration.xml" />
+    <None Remove="Templates\Import.xml" />
+    <None Remove="Templates\Schema.xml" />
+    <None Remove="Templates\SimpleType.xml" />
+    <None Remove="Templates\SpecificChildrenNode.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Alias.xml" />
+    <EmbeddedResource Include="Templates\Attribute.xml" />
+    <EmbeddedResource Include="Templates\SpecificChildrenNode.xml" />
+    <EmbeddedResource Include="Templates\ChildrenNode.xml" />
+    <EmbeddedResource Include="Templates\ComplexType.xml" />
+    <EmbeddedResource Include="Templates\Element.xml" />
+    <EmbeddedResource Include="Templates\EmptyEnumeration.xml" />
+    <EmbeddedResource Include="Templates\Enumeration.xml" />
+    <EmbeddedResource Include="Templates\Import.xml" />
+    <EmbeddedResource Include="Templates\Schema.xml" />
+    <EmbeddedResource Include="Templates\SimpleType.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentCommandLineParser-netstandard" Version="1.4.3.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Xx\Xx.csproj" />
+  </ItemGroup>
+
+</Project>

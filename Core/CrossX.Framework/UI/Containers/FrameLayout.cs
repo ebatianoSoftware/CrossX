@@ -1,6 +1,6 @@
 ﻿namespace CrossX.Framework.UI.Containers
 {
-    public class FrameLayout: ViewContainer
+    public class FrameLayout : ViewContainer
     {
         public override void RecalculateLayout()
         {

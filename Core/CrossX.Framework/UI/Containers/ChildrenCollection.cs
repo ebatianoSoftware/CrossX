@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace CrossX.Framework.UI
+namespace CrossX.Framework.UI.Containers
 {
     public class ChildrenCollection : ObservableCollection<View>
     {

@@ -1,0 +1,1 @@
+﻿<xsd:element name="{name}" type="{type}" minOccurs="0" maxOccurs="unbounded"/>

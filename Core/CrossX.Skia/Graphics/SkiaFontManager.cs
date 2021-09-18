@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Graphics;
+﻿using CrossX.Framework;
+using CrossX.Framework.Graphics;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework.UI" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework.UI" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework">
+  <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework" />
+  <xsd:complexType name="System.Object" />
+  <xsd:complexType name="CrossX.Framework.UI.View">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="HorizontalAlignment" />
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="VerticalAlignment" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Width" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Height" />
+        <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="Margin" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Name" name="Id" />
+        <xsd:attribute type="aa:CrossX.Framework.Classes" name="Classes" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Visible" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.TextBasedControl">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:System.String-Bindable" name="Text" />
+        <xsd:attribute type="aa:System.String-Bindable" name="FontFamily" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="FontSize" />
+        <xsd:attribute type="aa:CrossX.Framework.FontWeight-Bindable" name="FontWeight" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="FontItalic" />
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="HorizontalTextAlignment" />
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="VerticalTextAlignment" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TextColor" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.Button">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
+        <xsd:attribute type="aa:unknown" name="Command" />
+        <xsd:attribute type="aa:unknown" name="CommandParameter" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.Label">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
+        <xsd:attribute type="aa:CrossX.Framework.FontMeasure-Bindable" name="FontMeasure" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.ProgressBar">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:System.Float-Bindable" name="MaxValue" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="Progress" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.TextBox">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:System.String-Bindable" name="Text" />
+        <xsd:attribute type="aa:System.String-Bindable" name="FontFamily" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="FontSize" />
+        <xsd:attribute type="aa:CrossX.Framework.FontWeight-Bindable" name="FontWeight" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="FontItalic" />
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="HorizontalTextAlignment" />
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="VerticalTextAlignment" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TextColor" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.ViewContainer">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="Padding" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.FrameLayout">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Containers.ViewContainer">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:any />
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Button">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Label">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.Label" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ProgressBar">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.ProgressBar" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="TextBox">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBox" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="FrameLayout">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.FrameLayout" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

@@ -1,11 +1,15 @@
 ﻿using CrossX.Framework.Graphics;
+using CrossX.Framework.UI.Containers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Xx;
 
 namespace CrossX.Framework.UI
 {
+    [XxSchemaBindable(true)]
+    [XxSchemaExport]
     public abstract class View : INotifyPropertyChanged
     {
         private RectangleF bounds;
@@ -15,14 +19,16 @@ namespace CrossX.Framework.UI
         private Length height = Length.Auto;
         private Color backgroundColor = Color.Transparent;
         private Thickness margin = Thickness.Zero;
+        private bool visible;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
 
+        [XxSchemaIgnore]
         public RectangleF Bounds
         {
             get => bounds;
+
             set
             {
                 if (bounds != value)
@@ -34,15 +40,20 @@ namespace CrossX.Framework.UI
                 }
             }
         }
-
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
-
         public Length Width { get => width; set => SetProperty(ref width, value); }
         public Length Height { get => height; set => SetProperty(ref height, value); }
         public Thickness Margin { get => margin; set => SetProperty(ref margin, value); }
         public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
 
+        [XxSchemaBindable(false)]
+        public Name Id { get; set; }
+
+        [XxSchemaBindable(false)]
+        public Classes Classes { get; set; }
+
+        public bool Visible { get => visible; set => SetProperty(ref visible, value); }
         public float ActualWidth => Bounds.Width;
         public float ActualHeight => Bounds.Height;
 

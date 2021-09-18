@@ -1,0 +1,7 @@
+﻿<xsd:element name="{Name}">
+  <xsd:complexType>
+    <xsd:complexContent>
+      <xsd:extension base="{Base}"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:element>

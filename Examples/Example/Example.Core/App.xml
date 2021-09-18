@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application 
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.Resources"
+  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms">
+
+  <Styles>    
+    <Style Selector="Button">
+      <Setter Property="TextColor" Value="#c0c0c0"/>
+    </Style>
+    <Style Selector="Button:over">
+      <Setter Property="TextColor" Value="White"/>
+      <Setter Property="Transform" Value="{Resource ButtonOver}"/>
+    </Style>
+    <Style Selector="Button:down">
+      <Setter Property="TextColor" Value="White"/>
+    </Style>
+  </Styles>
+
+  <Transforms>
+    <Transform Key="ButtonOver" EnterDuration="100" LeaveDuration="50">
+      <t:Group>
+        <t:Rotation Angle="35"/>
+        <t:Offset X="100" Y="30"/>
+      </t:Group>
+    </Transform>
+  </Transforms>
+  
+</Application>
