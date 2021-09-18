@@ -53,9 +53,11 @@ To improve developer experience, a small tool - XxSchemaGenerator (xxsgen) was c
 
 
 ## Support and Contributions
-If you think you have found a bug or have a feature request, use our issue tracker. Before opening a new issue, please search to see if your problem has already been reported. Try to be as detailed as possible in your issue reports.
+If you think you have found a bug or have a feature request, use our [issue tracker](https://github.com/ebatianoSoftware/CrossX/issues). Before opening a new issue, please search to see if your problem has already been reported. Try to be as detailed as possible in your issue reports.
 
-If you are interested in contributing fixes or features to CrossX, just fork this repository, make your changes and open Pull Request to merge your work into development branch (Be aware that not all changes will be approved and merged).
+If you are interested in contributing fixes or features to CrossX, just fork this repository, make your changes and open [pull request](https://github.com/ebatianoSoftware/CrossX/pulls) to merge your work into development branch. 
+
+⚠️ *Be aware that not all changes will be approved and merged.*
 
 ## License
 The CrossX project is under the MIT License. See the LICENSE.txt file for more details. Third-party libraries used by CrossX are under their own licenses. Please refer to those libraries for details on the license they use.
