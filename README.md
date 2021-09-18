@@ -20,6 +20,11 @@ The framework is strongly based on Model-View-ViewModel pattern. No view code by
 ## Skia based rendering
 Rendering currently is realised with [SkiaSharp](https://github.com/mono/SkiaSharp) which allows you to create beautiful applications.
 
+## XX Definition Files
+XX definition files are XML files used to describe views and define styles and resources. I chose a XAML-like approach but simpler in its form. The XX "language" will surely evolve into something more in the future. 
+
+Currently XX project is put into CrossX repository and grows with the framework.
+
 ## Support and Contributions
 If you think you have found a bug or have a feature request, use our issue tracker. Before opening a new issue, please search to see if your problem has already been reported. Try to be as detailed as possible in your issue reports.
 
