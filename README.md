@@ -4,7 +4,7 @@
 
 # CrossX
 
-CrossX is an open source cross-platform framework for building iOS, Android, Windows, UWP and MacOS apps and games with .NET from a single codebase.
+CrossX is an open source cross-platform framework for building iOS, Android, Windows, UWP and MacOS apps and 2D games with .NET from a single codebase.
 
 Fast & easy app development with focus on performance and ablility to run in two redraw modes:
 * **continous** - for games,
