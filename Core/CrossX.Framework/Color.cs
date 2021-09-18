@@ -1,12 +1,73 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using Xx;
 
 namespace CrossX.Framework
 {
-    [XxSchemaPattern(@"#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?")]
+    [XxSchemaPattern(@"#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?|#[\dA-Fa-f]{3}([\dA-Fa-f])?")]
     public partial struct Color : IEquatable<Color>
     {
-        public Color(long color)
+        private static Dictionary<string, Color> builtInColors = null;
+
+        private static void InitBuiltInValues()
+        {
+            builtInColors = new Dictionary<string, Color>();
+            var fields = typeof(Color).GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly).Where(f => f.IsInitOnly);
+
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(Color))
+                {
+                    builtInColors.Add(field.Name, (Color)field.GetValue(null));
+                }
+            }
+        }
+
+        public static Color Parse(string text)
+        {
+            if(builtInColors == null)
+            {
+                InitBuiltInValues();
+            }
+            if (builtInColors.TryGetValue(text, out var color)) return color;
+
+            string colorcode = text;
+            colorcode = colorcode.TrimStart('#');
+
+            switch(colorcode.Length)
+            {
+                case 6: 
+                    return new Color(byte.Parse(colorcode.Substring(0, 2), NumberStyles.HexNumber),
+                                byte.Parse(colorcode.Substring(2, 2), NumberStyles.HexNumber),
+                                byte.Parse(colorcode.Substring(4, 2), NumberStyles.HexNumber));
+                case 8: 
+                    return new Color(
+                            byte.Parse(colorcode.Substring(2, 2), NumberStyles.HexNumber),
+                            byte.Parse(colorcode.Substring(4, 2), NumberStyles.HexNumber),
+                            byte.Parse(colorcode.Substring(6, 2), NumberStyles.HexNumber),
+                            byte.Parse(colorcode.Substring(0, 2), NumberStyles.HexNumber));
+
+                case 3:
+                    var r = byte.Parse(colorcode.Substring(0, 1), NumberStyles.HexNumber);
+                    var g = byte.Parse(colorcode.Substring(1, 1), NumberStyles.HexNumber);
+                    var b = byte.Parse(colorcode.Substring(2, 1), NumberStyles.HexNumber);
+                    return new Color((byte)(r | (r << 4)), (byte)(g | (g << 4)), (byte)(b | (b << 4)));
+
+                case 4:
+                    var aa = byte.Parse(colorcode.Substring(0, 1), NumberStyles.HexNumber);
+                    var rr = byte.Parse(colorcode.Substring(1, 1), NumberStyles.HexNumber);
+                    var gg = byte.Parse(colorcode.Substring(2, 1), NumberStyles.HexNumber);
+                    var bb = byte.Parse(colorcode.Substring(3, 1), NumberStyles.HexNumber);
+                    return new Color((byte)(rr | (rr << 4)), (byte)(gg | (gg << 4)), (byte)(bb | (bb << 4)), (byte)(aa | (aa << 4)));
+            }
+
+            throw new FormatException();
+        }
+
+        public Color(uint color)
         {
             R = (byte)(color & 0xff);
             G = (byte)((color >> 8) & 0xff);

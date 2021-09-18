@@ -1,23 +1,86 @@
-﻿using Xx;
+﻿using System.Globalization;
+using Xx;
 
 namespace CrossX.Framework
 {
-    [XxSchemaPattern(@"[A-Za-z][A-Za-z0-9-_]*")]
+    [XxSchemaPattern(@"[-]?([0-9]*[.])?[0-9]+(px|%|\*)?")]
     public struct Length
     {
-        public static readonly Length Auto = new Length(rest: -1);
-        public static readonly Length Zero = new Length();
-
-        private readonly float units;
-        private readonly float pixels;
-        private readonly float percent;
-        private readonly int rest;
-
-        public bool IsAuto => rest < 0;
-
-        public float Calculate(float onePixelInUnit, float size = 0, float oneRest = 0)
+        public enum Type
         {
-            return rest * oneRest + percent * size + units + pixels * onePixelInUnit;
+            Auto,
+            Units,
+            Pixels,
+            Percent,
+            Star
+        }
+
+        public static readonly Length Auto = new Length(0, Type.Auto);
+        public static readonly Length Zero = new Length(0, Type.Units);
+
+        public static Length Parse(string text)
+        {
+            switch(text)
+            {
+                case nameof(Auto):
+                    return Auto;
+
+                case nameof(Zero):
+                    return Zero;
+            }
+
+            text = text.Trim();
+
+            Type type = Type.Units;
+            if(text.EndsWith("px"))
+            {
+                text = text.Trim('p', 'x');
+                type = Type.Pixels;
+            }
+            else if (text.EndsWith("%"))
+            {
+                text = text.Trim('%');
+                type = Type.Percent;
+            }
+            else if (text.EndsWith("*"))
+            {
+                text = text.Trim('*');
+                if(string.IsNullOrWhiteSpace(text))
+                {
+                    text = "1";
+                }
+                type = Type.Star;
+            }
+
+            var value = float.Parse(text, CultureInfo.InvariantCulture);
+            return new Length(value, type);
+        }
+
+        private readonly float value;
+        private readonly Type type;
+
+        public bool IsAuto => type == Type.Auto;
+
+        public Length(float value, Type type = Type.Units)
+        {
+            this.value = value;
+            this.type = type;
+        }
+
+        public float Calculate(float onePixelInUnit, float size = 0, float oneStar = 0)
+        {
+            switch(type)
+            {
+                case Type.Percent:
+                    return value / 100f * size;
+
+                case Type.Pixels:
+                    return value * onePixelInUnit;
+
+                case Type.Star:
+                    return value * oneStar;
+            }
+            return 0;
         }
 
         public override bool Equals(object other)
@@ -41,24 +104,13 @@ namespace CrossX.Framework
 
         public bool Equals(Length other)
         {
-            return other.units == units &&
-                   other.pixels == pixels &&
-                   other.percent == percent &&
-                   other.rest == rest;
+            return other.value == value &&
+                   other.type == type;
         }
 
-        public Length(float units = 0, float pixels = 0, float percent = 0, int rest = 0)
-        {
-            this.units = units;
-            this.pixels = pixels;
-            this.percent = percent;
-            this.rest = rest;
-        }
-
-        public static implicit operator Length(float units) => new Length(units: units);
-        public static implicit operator Length(int units) => new Length(units: units);
-        public static implicit operator Length(double units) => new Length(units: (float)units);
-
+        public static implicit operator Length(float units) => new Length(units);
+        public static implicit operator Length(int units) => new Length(units);
+        public static implicit operator Length(double units) => new Length((float)units);
         public static bool operator ==(Length l1, Length l2) => l1.Equals(l2);
         public static bool operator !=(Length l1, Length l2) => !l1.Equals(l2);
     }
