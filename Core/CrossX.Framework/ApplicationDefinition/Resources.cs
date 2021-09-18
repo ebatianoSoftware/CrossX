@@ -1,9 +1,9 @@
 ﻿using Xx;
 
-namespace CrossX.Framework.Resources
+namespace CrossX.Framework.ApplicationDefinition
 {
     [XxSchemaExport(XxChildrenMode.Multiple, typeof(Transform))]
-    public sealed class Transforms
+    public sealed class Resources
     {
     }
 }
