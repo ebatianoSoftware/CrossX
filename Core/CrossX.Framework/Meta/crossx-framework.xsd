@@ -14,20 +14,6 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="System.String">
-    <xsd:union>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value="" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value=".*" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:union>
-  </xsd:simpleType>
   <xsd:simpleType name="System.String-Bindable">
     <xsd:union>
       <xsd:simpleType>
@@ -295,7 +281,7 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="CrossX.Framework.Id">
+  <xsd:simpleType name="CrossX.Framework.Name">
     <xsd:union>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
@@ -304,7 +290,7 @@
       </xsd:simpleType>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
-          <xsd:pattern value="[A-Za-z][A-Za-z0-9]*" />
+          <xsd:pattern value="[A-Za-z_]{1}[A-Za-z0-9_]*" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>
@@ -338,229 +324,47 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="System.Id">
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="[A-Za-z][A-Za-z0-9-_]*" />
-    </xsd:restriction>
+  <xsd:simpleType name="System.Float">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[+-]?([0-9]*[.])?[0-9]+" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.String">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value=".*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.Int">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[0-9]+" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
   </xsd:simpleType>
   <xsd:complexType name="System.Object" />
-  <xsd:complexType name="CrossX.Framework.UI.Resources.Setter">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:attribute type="xx:System.String" name="Property" />
-        <xsd:attribute type="xx:System.String" name="Value" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Resources.Style">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Setter" type="xx:CrossX.Framework.UI.Resources.Setter" minOccurs="0" maxOccurs="unbounded" />
-        </xsd:choice>
-        <xsd:attribute type="xx:System.String" name="Selector" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Resources.Styles">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Style" type="xx:CrossX.Framework.UI.Resources.Style" minOccurs="0" maxOccurs="unbounded" />
-        </xsd:choice>
-        <xsd:attribute type="xx:System.String" name="Selector" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Resources.Transition">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:any />
-        </xsd:choice>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Resources.Transitions">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Transition" type="xx:CrossX.Framework.UI.Resources.Transition" minOccurs="0" maxOccurs="unbounded" />
-        </xsd:choice>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Resources.Application">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Styles" type="xx:CrossX.Framework.UI.Resources.Styles" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="Transitions" type="xx:CrossX.Framework.UI.Resources.Transitions" minOccurs="0" maxOccurs="unbounded" />
-        </xsd:choice>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.View">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:attribute type="xx:CrossX.Framework.Alignment-Bindable" name="HorizontalAlignment" />
-        <xsd:attribute type="xx:CrossX.Framework.Alignment-Bindable" name="VerticalAlignment" />
-        <xsd:attribute type="xx:CrossX.Framework.Length-Bindable" name="Width" />
-        <xsd:attribute type="xx:CrossX.Framework.Length-Bindable" name="Height" />
-        <xsd:attribute type="xx:CrossX.Framework.Thickness-Bindable" name="Margin" />
-        <xsd:attribute type="xx:CrossX.Framework.Color-Bindable" name="BackgroundColor" />
-        <xsd:attribute type="xx:CrossX.Framework.Id" name="Id" />
-        <xsd:attribute type="xx:CrossX.Framework.Classes" name="Classes" />
-        <xsd:attribute type="xx:System.Boolean-Bindable" name="Visible" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Controls.TextBasedControl">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.View">
-        <xsd:attribute type="xx:System.String-Bindable" name="Text" />
-        <xsd:attribute type="xx:System.String-Bindable" name="FontFamily" />
-        <xsd:attribute type="xx:System.Float-Bindable" name="FontSize" />
-        <xsd:attribute type="xx:CrossX.Framework.FontWeight-Bindable" name="FontWeight" />
-        <xsd:attribute type="xx:System.Boolean-Bindable" name="FontItalic" />
-        <xsd:attribute type="xx:CrossX.Framework.Alignment-Bindable" name="HorizontalTextAlignment" />
-        <xsd:attribute type="xx:CrossX.Framework.Alignment-Bindable" name="VerticalTextAlignment" />
-        <xsd:attribute type="xx:CrossX.Framework.Color-Bindable" name="TextColor" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Controls.Button">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
-        <xsd:attribute type="xx:unknown" name="Command" />
-        <xsd:attribute type="xx:unknown" name="CommandParameter" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Controls.Label">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
-        <xsd:attribute type="xx:CrossX.Framework.FontMeasure-Bindable" name="FontMeasure" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Controls.ProgressBar">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.View">
-        <xsd:attribute type="xx:System.Float-Bindable" name="MaxValue" />
-        <xsd:attribute type="xx:System.Float-Bindable" name="Progress" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Controls.TextBox">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.View">
-        <xsd:attribute type="xx:System.String-Bindable" name="Text" />
-        <xsd:attribute type="xx:System.String-Bindable" name="FontFamily" />
-        <xsd:attribute type="xx:System.Float-Bindable" name="FontSize" />
-        <xsd:attribute type="xx:CrossX.Framework.FontWeight-Bindable" name="FontWeight" />
-        <xsd:attribute type="xx:System.Boolean-Bindable" name="FontItalic" />
-        <xsd:attribute type="xx:CrossX.Framework.Alignment-Bindable" name="HorizontalTextAlignment" />
-        <xsd:attribute type="xx:CrossX.Framework.Alignment-Bindable" name="VerticalTextAlignment" />
-        <xsd:attribute type="xx:CrossX.Framework.Color-Bindable" name="TextColor" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Containers.ViewContainer">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.View">
-        <xsd:attribute type="xx:CrossX.Framework.Thickness-Bindable" name="Padding" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Containers.FrameLayout">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.Containers.ViewContainer">
-        <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Button" type="xx:CrossX.Framework.UI.Controls.Button" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="Label" type="xx:CrossX.Framework.UI.Controls.Label" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="ProgressBar" type="xx:CrossX.Framework.UI.Controls.ProgressBar" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="TextBox" type="xx:CrossX.Framework.UI.Controls.TextBox" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="FrameLayout" type="xx:CrossX.Framework.UI.Containers.FrameLayout" minOccurs="0" maxOccurs="unbounded" />
-        </xsd:choice>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:element name="Setter">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Resources.Setter" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Style">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Resources.Style" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Styles">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Resources.Styles" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Transition">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Resources.Transition" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Transitions">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Resources.Transitions" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Application">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Resources.Application" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Button">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Label">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Controls.Label" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="ProgressBar">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Controls.ProgressBar" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="TextBox">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBox" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="FrameLayout">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Containers.FrameLayout" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
 </xsd:schema>

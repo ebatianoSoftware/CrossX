@@ -1,9 +1,9 @@
 ﻿using Xx;
 
-namespace CrossX.Framework.UI.Resources
+namespace CrossX.Framework.Resources
 {
     [XxSchemaExport]
-    public class Setter
+    public sealed class Setter
     {
         public string Property { get; set; }
         public string Value { get; set; }

@@ -6,5 +6,6 @@ namespace CrossX.Framework.Meta
     {
         public override string Namespace => "https://crossx.support/Schemas/CrossX.Framework";
         public override string SchemaOutputFile => "crossx-framework.xsd";
+        public override string RootNamespace => "CrossX.Framework";
     }
 }

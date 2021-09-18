@@ -2,6 +2,7 @@
 using CrossX.Framework.IoC;
 using CrossX.Framework.UI;
 using System;
+using Xx.Toolkit;
 
 namespace CrossX.Framework.Core
 {
@@ -22,6 +23,9 @@ namespace CrossX.Framework.Core
         {
             var builder = new ScopeBuilder().WithParent(servicesProvider);
             builder.WithInstance(this).As<Application>().As(GetType());
+
+            var elementTypeMapping = new ElementTypeMapping(GetType().Assembly);
+            builder.WithInstance(elementTypeMapping).As<IElementTypeMapping>();
 
             RedrawService = servicesProvider.GetService<IRedrawService>();
 

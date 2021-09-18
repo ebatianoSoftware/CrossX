@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <FrameLayout
-  xmlns="https://crossx.support/Schemas/CrossX.Framework"
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
   xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
   BackgroundColor="Black">
   <Label Id="label1" Classes="DefaultLabel" Text="&#xe876;" FontFamily="Default" FontSize="30" FontWeight="Bold" TextColor="Black" Margin="10"

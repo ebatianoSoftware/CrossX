@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Example" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Example" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework">
+<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Example" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Example" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework.UI" xmlns:ab="https://crossx.support/Schemas/CrossX.Framework">
+  <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework.UI" />
   <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework" />
   <xsd:simpleType name="unknown">
     <xsd:union>
@@ -58,16 +59,11 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="System.Id">
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="[A-Za-z][A-Za-z0-9-_]*" />
-    </xsd:restriction>
-  </xsd:simpleType>
   <xsd:complexType name="System.Object" />
   <xsd:complexType name="Example.Core.Controls.LabelEx">
     <xsd:complexContent>
       <xsd:extension base="aa:CrossX.Framework.UI.Controls.Label">
-        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="NewColor" />
+        <xsd:attribute type="ab:CrossX.Framework.Color-Bindable" name="NewColor" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

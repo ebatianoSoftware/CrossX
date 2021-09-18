@@ -10,41 +10,33 @@ namespace xxsgen
     {
         private const string bindablePattern = @"\{.*\}";
         private readonly Assembly assembly;
-        Dictionary<Assembly, string> namespaces = new Dictionary<Assembly, string>();
 
         List<SimpleType> simpleTypes = new List<SimpleType>();
         List<ComplexType> complexTypes = new List<ComplexType>();
 
-        public string TargetNamespace { get; private set; }
-        public string SchemaOutputFile { get; private set; }
+        public XxShemaInfo[] Infos { get; }
 
         public IEnumerable<SimpleType> SimpleTypes => simpleTypes;
         public IEnumerable<ComplexType> ComplexTypes => complexTypes;
-        public IEnumerable<string> Namespaces => namespaces.Values;
+        public HashSet<string> Namespaces = new HashSet<string>();
 
         private SimpleType unknownType;
+
+        private Dictionary<Assembly, XxShemaInfo[]> shemaInfos = new Dictionary<Assembly, XxShemaInfo[]>();
 
         public AssemblyParser(Assembly assembly)
         {
             this.assembly = assembly;
+            Infos = GetInfos(assembly);
         }
 
         public bool Parse()
         {
-            var shemaInfoType = assembly.DefinedTypes.FirstOrDefault(o => o.BaseType == typeof(XxShemaInfo));
-
-            if (shemaInfoType == null) return false;
-
-            var info = (XxShemaInfo)Activator.CreateInstance(shemaInfoType);
-
-            TargetNamespace = info.Namespace;
-            SchemaOutputFile = info.SchemaOutputFile;
-
             unknownType = new SimpleType
             {
                 Type = null,
                 Name = "unknown",
-                Namespace = TargetNamespace,
+                Namespace = Infos.Last().Namespace,
                 Patterns = new[] { bindablePattern },
                 Values = new string[0]
             };
@@ -197,6 +189,22 @@ namespace xxsgen
             {typeof(bool), Tuple.Create("System.Boolean", "", new[]{"True","False"})},
         };
 
+        private XxShemaInfo[] GetInfos(Assembly assembly)
+        {
+            if (!shemaInfos.TryGetValue(assembly, out var infos))
+            {
+                var shemaInfoTypes = assembly.DefinedTypes.Where(o => o.BaseType == typeof(XxShemaInfo)).ToArray();
+                infos = new XxShemaInfo[shemaInfoTypes.Length];
+                for (var idx = 0; idx < infos.Length; ++idx)
+                {
+                    infos[idx] = (XxShemaInfo)Activator.CreateInstance(shemaInfoTypes[idx]);
+                }
+                infos = infos.OrderByDescending(o => o.RootNamespace.Length).ToArray();
+                shemaInfos.Add(assembly, infos);
+            }
+            return infos;
+        }
+        
         private void GetInfo(Type type, bool bindable, out string @namespace, out string name)
         {
             var bindablePostfix = bindable ? "-Bindable" : "";
@@ -207,31 +215,31 @@ namespace xxsgen
                 name = name.Substring(0, name.Length - "Element".Length);
             }
 
-            if (namespaces.TryGetValue(type.Assembly, out var ns))
+            var infos = GetInfos(type.Assembly);
+
+            foreach (var info in infos)
             {
-                @namespace = ns;
-                return;
+                if (type.Namespace.StartsWith(info.RootNamespace))
+                {
+                    if (!Namespaces.Contains(info.Namespace))
+                    {
+                        Namespaces.Add(info.Namespace);
+                    }
+
+                    @namespace = info.Namespace;
+                    return;
+                }
             }
 
-            var shemaInfoType = type.Assembly.DefinedTypes.FirstOrDefault(o => o.BaseType == typeof(XxShemaInfo));
-
-            if(shemaInfoType != null)
-            {
-                var info = (XxShemaInfo)Activator.CreateInstance(shemaInfoType);
-                namespaces.Add(type.Assembly, info.Namespace);
-                @namespace = info.Namespace;
-                return;
-            }
-
-            if(builtinTypes.TryGetValue(type, out var tuple))
+            if (builtinTypes.TryGetValue(type, out var tuple))
             {
                 name = tuple.Item1 + bindablePostfix;
-                @namespace = TargetNamespace;
+                @namespace = Infos.Last().Namespace;
                 return;
             }
 
             name = unknownType.Name;
-            @namespace = TargetNamespace;
+            @namespace = Infos.Last().Namespace;
         }
     }
 }

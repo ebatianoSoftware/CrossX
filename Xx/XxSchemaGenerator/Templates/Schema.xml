@@ -5,12 +5,6 @@
   {NamespaceImports}
   {SimpleTypes}
 
-<xsd:simpleType name="System.Id">
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="[A-Za-z][A-Za-z0-9-_]*" />
-    </xsd:restriction>
-</xsd:simpleType>
-
   <xsd:complexType name="System.Object"/>
   
   {ComplexTypes}

@@ -48,7 +48,7 @@ namespace CrossX.Framework.UI
         public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
 
         [XxSchemaBindable(false)]
-        public Id Id { get; set; }
+        public Name Id { get; set; }
 
         [XxSchemaBindable(false)]
         public Classes Classes { get; set; }

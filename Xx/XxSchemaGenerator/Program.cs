@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using Xx;
 
 namespace xxsgen
 {
@@ -22,15 +25,18 @@ namespace xxsgen
             var assembliesParser = new AssemblyParser(assembly);
             if (!assembliesParser.Parse()) return -1;
 
-            var generator = new SchemaGenerator(assembliesParser.TargetNamespace, assembliesParser.Namespaces, assembliesParser.SimpleTypes, assembliesParser.ComplexTypes);
-            var xmlDocument = generator.Generate();
+            foreach (var info in assembliesParser.Infos)
+            { 
+                var generator = new SchemaGenerator(info.Namespace, assembliesParser.SimpleTypes, assembliesParser.ComplexTypes);
+                var xmlDocument = generator.Generate();
 
-            var outDir = args.Length < 2 ? dir : args[1].Trim('/', '\\');
+                var outDir = args.Length < 2 ? dir : args[1].Trim('/', '\\');
 
-            using(var stream = File.Open(Path.Combine(outDir, assembliesParser.SchemaOutputFile), FileMode.Create))
-            {
-                xmlDocument.Save(stream);
-                stream.Flush();
+                using (var stream = File.Open(Path.Combine(outDir, info.SchemaOutputFile), FileMode.Create))
+                {
+                    xmlDocument.Save(stream);
+                    stream.Flush();
+                }
             }
             return 0;
         }

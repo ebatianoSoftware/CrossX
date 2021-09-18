@@ -3,7 +3,7 @@ using Xx;
 
 namespace CrossX.Framework.UI.Containers
 {
-    [XxSchemaExport(XxChildrenMode.Multiple, typeof(View))]
+    [XxSchemaExport(XxChildrenMode.Multiple)]
     public abstract class ViewContainer : View
     {
         private bool layoutInvalid;

@@ -31,7 +31,26 @@ namespace xxsgen
         private readonly string childrenNode;
         private readonly string specificChildrenNode;
 
-        public SchemaGenerator(string targetNamespace, IEnumerable<string> namespaces, IEnumerable<SimpleType> simpleTypes, IEnumerable<ComplexType> complexTypes)
+        private char c1 = 'a';
+        private char c2 = 'a';
+
+        private string GetAlias(string ns)
+        {
+            if (namespaceAliases.TryGetValue(ns, out var alias)) return alias;
+
+            alias = $"{c1}{c2}";
+            c2++;
+            if (c2 > 'z')
+            {
+                c2 = 'a';
+                c1++;
+            }
+
+            namespaceAliases.Add(ns, alias);
+            return alias;
+        }
+
+        public SchemaGenerator(string targetNamespace, IEnumerable<SimpleType> simpleTypes, IEnumerable<ComplexType> complexTypes)
         {
             this.targetNamespace = targetNamespace;
             this.simpleTypes = simpleTypes.Where( o=>o.Namespace == targetNamespace).ToArray();
@@ -39,25 +58,6 @@ namespace xxsgen
 
             namespaceAliases.Add(xmlSchemaNamespace, "xsd");
             namespaceAliases.Add(targetNamespace, "xx");
-
-            char c1 = 'a';
-            char c2 = 'a';
-
-            foreach(var ns in namespaces)
-            {
-                if(!namespaceAliases.ContainsKey(ns))
-                {
-                    var alias = $"{c1}{c2}";
-                    c2++;
-                    if(c2 > 'z')
-                    {
-                        c2 = 'a';
-                        c1++;
-                    }
-
-                    namespaceAliases.Add(ns, alias);
-                }
-            }
 
             schemaTemplate = LoadFromAssembly("Templates.Schema.xml");
             simpleTemplate = LoadFromAssembly("Templates.SimpleType.xml");
@@ -86,21 +86,6 @@ namespace xxsgen
 
         public XDocument Generate()
         {
-            string aliases = "";
-
-            foreach(var al in namespaceAliases)
-            {
-                aliases += aliasTemplate.Replace("{Alias}", al.Value).Replace("{Namespace}", al.Key);
-            }
-
-            string imports = "";
-
-            foreach (var al in namespaceAliases)
-            {
-                if (al.Key == targetNamespace || al.Key == xmlSchemaNamespace) continue;
-                imports += importTemplate.Replace("{Namespace}", al.Key);
-            }
-
             string simpleTypes = "";
 
             foreach(var st in this.simpleTypes)
@@ -133,10 +118,25 @@ namespace xxsgen
             {
                 if (!ct.Exportable) continue;
 
-                var @base = namespaceAliases[ct.Namespace] + ':' + ct.Name;
+                var @base = GetAlias(ct.Namespace) + ':' + ct.Name;
                 elements += elementTemplate
                     .Replace("{Base}", @base)
                     .Replace("{Name}", ct.Name.Split('.').Last());
+            }
+
+            string aliases = "";
+
+            foreach (var al in namespaceAliases)
+            {
+                aliases += aliasTemplate.Replace("{Alias}", al.Value).Replace("{Namespace}", al.Key);
+            }
+
+            string imports = "";
+
+            foreach (var al in namespaceAliases)
+            {
+                if (al.Key == targetNamespace || al.Key == xmlSchemaNamespace) continue;
+                imports += importTemplate.Replace("{Namespace}", al.Key);
             }
 
             var xml = schemaTemplate
@@ -161,7 +161,7 @@ namespace xxsgen
 
                 if(ct.BaseType != null)
                 {
-                    @base = namespaceAliases[ct.BaseType.Namespace] + ':' + ct.BaseType.Name;
+                    @base = GetAlias(ct.BaseType.Namespace) + ':' + ct.BaseType.Name;
                 }
 
                 var children = "";
@@ -196,7 +196,7 @@ namespace xxsgen
                                 {
                                     if (complexType.Exportable)
                                     {
-                                        var type = namespaceAliases[complexType.Namespace] + ':' + complexType.Name;
+                                        var type = GetAlias(complexType.Namespace) + ':' + complexType.Name;
                                         var name = complexType.Name.Split('.').Last();
 
                                         children += specificChildrenNode.Replace("{type}", type).Replace("{name}", name);
@@ -219,7 +219,7 @@ namespace xxsgen
 
                 foreach(var attr in ct.Attributes)
                 {
-                    var attrType = namespaceAliases[attr.Type.Namespace] + ':' + attr.Type.Name;
+                    var attrType = GetAlias(attr.Type.Namespace) + ':' + attr.Type.Name;
                     attributes += attributeTemplate
                         .Replace("{Name}", attr.Name)
                         .Replace("{Type}", attrType);
