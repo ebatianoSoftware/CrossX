@@ -23,7 +23,34 @@ Rendering currently is realised with [SkiaSharp](https://github.com/mono/SkiaSha
 ## XX Definition Files
 XX definition files are XML files used to describe views and define styles and resources. I chose a XAML-like approach but simpler in its form. The XX "language" will surely evolve into something more in the future. 
 
-Currently XX project is put into CrossX repository and grows with the framework.
+Currently XX project is put into CrossX repository and grows with the framework. 
+
+To improve developer experience, a small tool - XxSchemaGenerator (xxsgen) was created. It generates XSD schema files based on your assemblies that use XX contracts. Thanks to that, editing views is easier with attribute names and values hints and values syntax checking.
+
+<br/>
+<p align="center"><i>Example definition of CrossX's View</i></p>
+
+```xml
+<FrameLayout
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
+  BackgroundColor="Black">
+  
+  <Label Classes="Header Light" Text="Hello World"/>
+  
+  <Label Id="label1" Text="&#xe876;" 
+         FontFamily="Material Icons" FontSize="30" FontWeight="Bold" 
+         TextColor="White" Margin="10"
+         HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  
+  <Button Width="200" Text="Test Button" Margin="0,0,0,50"
+          HorizontalAlignment="Center" VerticalAlignment="End"
+          BackgroundColor="White" TextColor="{Binding BackgroundColor, Source: Parent}"
+          Command="{Binding TestCommand}" CommandParameter="{Binding Text, Source: Self}"/>
+  
+</FrameLayout>
+```
+
 
 ## Support and Contributions
 If you think you have found a bug or have a feature request, use our issue tracker. Before opening a new issue, please search to see if your problem has already been reported. Try to be as detailed as possible in your issue reports.
