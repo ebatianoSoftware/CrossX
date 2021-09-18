@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application 
-  xmlns="https://crossx.support/Schemas/CrossX.Framework.Resources"
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
   xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms">
 
-  <Styles>    
+  <Styles>
     <Style Selector="Button">
       <Setter Property="TextColor" Value="#c0c0c0"/>
     </Style>
@@ -16,13 +16,13 @@
     </Style>
   </Styles>
 
-  <Transforms>
+  <Resources>
     <Transform Key="ButtonOver" EnterDuration="100" LeaveDuration="50">
       <t:Group>
         <t:Rotation Angle="35"/>
         <t:Offset X="100" Y="30"/>
       </t:Group>
     </Transform>
-  </Transforms>
+  </Resources>
   
 </Application>

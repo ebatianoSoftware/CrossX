@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework.Resources" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework.Resources" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework">
+<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework">
   <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework" />
   <xsd:complexType name="System.Object" />
-  <xsd:complexType name="CrossX.Framework.Resources.Setter">
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Setter">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:attribute type="aa:System.String" name="Property" />
@@ -10,27 +10,27 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.Resources.Style">
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Style">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Setter" type="xx:CrossX.Framework.Resources.Setter" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Setter" type="xx:CrossX.Framework.ApplicationDefinition.Setter" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
         <xsd:attribute type="aa:System.String" name="Selector" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.Resources.Styles">
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Styles">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Style" type="xx:CrossX.Framework.Resources.Style" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Style" type="xx:CrossX.Framework.ApplicationDefinition.Style" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
         <xsd:attribute type="aa:System.String" name="Selector" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.Resources.Transform">
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Transform">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="1" maxOccurs="1">
@@ -42,21 +42,21 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.Resources.Transforms">
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Resources">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Transform" type="xx:CrossX.Framework.Resources.Transform" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Transform" type="xx:CrossX.Framework.ApplicationDefinition.Transform" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.Resources.Application">
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Application">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Styles" type="xx:CrossX.Framework.Resources.Styles" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="Transforms" type="xx:CrossX.Framework.Resources.Transforms" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Styles" type="xx:CrossX.Framework.ApplicationDefinition.Styles" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Resources" type="xx:CrossX.Framework.ApplicationDefinition.Resources" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
@@ -64,42 +64,42 @@
   <xsd:element name="Setter">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.Resources.Setter" />
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Setter" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="Style">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.Resources.Style" />
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Style" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="Styles">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.Resources.Styles" />
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Styles" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="Transform">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.Resources.Transform" />
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Transform" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
-  <xsd:element name="Transforms">
+  <xsd:element name="Resources">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.Resources.Transforms" />
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Resources" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="Application">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.Resources.Application" />
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Application" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

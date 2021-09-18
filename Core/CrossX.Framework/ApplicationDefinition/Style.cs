@@ -1,6 +1,6 @@
 ﻿using Xx;
 
-namespace CrossX.Framework.Resources
+namespace CrossX.Framework.ApplicationDefinition
 {
     [XxSchemaExport(XxChildrenMode.Multiple, typeof(Setter))]
     public sealed class Style
