@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<FrameLayout
+﻿<FrameLayout
   xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
   xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
   BackgroundColor="Black">

@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Xx\Xx\Xx.csproj" />
+    <ProjectReference Include="..\CrossX.Abstractions\CrossX.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

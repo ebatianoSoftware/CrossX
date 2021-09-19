@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CrossX.Framework.Async
+namespace CrossX.Abstractions.Async
 {
     public interface ISequencer
     {

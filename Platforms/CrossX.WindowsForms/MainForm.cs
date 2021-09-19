@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Core;
+﻿using CrossX.Abstractions.IoC;
+using CrossX.Framework.Core;
 using CrossX.Framework.IoC;
 using CrossX.Skia;
 using SkiaSharp.Views.Desktop;
@@ -18,11 +19,8 @@ namespace CrossX.WindowsForms
         {
             InitializeComponent();
 
-            var scopeBuilder = new ScopeBuilder();
-
-            scopeBuilder
-                .WithParent(servicesProvider)
-                .WithSkia();
+            var scopeBuilder = new ScopeBuilder(servicesProvider);
+            scopeBuilder.WithSkia();
 
             mainLoop = new MainLoop(app, skglControl.Invalidate, scopeBuilder, true);
 

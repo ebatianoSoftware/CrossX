@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CrossX.Framework.IoC
+namespace CrossX.Abstractions.IoC
 {
     public interface IObjectFactory
     {

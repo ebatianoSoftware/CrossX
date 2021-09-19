@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Graphics;
+﻿using CrossX.Abstractions.IoC;
+using CrossX.Framework.Graphics;
 using CrossX.Framework.IoC;
 using CrossX.Framework.UI;
 using CrossX.Framework.UI.Containers;
@@ -24,7 +25,7 @@ namespace CrossX.Framework.Core
 
         void ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
-            var builder = new ScopeBuilder().WithParent(servicesProvider);
+            var builder = new ScopeBuilder(servicesProvider);
             builder.WithInstance(this).As<Application>().As(GetType());
 
             var elementTypeMapping = new ElementTypeMapping(GetType().Assembly);

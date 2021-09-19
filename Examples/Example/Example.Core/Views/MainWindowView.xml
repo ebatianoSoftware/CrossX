@@ -1,0 +1,5 @@
+﻿<NavigationFrame
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
+  BackgroundColor="CornflowerBlue"
+  AttachedToFrameCommand="{Binding AttachedToFrameCommand}" NavigationController="{Binding Navigation}"/>

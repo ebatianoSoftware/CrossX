@@ -1,14 +1,13 @@
-﻿using System;
+﻿using CrossX.Abstractions.Async;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CrossX.Framework.Async
 {
-    public sealed class Sequence
+    internal class SequenceImpl: Sequence
     {
-        private static readonly Sequence NextFrameSequence = new Sequence { frames = 0 };
-
         private int frames;
         private double seconds;
         private IEnumerator<Sequence> enumerator;
@@ -16,7 +15,14 @@ namespace CrossX.Framework.Async
 
         private volatile int cancel = 0;
 
-        internal bool IsRun 
+        private Task task;
+        private AutoResetEvent finishedEvent;
+        private object lockObj = new object();
+        private bool isFinished;
+        private bool isRun;
+        private bool isCancelled;
+
+        public bool IsRun
         {
             get
             {
@@ -32,48 +38,52 @@ namespace CrossX.Framework.Async
             }
         }
 
-        public bool IsFinished
+        public override bool IsFinished
         {
             get
             {
                 lock (lockObj) return isFinished;
             }
+        }
 
-            private set
+        private void SetFinished()
+        {
+            lock (lockObj)
             {
-                lock (lockObj)
-                {
-                    isFinished = value;
-                    finishedEvent?.Set();
-                }
+                isFinished = true;
+                finishedEvent?.Set();
             }
         }
 
-        public bool IsCanceled
+        public override bool IsCanceled
         {
             get
             {
                 lock (lockObj) return isCancelled;
             }
+        }
 
-            private set
+        internal static Sequence Create(int frames, double seconds, Func<bool> condition, IEnumerator<Sequence> enumerator)
+        {
+            return new SequenceImpl
             {
-                lock (lockObj)
-                {
-                    isCancelled = value;
-                    finishedEvent?.Set();
-                }
+                frames = frames,
+                seconds = seconds,
+                condition = condition,
+                enumerator = enumerator
+            };
+        }
+
+        private void SetCanceled()
+        {
+            lock (lockObj)
+            {
+                isCancelled = true;
+                finishedEvent?.Set();
             }
         }
 
-        private Task task;
-        private AutoResetEvent finishedEvent;
-        private object lockObj = new object();
-        private bool isFinished;
-        private bool isRun;
-        private bool isCancelled;
-
-        public Task Task
+        public override Task Task
         {
             get
             {
@@ -93,36 +103,13 @@ namespace CrossX.Framework.Async
             }
         }
 
-        private Sequence() { }
+        public override void Cancel() => cancel++;
 
-        public static Sequence WaitForNextFrame() => NextFrameSequence;
-        public static Sequence WaitForFrames(int frames) => new Sequence { frames = frames };
-        public static Sequence WaitForSeconds(double seconds) => new Sequence { seconds = seconds };
-        public static Sequence WaitForCondition(Func<bool> func) => new Sequence { condition = func };
-
-        public static Sequence DelayAction(double seconds, Action action) => Agregate(Delay(seconds, action));
-
-        private static IEnumerable<Sequence> Delay(double seconds, Action action)
-        {
-            yield return WaitForSeconds(seconds);
-            action.Invoke();
-        }
-
-        public static Sequence Agregate(IEnumerable<Sequence> Sequence)
-        {
-            var enumerator = Sequence.GetEnumerator();
-            if (!enumerator.MoveNext()) return WaitForNextFrame();
-
-            return new Sequence { enumerator = enumerator };
-        }
-
-        public void Cancel() => cancel++;
-
-        internal bool ShouldRemove(TimeSpan timeSpan)
+        public bool ShouldRemove(TimeSpan timeSpan)
         {
             if (cancel > 0)
             {
-                IsCanceled = true;
+                SetCanceled();
                 return true;
             }
 
@@ -131,7 +118,7 @@ namespace CrossX.Framework.Async
 
             if (enumerator != null)
             {
-                if (enumerator.Current.ShouldRemove(timeSpan))
+                if ( ((SequenceImpl)enumerator.Current).ShouldRemove(timeSpan))
                 {
                     if (!enumerator.MoveNext())
                     {
@@ -150,8 +137,9 @@ namespace CrossX.Framework.Async
 
             var finished = seconds <= 0 && frames <= 0 && enumerator == null && condition == null;
 
-            if (finished) IsFinished = true;
+            if (finished) SetFinished();
             return finished;
         }
+
     }
 }

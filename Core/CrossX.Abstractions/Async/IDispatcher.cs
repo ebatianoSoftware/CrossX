@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CrossX.Framework.Async
+namespace CrossX.Abstractions.Async
 {
     public interface IDispatcher
     {

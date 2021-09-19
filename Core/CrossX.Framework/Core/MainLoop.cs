@@ -1,6 +1,7 @@
-﻿using CrossX.Framework.Async;
+﻿using CrossX.Abstractions.Async;
+using CrossX.Abstractions.IoC;
+using CrossX.Framework.Async;
 using CrossX.Framework.Graphics;
-using CrossX.Framework.IoC;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -34,10 +35,14 @@ namespace CrossX.Framework.Core
             RedrawFunc = redrawFunc;
             this.coreApplication = coreApplication;
 
+            Sequence.CreateSequenceFunc = SequenceImpl.Create;
+            Sequence.NextFrameSequence = SequenceImpl.Create(0, 0, null, null);
+
             scopeBuilder
                 .WithInstance(dispatcher).As<IDispatcher>()
                 .WithInstance(sequencer).As<ISequencer>()
-                .WithInstance(this).As<IRedrawService>();
+                .WithInstance(this).As<IRedrawService>()
+                .WithCrossTypes();
 
             if(createSystemDispatcher)
             {
@@ -61,7 +66,9 @@ namespace CrossX.Framework.Core
                 {
                     dispatcher.Process();
                     var currentTimeSpan = _stopwatch.Elapsed;
-                    coreApplication.DoUpdate(currentTimeSpan - lastUpdateTimeSpan, this.size);
+                    var timeDelta = currentTimeSpan - lastUpdateTimeSpan;
+                    sequencer.Update(timeDelta);
+                    coreApplication.DoUpdate(timeDelta, size);
                     lastUpdateTimeSpan = currentTimeSpan;
                     _updatedEvent.Set();
 

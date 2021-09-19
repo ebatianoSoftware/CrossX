@@ -84,6 +84,14 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.NavigationFrame">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:unknown" name="AttachedToFrameCommand" />
+        <xsd:attribute type="aa:unknown" name="NavigationController" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:element name="Button">
     <xsd:complexType>
       <xsd:complexContent>
@@ -116,6 +124,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Containers.FrameLayout" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="NavigationFrame">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.NavigationFrame" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

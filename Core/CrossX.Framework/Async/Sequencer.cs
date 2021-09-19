@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrossX.Abstractions.Async;
+using System;
 using System.Collections.Generic;
 
 namespace CrossX.Framework.Async
@@ -10,8 +11,10 @@ namespace CrossX.Framework.Async
 
         public void Run(Sequence sequence)
         {
-            if (sequence.IsRun) throw new InvalidOperationException("Sequence already run!");
-            sequence.IsRun = true;
+            var sequenceImpl = (SequenceImpl)sequence;
+
+            if (sequenceImpl.IsRun) throw new InvalidOperationException("Sequence already run!");
+            sequenceImpl.IsRun = true;
 
             lock (objLock)
             {
@@ -22,7 +25,8 @@ namespace CrossX.Framework.Async
         public Sequence Run(IEnumerable<Sequence> sequences)
         {
             var sequence = Sequence.Agregate(sequences);
-            sequence.IsRun = true;
+            var sequenceImpl = (SequenceImpl)sequence;
+            sequenceImpl.IsRun = true;
 
             lock (objLock)
             {
@@ -36,13 +40,13 @@ namespace CrossX.Framework.Async
             int index = 0;
             while(true)
             {
-                Sequence sequence = null;
+                SequenceImpl sequence = null;
 
                 lock (objLock)
                 {
                     if (index < sequences.Count)
                     {
-                        sequence = sequences[index];
+                        sequence = (SequenceImpl)sequences[index];
                     }
                 }
 

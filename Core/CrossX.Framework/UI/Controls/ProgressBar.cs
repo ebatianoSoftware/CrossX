@@ -1,6 +1,4 @@
-﻿using Xx;
-
-namespace CrossX.Framework.UI.Controls
+﻿namespace CrossX.Framework.UI.Controls
 {
     public class ProgressBar : View
     {

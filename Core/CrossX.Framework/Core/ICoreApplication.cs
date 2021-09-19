@@ -1,5 +1,5 @@
-﻿using CrossX.Framework.Graphics;
-using CrossX.Framework.IoC;
+﻿using CrossX.Abstractions.IoC;
+using CrossX.Framework.Graphics;
 using System;
 
 namespace CrossX.Framework.Core

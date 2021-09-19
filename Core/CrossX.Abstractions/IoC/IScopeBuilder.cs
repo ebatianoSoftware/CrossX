@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CrossX.Framework.IoC
+namespace CrossX.Abstractions.IoC
 {
     public interface IScopeBuilder
     {
@@ -11,5 +11,6 @@ namespace CrossX.Framework.IoC
         IScopeBuilder AsSingleton();
         IScopeBuilder AsSelf();
         IScopeBuilder WithInstance(object instance);
+        IServicesProvider Build();
     }
 }
