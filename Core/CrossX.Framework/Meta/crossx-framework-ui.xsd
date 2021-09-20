@@ -48,6 +48,7 @@
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
         <xsd:attribute type="aa:CrossX.Framework.FontMeasure-Bindable" name="FontMeasure" />
+        <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="TextPadding" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

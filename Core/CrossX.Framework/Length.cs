@@ -67,7 +67,7 @@ namespace CrossX.Framework
             this.type = type;
         }
 
-        public float Calculate(float onePixelInUnit, float size = 0, float oneStar = 0)
+        public float Calculate(float size = 0, float oneStar = 0)
         {
             switch(type)
             {
@@ -75,7 +75,7 @@ namespace CrossX.Framework
                     return value / 100f * size;
 
                 case Type.Pixels:
-                    return value * onePixelInUnit;
+                    return value / UiUnit.PixelsPerUnit;
 
                 case Type.Star:
                     return value * oneStar;

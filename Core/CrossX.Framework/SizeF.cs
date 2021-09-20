@@ -4,8 +4,8 @@ namespace CrossX.Framework
 {
     public struct SizeF
     {
-        public readonly float Width;
-        public readonly float Height;
+        public float Width;
+        public float Height;
 
         public SizeF(float width, float height)
         {

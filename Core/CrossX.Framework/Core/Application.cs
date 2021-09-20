@@ -56,7 +56,6 @@ namespace CrossX.Framework.Core
 
         protected virtual void Update(TimeSpan ellapsedTime, Size size)
         {
-            var bounds = new RectangleF(0, 0, size.Width, size.Height);
             if (Window.Size != size)
             {
                 Window.Size = size;

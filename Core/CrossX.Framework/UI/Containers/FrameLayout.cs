@@ -6,8 +6,7 @@
         {
             base.RecalculateLayout();
 
-            var onePixelUnit = 1;
-            var bounds = Bounds.Inflate(Padding, onePixelUnit);
+            var bounds = Bounds.Deflate(Padding);
 
             var offset = bounds.TopLeft - Bounds.TopLeft;
 

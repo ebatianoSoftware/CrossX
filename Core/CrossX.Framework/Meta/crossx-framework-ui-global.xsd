@@ -23,6 +23,8 @@
         <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MaxHeight" />
         <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.InitialWidth" />
         <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.InitialHeight" />
+        <xsd:attribute type="aa:System.Boolean" name="Desktop.CanMaximize" />
+        <xsd:attribute type="aa:System.Boolean" name="Desktop.CanResize" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

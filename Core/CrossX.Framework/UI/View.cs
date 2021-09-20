@@ -90,24 +90,20 @@ namespace CrossX.Framework.UI
 
         public virtual SizeF CalculateSize(SizeF parentSize)
         {
-            float onePixelUnit = 1;
+            var parentWidth = parentSize.Width - Margin.Left.Calculate() - Margin.Right.Calculate();
+            var parentHeight = parentSize.Height - Margin.Top.Calculate() - Margin.Bottom.Calculate();
 
-            var parentWidth = parentSize.Width - Margin.Left.Calculate(onePixelUnit) - Margin.Right.Calculate(onePixelUnit);
-            var parentHeight = parentSize.Height - Margin.Top.Calculate(onePixelUnit) - Margin.Bottom.Calculate(onePixelUnit);
-
-            var width = Width.IsAuto ? parentWidth : Width.Calculate(onePixelUnit, parentWidth);
-            var height = Height.IsAuto ? parentHeight : Height.Calculate(onePixelUnit, parentHeight);
+            var width = Width.IsAuto ? parentWidth : Width.Calculate(parentWidth);
+            var height = Height.IsAuto ? parentHeight : Height.Calculate(parentHeight);
             return new SizeF(width, height);
         }
 
         public virtual Vector2 CalculatePosition(SizeF calculatedSize, SizeF parentSize)
         {
-            float onePixelUnit = 1;
-
-            var marginLeft = Margin.Left.Calculate(onePixelUnit);
-            var marginRight = Margin.Right.Calculate(onePixelUnit);
-            var marginTop = Margin.Top.Calculate(onePixelUnit);
-            var marginBottom = Margin.Bottom.Calculate(onePixelUnit);
+            var marginLeft = Margin.Left.Calculate();
+            var marginRight = Margin.Right.Calculate();
+            var marginTop = Margin.Top.Calculate();
+            var marginBottom = Margin.Bottom.Calculate();
 
             float x = marginLeft;
             float y = marginTop;

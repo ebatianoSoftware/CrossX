@@ -5,12 +5,12 @@ namespace CrossX.Framework
 {
     public struct RectangleF : IEquatable<RectangleF>
     {
-        public readonly float X;
-        public readonly float Y;
+        public float X;
+        public float Y;
 
-        public readonly float Width;
+        public float Width;
 
-        public readonly float Height;
+        public float Height;
 
         public Vector2 TopLeft => new Vector2(X, Y);
         public Vector2 TopRight => new Vector2(X + Width, Y);
@@ -49,12 +49,12 @@ namespace CrossX.Framework
             return new RectangleF(X + offset.X, Y + offset.Y, Width, Height);
         }
 
-        public RectangleF Inflate(Thickness padding, float onePixelUnit)
+        public RectangleF Deflate(Thickness padding)
         {
-            var marginLeft = padding.Left.Calculate(onePixelUnit);
-            var marginRight = padding.Right.Calculate(onePixelUnit);
-            var marginTop = padding.Top.Calculate(onePixelUnit);
-            var marginBottom = padding.Bottom.Calculate(onePixelUnit);
+            var marginLeft = padding.Left.Calculate();
+            var marginRight = padding.Right.Calculate();
+            var marginTop = padding.Top.Calculate();
+            var marginBottom = padding.Bottom.Calculate();
 
             return new RectangleF(X + marginLeft, Y + marginTop, Width - marginLeft - marginRight, Height - marginTop - marginBottom);
         }

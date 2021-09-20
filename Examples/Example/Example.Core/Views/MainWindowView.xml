@@ -2,14 +2,15 @@
   xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
   xmlns:g="https://crossx.support/Schemas/CrossX.Framework.UI.Global"
   xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
-  Desktop.MinWidth="400" Desktop.MinHeight="300"
-  Desktop.MaxWidth="1920" Desktop.MaxHeight="1080"
-  Desktop.InitialWidth="1280" Desktop.InitialHeight="720">
+  Desktop.MinWidth="400px" Desktop.MinHeight="300px"
+  Desktop.InitialWidth="1280px" Desktop.InitialHeight="720px"
+  Desktop.CanMaximize="False" Desktop.CanResize="False">
 
   <FrameLayout BackgroundColor="CornflowerBlue">
-    <Label ForegroundColor="Yellow" BackgroundColor="Red" Text="This is some test text"
-           HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="FluentSystemIcons-Regular" FontSize="30" />
-    <Button BackgroundColor="Blue" Width="10" Height="10" BackgroundColorPushed="AliceBlue" Text="Test" VerticalAlignment="End" HorizontalAlignment="End" Command="{Binding TestCommand}"/>
+    <Label ForegroundColor="White" BackgroundColor="DarkSlateBlue" Text="00:00.000"
+           HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" FontSize="30"
+           FontMeasure="Strict" TextPadding="16"/>
+    
   </FrameLayout>
 </g:Window>
 

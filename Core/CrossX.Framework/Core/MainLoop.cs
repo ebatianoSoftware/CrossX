@@ -4,6 +4,7 @@ using CrossX.Framework.Async;
 using CrossX.Framework.Graphics;
 using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,8 +31,10 @@ namespace CrossX.Framework.Core
         private SystemDispatcher systemDispatcher;
         private Sequencer sequencer = new Sequencer();
 
-        public MainLoop(ICoreApplication coreApplication, Action redrawFunc, IScopeBuilder scopeBuilder, bool createSystemDispatcher)
+        public MainLoop(ICoreApplication coreApplication, Action redrawFunc, IScopeBuilder scopeBuilder, float dpi, bool createSystemDispatcher)
         {
+            UiUnit.PixelsPerUnit = dpi / 96f;
+
             RedrawFunc = redrawFunc;
             this.coreApplication = coreApplication;
 

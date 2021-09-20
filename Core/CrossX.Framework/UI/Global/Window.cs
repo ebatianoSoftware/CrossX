@@ -20,7 +20,7 @@ namespace CrossX.Framework.UI.Global
             set
             {
                 if (nativeWindow == null) return;
-                minSize.Width = (int)value.Calculate(1);
+                minSize.Width = (int)(value.Calculate() * UiUnit.PixelsPerUnit);
                 nativeWindow.MinSize = minSize;
             }
         }
@@ -30,7 +30,7 @@ namespace CrossX.Framework.UI.Global
             set
             {
                 if (nativeWindow == null) return;
-                minSize.Height = (int)value.Calculate(1);
+                minSize.Height = (int)(value.Calculate() * UiUnit.PixelsPerUnit);
                 nativeWindow.MinSize = minSize;
             }
         }
@@ -40,7 +40,7 @@ namespace CrossX.Framework.UI.Global
             set
             {
                 if (nativeWindow == null) return;
-                maxSize.Width = (int)value.Calculate(1);
+                maxSize.Width = (int)(value.Calculate() * UiUnit.PixelsPerUnit);
                 nativeWindow.MaxSize = maxSize;
             }
         }
@@ -50,7 +50,7 @@ namespace CrossX.Framework.UI.Global
             set
             {
                 if (nativeWindow == null) return;
-                maxSize.Height = (int)value.Calculate(1);
+                maxSize.Height = (int)(value.Calculate() * UiUnit.PixelsPerUnit);
                 nativeWindow.MaxSize = maxSize;
             }
         }
@@ -60,7 +60,7 @@ namespace CrossX.Framework.UI.Global
             set
             {
                 if (nativeWindow == null) return;
-                size.Width = (int)value.Calculate(1);
+                size.Width = (int)(value.Calculate() * UiUnit.PixelsPerUnit);
                 nativeWindow.Size = size;
             }
         }
@@ -70,8 +70,26 @@ namespace CrossX.Framework.UI.Global
             set
             {
                 if (nativeWindow == null) return;
-                size.Height = (int)value.Calculate(1);
+                size.Height = (int)(value.Calculate() * UiUnit.PixelsPerUnit);
                 nativeWindow.Size = size;
+            }
+        }
+
+        public bool Desktop_CanMaximize
+        {
+            set
+            {
+                if (nativeWindow == null) return;
+                nativeWindow.CanMaximize = value;
+            }
+        }
+
+        public bool Desktop_CanResize
+        {
+            set
+            {
+                if (nativeWindow == null) return;
+                nativeWindow.CanResize = value;
             }
         }
 
@@ -95,11 +113,11 @@ namespace CrossX.Framework.UI.Global
         [XxSchemaIgnore]
         public Size Size
         {
-            get => RootView.Bounds.Size.Round();
+            get => ((SizeF)((Vector2)RootView.Bounds.Size * UiUnit.PixelsPerUnit)).Round();
 
             set
             {
-                RootView.Bounds = new RectangleF(Vector2.Zero, value);
+                RootView.Bounds = new RectangleF(Vector2.Zero, (Vector2)(SizeF)value / UiUnit.PixelsPerUnit);
             }
         }
 
@@ -110,7 +128,10 @@ namespace CrossX.Framework.UI.Global
 
         public void Render(Canvas canvas)
         {
+            canvas.SaveState();
+            canvas.Transform(Matrix3x2.CreateScale(UiUnit.PixelsPerUnit));
             RootView?.Render(canvas);
+            canvas.Restore();
         }
     }
 }

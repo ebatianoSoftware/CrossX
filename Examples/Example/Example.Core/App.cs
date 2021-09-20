@@ -6,6 +6,7 @@ using CrossX.Framework.UI.Controls;
 using Example.Core.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Example.Core
 {
@@ -16,8 +17,8 @@ namespace Example.Core
         {
             Load<MainWindowViewModel>();
 
-            //sequencer = Services.GetService<ISequencer>();
-            //var sequence = sequencer.Run(ChangeBackgroundColor());
+            sequencer = Services.GetService<ISequencer>();
+            var sequence = sequencer.Run(ChangeBackgroundColor());
 
             //sequencer.Run(Sequence.DelayAction(10, () => sequence.Cancel()));
         }
@@ -26,15 +27,31 @@ namespace Example.Core
         {
             yield return Sequence.WaitForNextFrame();
 
-            var random = new Random();
+            double r = Window.RootView.BackgroundColor.R;
+            double g = Window.RootView.BackgroundColor.G;
+            double b = Window.RootView.BackgroundColor.B;
 
-            var index = 0;
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            
             while(true)
             {
-                Window.RootView.BackgroundColor = new Color((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256));
+                yield return Sequence.WaitForSeconds(0.05);
+
+                var totalSeconds = watch.Elapsed.TotalSeconds;
+
+                r += Math.Sin(totalSeconds);
+                g += Math.Cos(totalSeconds);
+                b += Math.Cos(totalSeconds) + Math.Sin(totalSeconds);
+
+                Window.RootView.BackgroundColor = new Color(
+                    (byte)Math.Min(255, Math.Max(0, (int)r)),
+                    (byte)Math.Min(255, Math.Max(0, (int)g)),
+                    (byte)Math.Min(255, Math.Max(0, (int)b)));
+
+                ((Label)(Window.RootView as ViewContainer).Children[0]).Text = $"{watch.Elapsed.Minutes:00}:{watch.Elapsed.Seconds:00}.{watch.Elapsed.Milliseconds:000}";
+
                 RedrawService.RequestRedraw();
-                yield return Sequence.WaitForSeconds(0.1);
-                ((Label)(Window.RootView as ViewContainer).Children[0]).Text = $"{(char)(21 + index++)}" + (index%2==0 ? "#" : "");
             }
         }
     }

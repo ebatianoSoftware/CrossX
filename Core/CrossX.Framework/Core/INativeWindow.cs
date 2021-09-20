@@ -5,5 +5,7 @@
         Size MinSize { set; }
         Size MaxSize { set; }
         Size Size { set; }
+        bool CanResize { set; }
+        bool CanMaximize { set; }
     }
 }

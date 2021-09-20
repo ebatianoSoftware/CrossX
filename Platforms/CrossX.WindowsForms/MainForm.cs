@@ -52,6 +52,29 @@ namespace CrossX.WindowsForms
             }
         }
 
+        bool INativeWindow.CanResize
+        {
+            set
+            {
+                systemDispatcher.BeginInvoke(() =>
+                {
+                    FormBorderStyle = value ? FormBorderStyle.Sizable : FormBorderStyle.Fixed3D;
+                    
+                });
+            }
+        }
+
+        bool INativeWindow.CanMaximize
+        {
+            set
+            {
+                systemDispatcher.BeginInvoke(() =>
+                {
+                    MaximizeBox = value;
+                });
+            }
+        }
+
         public MainForm(ICoreApplication app, IServicesProvider servicesProvider = null)
         {
             Hide();
@@ -62,7 +85,13 @@ namespace CrossX.WindowsForms
             scopeBuilder.WithSkia();
             scopeBuilder.WithInstance(this).As<INativeWindow>();
 
-            mainLoop = new MainLoop(app, skglControl.Invalidate, scopeBuilder, true);
+            float dpi = 96;
+            using (var gr = CreateGraphics())
+            {
+                dpi = gr.DpiX;
+            }
+
+            mainLoop = new MainLoop(app, skglControl.Invalidate, scopeBuilder, dpi, true);
 
             var services = scopeBuilder.Build();
             var factory = services.GetService<IObjectFactory>();
