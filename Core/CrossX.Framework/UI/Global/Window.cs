@@ -10,6 +10,13 @@ using Xx.Toolkit;
 
 namespace CrossX.Framework.UI.Global
 {
+    public enum WindowState
+    {
+        Normal,
+        Maximized,
+        Fullscreen
+    }
+
     [XxSchemaExport(XxChildrenMode.OnlyOne)]
     public class Window : IElementsContainer
     {
@@ -90,6 +97,15 @@ namespace CrossX.Framework.UI.Global
             {
                 if (nativeWindow == null) return;
                 nativeWindow.CanResize = value;
+            }
+        }
+
+        public WindowState Desktop_StartMode
+        {
+            set
+            {
+                if (nativeWindow == null) return;
+                nativeWindow.State = value;
             }
         }
 

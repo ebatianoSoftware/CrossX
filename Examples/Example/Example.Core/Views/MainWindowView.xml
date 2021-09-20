@@ -4,7 +4,7 @@
   xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
   Desktop.MinWidth="400px" Desktop.MinHeight="300px"
   Desktop.InitialWidth="1280px" Desktop.InitialHeight="720px"
-  Desktop.CanMaximize="False" Desktop.CanResize="False">
+  Desktop.StartMode="Normal">
 
   <FrameLayout BackgroundColor="CornflowerBlue">
     <Label ForegroundColor="White" BackgroundColor="DarkSlateBlue" Text="00:00.000"

@@ -1,4 +1,6 @@
-﻿namespace CrossX.Framework.Core
+﻿using CrossX.Framework.UI.Global;
+
+namespace CrossX.Framework.Core
 {
     public interface INativeWindow
     {
@@ -7,5 +9,6 @@
         Size Size { set; }
         bool CanResize { set; }
         bool CanMaximize { set; }
+        WindowState State { get; set; }
     }
 }

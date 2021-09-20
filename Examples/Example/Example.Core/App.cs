@@ -1,6 +1,7 @@
 ﻿using CrossX.Abstractions.Async;
 using CrossX.Framework;
 using CrossX.Framework.Core;
+using CrossX.Framework.Graphics;
 using CrossX.Framework.UI.Containers;
 using CrossX.Framework.UI.Controls;
 using Example.Core.ViewModels;
@@ -20,7 +21,40 @@ namespace Example.Core
             sequencer = Services.GetService<ISequencer>();
             var sequence = sequencer.Run(ChangeBackgroundColor());
 
+            
+
             //sequencer.Run(Sequence.DelayAction(10, () => sequence.Cancel()));
+        }
+
+        protected override void Update(TimeSpan ellapsedTime, Size size)
+        {
+            base.Update(ellapsedTime, size);    
+            RedrawService.RequestRedraw();
+        }
+
+        Stopwatch watch = new Stopwatch();
+        private Dictionary<int, string> fpsStrings = new Dictionary<int, string>();
+        protected override void Render(Canvas canvas)
+        {
+            base.Render(canvas);
+
+            if (!watch.IsRunning)
+            {
+                watch.Start();
+            }
+            else
+            {
+                int fps = (int)(1.0 / watch.Elapsed.TotalSeconds);
+                watch.Reset();
+                if (!fpsStrings.TryGetValue(fps, out var str))
+                {
+                    str = $"FPS: {fps:####}";
+                    fpsStrings.Add(fps, str);
+                }
+
+                var font = Services.GetService<IFontManager>().FindFont("Consolas", 12, FontWeight.Normal, false);
+                canvas.DrawText(str, font, new RectangleF(0, 0, 1000, 100), TextAlign.Left, Color.White, FontMeasure.Strict);
+            }
         }
 
         private IEnumerable<Sequence> ChangeBackgroundColor()
