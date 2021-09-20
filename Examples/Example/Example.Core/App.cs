@@ -1,6 +1,8 @@
 ﻿using CrossX.Abstractions.Async;
 using CrossX.Framework;
 using CrossX.Framework.Core;
+using CrossX.Framework.UI.Containers;
+using CrossX.Framework.UI.Controls;
 using Example.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,10 +16,10 @@ namespace Example.Core
         {
             Load<MainWindowViewModel>();
 
-            sequencer = Services.GetService<ISequencer>();
-            var sequence = sequencer.Run(ChangeBackgroundColor());
+            //sequencer = Services.GetService<ISequencer>();
+            //var sequence = sequencer.Run(ChangeBackgroundColor());
 
-            sequencer.Run(Sequence.DelayAction(5, () => sequence.Cancel()));
+            //sequencer.Run(Sequence.DelayAction(10, () => sequence.Cancel()));
         }
 
         private IEnumerable<Sequence> ChangeBackgroundColor()
@@ -26,11 +28,13 @@ namespace Example.Core
 
             var random = new Random();
 
+            var index = 0;
             while(true)
             {
-                MainView.BackgroundColor = new Color((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256));
+                Window.RootView.BackgroundColor = new Color((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256));
                 RedrawService.RequestRedraw();
-                yield return Sequence.WaitForSeconds(0.2);
+                yield return Sequence.WaitForSeconds(0.1);
+                ((Label)(Window.RootView as ViewContainer).Children[0]).Text = $"{(char)(21 + index++)}" + (index%2==0 ? "#" : "");
             }
         }
     }

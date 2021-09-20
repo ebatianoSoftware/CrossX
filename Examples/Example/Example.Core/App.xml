@@ -1,10 +1,22 @@
 ﻿<Application 
   xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
-  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms">
+  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms"
+  xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
+  <Theme>
+    <Import Path="CrossX.Framework.Assets.LightTheme.xml;CrossX.Framework"/>
+    <Color Key="BackgroundColor" Value="#202030"/>
+    <Color Key="ForegroundColor" Value="#c0c0c0"/>
+    <Color Key="ButtonBackgroundColor" Value="#404050"/>
+  </Theme>
+  
   <Styles>
+    <Import Path="CrossX.Framework.Assets.Styles.xml;CrossX.Framework"/>
+
     <Style Selector="Button">
-      <Setter Property="TextColor" Value="#c0c0c0"/>
+      <Setter Property="ForegroundColor" Value="{Theme ForegroundColor}"/>
+      <Setter Property="BackgroundColor" Value="{Theme ButtonBackgroundColor}"/>
+      <Setter Property="BackgroundDrawable" Value="{Resource DefaultButtonBackground}"/>
     </Style>
     <Style Selector="Button:over">
       <Setter Property="TextColor" Value="White"/>
@@ -16,12 +28,45 @@
   </Styles>
 
   <Resources>
-    <Transform Key="ButtonOver" EnterDuration="100" LeaveDuration="50">
-      <t:Group>
-        <t:Rotation Angle="35"/>
-        <t:Offset X="100" Y="30"/>
-      </t:Group>
-    </Transform>
+
+    <Import Path="CrossX.Framework.Assets.Transforms.xml;CrossX.Framework"/>
+    <Resource Key="ButtonOverTransform">
+      <t:StateTransform EnterDuration="100" LeaveDuration="50">
+        <t:Group>
+          <t:Rotation Angle1="35"/>
+          <t:Scale X1="1.4" Y1="1.2"/>
+        </t:Group>
+      </t:StateTransform>
+    </Resource>
+
+    <Resource Key="ButtonDownTransform">
+      <t:StateTransform EnterDuration="100" LeaveDuration="50">
+        <t:Group>
+          <t:Rotation Angle1="-20"/>
+          <t:Scale X1="0.8" Y1="0.9"/>
+        </t:Group>
+      </t:StateTransform>
+    </Resource>
+
+    <Resource Key="PageNavigationToTransform">
+      <t:NavigationTransform Duration="250">
+        <t:Group>
+          <t:Offset X0="100%" X1="0"/>
+        </t:Group>
+      </t:NavigationTransform>
+    </Resource>
+
+    <Resource Key="PageNavigationFromTransform">
+      <t:NavigationTransform Duration="250">
+        <t:Group>
+          <t:Offset X0="0" X1="-100%"/>
+        </t:Group>
+      </t:NavigationTransform>
+    </Resource>
+
+    <Resource Key="DefaultButtonBackground">
+      <d:RectangleDrawable Corners="10,10,10,10" Color="DarkOliveGreen"/>
+    </Resource>
+    
   </Resources>
-  
 </Application>

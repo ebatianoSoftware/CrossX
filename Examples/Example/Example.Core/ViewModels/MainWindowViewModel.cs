@@ -1,5 +1,6 @@
 ﻿using CrossX.Abstractions.IoC;
 using CrossX.Abstractions.Mvvm;
+using System.Threading.Tasks;
 
 namespace Example.Core.ViewModels
 {
@@ -9,9 +10,9 @@ namespace Example.Core.ViewModels
         {
         }
 
-        protected override object InitializeStrartupViewModel(IObjectFactory objectFactory)
+        protected override Task InitializeFirstPage()
         {
-            return objectFactory.Create<MainPageViewModel>();
+            return Navigation.Navigate<MainPageViewModel>(out var viewModel);
         }
     }
 }

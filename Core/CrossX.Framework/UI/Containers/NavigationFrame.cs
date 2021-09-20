@@ -1,4 +1,5 @@
 ﻿using CrossX.Framework.Navigation;
+using CrossX.Framework.Transforms;
 using System.Windows.Input;
 
 namespace CrossX.Framework.UI.Containers
@@ -23,6 +24,9 @@ namespace CrossX.Framework.UI.Containers
                 }
             }
         }
+
+        public NavigationTransform NavigateToTransform { get; set; }
+        public NavigationTransform NavigateFromTransform { get; set; }
 
         private INavigationController navigationController;
 

@@ -24,7 +24,7 @@ namespace CrossX.Framework.Core
         private readonly ICoreApplication coreApplication;
 
         public Action RedrawFunc { get; set; }
-        private Size size = Size.Empty;
+        private Size size = new Size(800, 600);
 
         private Dispatcher dispatcher = new Dispatcher();
         private SystemDispatcher systemDispatcher;
@@ -112,6 +112,19 @@ namespace CrossX.Framework.Core
             var currentTimeSpan = _stopwatch.Elapsed;
             coreApplication.DoRender(canvas);
             _invalidatedEvent.Set();
+        }
+
+        public void Initialize()
+        {
+            _updatedEvent.Reset();
+
+            if (_loopTask == null)
+            {
+                _loopTask = Task.Run(async () => await Loop(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+            }
+
+            _updatedEvent.WaitOne(500);
+            systemDispatcher?.Process();
         }
 
         public void RequestRedraw() => redrawRequest++;

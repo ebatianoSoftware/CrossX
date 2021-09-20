@@ -1,0 +1,11 @@
+﻿<g:Page
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:g="https://crossx.support/Schemas/CrossX.Framework.UI.Global"
+  xmlns:ex="https://crossx.support/Schemas/CrossX.Example">
+  
+<FrameLayout BackgroundColor="CornflowerBlue">
+  <Label ForegroundColor="Yellow" BackgroundColor="Red" Text="This is some test text" 
+         HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Roboto" FontSize="30" />
+  <Button BackgroundColor="Blue" Width="10" Height="10" BackgroundColorPushed="AliceBlue" Text="Test" VerticalAlignment="End" HorizontalAlignment="End" Command="{Binding TestCommand}"/>
+</FrameLayout>
+</g:Page>

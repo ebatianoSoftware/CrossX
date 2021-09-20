@@ -1,10 +1,12 @@
 ﻿using CrossX.Framework.Graphics;
+using System.Collections.Generic;
 using Xx;
+using Xx.Toolkit;
 
 namespace CrossX.Framework.UI.Containers
 {
     [XxSchemaExport(XxChildrenMode.Multiple)]
-    public abstract class ViewContainer : View
+    public abstract class ViewContainer : View, IElementsContainer
     {
         private bool layoutInvalid;
         private Thickness padding;
@@ -54,6 +56,18 @@ namespace CrossX.Framework.UI.Containers
         {
             base.RecalculateLayout();
             layoutInvalid = false;
+        }
+
+        public void InitChildren(IEnumerable<object> elements)
+        {
+            foreach(var element in elements)
+            {
+                if(element is View view)
+                {
+                    Children.Add(view);
+                }
+            }
+            InvalidateLayout();
         }
     }
 }

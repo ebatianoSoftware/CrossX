@@ -221,7 +221,7 @@ namespace xxsgen
                 {
                     var attrType = GetAlias(attr.Type.Namespace) + ':' + attr.Type.Name;
                     attributes += attributeTemplate
-                        .Replace("{Name}", attr.Name)
+                        .Replace("{Name}", attr.Name.Replace('_', '.'))
                         .Replace("{Type}", attrType);
                 }
 

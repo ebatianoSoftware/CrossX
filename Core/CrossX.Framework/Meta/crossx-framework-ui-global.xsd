@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework.UI.Global" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework.UI.Global" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework">
+  <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework" />
+  <xsd:complexType name="System.Object" />
+  <xsd:complexType name="CrossX.Framework.UI.Global.Page">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Global.Window">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MinWidth" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MinHeight" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MaxWidth" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MaxHeight" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.InitialWidth" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.InitialHeight" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Page">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Global.Page" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Window">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Global.Window" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

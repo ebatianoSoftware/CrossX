@@ -35,7 +35,7 @@ namespace CrossX.Framework
             if (builtInColors.TryGetValue(text, out var color)) return color;
 
             string colorcode = text;
-            colorcode = colorcode.TrimStart('#');
+            colorcode = colorcode.TrimStart('#').ToUpperInvariant();
 
             switch(colorcode.Length)
             {

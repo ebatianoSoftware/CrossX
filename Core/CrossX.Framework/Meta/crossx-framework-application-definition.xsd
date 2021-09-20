@@ -20,25 +20,31 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Import">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:System.String" name="Path" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Styles">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="Style" type="xx:CrossX.Framework.ApplicationDefinition.Style" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
         <xsd:attribute type="aa:System.String" name="Selector" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Transform">
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Resource">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="1" maxOccurs="1">
           <xsd:any />
         </xsd:choice>
         <xsd:attribute type="aa:CrossX.Framework.Name" name="Key" />
-        <xsd:attribute type="aa:System.Int" name="EnterDuration" />
-        <xsd:attribute type="aa:System.Int" name="LeaveDuration" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -46,7 +52,35 @@
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="Transform" type="xx:CrossX.Framework.ApplicationDefinition.Transform" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Resource" type="xx:CrossX.Framework.ApplicationDefinition.Resource" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Color">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:System.String" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.Color" name="Value" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Length">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:System.String" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Value" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Theme">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:element name="Color" type="xx:CrossX.Framework.ApplicationDefinition.Color" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Length" type="xx:CrossX.Framework.ApplicationDefinition.Length" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
@@ -57,6 +91,7 @@
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="Styles" type="xx:CrossX.Framework.ApplicationDefinition.Styles" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="Resources" type="xx:CrossX.Framework.ApplicationDefinition.Resources" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Theme" type="xx:CrossX.Framework.ApplicationDefinition.Theme" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
@@ -75,6 +110,13 @@
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
+  <xsd:element name="Import">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Import" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
   <xsd:element name="Styles">
     <xsd:complexType>
       <xsd:complexContent>
@@ -82,10 +124,10 @@
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
-  <xsd:element name="Transform">
+  <xsd:element name="Resource">
     <xsd:complexType>
       <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Transform" />
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Resource" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
@@ -93,6 +135,27 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Resources" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Color">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Color" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Length">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Length" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Theme">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Theme" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

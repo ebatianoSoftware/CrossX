@@ -80,7 +80,7 @@ namespace CrossX.Framework
                 case Type.Star:
                     return value * oneStar;
             }
-            return 0;
+            return value;
         }
 
         public override bool Equals(object other)

@@ -2,10 +2,11 @@
 using CrossX.Framework.Graphics;
 using CrossX.Framework.IoC;
 using CrossX.Framework.UI;
-using CrossX.Framework.UI.Containers;
-using CrossX.Framework.UI.Controls;
+using CrossX.Framework.UI.Global;
+using CrossX.Framework.XxTools;
 using System;
 using System.Reflection;
+using Xx.Definition;
 using Xx.Toolkit;
 
 namespace CrossX.Framework.Core
@@ -21,7 +22,7 @@ namespace CrossX.Framework.Core
 
         protected IRedrawService RedrawService { get; private set; }
 
-        protected View MainView { get; private set; }
+        protected Window Window { get; private set; }
 
         void ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
@@ -44,7 +45,7 @@ namespace CrossX.Framework.Core
         void ICoreApplication.Run(Size size)
         {
             StartApp();
-            MainView.Bounds = new RectangleF(0, 0, size.Width, size.Height);
+            Window.Size = size;
         }
 
         void ICoreApplication.DoRender(Canvas canvas) => Render(canvas);
@@ -56,17 +57,17 @@ namespace CrossX.Framework.Core
         protected virtual void Update(TimeSpan ellapsedTime, Size size)
         {
             var bounds = new RectangleF(0, 0, size.Width, size.Height);
-            if (MainView.Bounds != bounds)
+            if (Window.Size != size)
             {
-                MainView.Bounds = bounds;
+                Window.Size = size;
                 RedrawService.RequestRedraw();
             }
-            MainView.Update((float)ellapsedTime.TotalSeconds);
+            Window.Update((float)ellapsedTime.TotalSeconds);
         }
 
         protected virtual void Render(Canvas canvas)
         {
-            MainView?.Render(canvas);
+            Window?.Render(canvas);
         }
 
         protected virtual void InitServices(IServicesProvider systemServices, IScopeBuilder scopeBuilder)
@@ -88,31 +89,51 @@ namespace CrossX.Framework.Core
             {
                 vm = ObjectFactory.Create<TViewModel>();
             }
-            var viewPath = LocateView(vm) + ".xml";
+            var (viewPath, assembly) = LocateView(vm);
+            viewPath += ".xml";
 
-            var frameLayout = new FrameLayout
-            {
-                BackgroundColor = Color.DarkSlateBlue,
-                Padding = new Thickness(100, 0, 0, 0)
-            };
+            XxElement viewElement;
 
-            frameLayout.Children.Add(ObjectFactory.Create<Label>().Set(l =>
+            try
             {
-                l.Text = "\xe88a";
-                l.FontFamily = "Material Icons";
-                l.TextColor = Color.White;
-                l.BackgroundColor = Color.Green;
-                l.FontSize = 128;
-                l.Margin = new Thickness(0, 0, 100, 0);
-                l.HorizontalAlignment = Alignment.Center;
-                l.VerticalAlignment = Alignment.Center;
-                l.HorizontalTextAlignment = Alignment.Center;
-                l.VerticalTextAlignment = Alignment.Center;
-                l.Height = 100;
-                l.Width = 500;
-                l.FontMeasure = FontMeasure.Extended;
-            }));
-            MainView = frameLayout;
+                using (var stream = assembly.GetManifestResourceStream(viewPath))
+                {
+                    var parser = ObjectFactory.Create<XxFileParser>();
+                    viewElement = parser.Parse(stream);
+                }
+
+                var defObjectFactory = ObjectFactory.Create<XxDefinitionObjectFactory>();
+                Window = defObjectFactory.CreateObject<Window>(viewElement);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+            
+            //var frameLayout = new FrameLayout
+            //{
+            //    BackgroundColor = Color.DarkSlateBlue,
+            //    Padding = new Thickness(100, 0, 0, 0)
+            //};
+
+            //frameLayout.Children.Add(ObjectFactory.Create<Label>().Set(l =>
+            //{
+            //    l.Text = "\xffc2";
+            //    l.FontFamily = "FluentSystemIcons-Regular";
+            //    l.ForegroundColor = Color.White;
+            //    l.BackgroundColor = Color.Green;
+            //    l.FontSize = 128;
+            //    l.Margin = new Thickness(0, 0, 100, 0);
+            //    l.HorizontalAlignment = Alignment.Center;
+            //    l.VerticalAlignment = Alignment.Center;
+            //    l.HorizontalTextAlignment = Alignment.Center;
+            //    l.VerticalTextAlignment = Alignment.Center;
+            //    l.Height = 100;
+            //    l.Width = 500;
+            //    l.FontMeasure = FontMeasure.Extended;
+            //}));
+            //MainView = frameLayout;
             return true;
         }
     }

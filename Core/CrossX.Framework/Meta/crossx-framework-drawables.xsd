@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework.Drawables" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework.Drawables" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework">
+  <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework" />
+  <xsd:complexType name="System.Object" />
+  <xsd:complexType name="CrossX.Framework.Drawables.Drawable">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object"></xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.Drawables.RectangleDrawable">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.Drawables.Drawable">
+        <xsd:attribute type="aa:CrossX.Framework.Thickness" name="Corners" />
+        <xsd:attribute type="aa:CrossX.Framework.Color" name="Color" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="StrokeThickness" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RectangleDrawable">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.Drawables.RectangleDrawable" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

@@ -27,7 +27,7 @@
         <xsd:attribute type="aa:System.Boolean-Bindable" name="FontItalic" />
         <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="HorizontalTextAlignment" />
         <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="VerticalTextAlignment" />
-        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TextColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColor" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -36,6 +36,11 @@
       <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
         <xsd:attribute type="aa:unknown" name="Command" />
         <xsd:attribute type="aa:unknown" name="CommandParameter" />
+        <xsd:attribute type="aa:unknown" name="BackgroundDrawable" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorOver" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -89,6 +94,8 @@
       <xsd:extension base="xx:CrossX.Framework.UI.View">
         <xsd:attribute type="aa:unknown" name="AttachedToFrameCommand" />
         <xsd:attribute type="aa:unknown" name="NavigationController" />
+        <xsd:attribute type="aa:unknown" name="NavigateToTransform" />
+        <xsd:attribute type="aa:unknown" name="NavigateFromTransform" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

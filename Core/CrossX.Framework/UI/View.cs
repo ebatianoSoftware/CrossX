@@ -40,6 +40,7 @@ namespace CrossX.Framework.UI
                 }
             }
         }
+
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Length Width { get => width; set => SetProperty(ref width, value); }

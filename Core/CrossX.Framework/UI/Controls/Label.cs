@@ -16,7 +16,7 @@ namespace CrossX.Framework.UI.Controls
         {
             base.OnRender(canvas);
             var font = FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
-            canvas.DrawText(Text, font, ScreenBounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), TextColor, FontMeasure);
+            canvas.DrawText(Text, font, ScreenBounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), ForegroundColor, FontMeasure);
         }
 
         public override SizeF CalculateSize(SizeF parentSize)

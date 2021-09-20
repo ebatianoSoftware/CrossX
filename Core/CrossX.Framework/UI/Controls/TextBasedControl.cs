@@ -11,10 +11,20 @@ namespace CrossX.Framework.UI.Controls
         private bool fontItalic;
         private Alignment horizontalTextAlign = Alignment.Center;
         private Alignment verticalTextAlign = Alignment.Center;
-        private Color textColor = Color.Black;
+        private Color foregroundColor = Color.Black;
         protected readonly IFontManager FontManager;
 
-        public string Text { get => text; set => SetProperty(ref text, value); }
+        public string Text 
+        { 
+            get => text;
+            set
+            {
+                if(SetProperty(ref text, value))
+                {
+                    Parent?.InvalidateLayout();
+                }
+            }
+        }
         public string FontFamily { get => fontFamily; set => SetProperty(ref fontFamily, value); }
         public float FontSize { get => fontSize; set => SetProperty(ref fontSize, value); }
         public FontWeight FontWeight { get => fontWeight; set => SetProperty(ref fontWeight, value); }
@@ -23,7 +33,7 @@ namespace CrossX.Framework.UI.Controls
         public Alignment HorizontalTextAlignment { get => horizontalTextAlign; set => SetProperty(ref horizontalTextAlign, value); }
         public Alignment VerticalTextAlignment { get => verticalTextAlign; set => SetProperty(ref verticalTextAlign, value); }
 
-        public Color TextColor { get => textColor; set => SetProperty(ref textColor, value); }
+        public Color ForegroundColor { get => foregroundColor; set => SetProperty(ref foregroundColor, value); }
 
         public TextBasedControl(IFontManager fontManager)
         {
