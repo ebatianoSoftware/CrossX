@@ -78,12 +78,16 @@ namespace Example.Core
                 g += Math.Cos(totalSeconds);
                 b += Math.Cos(totalSeconds) + Math.Sin(totalSeconds);
 
+                var offsetX = Math.Sin(totalSeconds * 2) * 150;
+                var offsetY = Math.Cos(totalSeconds * 2) * 150;
+
                 Window.RootView.BackgroundColor = new Color(
                     (byte)Math.Min(255, Math.Max(0, (int)r)),
                     (byte)Math.Min(255, Math.Max(0, (int)g)),
                     (byte)Math.Min(255, Math.Max(0, (int)b)));
 
                 ((Label)(Window.RootView as ViewContainer).Children[0]).Text = $"{watch.Elapsed.Minutes:00}:{watch.Elapsed.Seconds:00}.{watch.Elapsed.Milliseconds:000}";
+                ((Label)(Window.RootView as ViewContainer).Children[0]).Margin = new Thickness(offsetX, offsetY, -offsetX, -offsetY);
 
                 RedrawService.RequestRedraw();
             }

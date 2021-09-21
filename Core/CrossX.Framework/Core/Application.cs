@@ -42,10 +42,9 @@ namespace CrossX.Framework.Core
             ObjectFactory = Services.GetService<IObjectFactory>();
         }
 
-        void ICoreApplication.Run(Size size)
+        void ICoreApplication.Run()
         {
             StartApp();
-            Window.Size = size;
         }
 
         void ICoreApplication.DoRender(Canvas canvas) => Render(canvas);

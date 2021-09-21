@@ -6,7 +6,7 @@ namespace CrossX.Framework.Core
 {
     public interface ICoreApplication
     {
-        void Run(Size size);
+        void Run();
         void DoUpdate(TimeSpan ellapsedTime, Size size);
         void DoRender(Canvas canvas);
         void Initialize(IServicesProvider servicesProvider);

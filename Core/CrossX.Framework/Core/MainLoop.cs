@@ -25,7 +25,7 @@ namespace CrossX.Framework.Core
         private readonly ICoreApplication coreApplication;
 
         public Action RedrawFunc { get; set; }
-        private Size size = new Size(800, 600);
+        private Size size;
 
         private Dispatcher dispatcher = new Dispatcher();
         private SystemDispatcher systemDispatcher;
@@ -57,7 +57,7 @@ namespace CrossX.Framework.Core
         private async Task Loop(CancellationToken cancellationToken)
         {
             _stopwatch.Start();
-            coreApplication.Run(size);
+            coreApplication.Run();
 
             RequestRedraw();
 

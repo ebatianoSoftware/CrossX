@@ -9,6 +9,7 @@ using SkiaSharp.Views.Desktop;
 using System;
 using System.Windows.Forms;
 using DrawingSize = System.Drawing.Size;
+using DrawingRectangle = System.Drawing.Rectangle;
 
 namespace CrossX.WindowsForms
 {
@@ -18,10 +19,9 @@ namespace CrossX.WindowsForms
         private readonly ICoreApplication app;
         private readonly ISystemDispatcher systemDispatcher;
         private readonly MainLoop mainLoop;
-        private WindowState state = Framework.UI.Global.WindowState.Normal;
         private FormBorderStyle lastFormBorderStyle = FormBorderStyle.Sizable;
-        private DrawingSize lastNormalSize;
-        private FormWindowState lastNotFullscreenState;
+        private DrawingRectangle lastNormalPosition;
+        private FormWindowState lastNotFullscreenWindowState;
 
         Size INativeWindow.MinSize
         {
@@ -45,11 +45,11 @@ namespace CrossX.WindowsForms
         {
             set => systemDispatcher.BeginInvoke(() =>
                  {
-                     if(state == Framework.UI.Global.WindowState.Normal)
+                     if(State == Framework.UI.Global.WindowState.Normal)
                      {
                          ClientSize = new DrawingSize(value.Width, value.Height);
                      }
-                     lastNormalSize = new DrawingSize(value.Width, value.Height);
+                     lastNormalPosition = Bounds;
                  });
         }
 
@@ -70,44 +70,43 @@ namespace CrossX.WindowsForms
                  });
         }
 
-        WindowState INativeWindow.State
+        public WindowState State
         {
-            get => state;
+            get
+            {
+                if(FormBorderStyle == FormBorderStyle.None)
+                {
+                    return Framework.UI.Global.WindowState.Fullscreen;
+                }
+
+                if (WindowState == FormWindowState.Maximized)
+                {
+                    return Framework.UI.Global.WindowState.Maximized;
+                }
+                return Framework.UI.Global.WindowState.Normal;
+            }
 
             set
             {
                 
                 systemDispatcher.BeginInvoke(() =>
                 {
-                    if(state == Framework.UI.Global.WindowState.Normal)
-                    {
-                        lastNormalSize = ClientSize;
-                    }
-
                     switch (value)
                     {
                         case Framework.UI.Global.WindowState.Fullscreen:
-                            if (state != Framework.UI.Global.WindowState.Fullscreen)
-                            {
-                                EnterFullscreen();
-                            }
+                            EnterFullscreen();
                             break;
 
                         case Framework.UI.Global.WindowState.Maximized:
-                            if (state == Framework.UI.Global.WindowState.Fullscreen)
-                            {
-                                LeaveFullscreen();
-                            }
+                            LeaveFullscreen();
                             WindowState = FormWindowState.Maximized;
                             break;
 
                         case Framework.UI.Global.WindowState:
-                            if (state == Framework.UI.Global.WindowState.Fullscreen) LeaveFullscreen();
+                            LeaveFullscreen();
                             WindowState = FormWindowState.Normal;
-                            ClientSize = lastNormalSize;
                             break;
                     }
-                    state = value;
                 });
             }
         }
@@ -168,34 +167,44 @@ namespace CrossX.WindowsForms
         {
             if(args.KeyCode == Keys.F11)
             {
-                if(state == Framework.UI.Global.WindowState.Fullscreen)
+                switch(State)
                 {
-                    LeaveFullscreen();
-                }
-                else
-                {
-                    EnterFullscreen();
+                    case Framework.UI.Global.WindowState.Normal:
+                        State = Framework.UI.Global.WindowState.Maximized;
+                        break;
+
+                    case Framework.UI.Global.WindowState.Maximized:
+                        State = Framework.UI.Global.WindowState.Fullscreen;
+                        break;
+                    case Framework.UI.Global.WindowState.Fullscreen:
+                        State = Framework.UI.Global.WindowState.Normal;
+                        break;
                 }
             }
         }
 
         private void EnterFullscreen()
         {
-            lastFormBorderStyle = FormBorderStyle;
-            lastNotFullscreenState = WindowState;
+            if (WindowState == FormWindowState.Normal && FormBorderStyle != FormBorderStyle.None)
+            {
+                lastNormalPosition = Bounds;
+            }
 
+            if(FormBorderStyle != FormBorderStyle.None)
+            {
+                lastNotFullscreenWindowState = WindowState;
+            }
+
+            lastFormBorderStyle = FormBorderStyle;
             WindowState = FormWindowState.Normal;
             FormBorderStyle = FormBorderStyle.None;
             Bounds = Screen.FromHandle(Handle).Bounds;
-            state = Framework.UI.Global.WindowState.Fullscreen;
         }
 
         private void LeaveFullscreen()
         {
             FormBorderStyle = lastFormBorderStyle;
-            WindowState = lastNotFullscreenState;
-            ClientSize = lastNormalSize;
-            state = lastNotFullscreenState == FormWindowState.Maximized ? Framework.UI.Global.WindowState.Maximized : Framework.UI.Global.WindowState.Normal;
+            Bounds = lastNormalPosition;
         }
     }
 }
