@@ -10,5 +10,6 @@ namespace CrossX.Framework.Core
         bool CanResize { set; }
         bool CanMaximize { set; }
         WindowState State { get; set; }
+        string Title { set; }
     }
 }

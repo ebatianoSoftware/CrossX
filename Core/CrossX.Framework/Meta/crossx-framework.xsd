@@ -14,6 +14,20 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
+  <xsd:simpleType name="System.String">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value=".*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
   <xsd:simpleType name="CrossX.Framework.Length">
     <xsd:union>
       <xsd:simpleType>
@@ -198,6 +212,50 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
+  <xsd:simpleType name="System.Boolean-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="True" />
+          <xsd:enumeration value="False" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.FontMeasure-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Strict" />
+          <xsd:enumeration value="Extended" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Thickness-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Zero" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
   <xsd:simpleType name="System.String-Bindable">
     <xsd:union>
       <xsd:simpleType>
@@ -250,21 +308,6 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="System.Boolean-Bindable">
-    <xsd:union>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="True" />
-          <xsd:enumeration value="False" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value="|\{.*\}" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:union>
-  </xsd:simpleType>
   <xsd:simpleType name="CrossX.Framework.Alignment-Bindable">
     <xsd:union>
       <xsd:simpleType>
@@ -297,20 +340,6 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="CrossX.Framework.Thickness-Bindable">
-    <xsd:union>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="Zero" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value="[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|\{.*\}" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:union>
-  </xsd:simpleType>
   <xsd:simpleType name="CrossX.Framework.Name">
     <xsd:union>
       <xsd:simpleType>
@@ -339,21 +368,6 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="CrossX.Framework.FontMeasure-Bindable">
-    <xsd:union>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="Strict" />
-          <xsd:enumeration value="Extended" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value="\{.*\}" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:union>
-  </xsd:simpleType>
   <xsd:simpleType name="System.Int">
     <xsd:union>
       <xsd:simpleType>
@@ -378,20 +392,6 @@
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
           <xsd:pattern value="[+-]?([0-9]*[.])?[0-9]+" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:union>
-  </xsd:simpleType>
-  <xsd:simpleType name="CrossX.Framework.Thickness">
-    <xsd:union>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="Zero" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value="[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>
@@ -546,20 +546,6 @@
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
           <xsd:pattern value="#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?|#[\dA-Fa-f]{3}([\dA-Fa-f])?" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:union>
-  </xsd:simpleType>
-  <xsd:simpleType name="System.String">
-    <xsd:union>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value="" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value=".*" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>

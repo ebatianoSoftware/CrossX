@@ -1,4 +1,6 @@
-﻿namespace Xx.Definition
+﻿using System;
+
+namespace Xx.Definition
 {
     public class XxBindingString
     {
@@ -8,5 +10,10 @@
         {
             Value = value;
         }
+    }
+
+    public class XxBindingStringAttribute: Attribute
+    {
+
     }
 }

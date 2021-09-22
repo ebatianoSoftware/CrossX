@@ -10,5 +10,7 @@ namespace CrossX.Framework
 
         public static implicit operator Name(string str) => new Name(str);
         public static implicit operator string(Name name) => name.Value;
+
+        public static Name Parse(string val) => new Name(val);
     }
 }

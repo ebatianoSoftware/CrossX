@@ -20,6 +20,8 @@
   <xsd:complexType name="CrossX.Framework.UI.Controls.TextBasedControl">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:CrossX.Framework.FontMeasure-Bindable" name="FontMeasure" />
+        <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="TextPadding" />
         <xsd:attribute type="aa:System.String-Bindable" name="Text" />
         <xsd:attribute type="aa:System.String-Bindable" name="FontFamily" />
         <xsd:attribute type="aa:System.Float-Bindable" name="FontSize" />
@@ -39,17 +41,17 @@
         <xsd:attribute type="aa:unknown" name="BackgroundDrawable" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorPushed" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorDisabled" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorPushed" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorDisabled" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.Label">
     <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
-        <xsd:attribute type="aa:CrossX.Framework.FontMeasure-Bindable" name="FontMeasure" />
-        <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="TextPadding" />
-      </xsd:extension>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl"></xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.ProgressBar">

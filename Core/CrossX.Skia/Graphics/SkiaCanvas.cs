@@ -8,7 +8,12 @@ namespace CrossX.Skia.Graphics
     internal class SkiaCanvas: Canvas, ISkiaCanvas
     {
         private SKCanvas skCanvas;
-        private SKPaint skPaint = new SKPaint();
+        private SKPaint skPaint = new SKPaint
+        {
+            IsAntialias = true,
+            SubpixelText = true,
+            FilterQuality = SKFilterQuality.High
+        };
         private Size size;
 
         public override Size Size => size;
@@ -85,6 +90,8 @@ namespace CrossX.Skia.Graphics
         public override Vector2 DrawText(string line, Font font, RectangleF target, TextAlign textAlign, Color color, FontMeasure fontMeasure = FontMeasure.Extended)
         {
             if (font == null) return Vector2.Zero;
+            if (line == null) return Vector2.Zero;
+
             var skiaFont = (SkiaFont)font;
 
             var position = CalculateTargetPosition(font, line, target, textAlign, fontMeasure, out var size);
@@ -102,6 +109,29 @@ namespace CrossX.Skia.Graphics
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = false;
             skCanvas.DrawRect(rect.ToSkia(), skPaint);
+        }
+
+        public override void DrawRect(RectangleF rect, Color color, float thickness)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+            skCanvas.DrawRect(rect.ToSkia(), skPaint);
+        }
+
+        public override void FillRoundRect(RectangleF rect, Vector2 roundness, Color color)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = false;
+            skCanvas.DrawRoundRect(rect.ToSkia(), new SKSize(roundness.X, roundness.Y), skPaint);
+        }
+
+        public override void DrawRoundRect(RectangleF rect, Vector2 roundness, Color color, float thickness)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+            skCanvas.DrawRoundRect(rect.ToSkia(), new SKSize(roundness.X, roundness.Y), skPaint);
         }
     }
 }

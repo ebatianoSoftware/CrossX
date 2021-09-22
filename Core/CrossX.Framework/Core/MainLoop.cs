@@ -27,9 +27,11 @@ namespace CrossX.Framework.Core
         public Action RedrawFunc { get; set; }
         private Size size;
 
-        private Dispatcher dispatcher = new Dispatcher();
+        private readonly Dispatcher dispatcher = new Dispatcher();
         private SystemDispatcher systemDispatcher;
         private Sequencer sequencer = new Sequencer();
+
+        public IDispatcher Dispatcher => dispatcher;
 
         public MainLoop(ICoreApplication coreApplication, Action redrawFunc, IScopeBuilder scopeBuilder, float dpi, bool createSystemDispatcher)
         {

@@ -4,12 +4,27 @@
   xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
   Desktop.MinWidth="400px" Desktop.MinHeight="300px"
   Desktop.InitialWidth="1280px" Desktop.InitialHeight="720px"
-  Desktop.StartMode="Fullscreen">
+  Desktop.StartMode="Normal"
+  Title="CrossX Example Application">
 
   <FrameLayout BackgroundColor="CornflowerBlue">
     <Label ForegroundColor="White" BackgroundColor="DarkSlateBlue" Text="00:00.000"
            HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" FontSize="30"
            FontMeasure="Strict" TextPadding="16"/>
+
+    <Button BackgroundColor="#80404050" ForegroundColor="White"
+            BackgroundColorOver="#606070" ForegroundColorOver="AntiqueWhite"
+            BackgroundColorPushed="#404050" ForegroundColorPushed="AntiqueWhite"
+            FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
+            Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Start" Margin="30"
+            Text="Push ME!"/>
+
+    <Button BackgroundColor="#80404050" ForegroundColor="White"
+            BackgroundColorOver="#606070" ForegroundColorOver="AntiqueWhite"
+            BackgroundColorPushed="#404050" ForegroundColorPushed="AntiqueWhite"
+            FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
+            Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
+            Text="Push ME!"/>
     
   </FrameLayout>
 </g:Window>

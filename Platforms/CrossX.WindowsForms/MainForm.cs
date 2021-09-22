@@ -10,6 +10,8 @@ using System;
 using System.Windows.Forms;
 using DrawingSize = System.Drawing.Size;
 using DrawingRectangle = System.Drawing.Rectangle;
+using CrossX.Framework.Input;
+using System.Numerics;
 
 namespace CrossX.WindowsForms
 {
@@ -22,6 +24,14 @@ namespace CrossX.WindowsForms
         private FormBorderStyle lastFormBorderStyle = FormBorderStyle.Sizable;
         private DrawingRectangle lastNormalPosition;
         private FormWindowState lastNotFullscreenWindowState;
+
+        string INativeWindow.Title
+        {
+            set => systemDispatcher.BeginInvoke(() =>
+            {
+                Text = value;
+            });
+        }
 
         Size INativeWindow.MinSize
         {
@@ -143,6 +153,103 @@ namespace CrossX.WindowsForms
             BringToFront();
             skglControl.Invalidate();
             skglControl.KeyDown += SkglControl_KeyDown;
+
+            skglControl.MouseMove += SkglControl_MouseMove;
+            skglControl.MouseDown += SkglControl_MouseDown;
+            skglControl.MouseUp += SkglControl_MouseUp;
+            skglControl.MouseLeave += SkglControl_MouseLeave;
+        }
+
+        private void SkglControl_MouseLeave(object sender, EventArgs args)
+        {
+            mainLoop.Dispatcher.BeginInvoke(() =>
+            {
+                app.OnPointerCancel(new PointerId(PointerKind.MouseLeftButton));
+                app.OnPointerCancel(new PointerId(PointerKind.MouseRightButton));
+                app.OnPointerCancel(new PointerId(PointerKind.MouseMiddleButton));
+                app.OnPointerCancel(new PointerId(PointerKind.MousePointer));
+            });
+        }
+
+        private void SkglControl_MouseUp(object sender, MouseEventArgs args)
+        {
+            var position = new Vector2(args.Location.X, args.Location.Y);
+            PointerKind pointerKind = 0;
+            switch (args.Button)
+            {
+                case MouseButtons.Left:
+                    pointerKind = PointerKind.MouseLeftButton;
+                    break;
+
+                case MouseButtons.Right:
+                    pointerKind = PointerKind.MouseRightButton;
+                    break;
+
+                case MouseButtons.Middle:
+                    pointerKind = PointerKind.MouseMiddleButton;
+                    break;
+            }
+
+            if (pointerKind != 0)
+            {
+                mainLoop.Dispatcher.BeginInvoke(() =>
+                {
+                    app.OnPointerUp(new PointerId(pointerKind), position);
+                });
+            }
+        }
+
+        private void SkglControl_MouseDown(object sender, MouseEventArgs args)
+        {
+            var position = new Vector2(args.Location.X, args.Location.Y);
+            PointerKind pointerKind = 0;
+            switch (args.Button)
+            {
+                case MouseButtons.Left:
+                    pointerKind = PointerKind.MouseLeftButton;
+                    break;
+
+                case MouseButtons.Right:
+                    pointerKind = PointerKind.MouseRightButton;
+                    break;
+
+                case MouseButtons.Middle:
+                    pointerKind = PointerKind.MouseMiddleButton;
+                    break;
+            }
+
+            if (pointerKind != 0)
+            {
+                mainLoop.Dispatcher.BeginInvoke(() =>
+                {
+                    app.OnPointerDown(new PointerId(pointerKind), position);
+                });
+            }
+        }
+
+        private void SkglControl_MouseMove(object sender, MouseEventArgs args)
+        {
+            var position = new Vector2(args.Location.X, args.Location.Y);
+            var button = args.Button;
+
+            mainLoop.Dispatcher.BeginInvoke(() =>
+            {
+                if (button.HasFlag(MouseButtons.Left))
+                {
+                    app.OnPointerMove(new PointerId(PointerKind.MouseLeftButton), position);
+                }
+
+                if (button.HasFlag(MouseButtons.Right))
+                {
+                    app.OnPointerMove(new PointerId(PointerKind.MouseRightButton), position);
+                }
+
+                if (button.HasFlag(MouseButtons.Middle))
+                {
+                    app.OnPointerMove(new PointerId(PointerKind.MouseMiddleButton), position);
+                }
+                app.OnPointerMove(new PointerId(PointerKind.MousePointer), position);
+            });
         }
 
         private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs args)
@@ -167,18 +274,13 @@ namespace CrossX.WindowsForms
         {
             if(args.KeyCode == Keys.F11)
             {
-                switch(State)
+                if(State == Framework.UI.Global.WindowState.Fullscreen)
                 {
-                    case Framework.UI.Global.WindowState.Normal:
-                        State = Framework.UI.Global.WindowState.Maximized;
-                        break;
-
-                    case Framework.UI.Global.WindowState.Maximized:
-                        State = Framework.UI.Global.WindowState.Fullscreen;
-                        break;
-                    case Framework.UI.Global.WindowState.Fullscreen:
-                        State = Framework.UI.Global.WindowState.Normal;
-                        break;
+                    LeaveFullscreen();
+                }
+                else
+                {
+                    EnterFullscreen();
                 }
             }
         }
@@ -196,6 +298,7 @@ namespace CrossX.WindowsForms
             }
 
             lastFormBorderStyle = FormBorderStyle;
+
             WindowState = FormWindowState.Normal;
             FormBorderStyle = FormBorderStyle.None;
             Bounds = Screen.FromHandle(Handle).Bounds;
@@ -205,6 +308,7 @@ namespace CrossX.WindowsForms
         {
             FormBorderStyle = lastFormBorderStyle;
             Bounds = lastNormalPosition;
+            WindowState = lastNotFullscreenWindowState;
         }
     }
 }

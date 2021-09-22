@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Xx.Definition;
 using Xx.Toolkit;
 
@@ -10,16 +11,20 @@ namespace CrossX.Framework.XxTools
     public class XxDefinitionObjectFactory
     {
         private readonly IObjectFactory objectFactory;
+        private readonly IElementTypeMapping elementTypeMapping;
 
-        public XxDefinitionObjectFactory(IObjectFactory objectFactory)
+        public XxDefinitionObjectFactory(IObjectFactory objectFactory, IElementTypeMapping elementTypeMapping)
         {
             this.objectFactory = objectFactory;
+            this.elementTypeMapping = elementTypeMapping;
         }
 
         public TInstance CreateObject<TInstance>(XxElement element)
         {
             if (!typeof(TInstance).IsAssignableFrom(element.Type)) throw new InvalidDataException($"Cannot create {typeof(TInstance).Name} from {element.Type.Name}!");
-            var instance = objectFactory.Create(element.Type);
+            var instance = objectFactory.Create(element.Type, element.Namespaces, elementTypeMapping);
+
+            bool childrenAsDefinitions = element.Type.GetCustomAttribute<ChildrenAsDefinitionsAttribute>() != null;
 
             if (element.Children != null)
             {
@@ -29,8 +34,15 @@ namespace CrossX.Framework.XxTools
 
                     foreach (var childElement in element.Children)
                     {
-                        var child = CreateObject<object>(childElement);
-                        children.Add(child);
+                        if (childrenAsDefinitions)
+                        {
+                            children.Add(childElement);
+                        }
+                        else
+                        {
+                            var child = CreateObject<object>(childElement);
+                            children.Add(child);
+                        }
                     }
                     container.InitChildren(children);
                 }
@@ -44,11 +56,26 @@ namespace CrossX.Framework.XxTools
             {
                 if(prop.Value is XxBindingString binding)
                 {
-
+                    if (prop.Key.GetCustomAttribute<XxBindingStringAttribute>() != null)
+                    {
+                        prop.Key.SetValue(instance, $"{{{binding.Value}}}");
+                    }
                 }
                 else
                 {
-                    prop.Key.SetValue(instance, prop.Value);
+                    if (prop.Key.PropertyType.IsAssignableFrom(prop.Value.GetType()))
+                    {
+                        prop.Key.SetValue(instance, prop.Value);
+                    }
+                    else
+                    {
+                        var constructor = prop.Key.PropertyType.GetConstructor(new Type[] { prop.Value.GetType() });
+                        if(constructor != null)
+                        {
+                            var obj = constructor.Invoke(new[] { prop.Value });
+                            prop.Key.SetValue(instance, obj);
+                        }
+                    }
                 }
             }
 

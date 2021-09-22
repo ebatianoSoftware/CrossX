@@ -33,6 +33,7 @@
         <xsd:choice minOccurs="1" maxOccurs="1">
           <xsd:any />
         </xsd:choice>
+        <xsd:attribute type="aa:System.String" name="Title" />
         <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MinWidth" />
         <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MinHeight" />
         <xsd:attribute type="aa:CrossX.Framework.Length" name="Desktop.MaxWidth" />

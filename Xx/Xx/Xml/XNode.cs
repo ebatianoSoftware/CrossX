@@ -17,6 +17,10 @@ namespace Xx.Xml
         public readonly string Namespace;
         public readonly int LineNumber;
 
+        private Dictionary<string, string> namespaceMapping;
+
+        public IReadOnlyDictionary<string, string> Namespaces => namespaceMapping ?? parent?.Namespaces;
+
         public List<XNode> Nodes { get; private set; }
 
         readonly Dictionary<string, string> attributes = new Dictionary<string, string>();
@@ -64,9 +68,18 @@ namespace Xx.Xml
             Nodes = new List<XNode>();
         }
 
-        private XNode(XmlReader reader, XNode parent, Dictionary<string, string> namespaces)
+        private XNode(XmlReader reader, XNode parent, IReadOnlyDictionary<string, string> parentNamespaces)
         {
-            namespaces = new Dictionary<string, string>(namespaces);
+            namespaceMapping = null;
+
+            Dictionary<string, string> GetOwnNamespaces()
+            {
+                if (namespaceMapping == null)
+                {
+                    namespaceMapping = new Dictionary<string, string>(parentNamespaces);
+                }
+                return namespaceMapping;
+            }            
 
             this.parent = parent;
 
@@ -105,17 +118,22 @@ namespace Xx.Xml
                 while (reader.MoveToNextAttribute())
                 {
                     string key = reader.Name;
-                    if (key.StartsWith("xmlns:", StringComparison.InvariantCulture))
+                    if (key == "xmlns")
+                    {
+                        key = "";
+                        GetOwnNamespaces().Add(key, reader.Value);
+                    }
+                    else if (key.StartsWith("xmlns:", StringComparison.InvariantCulture))
                     {
                         key = key.Substring(6);
-                        namespaces.Add(key, reader.Value);
+                        GetOwnNamespaces().Add(key, reader.Value);
                     }
                     else if (key != "xmlns")
                     {
                         if (key.Contains(":"))
                         {
                             string[] vals = key.Split(':');
-                            key = string.Format("{0}:{1}", namespaces[vals[0]], vals[1]);
+                            key = string.Format("{0}:{1}", Namespaces[vals[0]], vals[1]);
                         }
 
                         attributes.Add(key, reader.Value);
@@ -147,7 +165,7 @@ namespace Xx.Xml
             {
                 while (true)
                 {
-                    XNode node = new XNode(reader, this, namespaces);
+                    XNode node = new XNode(reader, this, Namespaces);
 
                     if (node.Tag != null)
                     {

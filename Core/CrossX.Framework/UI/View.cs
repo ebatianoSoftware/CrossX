@@ -1,4 +1,5 @@
 ﻿using CrossX.Framework.Graphics;
+using CrossX.Framework.Input;
 using CrossX.Framework.UI.Containers;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,8 +35,8 @@ namespace CrossX.Framework.UI
                 if (bounds != value)
                 {
                     bounds = value;
-                    OnPropertyChanged(nameof(ActualWidth));
-                    OnPropertyChanged(nameof(ActualHeight));
+                    RaisePropertyChanged(nameof(ActualWidth));
+                    RaisePropertyChanged(nameof(ActualHeight));
                     RecalculateLayout();
                 }
             }
@@ -133,18 +134,41 @@ namespace CrossX.Framework.UI
             return new Vector2(x, y);
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {
+            OnPropertyChanged(propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        protected virtual void OnPropertyChanged(string propertyName) { }
 
         protected bool SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(property, value)) return false;
 
             property = value;
-            OnPropertyChanged(propertyName);
+            RaisePropertyChanged(propertyName);
             return true;
+        }
+
+        public bool PreviewGesture(Gesture gesture)
+        {
+            return OnPreviewGesture(gesture);
+        }
+
+        protected virtual bool OnPreviewGesture(Gesture gesture)
+        {
+            return false;
+        }
+
+        public bool ProcessGesture(Gesture gesture)
+        {
+            return OnProcessGesture(gesture);
+        }
+
+        protected virtual bool OnProcessGesture(Gesture gesture)
+        {
+            return false;
         }
     }
 }

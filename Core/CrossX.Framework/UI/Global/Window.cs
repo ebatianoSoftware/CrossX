@@ -1,12 +1,12 @@
 ﻿using CrossX.Abstractions.IoC;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
+using CrossX.Framework.XxTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Xx;
-using Xx.Toolkit;
 
 namespace CrossX.Framework.UI.Global
 {
@@ -22,6 +22,14 @@ namespace CrossX.Framework.UI.Global
     {
         public View RootView { get; private set; }
 
+        public string Title 
+        { 
+            set
+            {
+                if (nativeWindow == null) return;
+                nativeWindow.Title = value;
+            }
+        }
         public Length Desktop_MinWidth 
         { 
             set

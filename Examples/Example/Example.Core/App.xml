@@ -1,35 +1,30 @@
 ﻿<Application 
   xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
   xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms"
+  xmlns:ui="https://crossx.support/Schemas/CrossX.Framework.UI"
   xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
   <Theme>
-    <Import Path="CrossX.Framework.Assets.LightTheme.xml;CrossX.Framework"/>
+    <!--<Import Path="CrossX.Framework.Assets.LightTheme.xml;CrossX.Framework"/>-->
     <Color Key="BackgroundColor" Value="#202030"/>
     <Color Key="ForegroundColor" Value="#c0c0c0"/>
     <Color Key="ButtonBackgroundColor" Value="#404050"/>
   </Theme>
   
   <Styles>
-    <Import Path="CrossX.Framework.Assets.Styles.xml;CrossX.Framework"/>
+    <!--<Import Path="CrossX.Framework.Assets.Styles.xml;CrossX.Framework"/>-->
 
-    <Style Selector="Button">
-      <Setter Property="ForegroundColor" Value="{Theme ForegroundColor}"/>
-      <Setter Property="BackgroundColor" Value="{Theme ButtonBackgroundColor}"/>
-      <Setter Property="BackgroundDrawable" Value="{Resource DefaultButtonBackground}"/>
-    </Style>
-    <Style Selector="Button:over">
-      <Setter Property="TextColor" Value="White"/>
-      <Setter Property="Transform" Value="{Resource ButtonOver}"/>
-    </Style>
-    <Style Selector="Button:down">
-      <Setter Property="TextColor" Value="White"/>
+    <Style>
+      <ui:Button ForegroundColor="{Theme ForegroundColor}" BackgroundColor="{Theme ButtonBackgroundColor}"
+                 BackgroundDrawable="{Resource DefaultButtonBackground}"
+                 ForegroundColorOver="White"
+                 ForegroundColorPushed="White"/>
     </Style>
   </Styles>
 
   <Resources>
 
-    <Import Path="CrossX.Framework.Assets.Transforms.xml;CrossX.Framework"/>
+    <!--<Import Path="CrossX.Framework.Assets.Transforms.xml;CrossX.Framework"/>-->
     <Resource Key="ButtonOverTransform">
       <t:StateTransform EnterDuration="100" LeaveDuration="50">
         <t:Group>

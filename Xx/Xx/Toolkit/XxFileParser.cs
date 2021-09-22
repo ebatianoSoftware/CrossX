@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Xx.Definition;
@@ -40,7 +41,7 @@ namespace Xx.Toolkit
                 }
             }
 
-            return new XxElement(type, children?.ToArray(), propertyValues);
+            return new XxElement(node, type, children?.ToArray(), propertyValues);
         }
 
         private IReadOnlyDictionary<PropertyInfo, object> ParsePropertyValues(XNode node, Type type)
@@ -55,7 +56,7 @@ namespace Xx.Toolkit
                 var propertyInfo = type.GetProperty(attr.Replace('.', '_'), BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
                 if (propertyInfo == null) continue;
 
-                object value;
+                object value = null;
 
                 if (attrValue.StartsWith('{') && attrValue.EndsWith('}'))
                 {
@@ -73,10 +74,19 @@ namespace Xx.Toolkit
                     }
                     else
                     {
-                        var parseMethod = propertyInfo.PropertyType.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(string) }, Array.Empty<ParameterModifier>());
-                        if (parseMethod == null) continue;
-
-                        value = parseMethod.Invoke(null, new object[] { attrValue });
+                        var parseMethod = propertyInfo.PropertyType.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(string), typeof(IFormatProvider) }, Array.Empty<ParameterModifier>());
+                        if (parseMethod == null)
+                        {
+                            parseMethod = propertyInfo.PropertyType.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(string) }, Array.Empty<ParameterModifier>());
+                            if (parseMethod != null)
+                            {
+                                value = parseMethod.Invoke(null, new object[] { attrValue });
+                            }
+                        }
+                        else
+                        {
+                            value = parseMethod.Invoke(null, new object[] { attrValue, CultureInfo.InvariantCulture });
+                        }
                     }
                 }
 

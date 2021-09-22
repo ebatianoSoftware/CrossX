@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Xx.Xml;
 
 namespace Xx.Definition
 {
@@ -9,12 +10,13 @@ namespace Xx.Definition
         public Type Type { get; }
         public IEnumerable<XxElement> Children { get; }
         public IReadOnlyDictionary<PropertyInfo, object> Properties { get; }
-
-        public XxElement(Type type, IEnumerable<XxElement> children, IReadOnlyDictionary<PropertyInfo, object> properties)
+        public IReadOnlyDictionary<string, string> Namespaces { get; }
+        public XxElement(XNode node, Type type, IEnumerable<XxElement> children, IReadOnlyDictionary<PropertyInfo, object> properties)
         {
             Type = type;
             Children = children;
             Properties = properties;
+            Namespaces = node.Namespaces;
         }
     }
 }

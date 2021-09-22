@@ -79,5 +79,16 @@ namespace CrossX.Framework
 
         public static bool operator ==(RectangleF r1, RectangleF r2) => r1.Equals(r2);
         public static bool operator !=(RectangleF r1, RectangleF r2) => !r1.Equals(r2);
+
+        public bool Contains(Vector2 position)
+        {
+            if (position.X > Right) return false;
+            if (position.Y > Bottom) return false;
+
+            if (position.X < X) return false;
+            if (position.Y < Y) return false;
+
+            return true;
+        }
     }
 }

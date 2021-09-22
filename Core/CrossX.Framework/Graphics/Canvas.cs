@@ -10,6 +10,10 @@ namespace CrossX.Framework.Graphics
         public abstract void Restore();
 
         public abstract void FillRect(RectangleF rect, Color color);
+        public abstract void DrawRect(RectangleF rect, Color color, float thickness);
+
+        public abstract void FillRoundRect(RectangleF rect, Vector2 roundness, Color color);
+        public abstract void DrawRoundRect(RectangleF rect, Vector2 roundness, Color color, float thickness);
 
         public abstract void Restore(int count);
         public abstract void Transform(Matrix3x2 transform);

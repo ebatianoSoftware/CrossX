@@ -10,8 +10,10 @@
   <xsd:complexType name="CrossX.Framework.Drawables.RectangleDrawable">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.Drawables.Drawable">
-        <xsd:attribute type="aa:CrossX.Framework.Thickness" name="Corners" />
-        <xsd:attribute type="aa:CrossX.Framework.Color" name="Color" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Rx" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Ry" />
+        <xsd:attribute type="aa:CrossX.Framework.Color" name="FillColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color" name="StrokeColor" />
         <xsd:attribute type="aa:CrossX.Framework.Length" name="StrokeThickness" />
       </xsd:extension>
     </xsd:complexContent>

@@ -1,4 +1,5 @@
 ﻿using CrossX.Framework.Graphics;
+using System;
 
 namespace CrossX.Framework.UI.Controls
 {
@@ -14,6 +15,22 @@ namespace CrossX.Framework.UI.Controls
         private Color foregroundColor = Color.Black;
         protected readonly IFontManager FontManager;
 
+        private FontMeasure fontMeasure = FontMeasure.Extended;
+        private Thickness textPadding;
+
+        public FontMeasure FontMeasure { get => fontMeasure; set => SetProperty(ref fontMeasure, value); }
+
+        public Thickness TextPadding
+        {
+            get => textPadding;
+            set
+            {
+                if (SetProperty(ref textPadding, value))
+                {
+                    Parent?.InvalidateLayout();
+                }
+            }
+        }
         public string Text 
         { 
             get => text;
@@ -38,6 +55,23 @@ namespace CrossX.Framework.UI.Controls
         public TextBasedControl(IFontManager fontManager)
         {
             FontManager = fontManager;
+        }
+
+        public override SizeF CalculateSize(SizeF parentSize)
+        {
+            var size = base.CalculateSize(parentSize);
+
+            var autoWidth = Width.IsAuto && HorizontalAlignment != Alignment.Stretch;
+            var autoHeight = Height.IsAuto && VerticalAlignment != Alignment.Stretch;
+
+            var font = FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
+            var sizeAuto = font.MeasureText(Text, FontMeasure);
+
+
+            sizeAuto.Width += TextPadding.Width;
+            sizeAuto.Height += TextPadding.Height;
+
+            return new SizeF(autoWidth ? sizeAuto.Width : Math.Max(size.Width, sizeAuto.Width), autoHeight ? sizeAuto.Height : Math.Max(size.Height, sizeAuto.Height));
         }
     }
 }

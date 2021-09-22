@@ -1,7 +1,8 @@
 ﻿using CrossX.Framework.Graphics;
+using CrossX.Framework.Input;
+using CrossX.Framework.XxTools;
 using System.Collections.Generic;
 using Xx;
-using Xx.Toolkit;
 
 namespace CrossX.Framework.UI.Containers
 {
@@ -68,6 +69,24 @@ namespace CrossX.Framework.UI.Containers
                 }
             }
             InvalidateLayout();
+        }
+
+        protected override bool OnPreviewGesture(Gesture gesture)
+        {
+            foreach(var child in Children)
+            {
+                if (child.PreviewGesture(gesture)) return true;
+            }
+            return false;
+        }
+
+        protected override bool OnProcessGesture(Gesture gesture)
+        {
+            foreach (var child in Children)
+            {
+                if (child.ProcessGesture(gesture)) return true;
+            }
+            return false;
         }
     }
 }

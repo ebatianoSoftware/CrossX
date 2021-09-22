@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Xx.Toolkit
+namespace CrossX.Framework.XxTools
 {
     public interface IElementsContainer
     {

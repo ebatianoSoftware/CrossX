@@ -5,7 +5,7 @@ namespace CrossX.Framework
 {
     public static class Utils
     {
-        public static T Set<T>(this T obj, Action<T> action)
+        public static T Set<T>(this T obj, Action<T> action) where T: class
         {
             action(obj);
             return obj;
