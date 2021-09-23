@@ -191,14 +191,7 @@ namespace CrossX.Framework.Core
             if (gesture == null) return;
             if(!Window.RootView.PreviewGesture(gesture))
             {
-                if(Window.RootView.ProcessGesture(gesture))
-                {
-                    RedrawService.RequestRedraw();
-                }
-            }
-            else
-            {
-                RedrawService.RequestRedraw();
+                Window.RootView.ProcessGesture(gesture);
             }
         }
     }

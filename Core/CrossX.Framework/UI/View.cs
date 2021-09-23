@@ -160,7 +160,12 @@ namespace CrossX.Framework.UI
 
         public bool PreviewGesture(Gesture gesture)
         {
-            return OnPreviewGesture(gesture);
+            if(OnPreviewGesture(gesture))
+            {
+                RedrawService.RequestRedraw();
+                return true;
+            }
+            return false;
         }
 
         protected virtual bool OnPreviewGesture(Gesture gesture)
@@ -170,7 +175,8 @@ namespace CrossX.Framework.UI
 
         public bool ProcessGesture(Gesture gesture)
         {
-            return OnProcessGesture(gesture);
+            if (OnProcessGesture(gesture)) return true;
+            return ScreenBounds.Contains(gesture.Position);
         }
 
         protected virtual bool OnProcessGesture(Gesture gesture)

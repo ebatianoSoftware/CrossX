@@ -73,18 +73,18 @@ namespace CrossX.Framework.UI.Containers
 
         protected override bool OnPreviewGesture(Gesture gesture)
         {
-            foreach(var child in Children)
+            for (var idx = Children.Count-1; idx >=0; --idx)
             {
-                if (child.PreviewGesture(gesture)) return true;
+                if (Children[idx].PreviewGesture(gesture)) return true;
             }
             return false;
         }
 
         protected override bool OnProcessGesture(Gesture gesture)
         {
-            foreach (var child in Children)
+            for (var idx = Children.Count - 1; idx >= 0; --idx)
             {
-                if (child.ProcessGesture(gesture)) return true;
+                if (Children[idx].ProcessGesture(gesture)) return true;
             }
             return false;
         }
