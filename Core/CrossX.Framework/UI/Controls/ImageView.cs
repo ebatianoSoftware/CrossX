@@ -1,5 +1,4 @@
-﻿using CrossX.Abstractions.Async;
-using CrossX.Framework.Graphics;
+﻿using CrossX.Framework.Graphics;
 using System;
 using System.Numerics;
 
@@ -8,8 +7,6 @@ namespace CrossX.Framework.UI.Controls
     public class ImageView : View
     {
         private ImageDescriptor source;
-        private readonly IDispatcher dispatcher;
-        private readonly IImageCache imageCache;
 
         public ImageDescriptor Source
         {
@@ -31,7 +28,7 @@ namespace CrossX.Framework.UI.Controls
             {
                 if(SetProperty(ref stretch, value))
                 {
-                    RedrawService.RequestRedraw();
+                    Services.RedrawService.RequestRedraw();
                 }
             }
         }
@@ -54,7 +51,7 @@ namespace CrossX.Framework.UI.Controls
             {
                 if (SetProperty(ref opacity, value))
                 {
-                    RedrawService.RequestRedraw();
+                    Services.RedrawService.RequestRedraw();
                 }
             }
         }
@@ -64,10 +61,8 @@ namespace CrossX.Framework.UI.Controls
         private float opacity = 1;
         private Stretch stretch = Stretch.Uniform;
 
-        public ImageView(IDispatcher dispatcher, IRedrawService redrawService, IImageCache imageCache): base(redrawService)
+        public ImageView(IUIServices services): base(services)
         {
-            this.dispatcher = dispatcher;
-            this.imageCache = imageCache;
         }
 
         protected override void OnRender(Canvas canvas)
@@ -133,8 +128,8 @@ namespace CrossX.Framework.UI.Controls
             
             try
             {
-                var img = await imageCache.GetImage(desc.Uri);
-                dispatcher.BeginInvoke(() =>
+                var img = await Services.ImageCache.GetImage(desc.Uri);
+                Services.Dispatcher.BeginInvoke(() =>
                 {
                     Source = new ImageDescriptor(desc.Uri, img);
                 });

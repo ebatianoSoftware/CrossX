@@ -60,7 +60,7 @@ namespace CrossX.Framework.UI.Controls
                 if(currentState != value)
                 {
                     currentState = value;
-                    RedrawService.RequestRedraw();
+                    Services.RedrawService.RequestRedraw();
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace CrossX.Framework.UI.Controls
         private bool enabled = true;
         private State currentState = State.Normal;
 
-        public Button(IFontManager fontManager, IRedrawService redrawService) : base(fontManager, redrawService)
+        public Button(IUIServices services) : base(services)
         {
             BackgroundDrawable = new RectangleDrawable
             {
@@ -121,7 +121,7 @@ namespace CrossX.Framework.UI.Controls
 
             BackgroundDrawable?.Draw(canvas, ScreenBounds, backgroundColor);
 
-            var font = FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
+            var font = Services.FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
             var bounds = ScreenBounds.Deflate(TextPadding);
             canvas.DrawText(Text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), foregroundColor, FontMeasure);
         }
@@ -215,7 +215,7 @@ namespace CrossX.Framework.UI.Controls
                 case nameof(Enabled):
                     lockedPointer = PointerId.None;
                     CurrentState = State.Normal;
-                    RedrawService.RequestRedraw();
+                    Services.RedrawService.RequestRedraw();
                     break;
             }
         }

@@ -8,13 +8,23 @@ namespace CrossX.Abstractions.Mvvm
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        protected void SetProperty<T>(ref T property, T value, [CallerMemberName]string propertyName = "")
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (EqualityComparer<T>.Default.Equals(property, value)) return;
-            property = value;
+
+        }
+
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        {
             OnPropertyChanged(propertyName);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetProperty<T>(ref T property, T value, [CallerMemberName]string propertyName = "")
+        {
+            if (EqualityComparer<T>.Default.Equals(property, value)) return false;
+            property = value;
+            RaisePropertyChanged(propertyName);
+            return true;
         }
     }
 }

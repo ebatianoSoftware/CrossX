@@ -26,8 +26,8 @@
             Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
             Text="Push ME!"/>
 
-    <ImageView Source="https://picsum.photos/400/300" 
-               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+    <ImageView Source="https://picsum.photos/400/300"
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                Stretch="UniformToFill" Margin="50"/>
   
   </FrameLayout>

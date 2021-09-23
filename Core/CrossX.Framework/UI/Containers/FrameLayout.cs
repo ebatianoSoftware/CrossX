@@ -4,7 +4,7 @@ namespace CrossX.Framework.UI.Containers
 {
     public class FrameLayout : ViewContainer
     {
-        public FrameLayout(IRedrawService redrawService) : base(redrawService)
+        public FrameLayout(IUIServices services) : base(services)
         {
         }
 

@@ -10,7 +10,7 @@ namespace CrossX.Framework.UI.Controls
         public float MaxValue { get => maxValue; set => SetProperty(ref maxValue, value); }
         public float Progress { get => progress; set => SetProperty(ref progress, value); }
 
-        public ProgressBar(IRedrawService redrawService) : base(redrawService)
+        public ProgressBar(IUIServices services) : base(services)
         { 
         }
     }

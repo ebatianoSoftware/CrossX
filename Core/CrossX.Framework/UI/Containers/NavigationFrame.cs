@@ -31,7 +31,7 @@ namespace CrossX.Framework.UI.Containers
 
         private INavigationController navigationController;
 
-        public NavigationFrame(IRedrawService redrawService): base(redrawService)
+        public NavigationFrame(IUIServices services): base(services)
         {
 
         }

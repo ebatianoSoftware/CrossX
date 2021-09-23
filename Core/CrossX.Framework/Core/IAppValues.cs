@@ -8,7 +8,6 @@ namespace CrossX.Framework.Core
     {
         IEnumerable<Style> GetStyles(Type type, string classes);
         object GetValue(string name);
-
         object FindResource(string name);
     }
 }

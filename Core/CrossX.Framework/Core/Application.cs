@@ -1,8 +1,10 @@
 ﻿using CrossX.Abstractions.IoC;
 using CrossX.Framework.ApplicationDefinition;
+using CrossX.Framework.Binding;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.IoC;
+using CrossX.Framework.UI;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
@@ -30,13 +32,15 @@ namespace CrossX.Framework.Core
         void ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
             var builder = new ScopeBuilder(servicesProvider);
-            builder.WithInstance(this).As<Application>().As(GetType());
-
             var elementTypeMapping = new ElementTypeMapping(GetType().Assembly);
-            builder.WithInstance(elementTypeMapping).As<IElementTypeMapping>();
-
             var applicationDefinition = LoadApplicationDefinition(elementTypeMapping, servicesProvider.GetService<IObjectFactory>());
-            builder.WithInstance(applicationDefinition).As<IAppValues>();
+
+            builder
+                .WithInstance(this).As<Application>().As(GetType())
+                .WithInstance(elementTypeMapping).As<IElementTypeMapping>()
+                .WithInstance(applicationDefinition).As<IAppValues>()
+                .WithType<BindingService>().As<IBindingService>()
+                .WithType<UIServices>().As<IUIServices>().AsSingleton();
 
             BeforeInitServices?.Invoke(servicesProvider, builder);
             InitServices(servicesProvider, builder);
@@ -129,36 +133,13 @@ namespace CrossX.Framework.Core
 
                 var defObjectFactory = ObjectFactory.Create<XxDefinitionObjectFactory>();
                 Window = defObjectFactory.CreateObject<Window>(viewElement);
+                Window.BindingContext = vm;
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex);
                 throw;
             }
-            
-            //var frameLayout = new FrameLayout
-            //{
-            //    BackgroundColor = Color.DarkSlateBlue,
-            //    Padding = new Thickness(100, 0, 0, 0)
-            //};
-
-            //frameLayout.Children.Add(ObjectFactory.Create<Label>().Set(l =>
-            //{
-            //    l.Text = "\xffc2";
-            //    l.FontFamily = "FluentSystemIcons-Regular";
-            //    l.ForegroundColor = Color.White;
-            //    l.BackgroundColor = Color.Green;
-            //    l.FontSize = 128;
-            //    l.Margin = new Thickness(0, 0, 100, 0);
-            //    l.HorizontalAlignment = Alignment.Center;
-            //    l.VerticalAlignment = Alignment.Center;
-            //    l.HorizontalTextAlignment = Alignment.Center;
-            //    l.VerticalTextAlignment = Alignment.Center;
-            //    l.Height = 100;
-            //    l.Width = 500;
-            //    l.FontMeasure = FontMeasure.Extended;
-            //}));
-            //MainView = frameLayout;
             return true;
         }
 
@@ -194,5 +175,7 @@ namespace CrossX.Framework.Core
                 Window.RootView.ProcessGesture(gesture);
             }
         }
+
+        public void Dispose() => Window.Dispose();
     }
 }

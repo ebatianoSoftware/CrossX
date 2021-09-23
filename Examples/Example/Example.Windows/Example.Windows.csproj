@@ -6,6 +6,10 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>Debug2</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Platforms\CrossX.WindowsForms\CrossX.WindowsForms.csproj" />
     <ProjectReference Include="..\Example.Core\Example.Core.csproj" />

@@ -1,4 +1,6 @@
 ﻿using CrossX.Abstractions.IoC;
+using CrossX.Abstractions.Mvvm;
+using CrossX.Framework.Binding;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.XxTools;
@@ -18,20 +20,27 @@ namespace CrossX.Framework.UI.Global
     }
 
     [XxSchemaExport(XxChildrenMode.OnlyOne)]
-    public class Window : IElementsContainer
+    public class Window : BindingContext, IElementsContainer, IDisposable, IViewParent
     {
-        public View RootView { get; private set; }
+        public View RootView
+        {
+            get => rootView;
+            private set
+            {
+                rootView = value;
+            }
+        }
 
-        public string Title 
-        { 
+        public string Title
+        {
             set
             {
                 if (nativeWindow == null) return;
                 nativeWindow.Title = value;
             }
         }
-        public Length Desktop_MinWidth 
-        { 
+        public Length Desktop_MinWidth
+        {
             set
             {
                 if (nativeWindow == null) return;
@@ -117,36 +126,52 @@ namespace CrossX.Framework.UI.Global
             }
         }
 
+        public object BindingContext { get => bindingContext; set => SetProperty(ref bindingContext, value); }
+
         Size minSize = Size.Empty;
         Size maxSize = new Size(100000, 100000);
         Size size = new Size(800, 600);
-
+        private View rootView;
+        private object bindingContext;
+        private bool layoutInvalid;
         private readonly INativeWindow nativeWindow;
+        private readonly IBindingService bindingService;
 
         public Window(IServicesProvider servicesProvider)
         {
             servicesProvider.TryResolveInstance(out nativeWindow);
+            bindingService = servicesProvider.GetService<IBindingService>();
         }
 
         public void InitChildren(IEnumerable<object> elements)
         {
             if (elements.Count() != 1) throw new InvalidOperationException("Window must have only one child - root view.");
             RootView = (View)elements.First();
+            RootView.Parent = this;
+            RecalculateLayout();
         }
 
         [XxSchemaIgnore]
         public Size Size
         {
-            get => ((SizeF)((Vector2)RootView.Bounds.Size * UiUnit.PixelsPerUnit)).Round();
+            get => size;
 
             set
             {
-                RootView.Bounds = new RectangleF(Vector2.Zero, (Vector2)(SizeF)value / UiUnit.PixelsPerUnit);
+                if (SetProperty(ref size, value))
+                {
+                    RecalculateLayout();
+                }
             }
         }
 
+        public SizeF ScaledSize => (Vector2)(SizeF)Size / UiUnit.PixelsPerUnit;
+
+        public RectangleF ScreenBounds => new RectangleF(0, 0, ScaledSize.Width, ScaledSize.Height);
+
         public void Update(float timeDelta)
         {
+            if(layoutInvalid) RecalculateLayout();
             RootView?.Update(timeDelta);
         }
 
@@ -156,6 +181,26 @@ namespace CrossX.Framework.UI.Global
             canvas.Transform(Matrix3x2.CreateScale(UiUnit.PixelsPerUnit));
             RootView?.Render(canvas);
             canvas.Restore();
+        }
+
+        public void Dispose()
+        {
+            RootView.Dispose();
+            bindingService.RemoveBindings(this);
+        }
+
+        public void InvalidateLayout()
+        {
+            layoutInvalid = true;
+        }
+
+        private void RecalculateLayout()
+        {
+            layoutInvalid = false;
+            var child = RootView;
+            var size = child.CalculateSize(ScaledSize);
+            var position = child.CalculatePosition(size, ScaledSize);
+            child.Bounds = new RectangleF(position, size);
         }
     }
 }

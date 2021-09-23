@@ -7,7 +7,7 @@ using Xx;
 namespace CrossX.Framework.UI.Containers
 {
     [XxSchemaExport(XxChildrenMode.Multiple)]
-    public abstract class ViewContainer : View, IElementsContainer
+    public abstract class ViewContainer : View, IElementsContainer, IViewParent
     {
         private bool layoutInvalid;
         private Thickness padding;
@@ -26,7 +26,7 @@ namespace CrossX.Framework.UI.Containers
             }
         }
 
-        public ViewContainer(IRedrawService redrawService) : base(redrawService)
+        public ViewContainer(IUIServices services) : base(services)
         {
             Children = new ChildrenCollection(this);
         }
@@ -49,7 +49,7 @@ namespace CrossX.Framework.UI.Containers
             if (layoutInvalid)
             {
                 RecalculateLayout();
-                RedrawService.RequestRedraw();
+                Services.RedrawService.RequestRedraw();
             }
             base.OnUpdate(time);
         }
@@ -87,6 +87,18 @@ namespace CrossX.Framework.UI.Containers
                 if (Children[idx].ProcessGesture(gesture)) return true;
             }
             return false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (!disposing) return;
+
+            for (var idx = 0; idx < Children.Count; ++idx)
+            {
+                Children[idx].Dispose();
+            }
         }
     }
 }

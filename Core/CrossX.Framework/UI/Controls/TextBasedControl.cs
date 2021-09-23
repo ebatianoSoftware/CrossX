@@ -13,8 +13,6 @@ namespace CrossX.Framework.UI.Controls
         private Alignment horizontalTextAlign = Alignment.Center;
         private Alignment verticalTextAlign = Alignment.Center;
         private Color foregroundColor = Color.Black;
-        protected readonly IFontManager FontManager;
-
         private FontMeasure fontMeasure = FontMeasure.Extended;
         private Thickness textPadding;
 
@@ -52,9 +50,8 @@ namespace CrossX.Framework.UI.Controls
 
         public Color ForegroundColor { get => foregroundColor; set => SetProperty(ref foregroundColor, value); }
 
-        public TextBasedControl(IFontManager fontManager, IRedrawService redrawService) : base(redrawService)
+        public TextBasedControl(IUIServices services) : base(services)
         {
-            FontManager = fontManager;
         }
 
         public override SizeF CalculateSize(SizeF parentSize)
@@ -64,7 +61,7 @@ namespace CrossX.Framework.UI.Controls
             var autoWidth = Width.IsAuto && HorizontalAlignment != Alignment.Stretch;
             var autoHeight = Height.IsAuto && VerticalAlignment != Alignment.Stretch;
 
-            var font = FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
+            var font = Services.FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
             var sizeAuto = font.MeasureText(Text, FontMeasure);
 
 

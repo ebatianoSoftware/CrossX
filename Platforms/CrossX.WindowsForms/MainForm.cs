@@ -262,6 +262,7 @@ namespace CrossX.WindowsForms
             base.OnHandleDestroyed(args);
             MainLoop.Finish();
             skiaCanvas.Canvas.Dispose();
+            app.Dispose();
         }
 
         private void SkglControl_KeyDown(object sender, KeyEventArgs args)

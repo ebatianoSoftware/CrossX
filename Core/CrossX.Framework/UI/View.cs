@@ -1,17 +1,15 @@
-﻿using CrossX.Framework.Graphics;
+﻿using CrossX.Abstractions.Mvvm;
+using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
-using CrossX.Framework.UI.Containers;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using Xx;
 
 namespace CrossX.Framework.UI
 {
     [XxSchemaBindable(true)]
     [XxSchemaExport]
-    public abstract class View : INotifyPropertyChanged
+    public abstract class View : BindingContext, IDisposable
     {
         private RectangleF bounds;
         private Alignment horizontalAlignment;
@@ -21,9 +19,10 @@ namespace CrossX.Framework.UI
         private Color backgroundColor = Color.Transparent;
         private Thickness margin = Thickness.Zero;
         private bool visible;
-        protected readonly IRedrawService RedrawService;
+        private object bindingContext;
+        private IViewParent parent;
+        protected readonly IUIServices Services;
 
-        public event PropertyChangedEventHandler PropertyChanged;
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
 
         [XxSchemaIgnore]
@@ -39,11 +38,12 @@ namespace CrossX.Framework.UI
                     RaisePropertyChanged(nameof(ActualWidth));
                     RaisePropertyChanged(nameof(ActualHeight));
                     RecalculateLayout();
-                    RedrawService.RequestRedraw();
+                    Services.RedrawService.RequestRedraw();
                 }
             }
         }
 
+        public object BindingContext { get => bindingContext; set => SetProperty(ref bindingContext, value); }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Length Width { get => width; set => SetProperty(ref width, value); }
@@ -61,11 +61,22 @@ namespace CrossX.Framework.UI
         public float ActualWidth => Bounds.Width;
         public float ActualHeight => Bounds.Height;
 
-        public ViewContainer Parent { get; internal set; }
+        public IViewParent Parent
+        { 
+            get => parent;
+            internal set
+            {
+                parent = value;
+                if(BindingContext == null && parent != null)
+                {
+                    Services.BindingService.AddDataContextBinding(this, parent, nameof(BindingContext));
+                }
+            }
+        }
 
-        protected View(IRedrawService redrawService)
+        protected View(IUIServices services)
         {
-            this.RedrawService = redrawService;
+            Services = services;
         }
 
         public void Render(Canvas canvas)
@@ -141,30 +152,9 @@ namespace CrossX.Framework.UI
             return new Vector2(x, y);
         }
 
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            OnPropertyChanged(propertyName);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName) { }
-
-        protected bool SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
-        {
-            if (EqualityComparer<T>.Default.Equals(property, value)) return false;
-
-            property = value;
-            RaisePropertyChanged(propertyName);
-            return true;
-        }
-
         public bool PreviewGesture(Gesture gesture)
         {
-            if(OnPreviewGesture(gesture))
-            {
-                RedrawService.RequestRedraw();
-                return true;
-            }
+            if (OnPreviewGesture(gesture)) return true;
             return false;
         }
 
@@ -182,6 +172,33 @@ namespace CrossX.Framework.UI
         protected virtual bool OnProcessGesture(Gesture gesture)
         {
             return false;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Services.BindingService.RemoveBindings(this);
+            }
+        }
+
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            switch(propertyName)
+            {
+                case nameof(Width):
+                case nameof(Height):
+                case nameof(HorizontalAlignment):
+                case nameof(VerticalAlignment):
+                case nameof(Margin):
+                    Parent?.InvalidateLayout();
+                    break;
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace CrossX.Framework.Core
 {
-    public interface ICoreApplication
+    public interface ICoreApplication: IDisposable
     {
         void Run();
         void DoUpdate(TimeSpan ellapsedTime, Size size);

@@ -16,7 +16,8 @@ namespace CrossX.Framework.ApplicationDefinition
 
         public object FindResource(string name)
         {
-            throw new NotImplementedException();
+            if (resources.TryGetValue(name, out var value)) return value;
+            return null;
         }
 
         public IEnumerable<Style> GetStyles(Type type, string classes)
@@ -26,7 +27,8 @@ namespace CrossX.Framework.ApplicationDefinition
 
         public object GetValue(string name)
         {
-            throw new NotImplementedException();
+            if (values.TryGetValue(name, out var value)) return value;
+            return null;
         }
 
         public void InitChildren(IEnumerable<object> elements)

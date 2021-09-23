@@ -23,7 +23,7 @@ namespace CrossX.Framework.UI.Controls
         public Alignment VerticalTextAlignment { get => verticalTextAlign; set => SetProperty(ref verticalTextAlign, value); }
         public Color TextColor { get => textColor; set => SetProperty(ref textColor, value); }
 
-        public TextBox(IFontManager fontManager, IRedrawService redrawService) : base(redrawService)
+        public TextBox(IFontManager fontManager, IUIServices services) : base(services)
         {
             this.fontManager = fontManager;
         }
