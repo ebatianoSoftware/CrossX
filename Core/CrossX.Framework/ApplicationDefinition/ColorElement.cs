@@ -2,17 +2,27 @@
 
 namespace CrossX.Framework.ApplicationDefinition
 {
-    [XxSchemaExport]
-    public class ColorElement
+    public interface IValueElement
     {
-        public string Key { get; set; }
-        public Color Value { get; set; }
+        string Key { get; }
+        object Value { get; }
     }
 
     [XxSchemaExport]
-    public class LengthElement
+    public class ColorElement: IValueElement
+    {
+        public string Key { get; set; }
+        public Color Value { get; set; }
+
+        object IValueElement.Value => Value;
+    }
+
+    [XxSchemaExport]
+    public class LengthElement: IValueElement
     {
         public string Key { get; set; }
         public Length Value { get; set; }
+
+        object IValueElement.Value => Value;
     }
 }

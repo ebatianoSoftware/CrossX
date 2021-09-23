@@ -72,7 +72,6 @@ namespace CrossX.Framework.UI.Controls
             if (image == null) return;
 
             CalculateSourceAndTarget(out var target, out var source);
-
             canvas.DrawImage(image, target, source, Opacity);
         }
 
@@ -126,12 +125,25 @@ namespace CrossX.Framework.UI.Controls
                 return;
             }
             
+            if(desc.Uri == "")
+            {
+                image = null;
+            }
+
             try
             {
                 var img = await Services.ImageCache.GetImage(desc.Uri);
                 Services.Dispatcher.BeginInvoke(() =>
                 {
-                    Source = new ImageDescriptor(desc.Uri, img);
+                    if (Source.Uri == desc.Uri)
+                    {
+                        Source = new ImageDescriptor(desc.Uri, img);
+                    }
+                    else
+                    {
+                        image = img;
+                        Parent?.InvalidateLayout();
+                    }
                 });
             }
             catch

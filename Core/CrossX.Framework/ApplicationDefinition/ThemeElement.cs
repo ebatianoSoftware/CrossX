@@ -1,5 +1,7 @@
-﻿using CrossX.Framework.XxTools;
+﻿using CrossX.Framework.Core;
+using CrossX.Framework.XxTools;
 using System.Collections.Generic;
+using System.Linq;
 using Xx;
 
 namespace CrossX.Framework.ApplicationDefinition
@@ -7,27 +9,19 @@ namespace CrossX.Framework.ApplicationDefinition
     [XxSchemaExport(XxChildrenMode.Multiple, typeof(ColorElement), typeof(LengthElement), typeof(ImportElement))]
     public class ThemeElement : IElementsContainer
     {
-        public IReadOnlyDictionary<string, object> Values { get; private set; }
+        private readonly IAppValues appValues;
+
+        public ThemeElement(IAppValues appValues)
+        {
+            this.appValues = appValues;
+        }
 
         public void InitChildren(IEnumerable<object> elements)
         {
-            var values = new Dictionary<string, object>();
-
-            foreach(var element in elements)
+            foreach(var el in elements.Where( o=> o is IValueElement ).Cast<IValueElement>())
             {
-                switch(element)
-                {
-                    case ColorElement ce:
-                        values.Add(ce.Key, ce.Value);
-                        break;
-
-                    case LengthElement le:
-                        values.Add(le.Key, le.Value);
-                        break;
-                }
+                appValues.RegisterValue(el.Key, el.Value);
             }
-
-            Values = values;
         }
     }
 }

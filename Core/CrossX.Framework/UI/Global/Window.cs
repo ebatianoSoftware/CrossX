@@ -20,7 +20,7 @@ namespace CrossX.Framework.UI.Global
     }
 
     [XxSchemaExport(XxChildrenMode.OnlyOne)]
-    public class Window : BindingContext, IElementsContainer, IDisposable, IViewParent
+    public class Window : UIBindingContext, IElementsContainer, IDisposable, IViewParent
     {
         public View RootView
         {
@@ -126,13 +126,10 @@ namespace CrossX.Framework.UI.Global
             }
         }
 
-        public object BindingContext { get => bindingContext; set => SetProperty(ref bindingContext, value); }
-
         Size minSize = Size.Empty;
         Size maxSize = new Size(100000, 100000);
         Size size = new Size(800, 600);
         private View rootView;
-        private object bindingContext;
         private bool layoutInvalid;
         private readonly INativeWindow nativeWindow;
         private readonly IBindingService bindingService;

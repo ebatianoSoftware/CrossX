@@ -7,18 +7,20 @@ namespace CrossX.Framework.Binding
 {
     public class BaseBinding: IDisposable
     {
+        private readonly IConversionService conversionService;
+
         public object Target { get; }
         public PropertyInfo TargetProperty { get; }
         public string SourcePropertyName { get; }
         public object Source { get; private set; }
         public PropertyInfo SourceProperty { get; private set; }
         
-        public BaseBinding(object target, PropertyInfo targetProperty, object source, string sourcePropertyName)
+        public BaseBinding(object target, PropertyInfo targetProperty, object source, string sourcePropertyName, IConversionService conversionService)
         {
             Target = target;
             TargetProperty = targetProperty;
             SourcePropertyName = sourcePropertyName;
-
+            this.conversionService = conversionService;
             ChangeDataContext(source);
         }
 
@@ -36,11 +38,21 @@ namespace CrossX.Framework.Binding
         {
             try
             {
-                TargetProperty.SetValue(Target, SourceProperty.GetValue(Source));
+                SetProperty(Target, TargetProperty, Source, SourceProperty);
             }
             catch
             {
             }
+        }
+
+        protected void SetProperty(object to, PropertyInfo toInfo, object from, PropertyInfo fromInfo)
+        {
+            object value = fromInfo.GetValue(from);
+            value = conversionService.Convert(value, toInfo.PropertyType);
+
+            if (value == null) return;
+
+            toInfo.SetValue(to, value);
         }
 
         protected void ChangeDataContext(object context)

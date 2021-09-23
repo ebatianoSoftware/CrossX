@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.XxTools;
+﻿using CrossX.Framework.Core;
+using CrossX.Framework.XxTools;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace CrossX.Framework.ApplicationDefinition
         { 
             set
             {
-                var key = Key;
+                var key = keyValue;
 
                 var filters = value.Split(':');
                 var name = filters[0];
@@ -26,12 +27,17 @@ namespace CrossX.Framework.ApplicationDefinition
                     key.State = filters[1];
                 }
                 key.Name = name;
-                Key = key;
+                keyValue = key;
             }
         }
 
-        public SelectorKey Key { get; private set; }
-        public XxElement Element { get; private set; }
+        private SelectorKey keyValue;
+        private readonly IAppValues appValues;
+
+        public Style(IAppValues appValues)
+        {
+            this.appValues = appValues;
+        }
 
         public void InitChildren(IEnumerable<object> elements)
         {
@@ -39,10 +45,10 @@ namespace CrossX.Framework.ApplicationDefinition
 
             if (element != null)
             {
-                var key = Key;
+                var key = keyValue;
                 key.Type = element.Type;
-                Element = element;
-                Key = key;
+
+                appValues.RegisterStyle(key, element);
             }
         }
     }

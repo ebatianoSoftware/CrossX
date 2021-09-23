@@ -7,7 +7,7 @@
   Desktop.StartMode="Normal"
   Title="CrossX Example Application">
 
-  <FrameLayout BackgroundColor="Black">
+  <FrameLayout BackgroundColor="{Theme BackgroundColor}">
     <Label ForegroundColor="White" BackgroundColor="DarkSlateBlue" Text="00:00.000"
            HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" FontSize="30"
            FontMeasure="Strict" TextPadding="16"/>
@@ -17,18 +17,11 @@
             BackgroundColorPushed="#404050" ForegroundColorPushed="AntiqueWhite"
             FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
             Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Start" Margin="30"
-            Text="Push ME!"/>
+            Text="Push ME!"
+            Command="{Binding TestCommand}"/>
 
-    <Button BackgroundColor="#80404050" ForegroundColor="White"
-            BackgroundColorOver="#606070" ForegroundColorOver="AntiqueWhite"
-            BackgroundColorPushed="#404050" ForegroundColorPushed="AntiqueWhite"
-            FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
-            Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
-            Text="Push ME!"/>
-
-    <ImageView Source="https://picsum.photos/400/300"
-               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-               Stretch="UniformToFill" Margin="50"/>
+    <ImageView Source="{Binding ImageUrl}"
+               HorizontalAlignment="Center" VerticalAlignment="Center"/>
   
   </FrameLayout>
 </g:Window>

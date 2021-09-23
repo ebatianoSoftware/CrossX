@@ -31,15 +31,20 @@ namespace CrossX.Framework.Core
 
         void ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
+            var assembly = GetType().Assembly;
             var builder = new ScopeBuilder(servicesProvider);
-            var elementTypeMapping = new ElementTypeMapping(GetType().Assembly);
-            var applicationDefinition = LoadApplicationDefinition(elementTypeMapping, servicesProvider.GetService<IObjectFactory>());
+            var elementTypeMapping = new ElementTypeMapping(assembly);
+            var appValues = new AppValues();
+            var conversionService = new ConversionService(assembly);
+            var bindingService = new BindingService(appValues, conversionService);
+
+            LoadApplicationDefinition(appValues, bindingService, elementTypeMapping, servicesProvider.GetService<IObjectFactory>());
 
             builder
                 .WithInstance(this).As<Application>().As(GetType())
                 .WithInstance(elementTypeMapping).As<IElementTypeMapping>()
-                .WithInstance(applicationDefinition).As<IAppValues>()
-                .WithType<BindingService>().As<IBindingService>()
+                .WithInstance(appValues).As<IAppValues>()
+                .WithInstance(bindingService).As<IBindingService>()
                 .WithType<UIServices>().As<IUIServices>().AsSingleton();
 
             BeforeInitServices?.Invoke(servicesProvider, builder);
@@ -52,7 +57,7 @@ namespace CrossX.Framework.Core
             ObjectFactory = Services.GetService<IObjectFactory>();
         }
 
-        private ApplicationElement LoadApplicationDefinition(IElementTypeMapping elementTypeMapping, IObjectFactory objectFactory)
+        private void LoadApplicationDefinition(IAppValues appValues, IBindingService bindingService, IElementTypeMapping elementTypeMapping, IObjectFactory objectFactory)
         {
             try
             {
@@ -63,8 +68,17 @@ namespace CrossX.Framework.Core
                     element = parser.Parse(stream);
                 }
 
-                var defObjectFactory = objectFactory.Create<XxDefinitionObjectFactory>(elementTypeMapping);
-                return defObjectFactory.CreateObject<ApplicationElement>(element);
+                var scopeBuilder = objectFactory.Create<IScopeBuilder>();
+
+                scopeBuilder
+                    .WithInstance(elementTypeMapping).As<IElementTypeMapping>()
+                    .WithInstance(appValues).As<IAppValues>()
+                    .WithInstance(bindingService).As<IBindingService>();
+
+                var services = scopeBuilder.Build();
+                var defObjectFactory = services.GetService<IObjectFactory>().Create<XxDefinitionObjectFactory>();
+
+                defObjectFactory.CreateObject<ApplicationElement>(element);
             }
             catch (Exception ex)
             {
@@ -133,7 +147,7 @@ namespace CrossX.Framework.Core
 
                 var defObjectFactory = ObjectFactory.Create<XxDefinitionObjectFactory>();
                 Window = defObjectFactory.CreateObject<Window>(viewElement);
-                Window.BindingContext = vm;
+                Window.DataContext = vm;
             }
             catch(Exception ex)
             {

@@ -12,6 +12,7 @@ using DrawingSize = System.Drawing.Size;
 using DrawingRectangle = System.Drawing.Rectangle;
 using CrossX.Framework.Input;
 using System.Numerics;
+using System.Threading.Tasks;
 
 namespace CrossX.WindowsForms
 {

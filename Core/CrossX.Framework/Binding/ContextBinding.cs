@@ -8,8 +8,8 @@ namespace CrossX.Framework.Binding
         public BindingMode BindingMode { get; }
         public PropertyInfo TargetBindingContextProperty { get; }
 
-        public ContextBinding(object target, PropertyInfo targetProperty, string bindingContextPropertyName, string sourcePropertyName, BindingMode mode)
-            : base(target, targetProperty, null, sourcePropertyName)
+        public ContextBinding(object target, PropertyInfo targetProperty, string bindingContextPropertyName, string sourcePropertyName, BindingMode mode, IConversionService conversionService)
+            : base(target, targetProperty, null, sourcePropertyName, conversionService)
         {
             BindingMode = mode;
 
@@ -42,7 +42,7 @@ namespace CrossX.Framework.Binding
         {
             try
             {
-                SourceProperty.SetValue(Source, TargetProperty.GetValue(Target));
+                SetProperty(Source, SourceProperty, Target, TargetProperty);
             }
             catch
             {

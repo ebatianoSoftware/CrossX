@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using CrossX.Abstractions.Mvvm;
+using System.Globalization;
 using Xx;
 
 namespace CrossX.Framework
@@ -6,6 +7,32 @@ namespace CrossX.Framework
     [XxSchemaPattern(@"[-]?([0-9]*[.])?[0-9]+(px|%|\*)?")]
     public struct Length
     {
+        [ValueConverter(typeof(float), typeof(Length))]
+        internal class FloatToLengthConverter : IValueConverter
+        {
+            public object Convert(object value)
+            {
+                if(value is float f)
+                {
+                    return new Length(f);
+                }
+                return null;
+            }
+        }
+
+        [ValueConverter(typeof(int), typeof(Length))]
+        internal class IntToLengthConverter : IValueConverter
+        {
+            public object Convert(object value)
+            {
+                if (value is int i)
+                {
+                    return new Length(i);
+                }
+                return null;
+            }
+        }
+
         public enum Type
         {
             Auto,

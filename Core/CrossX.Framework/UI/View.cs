@@ -9,7 +9,7 @@ namespace CrossX.Framework.UI
 {
     [XxSchemaBindable(true)]
     [XxSchemaExport]
-    public abstract class View : BindingContext, IDisposable
+    public abstract class View : UIBindingContext, IDisposable
     {
         private RectangleF bounds;
         private Alignment horizontalAlignment;
@@ -19,7 +19,7 @@ namespace CrossX.Framework.UI
         private Color backgroundColor = Color.Transparent;
         private Thickness margin = Thickness.Zero;
         private bool visible;
-        private object bindingContext;
+        
         private IViewParent parent;
         protected readonly IUIServices Services;
 
@@ -43,7 +43,6 @@ namespace CrossX.Framework.UI
             }
         }
 
-        public object BindingContext { get => bindingContext; set => SetProperty(ref bindingContext, value); }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Length Width { get => width; set => SetProperty(ref width, value); }
@@ -67,9 +66,9 @@ namespace CrossX.Framework.UI
             internal set
             {
                 parent = value;
-                if(BindingContext == null && parent != null)
+                if(DataContext == null && parent != null)
                 {
-                    Services.BindingService.AddDataContextBinding(this, parent, nameof(BindingContext));
+                    Services.BindingService.AddDataContextBinding(this, parent);
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.IoC;
+using CrossX.Framework.Binding;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,11 +13,13 @@ namespace CrossX.Framework.XxTools
     {
         private readonly IObjectFactory objectFactory;
         private readonly IElementTypeMapping elementTypeMapping;
+        private readonly IBindingService bindingService;
 
-        public XxDefinitionObjectFactory(IObjectFactory objectFactory, IElementTypeMapping elementTypeMapping)
+        public XxDefinitionObjectFactory(IObjectFactory objectFactory, IElementTypeMapping elementTypeMapping, IBindingService bindingService)
         {
             this.objectFactory = objectFactory;
             this.elementTypeMapping = elementTypeMapping;
+            this.bindingService = bindingService;
         }
 
         public TInstance CreateObject<TInstance>(XxElement element)
@@ -59,6 +62,10 @@ namespace CrossX.Framework.XxTools
                     if (prop.Key.GetCustomAttribute<XxBindingStringAttribute>() != null)
                     {
                         prop.Key.SetValue(instance, $"{{{binding.Value}}}");
+                    }
+                    else
+                    {
+                        bindingService.AddBinding(instance, prop.Key, binding.Value);
                     }
                 }
                 else

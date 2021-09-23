@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using CrossX.Abstractions.Mvvm;
+using CrossX.Framework.Core;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace CrossX.Framework.Binding
@@ -6,7 +9,16 @@ namespace CrossX.Framework.Binding
     internal class BindingService : IBindingService
     {
         private readonly List<BaseBinding> bindings = new List<BaseBinding>();
-        public void AddBinding(BaseBinding binding)
+        private readonly IAppValues appValues;
+        private readonly IConversionService conversionService;
+
+        public BindingService(IAppValues appValues, IConversionService conversionService)
+        {
+            this.appValues = appValues;
+            this.conversionService = conversionService;
+        }
+
+        private void AddBinding(BaseBinding binding)
         {
             for (var idx = 0; idx < bindings.Count;)
             {
@@ -34,17 +46,90 @@ namespace CrossX.Framework.Binding
             }
         }
 
+        public void RemoveBinding(object target, string propertyName)
+        {
+            for (var idx = 0; idx < bindings.Count;)
+            {
+                if (bindings[idx].Target == target && bindings[idx].TargetProperty.Name == propertyName)
+                {
+                    bindings.RemoveAt(idx);
+                    continue;
+                }
+                ++idx;
+            }
+        }
+
         public void AddBinding(object target, PropertyInfo property, string bindingString)
         {
+            var parts = bindingString.Split(' ');
+
+            switch(parts[0])
+            {
+                case "Binding":
+                    AddValueBinding(target, property, string.Join(" ", parts.Skip(1)));
+                    break;
+
+                case "Theme":
+                    if (parts.Length > 1)
+                    {
+                        SetThemeValue(target, property, parts[1]);
+                    }
+                    break;
+
+                case "Resource":
+                    if (parts.Length > 1)
+                    {
+                        SetResourceValue(target, property, parts[1]);
+                    }
+                    break;
+            }
 
         }
 
-        public void AddDataContextBinding(object target, object source, string dataContextPropertyName)
+        private void SetResourceValue(object target, PropertyInfo property, string name)
         {
-            var targetProperty = target.GetType().GetProperty(dataContextPropertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
+            var res = appValues.GetResource(name);
+            if (res != null)
+            {
+                // TODO: Add build in conversion
+                try
+                {
+                    property.SetValue(target, res);
+                }
+                catch { }
+            }
+        }
+
+        private void SetThemeValue(object target, PropertyInfo property, string name)
+        {
+            var value = appValues.GetValue(name);
+            if (value != null)
+            {
+                // TODO: Add build in conversion
+                try
+                {
+                    property.SetValue(target, value);
+                }
+                catch { }
+            }
+        }
+
+        private void AddValueBinding(object target, PropertyInfo property, string binding)
+        {
+            var parts = binding.Split(',').Select(o => o.Trim()).ToArray();
+            var srcProperty = parts[0];
+
+            // TODO: use property properly
+            var mode = property.GetCustomAttribute<BindingModeAttribute>()?.Mode ?? BindingMode.OneWay;
+            AddBinding(new ContextBinding(target, property, nameof(UIBindingContext.DataContext), srcProperty, mode, conversionService));
+        }
+
+        public void AddDataContextBinding(object target, object source)
+        {
+            var targetProperty = target.GetType().GetProperty(nameof(UIBindingContext.DataContext), BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
             if (targetProperty == null) return;
 
-            AddBinding(new BaseBinding(target, targetProperty, source, dataContextPropertyName));
+            AddBinding(new BaseBinding(target, targetProperty, source, nameof(UIBindingContext.DataContext), conversionService));
         }
     }
 }
