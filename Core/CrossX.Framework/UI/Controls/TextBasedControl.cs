@@ -52,7 +52,7 @@ namespace CrossX.Framework.UI.Controls
 
         public Color ForegroundColor { get => foregroundColor; set => SetProperty(ref foregroundColor, value); }
 
-        public TextBasedControl(IFontManager fontManager)
+        public TextBasedControl(IFontManager fontManager, IRedrawService redrawService) : base(redrawService)
         {
             FontManager = fontManager;
         }

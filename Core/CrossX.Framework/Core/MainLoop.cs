@@ -2,9 +2,9 @@
 using CrossX.Abstractions.IoC;
 using CrossX.Framework.Async;
 using CrossX.Framework.Graphics;
+using CrossX.Framework.Utility;
 using System;
 using System.Diagnostics;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,10 +30,10 @@ namespace CrossX.Framework.Core
         private readonly Dispatcher dispatcher = new Dispatcher();
         private SystemDispatcher systemDispatcher;
         private Sequencer sequencer = new Sequencer();
-
+        
         public IDispatcher Dispatcher => dispatcher;
 
-        public MainLoop(ICoreApplication coreApplication, Action redrawFunc, IScopeBuilder scopeBuilder, float dpi, bool createSystemDispatcher)
+        public MainLoop(ICoreApplication coreApplication, Action redrawFunc, IScopeBuilder scopeBuilder, float dpi)
         {
             UiUnit.PixelsPerUnit = dpi / 96f;
 
@@ -49,22 +49,24 @@ namespace CrossX.Framework.Core
                 .WithInstance(this).As<IRedrawService>()
                 .WithCrossTypes();
 
-            if(createSystemDispatcher)
-            {
-                systemDispatcher = new SystemDispatcher(RequestRedraw);
-                scopeBuilder.WithInstance(systemDispatcher).As<ISystemDispatcher>();
-            }
+            systemDispatcher = new SystemDispatcher();
+            scopeBuilder.WithInstance(systemDispatcher).As<ISystemDispatcher>();
+            
         }
 
-        private async Task Loop(CancellationToken cancellationToken)
+        public void ProcessSystemDispatcher() => systemDispatcher.Process();
+
+        private void Loop(CancellationToken cancellationToken)
         {
+            dispatcher.DispatcherThread = Thread.CurrentThread;
+
             _stopwatch.Start();
             coreApplication.Run();
 
             RequestRedraw();
 
             var lastUpdateTimeSpan = _stopwatch.Elapsed;
-
+            
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
@@ -85,7 +87,7 @@ namespace CrossX.Framework.Core
                     }
                     else
                     {
-                        await Task.Delay(15);
+                        dispatcher.Wait(1000);
                     }
                 }
                 catch (Exception ex)
@@ -101,7 +103,7 @@ namespace CrossX.Framework.Core
         {
             if (_loopTask == null)
             {
-                _loopTask = Task.Run(async () => await Loop(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+                _loopTask = Task.Run(()=>Loop(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
             }
 
             if (size != canvas.Size)
@@ -109,9 +111,14 @@ namespace CrossX.Framework.Core
                 size = canvas.Size;
                 _updatedEvent.Reset();
                 _invalidatedEvent.Set();
+                dispatcher.Touch();
                 _updatedEvent.WaitOne(100);
             }
 
+            if(systemDispatcher != null)
+            {
+                systemDispatcher.DispatcherThread = Thread.CurrentThread;
+            }
             systemDispatcher?.Process();
 
             var currentTimeSpan = _stopwatch.Elapsed;
@@ -125,7 +132,7 @@ namespace CrossX.Framework.Core
 
             if (_loopTask == null)
             {
-                _loopTask = Task.Run(async () => await Loop(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+                _loopTask = Task.Run(() => Loop(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
             }
 
             _updatedEvent.WaitOne(500);

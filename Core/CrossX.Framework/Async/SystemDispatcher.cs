@@ -6,15 +6,18 @@ namespace CrossX.Framework.Async
     {
         private readonly Action onNewTask;
 
-        public SystemDispatcher(Action onNewTask)
+        public SystemDispatcher(Action onNewTask = null)
         {
             this.onNewTask = onNewTask;
         }
 
         public override void BeginInvoke(Action action)
         {
-            base.BeginInvoke(action);
-            onNewTask?.Invoke();
+            if(!InvokeOnDispatcherThread(action))
+            {
+                EnqueueAction(action);
+                onNewTask?.Invoke();
+            }
         }
     }
 }

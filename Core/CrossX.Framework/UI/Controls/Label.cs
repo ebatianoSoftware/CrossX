@@ -4,7 +4,7 @@ namespace CrossX.Framework.UI.Controls
 {
     public class Label : TextBasedControl
     {
-        public Label(IFontManager fontManager) : base(fontManager)
+        public Label(IFontManager fontManager, IRedrawService redrawService) : base(fontManager, redrawService)
         {
         }
 

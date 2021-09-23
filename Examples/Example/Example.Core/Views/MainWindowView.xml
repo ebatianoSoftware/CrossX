@@ -7,7 +7,7 @@
   Desktop.StartMode="Normal"
   Title="CrossX Example Application">
 
-  <FrameLayout BackgroundColor="CornflowerBlue">
+  <FrameLayout BackgroundColor="Black">
     <Label ForegroundColor="White" BackgroundColor="DarkSlateBlue" Text="00:00.000"
            HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" FontSize="30"
            FontMeasure="Strict" TextPadding="16"/>
@@ -25,7 +25,11 @@
             FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
             Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
             Text="Push ME!"/>
-    
+
+    <ImageView Source="https://picsum.photos/400/300" 
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+               Stretch="UniformToFill" Margin="10"/>
+  
   </FrameLayout>
 </g:Window>
 

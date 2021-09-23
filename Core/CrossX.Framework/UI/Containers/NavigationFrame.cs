@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Navigation;
+﻿using CrossX.Framework.Graphics;
+using CrossX.Framework.Navigation;
 using CrossX.Framework.Transforms;
 using System.Windows.Input;
 
@@ -30,7 +31,7 @@ namespace CrossX.Framework.UI.Containers
 
         private INavigationController navigationController;
 
-        public NavigationFrame()
+        public NavigationFrame(IRedrawService redrawService): base(redrawService)
         {
 
         }

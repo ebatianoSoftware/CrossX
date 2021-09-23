@@ -20,7 +20,7 @@ namespace CrossX.WindowsForms
         private readonly ISkiaCanvas skiaCanvas;
         private readonly ICoreApplication app;
         private readonly ISystemDispatcher systemDispatcher;
-        private readonly MainLoop mainLoop;
+        public MainLoop MainLoop { get; }
         private FormBorderStyle lastFormBorderStyle = FormBorderStyle.Sizable;
         private DrawingRectangle lastNormalPosition;
         private FormWindowState lastNotFullscreenWindowState;
@@ -137,7 +137,7 @@ namespace CrossX.WindowsForms
                 dpi = gr.DpiX;
             }
 
-            mainLoop = new MainLoop(app, skglControl.Invalidate, scopeBuilder, dpi, true);
+            MainLoop = new MainLoop(app, skglControl.Invalidate, scopeBuilder, dpi);
 
             var services = scopeBuilder.Build();
             var factory = services.GetService<IObjectFactory>();
@@ -148,12 +148,11 @@ namespace CrossX.WindowsForms
             app.Initialize(services);
             this.app = app;
 
-            mainLoop.Initialize();
+            MainLoop.Initialize();
             Show();
             BringToFront();
             skglControl.Invalidate();
             skglControl.KeyDown += SkglControl_KeyDown;
-
             skglControl.MouseMove += SkglControl_MouseMove;
             skglControl.MouseDown += SkglControl_MouseDown;
             skglControl.MouseUp += SkglControl_MouseUp;
@@ -162,7 +161,7 @@ namespace CrossX.WindowsForms
 
         private void SkglControl_MouseLeave(object sender, EventArgs args)
         {
-            mainLoop.Dispatcher.BeginInvoke(() =>
+            MainLoop.Dispatcher.BeginInvoke(() =>
             {
                 app.OnPointerCancel(new PointerId(PointerKind.MouseLeftButton));
                 app.OnPointerCancel(new PointerId(PointerKind.MouseRightButton));
@@ -192,7 +191,7 @@ namespace CrossX.WindowsForms
 
             if (pointerKind != 0)
             {
-                mainLoop.Dispatcher.BeginInvoke(() =>
+                MainLoop.Dispatcher.BeginInvoke(() =>
                 {
                     app.OnPointerUp(new PointerId(pointerKind), position);
                 });
@@ -220,7 +219,7 @@ namespace CrossX.WindowsForms
 
             if (pointerKind != 0)
             {
-                mainLoop.Dispatcher.BeginInvoke(() =>
+                MainLoop.Dispatcher.BeginInvoke(() =>
                 {
                     app.OnPointerDown(new PointerId(pointerKind), position);
                 });
@@ -232,7 +231,7 @@ namespace CrossX.WindowsForms
             var position = new Vector2(args.Location.X, args.Location.Y);
             var button = args.Button;
 
-            mainLoop.Dispatcher.BeginInvoke(() =>
+            MainLoop.Dispatcher.BeginInvoke(() =>
             {
                 if (button.HasFlag(MouseButtons.Left))
                 {
@@ -255,13 +254,13 @@ namespace CrossX.WindowsForms
         private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs args)
         {
             skiaCanvas.Prepare(args.Surface.Canvas, args.BackendRenderTarget.Width, args.BackendRenderTarget.Height);
-            mainLoop.OnPaintSurface(skiaCanvas.Canvas);
+            MainLoop.OnPaintSurface(skiaCanvas.Canvas);
         }
 
         protected override void OnHandleDestroyed(EventArgs args)
         {
             base.OnHandleDestroyed(args);
-            mainLoop.Finish();
+            MainLoop.Finish();
             skiaCanvas.Canvas.Dispose();
         }
 

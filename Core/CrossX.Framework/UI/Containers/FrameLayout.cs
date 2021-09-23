@@ -1,8 +1,14 @@
-﻿namespace CrossX.Framework.UI.Containers
+﻿using CrossX.Framework.Graphics;
+
+namespace CrossX.Framework.UI.Containers
 {
     public class FrameLayout : ViewContainer
     {
-        public override void RecalculateLayout()
+        public FrameLayout(IRedrawService redrawService) : base(redrawService)
+        {
+        }
+
+        protected override void RecalculateLayout()
         {
             base.RecalculateLayout();
 

@@ -21,6 +21,7 @@ namespace CrossX.Framework.UI
         private Color backgroundColor = Color.Transparent;
         private Thickness margin = Thickness.Zero;
         private bool visible;
+        protected readonly IRedrawService RedrawService;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
@@ -38,6 +39,7 @@ namespace CrossX.Framework.UI
                     RaisePropertyChanged(nameof(ActualWidth));
                     RaisePropertyChanged(nameof(ActualHeight));
                     RecalculateLayout();
+                    RedrawService.RequestRedraw();
                 }
             }
         }
@@ -61,6 +63,11 @@ namespace CrossX.Framework.UI
 
         public ViewContainer Parent { get; internal set; }
 
+        protected View(IRedrawService redrawService)
+        {
+            this.RedrawService = redrawService;
+        }
+
         public void Render(Canvas canvas)
         {
             OnRender(canvas);
@@ -71,7 +78,7 @@ namespace CrossX.Framework.UI
             OnUpdate(time);
         }
 
-        public virtual void RecalculateLayout()
+        protected virtual void RecalculateLayout()
         {
 
         }

@@ -6,11 +6,13 @@
 
   <ItemGroup>
     <None Remove="App.xml" />
+    <None Remove="Assets\Images\Test.png" />
     <None Remove="Views\**" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="App.xml" />
+    <EmbeddedResource Include="Assets\Images\Test.png" />
     <EmbeddedResource Include="Views\**" />
   </ItemGroup>
 

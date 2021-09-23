@@ -26,7 +26,7 @@ namespace CrossX.Framework.UI.Containers
             }
         }
 
-        public ViewContainer()
+        public ViewContainer(IRedrawService redrawService) : base(redrawService)
         {
             Children = new ChildrenCollection(this);
         }
@@ -46,16 +46,16 @@ namespace CrossX.Framework.UI.Containers
 
         protected override void OnUpdate(float time)
         {
-            base.OnUpdate(time);
             if (layoutInvalid)
             {
                 RecalculateLayout();
+                RedrawService.RequestRedraw();
             }
+            base.OnUpdate(time);
         }
 
-        public override void RecalculateLayout()
+        protected override void RecalculateLayout()
         {
-            base.RecalculateLayout();
             layoutInvalid = false;
         }
 

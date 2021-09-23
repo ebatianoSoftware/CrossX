@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace CrossX.Framework.Graphics
 {
@@ -21,5 +20,6 @@ namespace CrossX.Framework.Graphics
         public abstract void Clear(Color color);
         public abstract void DrawTriangles(VertexBuffer vertexBuffer, Image image);
         public abstract Vector2 DrawText(string text, Font font, RectangleF target, TextAlign align, Color color, FontMeasure fontMeasure = FontMeasure.Extended);
+        public abstract void DrawImage(Image image, RectangleF target, RectangleF source, float opacity);
     }
 }

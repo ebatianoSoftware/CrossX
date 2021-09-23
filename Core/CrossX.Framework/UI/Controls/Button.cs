@@ -69,9 +69,8 @@ namespace CrossX.Framework.UI.Controls
         private Color foregroundColorOver = Color.Black;
         private Color foregroundColorDisabled = Color.DarkGray;
         private bool enabled = true;
-        private readonly IRedrawService redrawService;
 
-        public Button(IFontManager fontManager, IRedrawService redrawService) : base(fontManager)
+        public Button(IFontManager fontManager, IRedrawService redrawService) : base(fontManager, redrawService)
         {
             BackgroundDrawable = new RectangleDrawable
             {
@@ -81,7 +80,6 @@ namespace CrossX.Framework.UI.Controls
                 //StrokeColor = Color.Gray,
                 //StrokeThickness = 2
             };
-            this.redrawService = redrawService;
         }
 
         protected override void OnRender(Canvas canvas)
@@ -204,7 +202,7 @@ namespace CrossX.Framework.UI.Controls
                 case nameof(Enabled):
                     lockedPointer = PointerId.None;
                     state = State.Normal;
-                    redrawService.RequestRedraw();
+                    RedrawService.RequestRedraw();
                     break;
             }
         }

@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace CrossX.Skia.Graphics
 {
-    internal class SkiaCanvas: Canvas, ISkiaCanvas
+    internal class SkiaCanvas : Canvas, ISkiaCanvas
     {
         private SKCanvas skCanvas;
         private SKPaint skPaint = new SKPaint
@@ -132,6 +132,13 @@ namespace CrossX.Skia.Graphics
             skPaint.IsStroke = true;
             skPaint.StrokeWidth = thickness;
             skCanvas.DrawRoundRect(rect.ToSkia(), new SKSize(roundness.X, roundness.Y), skPaint);
+        }
+
+        public override void DrawImage(Image image, RectangleF target, RectangleF source, float opacity)
+        {
+            var skiaImage = (SkiaImage)image;
+            skPaint.Color = new SKColor(255, 255, 255, (byte)(opacity * 255));
+            skCanvas.DrawImage(skiaImage.SKImage, source.ToSkia(), target.ToSkia(), skPaint);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Example.Core.Controls
     {
         public Color NewColor { get; set; }
 
-        public LabelEx(IFontManager fontManager): base(fontManager)
+        public LabelEx(IFontManager fontManager, IRedrawService redrawService): base(fontManager, redrawService)
         {
         }
     }

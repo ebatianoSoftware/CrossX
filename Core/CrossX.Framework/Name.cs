@@ -2,7 +2,7 @@
 
 namespace CrossX.Framework
 {
-    [XxSchemaPattern("[A-Za-z_]{1}[A-Za-z0-9_]*")]
+    [XxSchemaPattern(@"[A-Za-z_]{1}[A-Za-z0-9_]*")]
     public struct Name
     {
         public string Value { get; }

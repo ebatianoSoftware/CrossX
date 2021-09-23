@@ -49,6 +49,16 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.ImageView">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:CrossX.Framework.ImageDescriptor-Bindable" name="Source" />
+        <xsd:attribute type="aa:CrossX.Framework.Stretch-Bindable" name="Stretch" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="Scale" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="Opacity" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.Label">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl"></xsd:extension>
@@ -106,6 +116,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ImageView">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.ImageView" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
