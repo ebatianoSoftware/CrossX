@@ -5,7 +5,8 @@
   
 <FrameLayout BackgroundColor="CornflowerBlue">
   <Label ForegroundColor="Yellow" BackgroundColor="Red" Text="This is some test text" 
-         HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Roboto" FontSize="30" />
+         HorizontalAlignment="Center" VerticalAlignment="End" FontFamily="Roboto" FontSize="30"
+         Margin="20"/>
   <Button BackgroundColor="Blue" Width="10" Height="10" BackgroundColorPushed="AliceBlue" Text="Test" VerticalAlignment="End" HorizontalAlignment="End" Command="{Binding TestCommand}"/>
 </FrameLayout>
 </g:Page>

@@ -87,7 +87,7 @@ namespace CrossX.Framework.Core
                     }
                     else
                     {
-                        dispatcher.Wait(1000);
+                        dispatcher.Wait(10);
                     }
                 }
                 catch (Exception ex)
@@ -151,7 +151,11 @@ namespace CrossX.Framework.Core
             systemDispatcher?.Process();
         }
 
-        public void RequestRedraw() => redrawRequest++;
+        public void RequestRedraw()
+        {
+            redrawRequest++;
+            dispatcher.Touch();
+        }
 
         public void Finish()
         {

@@ -60,7 +60,7 @@
     </Resource>
 
     <Resource Key="DefaultButtonBackground">
-      <d:RectangleDrawable Corners="10,10,10,10" Color="DarkOliveGreen"/>
+      <d:RectangleDrawable Rx="5" Ry="5" FillColor="#40ffffff"/>
     </Resource>
     
   </Resources>
