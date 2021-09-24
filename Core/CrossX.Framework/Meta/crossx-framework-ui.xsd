@@ -12,6 +12,7 @@
   <xsd:complexType name="CrossX.Framework.UI.View">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.UIBindingContext">
+        <xsd:attribute type="aa:unknown" name="BackgroundDrawable" />
         <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="HorizontalAlignment" />
         <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="VerticalAlignment" />
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Width" />
@@ -45,7 +46,6 @@
       <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
         <xsd:attribute type="aa:unknown" name="Command" />
         <xsd:attribute type="aa:unknown" name="CommandParameter" />
-        <xsd:attribute type="aa:unknown" name="BackgroundDrawable" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorPushed" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorOver" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorDisabled" />
@@ -81,6 +81,9 @@
       <xsd:extension base="xx:CrossX.Framework.UI.View">
         <xsd:attribute type="aa:System.Float-Bindable" name="MaxValue" />
         <xsd:attribute type="aa:System.Float-Bindable" name="Progress" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="IndeterminateSpeed" />
+        <xsd:attribute type="aa:CrossX.Framework.ProgressDisplayMode-Bindable" name="Mode" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

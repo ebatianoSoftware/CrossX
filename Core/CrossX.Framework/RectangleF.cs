@@ -64,6 +64,17 @@ namespace CrossX.Framework
             return obj is RectangleF f && Equals(f);
         }
 
+        public RectangleF Intersect(RectangleF other)
+        {
+            var left = Math.Max(other.X, X);
+            var right = Math.Min(other.Right, Right);
+
+            var top = Math.Max(other.Y, Y);
+            var bottom = Math.Min(other.Bottom, Bottom);
+
+            return new RectangleF(left, top, right - left, bottom - top);
+        }
+
         public bool Equals(RectangleF other)
         {
             return X == other.X &&

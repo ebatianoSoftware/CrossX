@@ -104,6 +104,22 @@ namespace CrossX.Skia.Graphics
             return size;
         }
 
+        public override void DrawEllipse(RectangleF rect, Color color, float thickness)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+            skCanvas.DrawOval(rect.ToSkia(), skPaint);
+        }
+
+        public override void FillEllipse(RectangleF rect, Color color)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = false;
+            skCanvas.DrawOval(rect.ToSkia(), skPaint);
+        }
+
+
         public override void FillRect(RectangleF rect, Color color)
         {
             skPaint.Color = color.ToSkia();

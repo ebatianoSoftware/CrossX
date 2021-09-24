@@ -15,40 +15,31 @@ namespace CrossX.Framework.UI.Controls
         private FontMeasure fontMeasure = FontMeasure.Extended;
         private Thickness textPadding;
 
-        public FontMeasure FontMeasure { get => fontMeasure; set => SetProperty(ref fontMeasure, value); }
+        public FontMeasure FontMeasure 
+        {
+            get => fontMeasure; 
+            set => SetPropertyAndRecalcLayout(ref fontMeasure, value); 
+        }
 
         public Thickness TextPadding
         {
             get => textPadding;
-            set
-            {
-                if (SetProperty(ref textPadding, value))
-                {
-                    Parent?.InvalidateLayout();
-                }
-            }
+            set => SetPropertyAndRecalcLayout(ref textPadding, value);
         }
         public string Text 
         { 
             get => text;
-            set
-            {
-                if(SetProperty(ref text, value))
-                {
-                    Parent?.InvalidateLayout();
-                    Services.RedrawService.RequestRedraw();
-                }
-            }
+            set => SetPropertyAndRecalcLayout(ref text, value);
         }
-        public string FontFamily { get => fontFamily; set => SetProperty(ref fontFamily, value); }
-        public float FontSize { get => fontSize; set => SetProperty(ref fontSize, value); }
-        public FontWeight FontWeight { get => fontWeight; set => SetProperty(ref fontWeight, value); }
-        public bool FontItalic { get => fontItalic; set => SetProperty(ref fontItalic, value); }
+        public string FontFamily { get => fontFamily; set => SetPropertyAndRecalcLayout(ref fontFamily, value); }
+        public float FontSize { get => fontSize; set => SetPropertyAndRecalcLayout(ref fontSize, value); }
+        public FontWeight FontWeight { get => fontWeight; set => SetPropertyAndRecalcLayout(ref fontWeight, value); }
+        public bool FontItalic { get => fontItalic; set => SetPropertyAndRecalcLayout(ref fontItalic, value); }
 
-        public Alignment HorizontalTextAlignment { get => horizontalTextAlign; set => SetProperty(ref horizontalTextAlign, value); }
-        public Alignment VerticalTextAlignment { get => verticalTextAlign; set => SetProperty(ref verticalTextAlign, value); }
+        public Alignment HorizontalTextAlignment { get => horizontalTextAlign; set => SetPropertyAndRedraw(ref horizontalTextAlign, value); }
+        public Alignment VerticalTextAlignment { get => verticalTextAlign; set => SetPropertyAndRedraw(ref verticalTextAlign, value); }
 
-        public Color ForegroundColor { get => foregroundColor; set => SetProperty(ref foregroundColor, value); }
+        public Color ForegroundColor { get => foregroundColor; set => SetPropertyAndRedraw(ref foregroundColor, value); }
 
         public TextBasedControl(IUIServices services) : base(services)
         {

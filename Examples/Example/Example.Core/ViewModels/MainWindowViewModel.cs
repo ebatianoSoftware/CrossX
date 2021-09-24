@@ -21,8 +21,23 @@ namespace Example.Core.ViewModels
 
         public string Stopwatch { get => stopwatch; private set => SetProperty(ref stopwatch, value); }
 
+        public bool ShowButton
+        {
+            get => showButton;
+            set
+            {
+                if (SetProperty(ref showButton, value))
+                {
+                    RaisePropertyChanged(nameof(ShowProgress));
+                }
+            }
+        }
+
+        public bool ShowProgress => !ShowButton;
+
         private ImageDescriptor image;
         private string stopwatch = "";
+        private bool showButton = true;
         private readonly IObjectFactory objectFactory;
         private readonly ISystemDispatcher systemDispatcher;
         private readonly IDispatcher dispatcher;
@@ -60,8 +75,11 @@ namespace Example.Core.ViewModels
 
         private async void Test()
         {
+            if (ShowButton == false) return;
             try
             {
+                ShowButton = false;
+
                 var request = WebRequest.Create("https://picsum.photos/3840/2160");
 
                 Stream dataStream = null;
@@ -88,11 +106,14 @@ namespace Example.Core.ViewModels
                     }
                 });
 
+                await Task.Delay(500);
+
                 dispatcher.BeginInvoke(() =>
                 {
                     var oldImage = Image;
                     Image = image;
                     oldImage.Image?.Dispose();
+                    ShowButton = true;
                 });
             }
             catch

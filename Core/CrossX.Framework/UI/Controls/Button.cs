@@ -38,7 +38,7 @@ namespace CrossX.Framework.UI.Controls
         }
 
         public object CommandParameter { get => commandParameter; set => SetProperty(ref commandParameter, value); }
-        public Drawable BackgroundDrawable { get => backgroundDrawable; set => SetProperty(ref backgroundDrawable, value); }
+        
 
         public Color BackgroundColorPushed { get => backgroundColorPushed; set => SetProperty(ref backgroundColorPushed, value); }
         public Color BackgroundColorOver { get => backgroundColorOver; set => SetProperty(ref backgroundColorOver, value); }
@@ -71,7 +71,6 @@ namespace CrossX.Framework.UI.Controls
 
         private ICommand command;
         private object commandParameter;
-        private Drawable backgroundDrawable;
 
         private Color backgroundColorPushed = Color.Transparent;
         private Color backgroundColorOver = Color.Transparent;
@@ -85,14 +84,6 @@ namespace CrossX.Framework.UI.Controls
 
         public Button(IUIServices services) : base(services)
         {
-            BackgroundDrawable = new RectangleDrawable
-            {
-                Rx = 2,
-                Ry = 2,
-                FillColor = Color.White * 0.5f,
-                //StrokeColor = Color.Gray,
-                //StrokeThickness = 2
-            };
         }
 
         protected override void OnRender(Canvas canvas)
@@ -119,7 +110,14 @@ namespace CrossX.Framework.UI.Controls
                 backgroundColor = BackgroundColorDisabled;
             }
 
-            BackgroundDrawable?.Draw(canvas, ScreenBounds, backgroundColor);
+            if (BackgroundDrawable == null)
+            {
+                canvas.FillRect(ScreenBounds, backgroundColor);
+            }
+            else
+            {
+                BackgroundDrawable?.Draw(canvas, ScreenBounds, backgroundColor);
+            }
 
             var font = Services.FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
             var bounds = ScreenBounds.Deflate(TextPadding);
@@ -213,6 +211,7 @@ namespace CrossX.Framework.UI.Controls
             switch (propertyName)
             {
                 case nameof(Enabled):
+                case nameof(Visible):
                     lockedPointer = PointerId.None;
                     CurrentState = State.Normal;
                     Services.RedrawService.RequestRedraw();

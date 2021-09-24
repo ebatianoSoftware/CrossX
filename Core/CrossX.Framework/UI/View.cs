@@ -1,8 +1,9 @@
-﻿using CrossX.Abstractions.Mvvm;
+﻿using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Xx;
 
 namespace CrossX.Framework.UI
@@ -18,8 +19,9 @@ namespace CrossX.Framework.UI
         private Length height = Length.Auto;
         private Color backgroundColor = Color.Transparent;
         private Thickness margin = Thickness.Zero;
-        private bool visible;
-        
+        private bool visible = true;
+        private Drawable backgroundDrawable;
+
         private IViewParent parent;
         protected readonly IUIServices Services;
 
@@ -43,12 +45,15 @@ namespace CrossX.Framework.UI
             }
         }
 
+        public Drawable BackgroundDrawable { get => backgroundDrawable; set => SetPropertyAndRedraw(ref backgroundDrawable, value); }
+        
+
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Length Width { get => width; set => SetProperty(ref width, value); }
         public Length Height { get => height; set => SetProperty(ref height, value); }
         public Thickness Margin { get => margin; set => SetProperty(ref margin, value); }
-        public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
+        public Color BackgroundColor { get => backgroundColor; set => SetPropertyAndRedraw(ref backgroundColor, value); }
 
         [XxSchemaBindable(false)]
         public Name Id { get; set; }
@@ -56,8 +61,10 @@ namespace CrossX.Framework.UI
         [XxSchemaBindable(false)]
         public Classes Classes { get; set; }
 
-        public bool Visible { get => visible; set => SetProperty(ref visible, value); }
+        public bool Visible { get => visible; set => SetPropertyAndRedraw(ref visible, value); }
+
         public float ActualWidth => Bounds.Width;
+
         public float ActualHeight => Bounds.Height;
 
         public IViewParent Parent
@@ -80,6 +87,7 @@ namespace CrossX.Framework.UI
 
         public void Render(Canvas canvas)
         {
+            if (!Visible) return;
             OnRender(canvas);
         }
 
@@ -97,7 +105,14 @@ namespace CrossX.Framework.UI
         {
             if (BackgroundColor.A > 0)
             {
-                canvas.FillRect(ScreenBounds, BackgroundColor);
+                if(BackgroundDrawable == null)
+                {
+                    canvas.FillRect(ScreenBounds, BackgroundColor);
+                }
+                else
+                {
+                    BackgroundDrawable.Draw(canvas, ScreenBounds, BackgroundColor);
+                }
             }
         }
 
@@ -153,6 +168,7 @@ namespace CrossX.Framework.UI
 
         public bool PreviewGesture(Gesture gesture)
         {
+            if (!Visible) return false;
             if (OnPreviewGesture(gesture)) return true;
             return false;
         }
@@ -164,6 +180,7 @@ namespace CrossX.Framework.UI
 
         public bool ProcessGesture(Gesture gesture)
         {
+            if (!Visible) return false;
             if (OnProcessGesture(gesture)) return true;
             return ScreenBounds.Contains(gesture.Position);
         }
@@ -198,6 +215,27 @@ namespace CrossX.Framework.UI
                     Parent?.InvalidateLayout();
                     break;
             }
+        }
+
+        protected virtual bool SetPropertyAndRedraw<T>(ref T property, T value, [CallerMemberName]string propertyName = "")
+        {
+            if(SetProperty(ref property, value, propertyName))
+            {
+                Services.RedrawService.RequestRedraw();
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual bool SetPropertyAndRecalcLayout<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
+        {
+            if (SetProperty(ref property, value, propertyName))
+            {
+                Parent?.InvalidateLayout();
+                Services.RedrawService.RequestRedraw();
+                return true;
+            }
+            return false;
         }
     }
 }

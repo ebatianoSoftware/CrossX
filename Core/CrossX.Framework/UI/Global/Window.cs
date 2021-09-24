@@ -30,6 +30,7 @@ namespace CrossX.Framework.UI.Global
             }
         }
 
+        [XxSchemaBindable(true)]
         public string Title
         {
             set
@@ -125,6 +126,7 @@ namespace CrossX.Framework.UI.Global
             }
         }
 
+        [XxSchemaBindable(true)]
         public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
 
         Size minSize = Size.Empty;

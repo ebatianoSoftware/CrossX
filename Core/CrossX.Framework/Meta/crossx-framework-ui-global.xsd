@@ -34,7 +34,7 @@
         <xsd:choice minOccurs="1" maxOccurs="1">
           <xsd:any />
         </xsd:choice>
-        <xsd:attribute type="ab:System.String" name="Title" />
+        <xsd:attribute type="ab:System.String-Bindable" name="Title" />
         <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MinWidth" />
         <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MinHeight" />
         <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MaxWidth" />
@@ -44,7 +44,7 @@
         <xsd:attribute type="ab:System.Boolean" name="Desktop.CanMaximize" />
         <xsd:attribute type="ab:System.Boolean" name="Desktop.CanResize" />
         <xsd:attribute type="xx:CrossX.Framework.UI.Global.WindowState" name="Desktop.StartMode" />
-        <xsd:attribute type="ab:CrossX.Framework.Color" name="BackgroundColor" />
+        <xsd:attribute type="ab:CrossX.Framework.Color-Bindable" name="BackgroundColor" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

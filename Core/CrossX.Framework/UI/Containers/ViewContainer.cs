@@ -42,6 +42,7 @@ namespace CrossX.Framework.UI.Containers
             }
         }
 
+
         public void InvalidateLayout() => layoutInvalid = true;
 
         protected override void OnUpdate(float time)
@@ -51,6 +52,13 @@ namespace CrossX.Framework.UI.Containers
                 RecalculateLayout();
                 Services.RedrawService.RequestRedraw();
             }
+
+            for (var idx = 0; idx < Children.Count; ++idx)
+            {
+                var child = Children[idx];
+                child.Update(time);
+            }
+
             base.OnUpdate(time);
         }
 

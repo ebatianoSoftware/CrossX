@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace CrossX.Framework.Graphics
 {
@@ -21,5 +22,7 @@ namespace CrossX.Framework.Graphics
         public abstract void DrawTriangles(VertexBuffer vertexBuffer, Image image);
         public abstract Vector2 DrawText(string text, Font font, RectangleF target, TextAlign align, Color color, FontMeasure fontMeasure = FontMeasure.Extended);
         public abstract void DrawImage(Image image, RectangleF target, RectangleF source, float opacity);
+        public abstract void DrawEllipse(RectangleF rect, Color color, float thickness);
+        public abstract void FillEllipse(RectangleF rect, Color color);
     }
 }
