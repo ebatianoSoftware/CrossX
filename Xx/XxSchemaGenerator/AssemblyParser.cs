@@ -237,7 +237,10 @@ namespace xxsgen
                 @namespace = Infos.Last().Namespace;
                 return;
             }
-
+            if(!bindable)
+            {
+                Console.WriteLine("Unknown type: {0}", type.FullName);
+            }
             name = unknownType.Name;
             @namespace = Infos.Last().Namespace;
         }

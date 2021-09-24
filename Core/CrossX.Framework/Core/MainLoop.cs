@@ -111,8 +111,7 @@ namespace CrossX.Framework.Core
                 size = canvas.Size;
                 _updatedEvent.Reset();
                 _invalidatedEvent.Set();
-                dispatcher.Touch();
-                _updatedEvent.WaitOne(100);
+                _updatedEvent.WaitOne(10);
                 RequestRedraw();
             }
 
@@ -125,17 +124,6 @@ namespace CrossX.Framework.Core
             var currentTimeSpan = _stopwatch.Elapsed;
             coreApplication.DoRender(canvas);
             _invalidatedEvent.Set();
-        }
-
-        public void Resize(Size newSize)
-        {
-            if (size != newSize)
-            {
-                size = newSize;
-                _updatedEvent.Reset();
-                _invalidatedEvent.Set();
-                dispatcher.Touch();
-            }
         }
 
         public void Initialize()

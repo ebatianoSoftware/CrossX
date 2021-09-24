@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrossX.Abstractions.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace CrossX.Framework
     [XxSchemaPattern(@"#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?|#[\dA-Fa-f]{3}([\dA-Fa-f])?")]
     public partial struct Color : IEquatable<Color>
     {
+        
+
         private static Dictionary<string, Color> builtInColors = null;
 
         private static void InitBuiltInValues()

@@ -36,6 +36,7 @@ namespace CrossX.Framework.UI.Controls
                 if(SetProperty(ref text, value))
                 {
                     Parent?.InvalidateLayout();
+                    Services.RedrawService.RequestRedraw();
                 }
             }
         }

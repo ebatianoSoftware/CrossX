@@ -1,5 +1,4 @@
 ﻿using CrossX.Abstractions.IoC;
-using CrossX.Abstractions.Mvvm;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
@@ -126,6 +125,8 @@ namespace CrossX.Framework.UI.Global
             }
         }
 
+        public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
+
         Size minSize = Size.Empty;
         Size maxSize = new Size(100000, 100000);
         Size size = new Size(800, 600);
@@ -133,6 +134,7 @@ namespace CrossX.Framework.UI.Global
         private bool layoutInvalid;
         private readonly INativeWindow nativeWindow;
         private readonly IBindingService bindingService;
+        private Color backgroundColor = Color.Black;
 
         public Window(IServicesProvider servicesProvider)
         {
@@ -176,6 +178,9 @@ namespace CrossX.Framework.UI.Global
         {
             canvas.SaveState();
             canvas.Transform(Matrix3x2.CreateScale(UiUnit.PixelsPerUnit));
+
+            canvas.FillRect(ScreenBounds, BackgroundColor);
+
             RootView?.Render(canvas);
             canvas.Restore();
         }

@@ -1,9 +1,13 @@
 ﻿using CrossX.Abstractions.Async;
 using CrossX.Abstractions.IoC;
 using CrossX.Abstractions.Mvvm;
+using CrossX.Framework;
+using CrossX.Framework.Async;
+using CrossX.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -13,41 +17,88 @@ namespace Example.Core.ViewModels
     {
         public ICommand TestCommand { get; }
 
-        public string ImageUrl { get; private set; } = "https://picsum.photos/400/300";
+        public ImageDescriptor Image { get => image; private set => SetProperty(ref image, value); }
 
-        public string Stopwatch { get; private set; } = "00:00.000";
+        public string Stopwatch { get => stopwatch; private set => SetProperty(ref stopwatch, value); }
 
-        public MainWindowViewModel(IObjectFactory objectFactory, ISequencer sequencer) : base(objectFactory)
+        private ImageDescriptor image;
+        private string stopwatch = "";
+        private readonly IObjectFactory objectFactory;
+        private readonly ISystemDispatcher systemDispatcher;
+        private readonly IDispatcher dispatcher;
+
+        public MainWindowViewModel(
+            IObjectFactory objectFactory,
+            ISequencer sequencer,
+            ISystemDispatcher systemDispatcher,
+            IDispatcher dispatcher) : base(objectFactory)
         {
             TestCommand = new SyncCommand(Test);
-            this.sequencer = sequencer;
-
+            this.objectFactory = objectFactory;
+            this.systemDispatcher = systemDispatcher;
+            this.dispatcher = dispatcher;
             sequencer.Run(Count());
+            Test();
         }
 
         private IEnumerable<Sequence> Count()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            DateTime last = DateTime.MinValue;
             while (true)
             {
-                var ellapsed = stopwatch.Elapsed;
-                Stopwatch = $"{ellapsed.Minutes:00}:{ellapsed.Seconds:00}.{ellapsed.Milliseconds:000}";
-                RaisePropertyChanged(nameof(Stopwatch));
+                var time = DateTime.Now;
+                if (last.Minute != time.Minute) Test();
+
+                if (last.Second != time.Second)
+                {
+                    last = time;
+                    Stopwatch = $"{time.Hour:00}:{time.Minute:00}:{time.Second:00}";
+                }
                 yield return Sequence.WaitForSeconds(0.1);
             }
         }
 
-        Random rand = new Random();
-        private readonly ISequencer sequencer;
-
-        private void Test()
+        private async void Test()
         {
-            ImageUrl = "";
-            RaisePropertyChanged(nameof(ImageUrl));
+            try
+            {
+                var request = WebRequest.Create("https://picsum.photos/3840/2160");
 
-            ImageUrl = $"https://picsum.photos/{rand.Next(300,400)}/{rand.Next(300, 400)}";
-            RaisePropertyChanged(nameof(ImageUrl));
+                Stream dataStream = null;
+
+                using (var response = await request.GetResponseAsync())
+                {
+                    dataStream = new MemoryStream();
+                    using (var respStream = response.GetResponseStream())
+                    {
+                        await respStream.CopyToAsync(dataStream);
+                    }
+                    dataStream.Seek(0, SeekOrigin.Begin);
+                }
+
+                var image = await systemDispatcher.InvokeAsync(() =>
+                {
+                    try
+                    {
+                        return objectFactory.Create<Image>(dataStream);
+                    }
+                    finally
+                    {
+                        dataStream.Dispose();
+                    }
+                });
+
+                dispatcher.BeginInvoke(() =>
+                {
+                    var oldImage = Image;
+                    Image = image;
+                    oldImage.Image?.Dispose();
+                });
+            }
+            catch
+            {
+
+            }
         }
 
         protected override Task InitializeFirstPage()

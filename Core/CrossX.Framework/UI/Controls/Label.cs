@@ -6,6 +6,8 @@ namespace CrossX.Framework.UI.Controls
     {
         public Label(IUIServices service) : base(service)
         {
+            HorizontalAlignment = Alignment.Start;
+            VerticalAlignment = Alignment.Start;
         }
 
         protected override void OnRender(Canvas canvas)

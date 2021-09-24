@@ -9,24 +9,6 @@ namespace CrossX.Framework
     [XxSchemaPattern(@"^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?")]
     public struct ImageDescriptor : IEquatable<ImageDescriptor>
     {
-        [ValueConverter(typeof(string), typeof(ImageDescriptor))]
-        internal class StringToDescriptorConverter : IValueConverter
-        {
-            public object Convert(object value)
-            {
-                return new ImageDescriptor((string)value);
-            }
-        }
-
-        [ValueConverter(typeof(Image), typeof(ImageDescriptor))]
-        internal class ImageToDescriptorConverter : IValueConverter
-        {
-            public object Convert(object value)
-            {
-                return new ImageDescriptor((Image)value);
-            }
-        }
-
         public string Uri { get; }
         public Image Image { get; }
 

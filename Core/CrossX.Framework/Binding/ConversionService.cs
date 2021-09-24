@@ -30,14 +30,14 @@ namespace CrossX.Framework.Binding
             }
         }
 
-        private readonly Dictionary<Key, IValueConverter> converters = new Dictionary<Key, IValueConverter>();
+        private readonly Dictionary<Key, IImplicitValueConverter> converters = new Dictionary<Key, IImplicitValueConverter>();
 
         public ConversionService(Assembly assembly)
         {
             var assemblyList = new List<Assembly>(new[] { assembly });
             var assemblyNames = assembly.GetReferencedAssemblies();
 
-            var name = typeof(IValueConverter).Assembly.GetName();
+            var name = typeof(IImplicitValueConverter).Assembly.GetName();
 
             foreach (var assemblyName in assemblyNames)
             {
@@ -55,13 +55,13 @@ namespace CrossX.Framework.Binding
 
         private void ScanAssembly(Assembly assembly)
         {
-            var ct = typeof(IValueConverter);
+            var ct = typeof(IImplicitValueConverter);
             foreach(var type in assembly.DefinedTypes.Where( o=> ct.IsAssignableFrom(o)))
             {
-                var attr = type.GetCustomAttribute<ValueConverterAttribute>();
+                var attr = type.GetCustomAttribute<ImplicitValueConverterAttribute>();
                 if (attr == null) continue;
 
-                var instance = Activator.CreateInstance(type) as IValueConverter;
+                var instance = Activator.CreateInstance(type) as IImplicitValueConverter;
 
                 converters[new Key {
                     From = attr.From,

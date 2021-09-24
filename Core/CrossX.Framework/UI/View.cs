@@ -12,8 +12,8 @@ namespace CrossX.Framework.UI
     public abstract class View : UIBindingContext, IDisposable
     {
         private RectangleF bounds;
-        private Alignment horizontalAlignment;
-        private Alignment verticalAlignment;
+        private Alignment horizontalAlignment = Alignment.Stretch;
+        private Alignment verticalAlignment = Alignment.Stretch;
         private Length width = Length.Auto;
         private Length height = Length.Auto;
         private Color backgroundColor = Color.Transparent;
