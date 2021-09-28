@@ -12,18 +12,43 @@ namespace CrossX.Framework.Drawables
 
         public override void Draw(Canvas canvas, RectangleF rectangle, Color color)
         {
-            var rx = Rx.Calculate();
-            var ry = Ry.Calculate();
+            var rx = Rx.Calculate(rectangle.Width);
+            var ry = Ry.Calculate(rectangle.Height);
 
             if (FillColor.A > 0)
             {
+                if (StrokeColor.A > 0)
+                {
+                    canvas.SaveState();
+                    var def = StrokeThickness.Calculate() / 2;
+                    var rect = rectangle.Deflate(def, def);
+
+                    canvas.ClipRect(rect, new System.Numerics.Vector2(rx-def, ry-def), ClipMode.Intersect);
+                }
+
                 canvas.FillRoundRect(rectangle, new System.Numerics.Vector2(rx, ry), FillColor * color);
+
+                if (StrokeColor.A > 0)
+                {
+                    canvas.Restore();
+                }
             }
 
             if(StrokeColor.A > 0)
             {
                 canvas.DrawRoundRect(rectangle, new System.Numerics.Vector2(rx, ry), StrokeColor * color, StrokeThickness.Calculate());
             }
+        }
+
+        public override void ClipShape(Canvas canvas, RectangleF rectangle, ClipMode clipMode)
+        {
+            var rx = Rx.Calculate(rectangle.Width);
+            var ry = Ry.Calculate(rectangle.Height);
+
+            var add = -StrokeThickness.Calculate() / 2;
+            rectangle = rectangle.Deflate(add, add);
+
+            canvas.ClipRect(rectangle, new SizeF(rx, ry), clipMode);
         }
     }
 }

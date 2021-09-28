@@ -21,6 +21,8 @@ namespace Example.Core.ViewModels
 
         public string Stopwatch { get => stopwatch; private set => SetProperty(ref stopwatch, value); }
 
+        public float SliderValue { get => sliderValue; set => SetProperty(ref sliderValue, value); }
+
         public bool ShowButton
         {
             get => showButton;
@@ -38,6 +40,7 @@ namespace Example.Core.ViewModels
         private ImageDescriptor image;
         private string stopwatch = "";
         private bool showButton = true;
+        private float sliderValue = 0.2f;
         private readonly IObjectFactory objectFactory;
         private readonly ISystemDispatcher systemDispatcher;
         private readonly IDispatcher dispatcher;

@@ -53,7 +53,7 @@
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:attribute type="aa:System.String" name="Key" />
-        <xsd:attribute type="aa:CrossX.Framework.Color" name="Value" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="Value" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -61,7 +61,7 @@
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:attribute type="aa:System.String" name="Key" />
-        <xsd:attribute type="aa:CrossX.Framework.Length" name="Value" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Value" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

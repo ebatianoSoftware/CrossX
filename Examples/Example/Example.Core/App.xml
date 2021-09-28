@@ -5,10 +5,25 @@
   xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
   <Theme>
-    <!--<Import Path="CrossX.Framework.Assets.LightTheme.xml;CrossX.Framework"/>-->
     <Color Key="BackgroundColor" Value="#202030"/>
     <Color Key="ForegroundColor" Value="#c0c0c0"/>
-    <Color Key="ButtonBackgroundColor" Value="#404050"/>
+    
+    <Color Key="ButtonBackgroundColor" Value="Transparent"/>
+    <Color Key="ButtonBackgroundColorOver" Value="#60404050"/>
+    <Color Key="ButtonBackgroundColorPushed" Value="#60304060"/>
+
+
+    <Color Key="ThumbBackgroundColor" Value="#80ffffff"/>
+    <Color Key="ThumbBackgroundColorOver" Value="White"/>
+    <Color Key="ThumbBackgroundColorPushed" Value="#d0ffffff"/>
+
+    <Color Key="TrackBackgroundColor" Value="#40404050"/>
+    <Color Key="TrackBackgroundColorOver" Value="#60404050"/>
+    <Color Key="TrackBackgroundColorPushed" Value="#60404050"/>
+    
+    <Color Key="ButtonForegroundColor" Value="#30ffffff"/>
+    <Color Key="ButtonForegroundColorOver" Value="White"/>
+    <Color Key="ButtonForegroundColorPushed" Value="#d0ffffff"/>
   </Theme>
   
   <Styles>
@@ -60,8 +75,12 @@
     </Resource>
 
     <Resource Key="DefaultButtonBackground">
-      <d:RectangleDrawable Rx="5" Ry="5" FillColor="#40ffffff"/>
+      <d:RectangleDrawable Rx="5" Ry="50%" FillColor="White"/>
     </Resource>
-    
+
+    <Resource Key="SliderThumb">
+      <d:RectangleDrawable Rx="5" Ry="50%" FillColor="#80ffffff" StrokeThickness="2" StrokeColor="#a0ffffff"/>
+    </Resource>
+
   </Resources>
 </Application>

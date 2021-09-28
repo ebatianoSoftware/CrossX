@@ -23,6 +23,7 @@ namespace CrossX.Framework.UI
         private Drawable backgroundDrawable;
 
         private IViewParent parent;
+        private float opacity = 1;
         protected readonly IUIServices Services;
 
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
@@ -46,7 +47,7 @@ namespace CrossX.Framework.UI
         }
 
         public Drawable BackgroundDrawable { get => backgroundDrawable; set => SetPropertyAndRedraw(ref backgroundDrawable, value); }
-        
+
 
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
@@ -54,6 +55,8 @@ namespace CrossX.Framework.UI
         public Length Height { get => height; set => SetProperty(ref height, value); }
         public Thickness Margin { get => margin; set => SetProperty(ref margin, value); }
         public Color BackgroundColor { get => backgroundColor; set => SetPropertyAndRedraw(ref backgroundColor, value); }
+
+        public float Opacity { get => opacity; set => SetPropertyAndRedraw(ref opacity, value); }
 
         [XxSchemaBindable(false)]
         public Name Id { get; set; }
@@ -68,12 +71,12 @@ namespace CrossX.Framework.UI
         public float ActualHeight => Bounds.Height;
 
         public IViewParent Parent
-        { 
+        {
             get => parent;
             internal set
             {
                 parent = value;
-                if(DataContext == null && parent != null)
+                if (DataContext == null && parent != null)
                 {
                     Services.BindingService.AddDataContextBinding(this, parent);
                 }
@@ -85,10 +88,10 @@ namespace CrossX.Framework.UI
             Services = services;
         }
 
-        public void Render(Canvas canvas)
+        public void Render(Canvas canvas, float opacity = 1)
         {
             if (!Visible) return;
-            OnRender(canvas);
+            OnRender(canvas, opacity * Opacity);
         }
 
         public void Update(float time)
@@ -101,17 +104,17 @@ namespace CrossX.Framework.UI
 
         }
 
-        protected virtual void OnRender(Canvas canvas)
+        protected virtual void OnRender(Canvas canvas, float opacity)
         {
             if (BackgroundColor.A > 0)
             {
-                if(BackgroundDrawable == null)
+                if (BackgroundDrawable == null)
                 {
-                    canvas.FillRect(ScreenBounds, BackgroundColor);
+                    canvas.FillRect(ScreenBounds, BackgroundColor * opacity);
                 }
                 else
                 {
-                    BackgroundDrawable.Draw(canvas, ScreenBounds, BackgroundColor);
+                    BackgroundDrawable.Draw(canvas, ScreenBounds, BackgroundColor * opacity);
                 }
             }
         }
@@ -205,7 +208,7 @@ namespace CrossX.Framework.UI
 
         protected override void OnPropertyChanged(string propertyName)
         {
-            switch(propertyName)
+            switch (propertyName)
             {
                 case nameof(Width):
                 case nameof(Height):
@@ -217,9 +220,9 @@ namespace CrossX.Framework.UI
             }
         }
 
-        protected virtual bool SetPropertyAndRedraw<T>(ref T property, T value, [CallerMemberName]string propertyName = "")
+        protected virtual bool SetPropertyAndRedraw<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
         {
-            if(SetProperty(ref property, value, propertyName))
+            if (SetProperty(ref property, value, propertyName))
             {
                 Services.RedrawService.RequestRedraw();
                 return true;

@@ -6,12 +6,12 @@ namespace CrossX.Framework.UI.Controls
     public class ProgressBar : View
     {
         private float maxValue = 100;
-        private float progress = 0;
+        private float value = 0;
         private ProgressDisplayMode mode;
         private Color foregroundColor;
 
         public float MaxValue { get => maxValue; set => SetPropertyAndRedraw(ref maxValue, value); }
-        public float Progress { get => progress; set => SetPropertyAndRedraw(ref progress, value); }
+        public float Value { get => value; set => base.SetPropertyAndRedraw(ref this.value, value); }
 
         public Color ForegroundColor { get => foregroundColor; set => SetPropertyAndRedraw(ref foregroundColor, value); }
 
@@ -26,32 +26,31 @@ namespace CrossX.Framework.UI.Controls
         {
         }
 
-        protected override void OnRender(Canvas canvas)
+        protected override void OnRender(Canvas canvas, float opacity)
         {
-            base.OnRender(canvas);
+            base.OnRender(canvas, opacity);
 
             switch(Mode)
             {
                 case ProgressDisplayMode.Determinate:
-                    DrawDeterminate(canvas);
+                    DrawDeterminate(canvas, opacity);
                     break;
 
                 case ProgressDisplayMode.Indeterminate:
-                    DrawIndeterminate(canvas, false);
+                    DrawIndeterminate(canvas, opacity, false);
                     break;
 
                 case ProgressDisplayMode.Query:
-                    DrawIndeterminate(canvas, true);
+                    DrawIndeterminate(canvas, opacity, true);
                     break;
 
                 case ProgressDisplayMode.Buffer:
-                    DrawBuffer(canvas);
+                    DrawBuffer(canvas, opacity);
                     break;
             }
-            
         }
 
-        private void DrawBuffer(Canvas canvas)
+        private void DrawBuffer(Canvas canvas, float opacity)
         {
             var size = ScreenBounds.Height;
             var count = ScreenBounds.Width / size / 2 + 2;
@@ -59,7 +58,7 @@ namespace CrossX.Framework.UI.Controls
             var offset = step % size * 2;
 
             canvas.SaveState();
-            canvas.ClipRect(ScreenBounds);
+            canvas.ClipRect(ScreenBounds, SizeF.Zero);
 
             var bounds = ScreenBounds;
             bounds.Width = size;
@@ -68,14 +67,14 @@ namespace CrossX.Framework.UI.Controls
             
             for(var idx =0; idx < count; ++idx)
             {
-                canvas.FillEllipse(bounds, ForegroundColor);
+                canvas.FillEllipse(bounds, ForegroundColor * opacity);
                 bounds.X += size * 2;
             }
 
             canvas.Restore();
         }
 
-        private void DrawIndeterminate(Canvas canvas, bool reverse)
+        private void DrawIndeterminate(Canvas canvas, float opacity, bool reverse)
         {
             var bounds = ScreenBounds;
             bounds.Width /= 2;
@@ -91,18 +90,18 @@ namespace CrossX.Framework.UI.Controls
             bounds.X += offset - bounds.Width;
 
             bounds = bounds.Intersect(ScreenBounds);
-            canvas.FillRect(bounds, ForegroundColor);
+            canvas.FillRect(bounds, ForegroundColor * opacity);
         }
 
-        private void DrawDeterminate(Canvas canvas)
+        private void DrawDeterminate(Canvas canvas, float opacity)
         {
-            var factor = Progress / MaxValue;
+            var factor = Value / MaxValue;
 
             if (factor > 0)
             {
                 var bounds = ScreenBounds;
                 bounds.Width *= factor;
-                canvas.FillRect(bounds, ForegroundColor);
+                canvas.FillRect(bounds, ForegroundColor * opacity);
             }
         }
 

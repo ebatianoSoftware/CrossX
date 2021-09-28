@@ -12,6 +12,8 @@ namespace CrossX.Framework.ApplicationDefinition
     public class ColorElement: IValueElement
     {
         public string Key { get; set; }
+
+        [XxSchemaBindable]
         public Color Value { get; set; }
 
         object IValueElement.Value => Value;
@@ -21,6 +23,8 @@ namespace CrossX.Framework.ApplicationDefinition
     public class LengthElement: IValueElement
     {
         public string Key { get; set; }
+
+        [XxSchemaBindable]
         public Length Value { get; set; }
 
         object IValueElement.Value => Value;

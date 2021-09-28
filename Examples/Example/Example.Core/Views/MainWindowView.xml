@@ -9,38 +9,62 @@
   Title="CrossX Example Application">
 
   <FrameLayout BackgroundColor="White" Margin="20">
-  <FrameLayout Margin="1" BackgroundColor="{Theme BackgroundColor}">
+    <FrameLayout Margin="1" BackgroundColor="Black">
 
-    <ImageView Source="{Binding Image}"
-               Stretch="UniformToFill"
-               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1"/>
+      <ImageView Source="{Binding Image}"
+                 Stretch="UniformToFill"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1"/>
 
-    <Label ForegroundColor="Black" Text="{Binding Stopwatch}" Margin="4,4,-4,-4"
-            HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="200"
-            FontMeasure="Strict" TextPadding="40"/>
+      <FrameLayout BackgroundColor="Black" BackgroundDrawable="{Resource DefaultButtonBackground}" Opacity="{Binding SliderValue}"
+                   Width="800" Height="280" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-    <Label ForegroundColor="White" Text="{Binding Stopwatch}" BackgroundColor="Black"
-            BackgroundDrawable="{Resource DefaultButtonBackground}"
-            HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="200"
-            FontMeasure="Strict" TextPadding="40"/>
-          
-    
-    <Button BackgroundColor="#10000000" ForegroundColor="#50f0f0f0"
-            BackgroundColorOver="Black" ForegroundColorOver="White"
-            BackgroundColorPushed="#d0000000" ForegroundColorPushed="#d0d0d0"
-            BackgroundDrawable="{Resource DefaultButtonBackground}"
-            FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
-            Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
-            Text="Switch"
-            Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
+      <Label ForegroundColor="Black" Text="{Binding Stopwatch}" Margin="4,4,-4,-4"
+              HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="200"
+              FontMeasure="Strict" TextPadding="40"/>
 
-    <ProgressBar BackgroundColor="#40ffffff" ForegroundColor="White" 
-                 Margin="48" HorizontalAlignment="Center" VerticalAlignment="End"
-                 Width="100" Height="2" Mode="Query"
-                 MaxValue="1" Progress="{Binding Progress}"
-                 Visible="{Binding ShowProgress}"/>
-    
-  </FrameLayout>
+      <Label ForegroundColor="White" Text="{Binding Stopwatch}"
+              HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="200"
+              FontMeasure="Strict" TextPadding="40"/>
+
+      <Button BackgroundColor="{Theme ButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}"
+              BackgroundColorOver="{Theme ButtonBackgroundColorOver}" ForegroundColorOver="{Theme ButtonForegroundColorOver}"
+              BackgroundColorPushed="{Theme ButtonBackgroundColorPushed}" ForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
+              BackgroundDrawable="{Resource DefaultButtonBackground}"
+              FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
+              Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
+              Text="Switch"
+              Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
+      <ProgressBar BackgroundColor="#40ffffff" ForegroundColor="White"
+                   MaxValue="1" Value="{Binding Progress}"
+                   Margin="48" HorizontalAlignment="Center" VerticalAlignment="End"
+                   Width="100" Height="2" Mode="Query"
+                   Visible="{Binding ShowProgress}"/>
+
+
+      <Slider HorizontalAlignment="Center" VerticalAlignment="Start" Width="300" Height="20" TrackThickness="1"
+              ThumbDrawable="{Resource SliderThumb}" Margin="30" Value="{Binding SliderValue}"
+              MinValue="0" MaxValue="1"
+              ValueResolution="0.1"
+              ThumbColor="{Theme ThumbBackgroundColor}"
+              ThumbColorOver="{Theme ThumbBackgroundColorOver}"
+              ThumbColorPushed="{Theme ThumbBackgroundColorPushed}"
+              TrackColor="{Theme TrackBackgroundColor}"
+              TrackColorOver="{Theme TrackBackgroundColorOver}"
+              TrackColorPushed="{Theme TrackBackgroundColorPushed}"/>
+
+      <Slider HorizontalAlignment="Start" VerticalAlignment="Center" Width="20" Height="300" TrackThickness="1"
+              ThumbDrawable="{Resource SliderThumb}" Margin="30"
+              Value="{Binding SliderValue}"
+              MinValue="0"
+              MaxValue="1"
+              ThumbColor="{Theme ThumbBackgroundColor}"
+              ThumbColorOver="{Theme ThumbBackgroundColorOver}"
+              ThumbColorPushed="{Theme ThumbBackgroundColorPushed}"
+              TrackColor="{Theme TrackBackgroundColor}"
+              TrackColorOver="{Theme TrackBackgroundColorOver}"
+              TrackColorPushed="{Theme TrackBackgroundColorPushed}"/>
+
+    </FrameLayout>
   </FrameLayout>
 </g:Window>
 

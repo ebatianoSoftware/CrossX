@@ -1,5 +1,4 @@
-﻿using CrossX.Framework.Drawables;
-using CrossX.Framework.Graphics;
+﻿using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -7,15 +6,15 @@ using System.Windows.Input;
 
 namespace CrossX.Framework.UI.Controls
 {
+    public enum ButtonState
+    {
+        Normal,
+        Hover,
+        Pushed
+    }
+
     public class Button : TextBasedControl
     {
-        enum State
-        {
-            Normal,
-            Hover,
-            Pushed
-        }
-
         public ICommand Command
         {
             get => command;
@@ -38,8 +37,6 @@ namespace CrossX.Framework.UI.Controls
         }
 
         public object CommandParameter { get => commandParameter; set => SetProperty(ref commandParameter, value); }
-        
-
         public Color BackgroundColorPushed { get => backgroundColorPushed; set => SetProperty(ref backgroundColorPushed, value); }
         public Color BackgroundColorOver { get => backgroundColorOver; set => SetProperty(ref backgroundColorOver, value); }
 
@@ -52,12 +49,12 @@ namespace CrossX.Framework.UI.Controls
 
         public bool Enabled { get => enabled; set => SetProperty(ref enabled, value); }
 
-        private State CurrentState 
-        { 
+        private ButtonState CurrentState
+        {
             get => currentState;
             set
             {
-                if(currentState != value)
+                if (currentState != value)
                 {
                     currentState = value;
                     Services.RedrawService.RequestRedraw();
@@ -66,7 +63,6 @@ namespace CrossX.Framework.UI.Controls
         }
 
         private PointerId lockedPointer = PointerId.None;
-
         private HashSet<PointerId> hoverPointers = new HashSet<PointerId>();
 
         private ICommand command;
@@ -80,25 +76,25 @@ namespace CrossX.Framework.UI.Controls
         private Color foregroundColorOver = Color.Black;
         private Color foregroundColorDisabled = Color.DarkGray;
         private bool enabled = true;
-        private State currentState = State.Normal;
+        private ButtonState currentState = ButtonState.Normal;
 
         public Button(IUIServices services) : base(services)
         {
         }
 
-        protected override void OnRender(Canvas canvas)
+        protected override void OnRender(Canvas canvas, float opacity)
         {
             Color foregroundColor = ForegroundColor;
             Color backgroundColor = BackgroundColor;
 
             switch (CurrentState)
             {
-                case State.Hover:
+                case ButtonState.Hover:
                     foregroundColor = ForegroundColorOver;
                     backgroundColor = BackgroundColorOver;
                     break;
 
-                case State.Pushed:
+                case ButtonState.Pushed:
                     foregroundColor = ForegroundColorPushed;
                     backgroundColor = BackgroundColorPushed;
                     break;
@@ -112,16 +108,16 @@ namespace CrossX.Framework.UI.Controls
 
             if (BackgroundDrawable == null)
             {
-                canvas.FillRect(ScreenBounds, backgroundColor);
+                canvas.FillRect(ScreenBounds, backgroundColor * opacity);
             }
             else
             {
-                BackgroundDrawable?.Draw(canvas, ScreenBounds, backgroundColor);
+                BackgroundDrawable.Draw(canvas, ScreenBounds, backgroundColor * opacity);
             }
-
+            
             var font = Services.FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
             var bounds = ScreenBounds.Deflate(TextPadding);
-            canvas.DrawText(Text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), foregroundColor, FontMeasure);
+            canvas.DrawText(Text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), foregroundColor * opacity, FontMeasure);
         }
 
         protected override bool OnProcessGesture(Gesture gesture)
@@ -134,7 +130,7 @@ namespace CrossX.Framework.UI.Controls
                         if (ScreenBounds.Contains(gesture.Position))
                         {
                             lockedPointer = gesture.PointerId;
-                            CurrentState = State.Pushed;
+                            CurrentState = ButtonState.Pushed;
                             return true;
                         }
                     }
@@ -146,12 +142,12 @@ namespace CrossX.Framework.UI.Controls
                         lockedPointer = PointerId.None;
                         if (ScreenBounds.Contains(gesture.Position))
                         {
-                            CurrentState = State.Hover;
+                            CurrentState = ButtonState.Hover;
                             Command?.Execute(CommandParameter);
                         }
                         else
                         {
-                            CurrentState = State.Normal;
+                            CurrentState = ButtonState.Normal;
                         }
                         return true;
                     }
@@ -172,7 +168,7 @@ namespace CrossX.Framework.UI.Controls
                             hoverPointers.Remove(gesture.PointerId);
                         }
 
-                        State newState = hoverPointers.Count > 0 ? State.Hover : State.Normal;
+                        ButtonState newState = hoverPointers.Count > 0 ? ButtonState.Hover : ButtonState.Normal;
 
                         if (newState != CurrentState)
                         {
@@ -184,11 +180,11 @@ namespace CrossX.Framework.UI.Controls
                     {
                         if (ScreenBounds.Contains(gesture.Position))
                         {
-                            CurrentState = State.Pushed;
+                            CurrentState = ButtonState.Pushed;
                         }
                         else
                         {
-                            CurrentState = State.Normal;
+                            CurrentState = ButtonState.Normal;
                         }
                         return true;
                     }
@@ -197,7 +193,7 @@ namespace CrossX.Framework.UI.Controls
                 case GestureType.CancelPointer:
                     if (lockedPointer == gesture.PointerId)
                     {
-                        CurrentState = State.Normal;
+                        CurrentState = ButtonState.Normal;
                         lockedPointer = PointerId.None;
                         return true;
                     }
@@ -213,7 +209,7 @@ namespace CrossX.Framework.UI.Controls
                 case nameof(Enabled):
                 case nameof(Visible):
                     lockedPointer = PointerId.None;
-                    CurrentState = State.Normal;
+                    CurrentState = ButtonState.Normal;
                     Services.RedrawService.RequestRedraw();
                     break;
             }

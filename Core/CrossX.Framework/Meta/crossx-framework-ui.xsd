@@ -19,6 +19,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Height" />
         <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="Margin" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColor" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="Opacity" />
         <xsd:attribute type="aa:CrossX.Framework.Name" name="Id" />
         <xsd:attribute type="aa:CrossX.Framework.Classes" name="Classes" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Visible" />
@@ -67,7 +68,6 @@
         <xsd:attribute type="aa:CrossX.Framework.ImageDescriptor-Bindable" name="Source" />
         <xsd:attribute type="aa:CrossX.Framework.Stretch-Bindable" name="Stretch" />
         <xsd:attribute type="aa:System.Float-Bindable" name="Scale" />
-        <xsd:attribute type="aa:System.Float-Bindable" name="Opacity" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -80,10 +80,30 @@
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.View">
         <xsd:attribute type="aa:System.Float-Bindable" name="MaxValue" />
-        <xsd:attribute type="aa:System.Float-Bindable" name="Progress" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="Value" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColor" />
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="IndeterminateSpeed" />
         <xsd:attribute type="aa:CrossX.Framework.ProgressDisplayMode-Bindable" name="Mode" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.Slider">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:attribute type="aa:System.Float-Bindable" name="MaxValue" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="MinValue" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="Value" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ThumbColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TrackColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ThumbColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TrackColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ThumbColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TrackColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="TrackThickness" />
+        <xsd:attribute type="aa:unknown" name="ThumbDrawable" />
+        <xsd:attribute type="aa:unknown" name="TrackDrawable" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="ValueResolution" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -159,6 +179,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Controls.ProgressBar" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Slider">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.Slider" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

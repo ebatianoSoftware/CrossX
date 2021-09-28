@@ -59,6 +59,11 @@ namespace CrossX.Framework
             return new RectangleF(X + marginLeft, Y + marginTop, Width - marginLeft - marginRight, Height - marginTop - marginBottom);
         }
 
+        public RectangleF Deflate(float w, float h)
+        {
+            return new RectangleF(X + w, Y + h, Width - w * 2, Height - h * 2);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is RectangleF f && Equals(f);

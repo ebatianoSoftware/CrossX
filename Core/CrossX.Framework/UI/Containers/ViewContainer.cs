@@ -31,14 +31,14 @@ namespace CrossX.Framework.UI.Containers
             Children = new ChildrenCollection(this);
         }
 
-        protected override void OnRender(Canvas canvas)
+        protected override void OnRender(Canvas canvas, float opacity)
         {
-            base.OnRender(canvas);
+            base.OnRender(canvas, opacity);
 
             for (var idx = 0; idx < Children.Count; ++idx)
             {
                 var child = Children[idx];
-                child.Render(canvas);
+                child.Render(canvas, opacity);
             }
         }
 

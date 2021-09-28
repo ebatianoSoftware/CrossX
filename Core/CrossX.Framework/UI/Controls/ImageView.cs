@@ -44,35 +44,23 @@ namespace CrossX.Framework.UI.Controls
                 }
             }
         }
-        public float Opacity
-        {
-            get => opacity;
-            set
-            {
-                if (SetProperty(ref opacity, value))
-                {
-                    Services.RedrawService.RequestRedraw();
-                }
-            }
-        }
 
         private Image image;
         private float scale = 1;
-        private float opacity = 1;
         private Stretch stretch = Stretch.Uniform;
 
         public ImageView(IUIServices services): base(services)
         {
         }
 
-        protected override void OnRender(Canvas canvas)
+        protected override void OnRender(Canvas canvas, float opacity)
         {
-            base.OnRender(canvas);
+            base.OnRender(canvas, opacity);
 
             if (image == null) return;
 
             CalculateSourceAndTarget(out var target, out var source);
-            canvas.DrawImage(image, target, source, Opacity);
+            canvas.DrawImage(image, target, source, opacity);
         }
 
         private void CalculateSourceAndTarget(out RectangleF target, out RectangleF source)

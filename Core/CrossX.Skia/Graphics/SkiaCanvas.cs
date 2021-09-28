@@ -1,6 +1,7 @@
 ﻿using CrossX.Framework;
 using CrossX.Framework.Graphics;
 using SkiaSharp;
+using System;
 using System.Numerics;
 
 namespace CrossX.Skia.Graphics
@@ -27,7 +28,33 @@ namespace CrossX.Skia.Graphics
         }
 
         public override void Clear(Color color) => skCanvas.Clear(color.ToSkia());
-        public override void ClipRect(RectangleF clip) => skCanvas.ClipRect(clip.ToSkia(), SKClipOperation.Intersect);
+        public override void ClipRect(RectangleF rect, SizeF round, ClipMode mode)
+        {
+            var skMode = mode == ClipMode.Difference ? SKClipOperation.Difference : SKClipOperation.Intersect;
+
+            if(round.Width == 0 && round.Height == 0)
+            {
+                skCanvas.ClipRect(rect.ToSkia(), skMode, true);
+            }
+            else
+            {
+                var path = GetTempPath();
+                path.AddRoundRect(rect.ToSkia(), round.Width, round.Height);
+                skCanvas.ClipPath(path, skMode, true);
+            }
+        }
+
+        private SKPath path = new SKPath();
+        private SKPath GetTempPath()
+        {
+            if(path.Handle == IntPtr.Zero)
+            {
+                path = new SKPath();
+            }
+            path.Reset();
+            return path;
+        }
+
         public override void DrawTriangles(VertexBuffer vertexBuffer, Image image)
         {
             var vb = (SkiaVertexBuffer)vertexBuffer;
