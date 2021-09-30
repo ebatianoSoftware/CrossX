@@ -3,7 +3,6 @@ using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace CrossX.Framework.UI.Controls
@@ -25,6 +24,13 @@ namespace CrossX.Framework.UI.Controls
         private Length trackThickness;
         private Drawable thumbDrawable;
         private Drawable trackDrawable;
+
+        private bool enabled = true;
+        private ButtonState currentState = ButtonState.Normal;
+        private Vector2? pointerOffset;
+        private float valueResolution;
+
+        private ButtonGesturesProcessor buttonGesturesProcessor;
 
         public float MaxValue { get => maxValue; set => SetPropertyAndRedraw(ref maxValue, value); }
         public float MinValue { get => minValue; set => SetPropertyAndRedraw(ref minValue, value); }
@@ -59,15 +65,6 @@ namespace CrossX.Framework.UI.Controls
             }
         }
 
-        private PointerId lockedPointer = PointerId.None;
-        private HashSet<PointerId> hoverPointers = new HashSet<PointerId>();
-        private bool enabled = true;
-
-        private ButtonState currentState = ButtonState.Normal;
-
-        private Vector2? pointerOffset;
-        private float valueResolution;
-
         private ButtonState CurrentState
         {
             get => currentState;
@@ -76,6 +73,16 @@ namespace CrossX.Framework.UI.Controls
 
         public Slider(IUIServices services) : base(services)
         {
+            buttonGesturesProcessor = new ButtonGesturesProcessor(
+                state => CurrentState = state,
+                onDownAction: g =>
+                {
+                    pointerOffset = null;
+                    CalculateValue(g.Position);
+                },
+                onMoveAction: g => CalculateValue(g.Position),
+                onUpAction: g => pointerOffset = null
+                );
         }
 
         protected override void OnRender(Canvas canvas, float opacity)
@@ -153,87 +160,11 @@ namespace CrossX.Framework.UI.Controls
             {
                 canvas.FillEllipse(thumbBounds, thumbColor);
             }
-
-            
         }
 
         protected override bool OnProcessGesture(Gesture gesture)
         {
-            if (gesture.PointerId.Kind == PointerKind.MouseMiddleButton || gesture.PointerId.Kind == PointerKind.MouseRightButton) return false;
-
-            switch (gesture.GestureType)
-            {
-                case GestureType.PointerDown:
-                    if (lockedPointer == PointerId.None && Enabled)
-                    {
-                        if (ScreenBounds.Contains(gesture.Position))
-                        {
-                            pointerOffset = null;
-                            lockedPointer = gesture.PointerId;
-                            CurrentState = ButtonState.Pushed;
-                            CalculateValue(gesture.Position);
-                            return true;
-                        }
-                    }
-                    break;
-
-                case GestureType.PointerMove:
-                    if (lockedPointer == PointerId.None)
-                    {
-                        if (ScreenBounds.Contains(gesture.Position))
-                        {
-                            if (!hoverPointers.Contains(gesture.PointerId))
-                            {
-                                hoverPointers.Add(gesture.PointerId);
-                            }
-                        }
-                        else
-                        {
-                            hoverPointers.Remove(gesture.PointerId);
-                        }
-
-                        ButtonState newState = hoverPointers.Count > 0 ? ButtonState.Hover : ButtonState.Normal;
-
-                        if (newState != CurrentState)
-                        {
-                            CurrentState = newState;
-                            return true;
-                        }
-                    }
-                    else if (lockedPointer == gesture.PointerId)
-                    {
-                        CalculateValue(gesture.Position);
-                        return true;
-                    }
-                    break;
-
-                case GestureType.PointerUp:
-                    if (lockedPointer == gesture.PointerId)
-                    {
-                        lockedPointer = PointerId.None;
-                        pointerOffset = null;
-                        if (ScreenBounds.Contains(gesture.Position))
-                        {
-                            CurrentState = ButtonState.Hover;
-                        }
-                        else
-                        {
-                            CurrentState = ButtonState.Normal;
-                        }
-                        return true;
-                    }
-                    break;
-
-                case GestureType.CancelPointer:
-                    if (lockedPointer == gesture.PointerId)
-                    {
-                        pointerOffset = null;
-                        CurrentState = ButtonState.Normal;
-                        lockedPointer = PointerId.None;
-                        return true;
-                    }
-                    break;
-            }
+            if (buttonGesturesProcessor.ProcessGesture(gesture, ScreenBounds, Enabled)) return true;
 
             return base.OnProcessGesture(gesture);
         }

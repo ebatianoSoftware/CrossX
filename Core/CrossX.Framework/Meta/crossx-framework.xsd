@@ -256,16 +256,17 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="System.Float-Bindable">
+  <xsd:simpleType name="CrossX.Framework.Length-Bindable">
     <xsd:union>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
-          <xsd:pattern value="" />
+          <xsd:enumeration value="Auto" />
+          <xsd:enumeration value="Zero" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
-          <xsd:pattern value="[+-]?([0-9]*[.])?[0-9]+|\{.*\}" />
+          <xsd:pattern value="[-]?([0-9]*[.])?[0-9]+(px|%|\*)?|\{.*\}" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>
@@ -311,17 +312,16 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="CrossX.Framework.Length-Bindable">
+  <xsd:simpleType name="System.Float-Bindable">
     <xsd:union>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="Auto" />
-          <xsd:enumeration value="Zero" />
+          <xsd:pattern value="" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
-          <xsd:pattern value="[-]?([0-9]*[.])?[0-9]+(px|%|\*)?|\{.*\}" />
+          <xsd:pattern value="[+-]?([0-9]*[.])?[0-9]+|\{.*\}" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>
@@ -609,6 +609,30 @@
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
           <xsd:pattern value=".*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.FontWeight">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Invisible" />
+          <xsd:enumeration value="Thin" />
+          <xsd:enumeration value="ExtraLight" />
+          <xsd:enumeration value="Light" />
+          <xsd:enumeration value="Normal" />
+          <xsd:enumeration value="Medium" />
+          <xsd:enumeration value="SemiBold" />
+          <xsd:enumeration value="Bold" />
+          <xsd:enumeration value="ExtraBold" />
+          <xsd:enumeration value="Black" />
+          <xsd:enumeration value="ExtraBlack" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>

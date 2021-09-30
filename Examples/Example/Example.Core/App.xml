@@ -80,9 +80,17 @@
     </Resource>
 
     <Resource Key="DefaultButtonBackground">
-      <d:RectangleDrawable Rx="20" Ry="20" FillColor="White"/>
+      <d:RectangleDrawable Rx="5" Ry="5" FillColor="White"/>
     </Resource>
 
+    <Resource Key="CheckBoxDrawable">
+      <d:RectangleDrawable Rx="5" Ry="5" FillColor="White" />
+    </Resource>
+
+    <Resource Key="CheckBoxTickDrawable">
+      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="17" FontWeight="Bold" Text="&#62102;" OffsetX="-0.5" OffsetY="1"/>
+    </Resource>
+    
     <Resource Key="SplitterDrawable">
       <d:SplitterDotsDrawable Rx="50%" Ry="50%" Count="3" Padding="1" Spacing="2" BackgroundTint="#40ffffff"/>
     </Resource>

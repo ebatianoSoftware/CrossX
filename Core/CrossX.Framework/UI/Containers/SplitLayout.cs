@@ -31,11 +31,8 @@ namespace CrossX.Framework.UI.Containers
         private Vector2 downPosition;
         private Length firstMinSize = Length.Zero;
         private Length secondMinSize = Length.Zero;
+        private readonly ButtonGesturesProcessor buttonGesturesProcessor;
 
-        // TODO: Extract logic of button to some processor
-
-        private PointerId lockedPointer = PointerId.None;
-        private HashSet<PointerId> hoverPointers = new HashSet<PointerId>();
 
         public Orientation Orientation { get => orientation; set => SetPropertyAndRecalcLayout(ref orientation, value); }
 
@@ -83,7 +80,38 @@ namespace CrossX.Framework.UI.Containers
 
         public SplitLayout(IUIServices services) : base(services)
         {
+            buttonGesturesProcessor = new ButtonGesturesProcessor(
+                 state => CurrentState = state,
+                 onDownAction: g =>
+                 {
+                     downPosition = g.Position;
+                     SetCursorOverSplitter(g);
+                 },
+                 onUpAction: g=>
+                 {
+                     var splitterBounds = this.splitterBounds.Offset(ScreenBounds.TopLeft);
+                     if (splitterBounds.Contains(g.Position))
+                     {
+                         SetCursorOverSplitter(g);
+                     }
+                 },
+                 onMoveAction: g =>
+                 {
+                     var offset = g.Position - downPosition;
+                     downPosition = g.Position;
 
+                     float offsetValue = Orientation == Orientation.Horizontal ? offset.X : offset.Y;
+
+                     var refSize = Orientation == Orientation.Vertical ? ScreenBounds.Height : ScreenBounds.Width;
+                     var splitPosition = SplitPosition.Calculate(refSize);
+
+                     splitPosition += offsetValue;
+                     SplitPosition = SplitPositionFromValue(splitPosition);
+
+                     SetCursorOverSplitter(g);
+                 },
+                 onHoveredAction: g => SetCursorOverSplitter(g)
+                );
         }
 
         public void InitChildren(IEnumerable<object> elements)
@@ -254,103 +282,8 @@ namespace CrossX.Framework.UI.Containers
 
         protected override bool OnProcessGesture(Gesture gesture)
         {
-            if (gesture.PointerId.Kind == PointerKind.MouseMiddleButton || gesture.PointerId.Kind == PointerKind.MouseRightButton) return false;
-
             var splitterBounds = this.splitterBounds.Offset(ScreenBounds.TopLeft);
-
-            switch (gesture.GestureType)
-            {
-                case GestureType.PointerDown:
-                    if (lockedPointer == PointerId.None && EnableManipulation)
-                    {
-                        if (splitterBounds.Contains(gesture.Position))
-                        {
-                            downPosition = gesture.Position;
-                            lockedPointer = gesture.PointerId;
-                            CurrentState = ButtonState.Pushed;
-                            SetCursorOverSplitter(gesture);
-                            return true;
-                        }
-                    }
-                    break;
-
-                case GestureType.PointerUp:
-                    if (lockedPointer == gesture.PointerId)
-                    {
-                        lockedPointer = PointerId.None;
-                        if (splitterBounds.Contains(gesture.Position))
-                        {
-                            CurrentState = ButtonState.Hover;
-                            SetCursorOverSplitter(gesture);
-                        }
-                        else
-                        {
-                            CurrentState = ButtonState.Normal;
-                        }
-                        return true;
-                    }
-                    break;
-
-                case GestureType.PointerMove:
-                    if (lockedPointer == PointerId.None && EnableManipulation)
-                    {
-                        if (splitterBounds.Contains(gesture.Position))
-                        {
-                            if (!hoverPointers.Contains(gesture.PointerId))
-                            {
-                                hoverPointers.Add(gesture.PointerId);
-                            }
-                            SetCursorOverSplitter(gesture);
-                        }
-                        else
-                        {
-                            hoverPointers.Remove(gesture.PointerId);
-                        }
-
-                        ButtonState newState = hoverPointers.Count > 0 ? ButtonState.Hover : ButtonState.Normal;
-
-                        if (newState != CurrentState)
-                        {
-                            CurrentState = newState;
-                            return true;
-                        }
-                    }
-                    else if (lockedPointer == gesture.PointerId)
-                    {
-                        var offset = gesture.Position - downPosition;
-                        downPosition = gesture.Position;
-
-                        float offsetValue = Orientation == Orientation.Horizontal ? offset.X : offset.Y;
-
-                        var refSize = Orientation == Orientation.Vertical ? ScreenBounds.Height : ScreenBounds.Width;
-                        var splitPosition = SplitPosition.Calculate(refSize);
-
-                        splitPosition += offsetValue;
-                        SplitPosition = SplitPositionFromValue(splitPosition);
-
-                        SetCursorOverSplitter(gesture);
-
-                        return true;
-                    }
-                    else if (gesture.PointerId.Kind == PointerKind.MousePointer)
-                    {
-                        if (lockedPointer != PointerId.None)
-                        {
-                            SetCursorOverSplitter(gesture);
-                        }
-                    }
-                    break;
-
-                case GestureType.CancelPointer:
-                    if (lockedPointer == gesture.PointerId)
-                    {
-                        CurrentState = ButtonState.Normal;
-                        lockedPointer = PointerId.None;
-                        return true;
-                    }
-                    break;
-            }
-
+            if (buttonGesturesProcessor.ProcessGesture(gesture, splitterBounds, EnableManipulation)) return true;
 
             if (firstView?.ProcessGesture(gesture) == true) return true;
             if (secondView?.ProcessGesture(gesture) == true) return true;

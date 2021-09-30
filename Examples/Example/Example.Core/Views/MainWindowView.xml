@@ -10,28 +10,64 @@
 
   <SplitLayout SplitPosition="25%" Orientation="Horizontal" SplitterSize="5"
                SplitterColor="{Theme ButtonBackgroundColor}"
-               SplitterColorOver="{Theme ButtonBackgroundColorOver}" 
+               SplitterColorOver="{Theme ButtonBackgroundColorOver}"
                SplitterColorPushed="{Theme ButtonBackgroundColorPushed}"
                SplitterDrawable="{Resource SplitterDrawable}"
-               EnableManipulation="True">
+               EnableManipulation="True"
+               SecondMinSize="960">
 
-    <FrameLayout BackgroundColor="#20000000"/>
-    
-    <FrameLayout Margin="20">
-      
+    <FrameLayout BackgroundColor="#20000000">
+      <StackLayout VerticalAlignment="End" Spacing="20" HorizontalAlignment="Center">
+        <CheckBox Text="Test the checkbox" ForegroundColor="{Theme ButtonForegroundColor}"
+                  BoxColor="{Theme ButtonBackgroundColor}"
+                  BoxColorOver="{Theme ButtonBackgroundColorOver}"
+                  BoxColorPushed="{Theme ButtonBackgroundColorPushed}"
+                  CheckedTickColor="{Theme ButtonForegroundColor}"
+                  CheckedTickColorOver="{Theme ButtonForegroundColor}"
+                  CheckedTickColorPushed="#a0ffffff"
+                  TickColorPushed="{Theme ButtonBackgroundColorOver}"
+                  CheckedBoxColor="{Theme DefaultButtonBackgroundColor}"
+                  CheckedBoxColorOver="{Theme DefaultButtonBackgroundColorOver}"
+                  CheckedBoxColorPushed="{Theme DefaultButtonBackgroundColorPushed}"
+                  FontFamily="Segoe UI" FontSize="16" FontMeasure="Extended"
+                  Spacing="8" HorizontalAlignment="Start" BoxSize="16"
+                  BoxDrawable="{Resource CheckBoxDrawable}"
+                  TickMarkDrawable="{Resource CheckBoxTickDrawable}"
+                  Checked="{Binding ShowTest}" TextPadding="0,0,0,1"
+                  />
+        
+        <ToggleButton BackgroundColor="{Theme ButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}" Checked="{Binding ShowTest}"
+                      BackgroundColorOver="{Theme ButtonBackgroundColorOver}" ForegroundColorOver="{Theme ButtonForegroundColorOver}"
+                      BackgroundColorPushed="{Theme ButtonBackgroundColorPushed}" ForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
+                      CheckedBackgroundColor="{Theme DefaultButtonBackgroundColor}"
+                      CheckedForegroundColor="{Theme ButtonForegroundColorPushed}"
+                      CheckedBackgroundColorOver="{Theme ThumbBackgroundColorOver}"
+                      CheckedForegroundColorOver="{Theme ButtonForegroundColorPushed}"
+                      CheckedBackgroundColorPushed="{Theme DefaultButtonBackgroundColor}"
+                      CheckedForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
+                      BackgroundDrawable="{Resource DefaultButtonBackground}"
+              
+                FontFamily="Segoe UI" FontSize="22" FontMeasure="Strict" TextPadding="20,10,20,10"
+                Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
+                Text="Toggle"/>
+      </StackLayout>
+    </FrameLayout>
+
+    <FrameLayout Margin="10">
+
       <ImageView Source="{Binding Image}"
                  Stretch="UniformToFill"
-                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="100"/>
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200"/>
 
       <FrameLayout BackgroundColor="Black" BackgroundDrawable="{Resource DefaultButtonBackground}" Opacity="{Binding SliderValue}"
-                   Width="800" Height="280" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                   Width="400" Height="140" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
       <Label ForegroundColor="Black" Text="{Binding Stopwatch}" Margin="4,4,-4,-4"
-              HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="200"
+              HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="100"
               FontMeasure="Strict" TextPadding="40"/>
 
       <Label ForegroundColor="White" Text="{Binding Stopwatch}"
-              HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="200"
+              HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="100"
               FontMeasure="Strict" TextPadding="40"/>
 
       <Button BackgroundColor="{Theme DefaultButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}"
@@ -42,16 +78,17 @@
               Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
               Text="Switch"
               Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
-    
+
       <ProgressBar BackgroundColor="#5B5B5B" ForegroundColor="#FB690E"
                    MaxValue="1" Value="{Binding Progress}"
                    Margin="46" HorizontalAlignment="Center" VerticalAlignment="End"
                    Width="100" Height="2" Mode="Query"
                    Visible="{Binding ShowProgress}"/>
 
-
-      <Slider HorizontalAlignment="Center" VerticalAlignment="Start" Width="300" Height="20" TrackThickness="1"
-              ThumbDrawable="{Resource SliderThumb}" Margin="30" Value="{Binding SliderValue}"
+      <StackLayout VerticalAlignment="Start" HorizontalAlignment="Center">
+        <Label Text="Clock background opacity" FontSize="16" FontFamily="Segoe Script" FontMeasure="Extended" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
+        <Slider HorizontalAlignment="Stretch" Height="20" TrackThickness="1" Margin="0,15,0,15"
+              ThumbDrawable="{Resource SliderThumb}" Value="{Binding SliderValue}"
               MinValue="0" MaxValue="1"
               ValueResolution="0.1"
               ThumbColor="{Theme ThumbBackgroundColor}"
@@ -61,44 +98,12 @@
               TrackColorOver="{Theme TrackBackgroundColorOver}"
               TrackColorPushed="{Theme TrackBackgroundColorPushed}"/>
 
-      <Slider HorizontalAlignment="Start" VerticalAlignment="Center" Width="20" Height="300" TrackThickness="1"
-              ThumbDrawable="{Resource SliderThumb}" Margin="30"
-              Value="{Binding SliderValue}"
-              MinValue="0"
-              MaxValue="1"
-              ThumbColor="{Theme ThumbBackgroundColor}"
-              ThumbColorOver="{Theme ThumbBackgroundColorOver}"
-              ThumbColorPushed="{Theme ThumbBackgroundColorPushed}"
-              TrackColor="{Theme TrackBackgroundColor}"
-              TrackColorOver="{Theme TrackBackgroundColorOver}"
-              TrackColorPushed="{Theme TrackBackgroundColorPushed}"/>
-
-    <StackLayout Orientation="Vertical" Spacing="10" Padding="10" BackgroundColor="DarkRed" HorizontalAlignment="Center" Width="Auto" VerticalAlignment="Center" Visible="False">
-      <Label Text="Test1" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Stretch"/>
-      <Label Text="Test2" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
-      <Label Text="Test3 He" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
-      <StackLayout Orientation="Horizontal" Spacing="10" Padding="10" BackgroundColor="Navy" HorizontalAlignment="Center" Width="Auto" VerticalAlignment="Center">
-        <Label Text="Test2" BackgroundColor="Green" TextPadding="10" FontSize="50" FontFamily="Segoe UI" VerticalAlignment="Center"/>
-        <Label Text="Test4" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" VerticalAlignment="End"/>
-        <Label Text="Test5 Ho 33" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" VerticalAlignment="Center"/>
-        <Label Text="Test6" BackgroundColor="Green" TextPadding="10" FontSize="20" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+        <Label Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit." FontMeasure="Extended" FontSize="12" FontFamily="Segoe Script" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
+        <Label Text="Nullam vitae felis hendrerit, vestibulum eros eu, faucibus" FontMeasure="Extended" FontSize="12" FontFamily="Segoe Script" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
+        <Label Text="arcu. Aenean in finibus lectus. Etiam cursus sem sit amet" FontMeasure="Extended" FontSize="12" FontFamily="Segoe Script" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
+        <Label Text="diam gravida tempus. Nulla interdum placerat libero et." FontMeasure="Extended" FontSize="12" FontFamily="Segoe Script" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
+        
       </StackLayout>
-      <Label Text="Test4" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="End"/>
-      <Label Text="Test5 Ho 33" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
-
-      <Button BackgroundColor="{Theme ButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}"
-              BackgroundColorOver="{Theme ButtonBackgroundColorOver}" ForegroundColorOver="{Theme ButtonForegroundColorOver}"
-              BackgroundColorPushed="{Theme ButtonBackgroundColorPushed}" ForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
-              BackgroundDrawable="{Resource ButtonBackground}"
-              FontFamily="Segoe UI" FontSize="22" FontMeasure="Strict" TextPadding="20,10,20,10"
-              Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
-              Text="Switch"
-              Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
-      
-      <Label Text="Test6" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
-    </StackLayout>
-
-    
 
     </FrameLayout>
   </SplitLayout>

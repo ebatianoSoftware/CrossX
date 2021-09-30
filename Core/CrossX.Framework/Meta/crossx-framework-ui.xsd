@@ -33,7 +33,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="TextPadding" />
         <xsd:attribute type="aa:System.String-Bindable" name="Text" />
         <xsd:attribute type="aa:System.String-Bindable" name="FontFamily" />
-        <xsd:attribute type="aa:System.Float-Bindable" name="FontSize" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="FontSize" />
         <xsd:attribute type="aa:CrossX.Framework.FontWeight-Bindable" name="FontWeight" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="FontItalic" />
         <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="HorizontalTextAlignment" />
@@ -54,6 +54,28 @@
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorOver" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorDisabled" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.CheckBox">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Checked" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBoxColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedTickColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBoxColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedTickColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBoxColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedTickColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TickColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="BoxSize" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Spacing" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
+        <xsd:attribute type="aa:unknown" name="BoxDrawable" />
+        <xsd:attribute type="aa:unknown" name="TickMarkDrawable" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -121,6 +143,19 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.ToggleButton">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button">
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBackgroundColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedForegroundColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBackgroundColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedForegroundColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBackgroundColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedForegroundColorPushed" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Checked" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Containers.ViewContainer">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.View">
@@ -184,6 +219,13 @@
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
+  <xsd:element name="CheckBox">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.CheckBox" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
   <xsd:element name="Fill">
     <xsd:complexType>
       <xsd:complexContent>
@@ -223,6 +265,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBox" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ToggleButton">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.ToggleButton" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

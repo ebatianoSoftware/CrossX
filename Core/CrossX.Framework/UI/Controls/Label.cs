@@ -13,7 +13,7 @@ namespace CrossX.Framework.UI.Controls
         protected override void OnRender(Canvas canvas, float opacity)
         {
             base.OnRender(canvas, opacity );
-            var font = Services.FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
+            var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
             var bounds = ScreenBounds.Deflate(TextPadding);
             canvas.DrawText(Text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), ForegroundColor * opacity, FontMeasure);
         }

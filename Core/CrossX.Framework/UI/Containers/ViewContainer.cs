@@ -43,7 +43,7 @@ namespace CrossX.Framework.UI.Containers
         }
 
 
-        public void InvalidateLayout() => layoutInvalid = true;
+        public virtual void InvalidateLayout() => layoutInvalid = true;
 
         protected override void OnUpdate(float time)
         {

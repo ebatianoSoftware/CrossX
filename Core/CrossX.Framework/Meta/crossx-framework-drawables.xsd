@@ -30,6 +30,18 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.Drawables.TextIconDrawable">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.Drawables.Drawable">
+        <xsd:attribute type="aa:System.String" name="FontFamily" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="FontSize" />
+        <xsd:attribute type="aa:CrossX.Framework.FontWeight" name="FontWeight" />
+        <xsd:attribute type="aa:System.String" name="Text" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="OffsetX" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="OffsetY" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:element name="RectangleDrawable">
     <xsd:complexType>
       <xsd:complexContent>
@@ -41,6 +53,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.Drawables.SplitterDotsDrawable" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="TextIconDrawable">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.Drawables.TextIconDrawable" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

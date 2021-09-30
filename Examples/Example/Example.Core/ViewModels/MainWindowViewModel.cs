@@ -35,11 +35,18 @@ namespace Example.Core.ViewModels
             }
         }
 
+        public bool ShowTest
+        {
+            get => showTest;
+            set => SetProperty(ref showTest, value);
+        }
+
         public bool ShowProgress => !ShowButton;
 
         private ImageDescriptor image;
         private string stopwatch = "";
         private bool showButton = true;
+        private bool showTest = true;
         private float sliderValue = 0.2f;
         private readonly IObjectFactory objectFactory;
         private readonly ISystemDispatcher systemDispatcher;

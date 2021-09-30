@@ -6,7 +6,7 @@ namespace CrossX.Framework.UI.Controls
     {
         private string text;
         private string fontFamily;
-        private float fontSize = 10;
+        private Length fontSize = new Length(10);
         private FontWeight fontWeight = FontWeight.Normal;
         private bool fontItalic;
         private Alignment horizontalTextAlign = Alignment.Center;
@@ -32,7 +32,7 @@ namespace CrossX.Framework.UI.Controls
             set => SetPropertyAndRecalcLayout(ref text, value);
         }
         public string FontFamily { get => fontFamily; set => SetPropertyAndRecalcLayout(ref fontFamily, value); }
-        public float FontSize { get => fontSize; set => SetPropertyAndRecalcLayout(ref fontSize, value); }
+        public Length FontSize { get => fontSize; set => SetPropertyAndRecalcLayout(ref fontSize, value); }
         public FontWeight FontWeight { get => fontWeight; set => SetPropertyAndRecalcLayout(ref fontWeight, value); }
         public bool FontItalic { get => fontItalic; set => SetPropertyAndRecalcLayout(ref fontItalic, value); }
 
@@ -52,9 +52,8 @@ namespace CrossX.Framework.UI.Controls
             var autoWidth = Width.IsAuto && HorizontalAlignment != Alignment.Stretch;
             var autoHeight = Height.IsAuto && VerticalAlignment != Alignment.Stretch;
 
-            var font = Services.FontManager.FindFont(FontFamily, FontSize, FontWeight, FontItalic);
+            var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
             var sizeAuto = font.MeasureText(Text, FontMeasure);
-
 
             sizeAuto.Width += TextPadding.Width;
             sizeAuto.Height += TextPadding.Height;

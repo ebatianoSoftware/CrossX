@@ -44,7 +44,7 @@ namespace CrossX.Framework.UI.Containers
                     var size = child.CalculateSize(mySize);
                     var position = child.CalculatePosition(size, mySize) + offset;
 
-                    child.Bounds = new RectangleF(positionX, position.Y, size.Width, size.Height);
+                    child.Bounds = new RectangleF(positionX + child.Margin.Left.Calculate(), position.Y, size.Width, size.Height);
                     positionX += size.Width + child.Margin.Width + spacing;
                 }
             }
@@ -60,7 +60,7 @@ namespace CrossX.Framework.UI.Containers
                     var size = child.CalculateSize(mySize);
                     var position = child.CalculatePosition(size, mySize) + offset;
 
-                    child.Bounds = new RectangleF(position.X, positionY, size.Width, size.Height);
+                    child.Bounds = new RectangleF(position.X, positionY + child.Margin.Top.Calculate(), size.Width, size.Height);
                     positionY += size.Height + child.Margin.Height + spacing;
                 }
             }
@@ -140,6 +140,12 @@ namespace CrossX.Framework.UI.Containers
 
             height += Math.Max(0, visibleChildren - 1) * spacing;
             return new SizeF(width, height);
+        }
+
+        public override void InvalidateLayout()
+        {
+            Parent?.InvalidateLayout();
+            base.InvalidateLayout();
         }
     }
 }

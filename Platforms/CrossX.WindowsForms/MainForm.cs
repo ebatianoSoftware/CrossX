@@ -255,21 +255,29 @@ namespace CrossX.WindowsForms
 
             MainLoop.Dispatcher.BeginInvoke(() =>
             {
+                bool buttonPressed = false;
                 if (button.HasFlag(MouseButtons.Left))
                 {
                     app.OnPointerMove(new PointerId(PointerKind.MouseLeftButton), position);
+                    buttonPressed = true;
                 }
 
                 if (button.HasFlag(MouseButtons.Right))
                 {
                     app.OnPointerMove(new PointerId(PointerKind.MouseRightButton), position);
+                    buttonPressed = true;
                 }
 
                 if (button.HasFlag(MouseButtons.Middle))
                 {
                     app.OnPointerMove(new PointerId(PointerKind.MouseMiddleButton), position);
+                    buttonPressed = true;
                 }
-                app.OnPointerMove(new PointerId(PointerKind.MousePointer), position);
+
+                if (!buttonPressed)
+                {
+                    app.OnPointerMove(new PointerId(PointerKind.MousePointer), position);
+                }
             });
             Cursor = cursor;
         }
