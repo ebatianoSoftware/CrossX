@@ -184,10 +184,13 @@ namespace CrossX.Framework.Core
         private void PropagateGesture(Gesture gesture)
         {
             if (gesture == null) return;
+
             if(!Window.RootView.PreviewGesture(gesture))
             {
                 Window.RootView.ProcessGesture(gesture);
             }
+
+            Services.GetService<INativeWindow>().Cursor = gesture.SetCursor;
         }
 
         public void Dispose() => Window.Dispose();

@@ -254,6 +254,8 @@ namespace CrossX.Framework.UI.Containers
 
         protected override bool OnProcessGesture(Gesture gesture)
         {
+            if (gesture.PointerId.Kind == PointerKind.MouseMiddleButton || gesture.PointerId.Kind == PointerKind.MouseRightButton) return false;
+
             var splitterBounds = this.splitterBounds.Offset(ScreenBounds.TopLeft);
 
             switch (gesture.GestureType)
@@ -266,6 +268,7 @@ namespace CrossX.Framework.UI.Containers
                             downPosition = gesture.Position;
                             lockedPointer = gesture.PointerId;
                             CurrentState = ButtonState.Pushed;
+                            SetCursorOverSplitter(gesture);
                             return true;
                         }
                     }
@@ -278,6 +281,7 @@ namespace CrossX.Framework.UI.Containers
                         if (splitterBounds.Contains(gesture.Position))
                         {
                             CurrentState = ButtonState.Hover;
+                            SetCursorOverSplitter(gesture);
                         }
                         else
                         {
@@ -296,6 +300,7 @@ namespace CrossX.Framework.UI.Containers
                             {
                                 hoverPointers.Add(gesture.PointerId);
                             }
+                            SetCursorOverSplitter(gesture);
                         }
                         else
                         {
@@ -322,7 +327,17 @@ namespace CrossX.Framework.UI.Containers
 
                         splitPosition += offsetValue;
                         SplitPosition = SplitPositionFromValue(splitPosition);
+
+                        SetCursorOverSplitter(gesture);
+
                         return true;
+                    }
+                    else if (gesture.PointerId.Kind == PointerKind.MousePointer)
+                    {
+                        if (lockedPointer != PointerId.None)
+                        {
+                            SetCursorOverSplitter(gesture);
+                        }
                     }
                     break;
 
@@ -341,6 +356,11 @@ namespace CrossX.Framework.UI.Containers
             if (secondView?.ProcessGesture(gesture) == true) return true;
 
             return false;
+        }
+
+        private void SetCursorOverSplitter(Gesture gesture)
+        {
+            gesture.SetCursor = Orientation == Orientation.Vertical ? CursorType.HSplit : CursorType.VSplit;
         }
 
         protected override void Dispose(bool disposing)

@@ -122,6 +122,8 @@ namespace CrossX.Framework.UI.Controls
 
         protected override bool OnProcessGesture(Gesture gesture)
         {
+            if (gesture.PointerId.Kind == PointerKind.MouseMiddleButton || gesture.PointerId.Kind == PointerKind.MouseRightButton) return false;
+
             switch (gesture.GestureType)
             {
                 case GestureType.PointerDown:

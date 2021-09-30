@@ -7,5 +7,6 @@ namespace CrossX.Framework.Input
         public GestureType GestureType { get; internal set; }
         public PointerId PointerId { get; internal set; }
         public Vector2 Position { get; internal set; }
+        public CursorType SetCursor { get; set; }
     }
 }

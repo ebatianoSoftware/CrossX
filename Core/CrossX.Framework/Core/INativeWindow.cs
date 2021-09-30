@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.UI.Global;
+﻿using CrossX.Framework.Input;
+using CrossX.Framework.UI.Global;
 
 namespace CrossX.Framework.Core
 {
@@ -11,5 +12,6 @@ namespace CrossX.Framework.Core
         bool CanMaximize { set; }
         WindowState State { get; set; }
         string Title { set; }
+        CursorType Cursor { set; }
     }
 }

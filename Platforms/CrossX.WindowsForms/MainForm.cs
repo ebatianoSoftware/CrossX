@@ -113,7 +113,7 @@ namespace CrossX.WindowsForms
                             WindowState = FormWindowState.Maximized;
                             break;
 
-                        case Framework.UI.Global.WindowState:
+                        case Framework.UI.Global.WindowState.Normal:
                             LeaveFullscreen();
                             WindowState = FormWindowState.Normal;
                             break;
@@ -121,6 +121,25 @@ namespace CrossX.WindowsForms
                 });
             }
         }
+
+        CursorType INativeWindow.Cursor
+        {
+            set
+            {
+                if (cursorType != value)
+                {
+                    cursorType = value;
+                    cursor = MapCursor(value);
+                    systemDispatcher.BeginInvoke(() =>
+                    {
+                        Cursor = cursor;
+                    });
+                }
+            }
+        }
+
+        private Cursor cursor = Cursors.Default;
+        private CursorType cursorType = CursorType.Default;
 
         public MainForm(ICoreApplication app, IServicesProvider servicesProvider = null)
         {
@@ -197,6 +216,7 @@ namespace CrossX.WindowsForms
                     app.OnPointerUp(new PointerId(pointerKind), position);
                 });
             }
+            Cursor = cursor;
         }
 
         private void SkglControl_MouseDown(object sender, MouseEventArgs args)
@@ -225,6 +245,7 @@ namespace CrossX.WindowsForms
                     app.OnPointerDown(new PointerId(pointerKind), position);
                 });
             }
+            Cursor = cursor;
         }
 
         private void SkglControl_MouseMove(object sender, MouseEventArgs args)
@@ -250,6 +271,7 @@ namespace CrossX.WindowsForms
                 }
                 app.OnPointerMove(new PointerId(PointerKind.MousePointer), position);
             });
+            Cursor = cursor;
         }
 
         private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs args)
@@ -310,6 +332,34 @@ namespace CrossX.WindowsForms
             FormBorderStyle = lastFormBorderStyle;
             Bounds = lastNormalPosition;
             WindowState = lastNotFullscreenWindowState;
+        }
+
+        private Cursor MapCursor(CursorType cursorType)
+        {
+            switch (cursorType)
+            {
+                case CursorType.Default:
+                    return Cursors.Default;
+
+                case CursorType.Cross:
+                    return Cursors.Cross;
+
+                case CursorType.Hand:
+                    return Cursors.Hand;
+
+                case CursorType.Move:
+                    return Cursors.SizeAll;
+
+                case CursorType.Wait:
+                    return Cursors.WaitCursor;
+
+                case CursorType.VSplit:
+                    return Cursors.VSplit;
+
+                case CursorType.HSplit:
+                    return Cursors.HSplit;
+            }
+            return Cursors.Default;
         }
     }
 }
