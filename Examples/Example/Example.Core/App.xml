@@ -5,25 +5,30 @@
   xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
   <Theme>
-    <Color Key="BackgroundColor" Value="#202030"/>
-    <Color Key="ForegroundColor" Value="#c0c0c0"/>
+    <Color Key="BackgroundColor" Value="#2e2e2e"/>
+    <Color Key="ForegroundColor" Value="#ffffff"/>
     
-    <Color Key="ButtonBackgroundColor" Value="Transparent"/>
-    <Color Key="ButtonBackgroundColorOver" Value="#60404050"/>
-    <Color Key="ButtonBackgroundColorPushed" Value="#60304060"/>
+    <Color Key="ButtonBackgroundColor" Value="#5B5B5B"/>
+    <Color Key="ButtonBackgroundColorOver" Value="#6D6D6D"/>
+    <Color Key="ButtonBackgroundColorPushed" Value="#5B5B5B"/>
 
+    <Color Key="DefaultButtonBackgroundColor" Value="#FB690E"/>
+    <Color Key="DefaultButtonBackgroundColorOver" Value="#FC8236"/>
+    <Color Key="DefaultButtonBackgroundColorPushed" Value="#FB690E"/>
 
-    <Color Key="ThumbBackgroundColor" Value="#80ffffff"/>
-    <Color Key="ThumbBackgroundColorOver" Value="White"/>
-    <Color Key="ThumbBackgroundColorPushed" Value="#d0ffffff"/>
+    <Color Key="ButtonForegroundColor" Value="#ffffff"/>
+    <Color Key="ButtonForegroundColorOver" Value="#ffffff"/>
+    <Color Key="ButtonForegroundColorPushed" Value="#ffffff"/>
 
-    <Color Key="TrackBackgroundColor" Value="#40404050"/>
-    <Color Key="TrackBackgroundColorOver" Value="#60404050"/>
-    <Color Key="TrackBackgroundColorPushed" Value="#60404050"/>
+    <Color Key="ThumbBackgroundColor" Value="#FB690E"/>
+    <Color Key="ThumbBackgroundColorOver" Value="#FC8236"/>
+    <Color Key="ThumbBackgroundColorPushed" Value="#FB690E"/>
+
+    <Color Key="TrackBackgroundColor" Value="#5B5B5B"/>
+    <Color Key="TrackBackgroundColorOver" Value="#6D6D6D"/>
+    <Color Key="TrackBackgroundColorPushed" Value="#5B5B5B"/>
     
-    <Color Key="ButtonForegroundColor" Value="#30ffffff"/>
-    <Color Key="ButtonForegroundColorOver" Value="White"/>
-    <Color Key="ButtonForegroundColorPushed" Value="#d0ffffff"/>
+    
   </Theme>
   
   <Styles>
@@ -75,11 +80,15 @@
     </Resource>
 
     <Resource Key="DefaultButtonBackground">
-      <d:RectangleDrawable Rx="5" Ry="50%" FillColor="White"/>
+      <d:RectangleDrawable Rx="20" Ry="20" FillColor="White"/>
+    </Resource>
+
+    <Resource Key="SplitterDrawable">
+      <d:SplitterDotsDrawable Rx="50%" Ry="50%" Count="3" Padding="1" Spacing="2" BackgroundTint="#40ffffff"/>
     </Resource>
 
     <Resource Key="SliderThumb">
-      <d:RectangleDrawable Rx="5" Ry="50%" FillColor="#80ffffff" StrokeThickness="2" StrokeColor="#a0ffffff"/>
+      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White"/>
     </Resource>
 
   </Resources>

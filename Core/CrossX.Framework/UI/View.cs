@@ -64,7 +64,7 @@ namespace CrossX.Framework.UI
         [XxSchemaBindable(false)]
         public Classes Classes { get; set; }
 
-        public bool Visible { get => visible; set => SetPropertyAndRedraw(ref visible, value); }
+        public bool Visible { get => visible; set => SetPropertyAndRecalcLayout(ref visible, value); }
 
         public float ActualWidth => Bounds.Width;
 
@@ -82,6 +82,8 @@ namespace CrossX.Framework.UI
                 }
             }
         }
+
+        public bool DisplayVisible => Visible && (Parent?.DisplayVisible ?? true);
 
         protected View(IUIServices services)
         {
@@ -171,7 +173,7 @@ namespace CrossX.Framework.UI
 
         public bool PreviewGesture(Gesture gesture)
         {
-            if (!Visible) return false;
+            if (!DisplayVisible || !Visible) return false;
             if (OnPreviewGesture(gesture)) return true;
             return false;
         }
@@ -183,11 +185,10 @@ namespace CrossX.Framework.UI
 
         public bool ProcessGesture(Gesture gesture)
         {
-            if (!Visible) return false;
+            if (!DisplayVisible || !Visible) return false;
             if (OnProcessGesture(gesture)) return true;
             return ScreenBounds.Contains(gesture.Position);
         }
-
         protected virtual bool OnProcessGesture(Gesture gesture)
         {
             return false;

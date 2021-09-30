@@ -8,12 +8,20 @@
   BackgroundColor="{Theme BackgroundColor}"
   Title="CrossX Example Application">
 
-  <FrameLayout BackgroundColor="White" Margin="20">
-    <FrameLayout Margin="1" BackgroundColor="Black">
+  <SplitLayout SplitPosition="25%" Orientation="Horizontal" SplitterSize="5"
+               SplitterColor="{Theme ButtonBackgroundColor}"
+               SplitterColorOver="{Theme ButtonBackgroundColorOver}" 
+               SplitterColorPushed="{Theme ButtonBackgroundColorPushed}"
+               SplitterDrawable="{Resource SplitterDrawable}"
+               EnableManipulation="True">
 
+    <FrameLayout BackgroundColor="#20000000"/>
+    
+    <FrameLayout Margin="20">
+      
       <ImageView Source="{Binding Image}"
                  Stretch="UniformToFill"
-                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1"/>
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="100"/>
 
       <FrameLayout BackgroundColor="Black" BackgroundDrawable="{Resource DefaultButtonBackground}" Opacity="{Binding SliderValue}"
                    Width="800" Height="280" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -26,17 +34,18 @@
               HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="200"
               FontMeasure="Strict" TextPadding="40"/>
 
-      <Button BackgroundColor="{Theme ButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}"
-              BackgroundColorOver="{Theme ButtonBackgroundColorOver}" ForegroundColorOver="{Theme ButtonForegroundColorOver}"
-              BackgroundColorPushed="{Theme ButtonBackgroundColorPushed}" ForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
+      <Button BackgroundColor="{Theme DefaultButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}"
+              BackgroundColorOver="{Theme DefaultButtonBackgroundColorOver}" ForegroundColorOver="{Theme ButtonForegroundColorOver}"
+              BackgroundColorPushed="{Theme DefaultButtonBackgroundColorPushed}" ForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
               BackgroundDrawable="{Resource DefaultButtonBackground}"
-              FontFamily="Roboto" FontSize="30" FontMeasure="Strict" TextPadding="10"
+              FontFamily="Segoe UI" FontSize="22" FontMeasure="Strict" TextPadding="20,10,20,10"
               Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
               Text="Switch"
               Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
-      <ProgressBar BackgroundColor="#40ffffff" ForegroundColor="White"
+    
+      <ProgressBar BackgroundColor="#5B5B5B" ForegroundColor="#FB690E"
                    MaxValue="1" Value="{Binding Progress}"
-                   Margin="48" HorizontalAlignment="Center" VerticalAlignment="End"
+                   Margin="46" HorizontalAlignment="Center" VerticalAlignment="End"
                    Width="100" Height="2" Mode="Query"
                    Visible="{Binding ShowProgress}"/>
 
@@ -64,8 +73,35 @@
               TrackColorOver="{Theme TrackBackgroundColorOver}"
               TrackColorPushed="{Theme TrackBackgroundColorPushed}"/>
 
+    <StackLayout Orientation="Vertical" Spacing="10" Padding="10" BackgroundColor="DarkRed" HorizontalAlignment="Center" Width="Auto" VerticalAlignment="Center" Visible="False">
+      <Label Text="Test1" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Stretch"/>
+      <Label Text="Test2" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
+      <Label Text="Test3 He" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
+      <StackLayout Orientation="Horizontal" Spacing="10" Padding="10" BackgroundColor="Navy" HorizontalAlignment="Center" Width="Auto" VerticalAlignment="Center">
+        <Label Text="Test2" BackgroundColor="Green" TextPadding="10" FontSize="50" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+        <Label Text="Test4" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" VerticalAlignment="End"/>
+        <Label Text="Test5 Ho 33" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+        <Label Text="Test6" BackgroundColor="Green" TextPadding="10" FontSize="20" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+      </StackLayout>
+      <Label Text="Test4" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="End"/>
+      <Label Text="Test5 Ho 33" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
+
+      <Button BackgroundColor="{Theme ButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}"
+              BackgroundColorOver="{Theme ButtonBackgroundColorOver}" ForegroundColorOver="{Theme ButtonForegroundColorOver}"
+              BackgroundColorPushed="{Theme ButtonBackgroundColorPushed}" ForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
+              BackgroundDrawable="{Resource ButtonBackground}"
+              FontFamily="Segoe UI" FontSize="22" FontMeasure="Strict" TextPadding="20,10,20,10"
+              Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
+              Text="Switch"
+              Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
+      
+      <Label Text="Test6" BackgroundColor="Green" TextPadding="10" FontSize="30" FontFamily="Segoe UI" HorizontalAlignment="Center"/>
+    </StackLayout>
+
+    
+
     </FrameLayout>
-  </FrameLayout>
+  </SplitLayout>
 </g:Window>
 
 <!--<NavigationFrame

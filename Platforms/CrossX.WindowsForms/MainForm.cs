@@ -8,11 +8,11 @@ using CrossX.Skia;
 using SkiaSharp.Views.Desktop;
 using System;
 using System.Windows.Forms;
-using DrawingSize = System.Drawing.Size;
-using DrawingRectangle = System.Drawing.Rectangle;
 using CrossX.Framework.Input;
 using System.Numerics;
-using System.Threading.Tasks;
+
+using DrawingSize = System.Drawing.Size;
+using DrawingRectangle = System.Drawing.Rectangle;
 
 namespace CrossX.WindowsForms
 {

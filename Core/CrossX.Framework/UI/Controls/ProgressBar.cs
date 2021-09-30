@@ -58,7 +58,7 @@ namespace CrossX.Framework.UI.Controls
             var offset = step % size * 2;
 
             canvas.SaveState();
-            canvas.ClipRect(ScreenBounds, SizeF.Zero);
+            canvas.ClipRect(ScreenBounds);
 
             var bounds = ScreenBounds;
             bounds.Width = size;

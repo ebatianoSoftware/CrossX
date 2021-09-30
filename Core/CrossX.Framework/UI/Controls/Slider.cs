@@ -71,14 +71,7 @@ namespace CrossX.Framework.UI.Controls
         private ButtonState CurrentState
         {
             get => currentState;
-            set
-            {
-                if (currentState != value)
-                {
-                    currentState = value;
-                    Services.RedrawService.RequestRedraw();
-                }
-            }
+            set => SetPropertyAndRedraw(ref currentState, value);
         }
 
         public Slider(IUIServices services) : base(services)
@@ -98,6 +91,7 @@ namespace CrossX.Framework.UI.Controls
             var trackThickness = TrackThickness.Calculate(thumbSize);
 
             var trackBounds = bounds;
+            var valueBounds = bounds;
             var thumbBounds = bounds;
 
             thumbBounds.Width = thumbBounds.Height = thumbSize;
@@ -106,13 +100,22 @@ namespace CrossX.Framework.UI.Controls
             {
                 trackBounds.Y = bounds.Center.Y - trackThickness / 2;
                 trackBounds.Height = trackThickness;
+
+                valueBounds = trackBounds;
                 thumbBounds.X += offset;
+
+                trackBounds.Left = thumbBounds.Center.X;
+                valueBounds.Right = thumbBounds.Center.X;
             }
             else
             {
                 trackBounds.X = bounds.Center.X - trackThickness / 2;
                 trackBounds.Width = trackThickness;
+                valueBounds = trackBounds;
                 thumbBounds.Y += area - offset;
+
+                trackBounds.Bottom = thumbBounds.Center.Y;
+                valueBounds.Top = thumbBounds.Center.Y;
             }
 
             var thumbColor = ThumbColor;
@@ -131,28 +134,27 @@ namespace CrossX.Framework.UI.Controls
                     break;
             }
 
-            canvas.SaveState();
-            if (ThumbDrawable != null)
-            {
-                ThumbDrawable.Draw(canvas, thumbBounds, thumbColor * opacity);
-                ThumbDrawable.ClipShape(canvas, thumbBounds, ClipMode.Difference);
-            }
-            else
-            {
-                canvas.FillEllipse(thumbBounds, thumbColor);
-                canvas.ClipRect(thumbBounds, new SizeF(thumbBounds.Width / 2, thumbBounds.Width / 2), ClipMode.Difference);
-            }
-
             if (TrackDrawable != null)
             {
                 TrackDrawable.Draw(canvas, trackBounds, trackColor * opacity);
+                TrackDrawable.Draw(canvas, valueBounds, thumbColor * opacity);
             }
             else
             {
                 canvas.FillRect(trackBounds, trackColor * opacity);
+                canvas.FillRect(valueBounds, thumbColor * opacity);
             }
 
-            canvas.Restore();
+            if (ThumbDrawable != null)
+            {
+                ThumbDrawable.Draw(canvas, thumbBounds, thumbColor * opacity);
+            }
+            else
+            {
+                canvas.FillEllipse(thumbBounds, thumbColor);
+            }
+
+            
         }
 
         protected override bool OnProcessGesture(Gesture gesture)

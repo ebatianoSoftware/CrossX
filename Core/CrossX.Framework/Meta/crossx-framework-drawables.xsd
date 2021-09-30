@@ -18,10 +18,29 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.Drawables.SplitterDotsDrawable">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.Drawables.Drawable">
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Padding" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Spacing" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Rx" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Ry" />
+        <xsd:attribute type="aa:System.Int" name="Count" />
+        <xsd:attribute type="aa:CrossX.Framework.Color" name="BackgroundTint" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:element name="RectangleDrawable">
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.Drawables.RectangleDrawable" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="SplitterDotsDrawable">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.Drawables.SplitterDotsDrawable" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

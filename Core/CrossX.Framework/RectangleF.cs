@@ -20,11 +20,43 @@ namespace CrossX.Framework
 
         public Vector2 Center => new Vector2(X + Width / 2, Y + Height / 2);
 
-        public float Left => X;
-        public float Top => Y;
+        public float Left 
+        { 
+            get => X;
+            set
+            {
+                Width -= value - X;
+                X = value;
+            }
+        }
 
-        public float Right => X + Width;
-        public float Bottom => Y + Height;
+        public float Top
+        {
+            get => Y;
+            set
+            {
+                Height -= value - Y;
+                Y = value;
+            }
+        }
+
+        public float Right
+        {
+            get => X + Width;
+            set
+            {
+                Width = value - X;
+            }
+        }
+
+        public float Bottom
+        {
+            get => Y + Height;
+            set
+            {
+                Height = value - Y;
+            }
+        }
 
         public bool IsEmpty => Width <= 0 || Height <= 0;
 

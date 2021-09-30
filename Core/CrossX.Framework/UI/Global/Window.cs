@@ -170,6 +170,8 @@ namespace CrossX.Framework.UI.Global
 
         public RectangleF ScreenBounds => new RectangleF(0, 0, ScaledSize.Width, ScaledSize.Height);
 
+        bool IViewParent.DisplayVisible => true;
+
         public void Update(float timeDelta)
         {
             if(layoutInvalid) RecalculateLayout();

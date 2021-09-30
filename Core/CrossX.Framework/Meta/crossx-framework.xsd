@@ -402,6 +402,21 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Orientation-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Horizontal" />
+          <xsd:enumeration value="Vertical" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
   <xsd:simpleType name="System.Int">
     <xsd:union>
       <xsd:simpleType>

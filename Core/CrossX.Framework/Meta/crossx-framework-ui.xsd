@@ -147,6 +147,36 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.SplitLayout">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="aa:CrossX.Framework.Orientation-Bindable" name="Orientation" />
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="EnableManipulation" />
+        <xsd:attribute type="aa:unknown" name="SplitterDrawable" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="SplitterColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="SplitterColorOver" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="SplitterColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="FirstMinSize" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="SecondMinSize" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="SplitterSize" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="SplitPosition" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.StackLayout">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Containers.ViewContainer">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="aa:CrossX.Framework.Orientation-Bindable" name="Orientation" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Spacing" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:element name="Button">
     <xsd:complexType>
       <xsd:complexContent>
@@ -207,6 +237,20 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Containers.NavigationFrame" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="SplitLayout">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.SplitLayout" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="StackLayout">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.StackLayout" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

@@ -4,5 +4,6 @@
     {
         void InvalidateLayout();
         RectangleF ScreenBounds { get; }
+        bool DisplayVisible { get; }
     }
 }

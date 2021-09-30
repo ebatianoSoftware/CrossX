@@ -15,8 +15,8 @@ namespace CrossX.Skia.Graphics
             SubpixelText = true,
             FilterQuality = SKFilterQuality.High
         };
-        private Size size;
 
+        private Size size;
         public override Size Size => size;
 
         public Canvas Canvas => this;
@@ -28,21 +28,7 @@ namespace CrossX.Skia.Graphics
         }
 
         public override void Clear(Color color) => skCanvas.Clear(color.ToSkia());
-        public override void ClipRect(RectangleF rect, SizeF round, ClipMode mode)
-        {
-            var skMode = mode == ClipMode.Difference ? SKClipOperation.Difference : SKClipOperation.Intersect;
-
-            if(round.Width == 0 && round.Height == 0)
-            {
-                skCanvas.ClipRect(rect.ToSkia(), skMode, true);
-            }
-            else
-            {
-                var path = GetTempPath();
-                path.AddRoundRect(rect.ToSkia(), round.Width, round.Height);
-                skCanvas.ClipPath(path, skMode, true);
-            }
-        }
+        public override void ClipRect(RectangleF rect) => skCanvas.ClipRect(rect.ToSkia(), SKClipOperation.Intersect, true);
 
         private SKPath path = new SKPath();
         private SKPath GetTempPath()
