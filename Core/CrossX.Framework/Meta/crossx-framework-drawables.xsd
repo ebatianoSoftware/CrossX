@@ -15,6 +15,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Color" name="FillColor" />
         <xsd:attribute type="aa:CrossX.Framework.Color" name="StrokeColor" />
         <xsd:attribute type="aa:CrossX.Framework.Length" name="StrokeThickness" />
+        <xsd:attribute type="aa:CrossX.Framework.Thickness" name="Padding" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

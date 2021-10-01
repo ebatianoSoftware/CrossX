@@ -18,6 +18,62 @@
 
     <FrameLayout BackgroundColor="#20000000">
       <StackLayout VerticalAlignment="End" Spacing="20" HorizontalAlignment="Center">
+
+        <RadioButton Text="First value" ForegroundColor="{Theme ButtonForegroundColor}"
+          Value="1" CurrentValue="{Binding RadioValue}"
+          BoxColor="{Theme ButtonBackgroundColor}"
+          BoxColorOver="{Theme ButtonBackgroundColorOver}"
+          BoxColorPushed="{Theme ButtonBackgroundColorPushed}"
+          CheckedTickColor="{Theme ButtonForegroundColor}"
+          CheckedTickColorOver="{Theme ButtonForegroundColor}"
+          CheckedTickColorPushed="#a0ffffff"
+          TickColorPushed="{Theme ButtonBackgroundColorOver}"
+          CheckedBoxColor="{Theme DefaultButtonBackgroundColor}"
+          CheckedBoxColorOver="{Theme DefaultButtonBackgroundColorOver}"
+          CheckedBoxColorPushed="{Theme DefaultButtonBackgroundColorPushed}"
+          FontFamily="Segoe UI" FontSize="16" FontMeasure="Extended"
+          Spacing="8" HorizontalAlignment="Start" BoxSize="16"
+          BoxDrawable="{Resource RadioDrawable}"
+          TickMarkDrawable="{Resource RadioTickDrawable}"
+          TextPadding="0,0,0,1"/>
+
+        <RadioButton Text="Second value" ForegroundColor="{Theme ButtonForegroundColor}"
+          Value="2" CurrentValue="{Binding RadioValue}"
+          BoxColor="{Theme ButtonBackgroundColor}"
+          BoxColorOver="{Theme ButtonBackgroundColorOver}"
+          BoxColorPushed="{Theme ButtonBackgroundColorPushed}"
+          CheckedTickColor="{Theme ButtonForegroundColor}"
+          CheckedTickColorOver="{Theme ButtonForegroundColor}"
+          CheckedTickColorPushed="#a0ffffff"
+          TickColorPushed="{Theme ButtonBackgroundColorOver}"
+          CheckedBoxColor="{Theme DefaultButtonBackgroundColor}"
+          CheckedBoxColorOver="{Theme DefaultButtonBackgroundColorOver}"
+          CheckedBoxColorPushed="{Theme DefaultButtonBackgroundColorPushed}"
+          FontFamily="Segoe UI" FontSize="16" FontMeasure="Extended"
+          Spacing="8" HorizontalAlignment="Start" BoxSize="16"
+          BoxDrawable="{Resource RadioDrawable}"
+          TickMarkDrawable="{Resource RadioTickDrawable}"
+          TextPadding="0,0,0,1"/>
+
+        <RadioButton Text="Third value" ForegroundColor="{Theme ButtonForegroundColor}"
+          Value="3" CurrentValue="{Binding RadioValue}"
+          BoxColor="{Theme ButtonBackgroundColor}"
+          BoxColorOver="{Theme ButtonBackgroundColorOver}"
+          BoxColorPushed="{Theme ButtonBackgroundColorPushed}"
+          CheckedTickColor="{Theme ButtonForegroundColor}"
+          CheckedTickColorOver="{Theme ButtonForegroundColor}"
+          CheckedTickColorPushed="#a0ffffff"
+          TickColorPushed="{Theme ButtonBackgroundColorOver}"
+          CheckedBoxColor="{Theme DefaultButtonBackgroundColor}"
+          CheckedBoxColorOver="{Theme DefaultButtonBackgroundColorOver}"
+          CheckedBoxColorPushed="{Theme DefaultButtonBackgroundColorPushed}"
+          FontFamily="Segoe UI" FontSize="16" FontMeasure="Extended"
+          Spacing="8" HorizontalAlignment="Start" BoxSize="16"
+          BoxDrawable="{Resource RadioDrawable}"
+          TickMarkDrawable="{Resource RadioTickDrawable}"
+          TextPadding="0,0,0,1" Margin="0,0,0,20"/>
+
+
         <CheckBox Text="Test the checkbox" ForegroundColor="{Theme ButtonForegroundColor}"
                   BoxColor="{Theme ButtonBackgroundColor}"
                   BoxColorOver="{Theme ButtonBackgroundColorOver}"
@@ -35,7 +91,7 @@
                   TickMarkDrawable="{Resource CheckBoxTickDrawable}"
                   Checked="{Binding ShowTest}" TextPadding="0,0,0,1"
                   />
-        
+
         <ToggleButton BackgroundColor="{Theme ButtonBackgroundColor}" ForegroundColor="{Theme ButtonForegroundColor}" Checked="{Binding ShowTest}"
                       BackgroundColorOver="{Theme ButtonBackgroundColorOver}" ForegroundColorOver="{Theme ButtonForegroundColorOver}"
                       BackgroundColorPushed="{Theme ButtonBackgroundColorPushed}" ForegroundColorPushed="{Theme ButtonForegroundColorPushed}"
@@ -102,7 +158,7 @@
         <Label Text="Nullam vitae felis hendrerit, vestibulum eros eu, faucibus" FontMeasure="Extended" FontSize="12" FontFamily="Segoe Script" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
         <Label Text="arcu. Aenean in finibus lectus. Etiam cursus sem sit amet" FontMeasure="Extended" FontSize="12" FontFamily="Segoe Script" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
         <Label Text="diam gravida tempus. Nulla interdum placerat libero et." FontMeasure="Extended" FontSize="12" FontFamily="Segoe Script" FontWeight="Light" HorizontalAlignment="Center" ForegroundColor="White"/>
-        
+
       </StackLayout>
 
     </FrameLayout>

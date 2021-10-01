@@ -9,9 +9,12 @@ namespace CrossX.Framework.Drawables
         public Color FillColor { get; set; }
         public Color StrokeColor { get; set; }
         public Length StrokeThickness { get; set; }
+        public Thickness Padding { get; set; }
 
         public override void Draw(Canvas canvas, RectangleF rectangle, Color color)
         {
+            rectangle = rectangle.Deflate(Padding);
+
             var rx = Rx.Calculate(rectangle.Width);
             var ry = Ry.Calculate(rectangle.Height);
 

@@ -57,10 +57,9 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Controls.CheckBox">
+  <xsd:complexType name="CrossX.Framework.UI.Controls.CheckButtonBase">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
-        <xsd:attribute type="aa:System.Boolean-Bindable" name="Checked" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColor" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColorOver" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColorPushed" />
@@ -76,6 +75,13 @@
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
         <xsd:attribute type="aa:unknown" name="BoxDrawable" />
         <xsd:attribute type="aa:unknown" name="TickMarkDrawable" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.CheckBox">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.CheckButtonBase">
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Checked" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -106,6 +112,14 @@
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColor" />
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="IndeterminateSpeed" />
         <xsd:attribute type="aa:CrossX.Framework.ProgressDisplayMode-Bindable" name="Mode" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.RadioButton">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.CheckButtonBase">
+        <xsd:attribute type="aa:System.Int-Bindable" name="CurrentValue" />
+        <xsd:attribute type="aa:System.Int-Bindable" name="Value" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -251,6 +265,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Controls.ProgressBar" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="RadioButton">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.RadioButton" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

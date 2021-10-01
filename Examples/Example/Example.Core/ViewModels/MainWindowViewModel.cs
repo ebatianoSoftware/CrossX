@@ -35,6 +35,8 @@ namespace Example.Core.ViewModels
             }
         }
 
+        public int RadioValue { get => radioValue; set => SetProperty(ref radioValue, value); }
+
         public bool ShowTest
         {
             get => showTest;
@@ -48,6 +50,7 @@ namespace Example.Core.ViewModels
         private bool showButton = true;
         private bool showTest = true;
         private float sliderValue = 0.2f;
+        private int radioValue = 1;
         private readonly IObjectFactory objectFactory;
         private readonly ISystemDispatcher systemDispatcher;
         private readonly IDispatcher dispatcher;

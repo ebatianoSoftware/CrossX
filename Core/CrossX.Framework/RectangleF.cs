@@ -81,12 +81,12 @@ namespace CrossX.Framework
             return new RectangleF(X + offset.X, Y + offset.Y, Width, Height);
         }
 
-        public RectangleF Deflate(Thickness padding)
+        public RectangleF Deflate(Thickness padding, SizeF? size = null)
         {
-            var marginLeft = padding.Left.Calculate();
-            var marginRight = padding.Right.Calculate();
-            var marginTop = padding.Top.Calculate();
-            var marginBottom = padding.Bottom.Calculate();
+            var marginLeft = padding.Left.Calculate(size.GetValueOrDefault().Width);
+            var marginRight = padding.Right.Calculate(size.GetValueOrDefault().Width);
+            var marginTop = padding.Top.Calculate(size.GetValueOrDefault().Height);
+            var marginBottom = padding.Bottom.Calculate(size.GetValueOrDefault().Height);
 
             return new RectangleF(X + marginLeft, Y + marginTop, Width - marginLeft - marginRight, Height - marginTop - marginBottom);
         }

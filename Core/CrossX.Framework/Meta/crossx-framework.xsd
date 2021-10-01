@@ -402,6 +402,20 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
+  <xsd:simpleType name="System.Int-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[0-9]+|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
   <xsd:simpleType name="CrossX.Framework.Orientation-Bindable">
     <xsd:union>
       <xsd:simpleType>
@@ -595,6 +609,20 @@
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
           <xsd:pattern value="#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?|#[\dA-Fa-f]{3}([\dA-Fa-f])?" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Thickness">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Zero" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?|[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?[ ]*,[ ]*[-+]?[0-9]*\.?[0-9]+(px)?" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>
