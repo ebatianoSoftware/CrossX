@@ -4,7 +4,7 @@ using Xx;
 
 namespace CrossX.Framework.ApplicationDefinition
 {
-    [XxSchemaExport(XxChildrenMode.Multiple, typeof(Styles), typeof(Resources), typeof(ThemeElement))]
+    [XxSchemaExport(XxChildrenMode.Multiple, typeof(StylesElement), typeof(ResourcesElement), typeof(ThemeElement))]
     public sealed class ApplicationElement : IElementsContainer
     {
         public void InitChildren(IEnumerable<object> elements)

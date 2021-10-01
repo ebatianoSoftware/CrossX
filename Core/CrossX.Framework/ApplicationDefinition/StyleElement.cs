@@ -11,7 +11,7 @@ namespace CrossX.Framework.ApplicationDefinition
 {
     [XxSchemaExport(XxChildrenMode.OnlyOne)]
     [ChildrenAsDefinitions]
-    public sealed class Style: IElementsContainer
+    public sealed class StyleElement: IElementsContainer
     {
         public string Selector
         { 
@@ -34,7 +34,7 @@ namespace CrossX.Framework.ApplicationDefinition
         private SelectorKey keyValue;
         private readonly IAppValues appValues;
 
-        public Style(IAppValues appValues)
+        public StyleElement(IAppValues appValues)
         {
             this.appValues = appValues;
         }

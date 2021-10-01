@@ -52,7 +52,7 @@
   <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Color">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
-        <xsd:attribute type="aa:System.String" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.Styles.ThemeValueKey" name="Key" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="Value" />
       </xsd:extension>
     </xsd:complexContent>
@@ -60,8 +60,40 @@
   <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Length">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
-        <xsd:attribute type="aa:System.String" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.Styles.ThemeValueKey" name="Key" />
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Value" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.FontWeight">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:CrossX.Framework.Styles.ThemeValueKey" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.FontWeight-Bindable" name="Value" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.FontMeasure">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:CrossX.Framework.Styles.ThemeValueKey" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.FontMeasure-Bindable" name="Value" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.String">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:CrossX.Framework.Styles.ThemeValueKey" name="Key" />
+        <xsd:attribute type="aa:System.String-Bindable" name="Value" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Thickness">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:CrossX.Framework.Styles.ThemeValueKey" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.Thickness-Bindable" name="Value" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -72,6 +104,10 @@
           <xsd:element name="Color" type="xx:CrossX.Framework.ApplicationDefinition.Color" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="Length" type="xx:CrossX.Framework.ApplicationDefinition.Length" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="FontWeight" type="xx:CrossX.Framework.ApplicationDefinition.FontWeight" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="FontMeasure" type="xx:CrossX.Framework.ApplicationDefinition.FontMeasure" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="String" type="xx:CrossX.Framework.ApplicationDefinition.String" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Thickness" type="xx:CrossX.Framework.ApplicationDefinition.Thickness" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
@@ -133,6 +169,34 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Length" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="FontWeight">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.FontWeight" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="FontMeasure">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.FontMeasure" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="String">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.String" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Thickness">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Thickness" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

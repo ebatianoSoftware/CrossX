@@ -93,41 +93,40 @@ namespace Example.Core.ViewModels
             {
                 ShowButton = false;
 
-                var request = WebRequest.Create("https://picsum.photos/3840/2160");
+                await Task.Run(async () =>
+               {
+                   var request = WebRequest.Create("https://picsum.photos/3840/2160");
 
-                Stream dataStream = null;
+                   Stream dataStream = null;
 
-                using (var response = await request.GetResponseAsync())
-                {
-                    dataStream = new MemoryStream();
-                    using (var respStream = response.GetResponseStream())
-                    {
-                        await respStream.CopyToAsync(dataStream);
-                    }
-                    dataStream.Seek(0, SeekOrigin.Begin);
-                }
+                   using (var response = await request.GetResponseAsync())
+                   {
+                       dataStream = new MemoryStream();
+                       using (var respStream = response.GetResponseStream())
+                       {
+                           await respStream.CopyToAsync(dataStream);
+                       }
+                       dataStream.Seek(0, SeekOrigin.Begin);
+                   }
 
-                var image = await systemDispatcher.InvokeAsync(() =>
-                {
-                    try
-                    {
-                        return objectFactory.Create<Image>(dataStream);
-                    }
-                    finally
-                    {
-                        dataStream.Dispose();
-                    }
-                });
+                   try
+                   {
+                       var image = objectFactory.Create<Image>(dataStream);
 
-                await Task.Delay(500);
+                       dispatcher.BeginInvoke(() =>
+                       {
+                           var oldImage = Image;
+                           Image = image;
+                           ShowButton = true;
 
-                dispatcher.BeginInvoke(() =>
-                {
-                    var oldImage = Image;
-                    Image = image;
-                    oldImage.Image?.Dispose();
-                    ShowButton = true;
-                });
+                           oldImage.Image?.Dispose();
+                       });
+                   }
+                   finally
+                   {
+                       dataStream.Dispose();
+                   }
+               });
             }
             catch
             {

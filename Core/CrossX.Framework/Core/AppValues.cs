@@ -17,7 +17,7 @@ namespace CrossX.Framework.Core
             return null;
         }
 
-        public IEnumerable<Style> GetStyles(Type type, string classes)
+        public IEnumerable<StyleElement> GetStyles(Type type, string classes)
         {
             throw new NotImplementedException();
         }

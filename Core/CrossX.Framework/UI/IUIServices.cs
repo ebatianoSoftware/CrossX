@@ -1,5 +1,6 @@
 ﻿using CrossX.Abstractions.Async;
 using CrossX.Framework.Binding;
+using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
 
 namespace CrossX.Framework.UI
@@ -11,5 +12,6 @@ namespace CrossX.Framework.UI
         IFontManager FontManager { get; }
         IDispatcher Dispatcher { get; }
         IImageCache ImageCache { get; }
+        IAppValues AppValues { get; }
     }
 }

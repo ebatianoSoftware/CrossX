@@ -6,19 +6,19 @@ using Xx;
 
 namespace CrossX.Framework.ApplicationDefinition
 {
-    [XxSchemaExport(XxChildrenMode.Multiple, typeof(Resource), typeof(ImportElement))]
-    public sealed class Resources : IElementsContainer
+    [XxSchemaExport(XxChildrenMode.Multiple, typeof(ResourceElement), typeof(ImportElement))]
+    public sealed class ResourcesElement : IElementsContainer
     {
         private IAppValues appValues;
 
-        public Resources(IAppValues appValues)
+        public ResourcesElement(IAppValues appValues)
         {
             this.appValues = appValues;
         }
 
         public void InitChildren(IEnumerable<object> elements)
         {
-            foreach(var el in elements.Cast<Resource>())
+            foreach(var el in elements.Cast<ResourceElement>())
             {
                 appValues.RegisterResource(el.Key, el.Value);
             }

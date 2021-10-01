@@ -1,6 +1,7 @@
 ﻿using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.Styles;
 
 namespace CrossX.Framework.UI.Controls
 {
@@ -23,13 +24,14 @@ namespace CrossX.Framework.UI.Controls
         private Length boxSize = new Length(90, Length.Type.Percent);
         private Length spacing;
         private Color tickColorPushed;
+        private Color boxColorDisabled;
+        private Color tickColorDisabled;
         private readonly ButtonGesturesProcessor buttonGesturesProcessor;
-
-        
 
         public Color BoxColor { get => boxColor; set => SetPropertyAndRedraw(ref boxColor, value); }
         public Color BoxColorOver { get => boxColorOver; set => SetPropertyAndRedraw(ref boxColorOver, value); }
         public Color BoxColorPushed { get => boxColorPushed; set => SetPropertyAndRedraw(ref boxColorPushed, value); }
+        public Color BoxColorDisabled { get => boxColorDisabled; set => SetPropertyAndRedraw(ref boxColorDisabled, value); }
 
         public Color CheckedBoxColor { get => checkedBoxColor; set => SetPropertyAndRedraw(ref checkedBoxColor, value); }
         public Color CheckedTickColor { get => checkedTickColor; set => SetPropertyAndRedraw(ref checkedTickColor, value); }
@@ -41,6 +43,8 @@ namespace CrossX.Framework.UI.Controls
         public Color CheckedTickColorPushed { get => checkedTickColorPushed; set => SetPropertyAndRedraw(ref checkedTickColorPushed, value); }
 
         public Color TickColorPushed { get => tickColorPushed; set => SetPropertyAndRedraw(ref tickColorPushed, value); }
+
+        public Color TickColorDisabled { get => tickColorDisabled; set => SetPropertyAndRedraw(ref tickColorDisabled, value); }
 
         public Length BoxSize { get => boxSize; set => SetPropertyAndRecalcLayout(ref boxSize, value); }
         public Length Spacing { get => spacing; set => SetPropertyAndRecalcLayout(ref spacing, value); }
@@ -61,8 +65,36 @@ namespace CrossX.Framework.UI.Controls
         {
             buttonGesturesProcessor = new ButtonGesturesProcessor(
                 state => CurrentState = state,
-                OnClick
+                OnClick,
+                onHoveredAction: g=>g.SetCursor = CursorType.Hand
                 );
+        }
+
+        protected override void ApplyDefaultStyle()
+        {
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColor) is Color bgColor) BoxColor = bgColor;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorOver) is Color bgColorOver) BoxColorOver = bgColorOver;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorPushed) is Color bgColorPushed) BoxColorPushed = bgColorPushed;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorDisabled) is Color bgColorDisabled) BoxColorDisabled = bgColorDisabled;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColor) is Color bgColor2) CheckedBoxColor = bgColor2;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorOver) is Color bgColorOver2) CheckedBoxColorOver = bgColorOver2;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorPushed) is Color bgColorPushed2) CheckedBoxColorPushed = bgColorPushed2;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColor) is Color fgColor) CheckedTickColor = fgColor;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorOver) is Color fgColorOver) CheckedTickColorOver = fgColorOver;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorPushed) is Color fgColorPushed) CheckedTickColorPushed = fgColorPushed;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorDisabled) is Color fgColorDisabled2) TickColorDisabled = fgColorDisabled2;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemForegroundColorDisabled) is Color fgColorDisabled) ForegroundColorDisabled = fgColorDisabled;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemTextFontFamily) is string fontFamily) FontFamily = fontFamily;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemTextFontSize) is Length fontSize) FontSize = fontSize;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemTextFontWeight) is FontWeight fontWeight) FontWeight = fontWeight;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemForegroundColor) is Color fgColor2) ForegroundColor = fgColor2;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemCheckRadioSize) is Length boxSize) BoxSize = boxSize;
         }
 
         protected abstract void OnClick();
@@ -110,6 +142,11 @@ namespace CrossX.Framework.UI.Controls
                     break;
             }
 
+            if(!Enabled)
+            {
+                boxColor = BoxColorDisabled;
+                tickColor = TickColorDisabled;
+            }
 
             if (BoxDrawable != null)
             {
@@ -132,7 +169,9 @@ namespace CrossX.Framework.UI.Controls
                 }
             }
 
-            canvas.DrawText(Text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), ForegroundColor * opacity, FontMeasure);
+            var foregroundColor = Enabled ? ForegroundColor : ForegroundColorDisabled;
+
+            canvas.DrawText(Text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), foregroundColor * opacity, FontMeasure);
         }
 
         public override SizeF CalculateSize(SizeF parentSize)

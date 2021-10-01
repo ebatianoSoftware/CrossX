@@ -57,6 +57,11 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.DefaultButton">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button"></xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.CheckButtonBase">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
@@ -230,6 +235,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="DefaultButton">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.DefaultButton" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

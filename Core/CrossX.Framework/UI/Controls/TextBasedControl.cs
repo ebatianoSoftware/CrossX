@@ -14,11 +14,12 @@ namespace CrossX.Framework.UI.Controls
         private Color foregroundColor = Color.Black;
         private FontMeasure fontMeasure = FontMeasure.Extended;
         private Thickness textPadding;
+        private Color foregroundColorDisabled;
 
         public FontMeasure FontMeasure 
         {
             get => fontMeasure; 
-            set => SetPropertyAndRecalcLayout(ref fontMeasure, value); 
+            set => SetPropertyAndRecalcLayout(ref fontMeasure, value);
         }
 
         public Thickness TextPadding
@@ -40,9 +41,11 @@ namespace CrossX.Framework.UI.Controls
         public Alignment VerticalTextAlignment { get => verticalTextAlign; set => SetPropertyAndRedraw(ref verticalTextAlign, value); }
 
         public Color ForegroundColor { get => foregroundColor; set => SetPropertyAndRedraw(ref foregroundColor, value); }
+        public Color ForegroundColorDisabled { get => foregroundColorDisabled; set => SetPropertyAndRedraw(ref foregroundColorDisabled, value); }
 
         public TextBasedControl(IUIServices services) : base(services)
         {
+            
         }
 
         public override SizeF CalculateSize(SizeF parentSize)
@@ -59,6 +62,11 @@ namespace CrossX.Framework.UI.Controls
             sizeAuto.Height += TextPadding.Height;
 
             return new SizeF(autoWidth ? sizeAuto.Width : Math.Max(size.Width, sizeAuto.Width), autoHeight ? sizeAuto.Height : Math.Max(size.Height, sizeAuto.Height));
+        }
+
+        protected virtual void ApplyDefaultStyle()
+        {
+            
         }
     }
 }

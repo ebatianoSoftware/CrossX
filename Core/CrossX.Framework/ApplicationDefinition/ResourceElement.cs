@@ -1,5 +1,4 @@
-﻿using CrossX.Framework.Core;
-using CrossX.Framework.XxTools;
+﻿using CrossX.Framework.XxTools;
 using System.Collections.Generic;
 using System.Linq;
 using Xx;
@@ -7,7 +6,7 @@ using Xx;
 namespace CrossX.Framework.ApplicationDefinition
 {
     [XxSchemaExport(XxChildrenMode.OnlyOne)]
-    public sealed class Resource: IElementsContainer
+    public sealed class ResourceElement: IElementsContainer
     {
         public Name Key { get; set; }
         public object Value { get; private set; }

@@ -2,6 +2,7 @@
 using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.Styles;
 using System;
 using System.Numerics;
 
@@ -31,6 +32,8 @@ namespace CrossX.Framework.UI.Controls
         private float valueResolution;
 
         private ButtonGesturesProcessor buttonGesturesProcessor;
+        private Color trackColorDisabled;
+        private Color thumbColorDisabled;
 
         public float MaxValue { get => maxValue; set => SetPropertyAndRedraw(ref maxValue, value); }
         public float MinValue { get => minValue; set => SetPropertyAndRedraw(ref minValue, value); }
@@ -38,10 +41,13 @@ namespace CrossX.Framework.UI.Controls
         [BindingMode(BindingMode.TwoWay)]
         public float Value { get => value; set => base.SetPropertyAndRedraw(ref this.value, value); }
 
-        public bool Enabled { get => enabled; set => SetProperty(ref enabled, value); }
+        public bool Enabled { get => enabled; set => SetPropertyAndRedraw(ref enabled, value); }
 
         public Color ThumbColor { get => thumbColor; set => SetPropertyAndRedraw(ref thumbColor, value); }
         public Color TrackColor { get => trackColor; set => SetPropertyAndRedraw(ref trackColor, value); }
+
+        public Color ThumbColorDisabled { get => thumbColorDisabled; set => SetPropertyAndRedraw(ref thumbColorDisabled, value); }
+        public Color TrackColorDisabled { get => trackColorDisabled; set => SetPropertyAndRedraw(ref trackColorDisabled, value); }
 
         public Color ThumbColorOver { get => thumbColorOver; set => SetPropertyAndRedraw(ref thumbColorOver, value); }
         public Color TrackColorOver { get => trackColorOver; set => SetPropertyAndRedraw(ref trackColorOver, value); }
@@ -81,8 +87,26 @@ namespace CrossX.Framework.UI.Controls
                     CalculateValue(g.Position);
                 },
                 onMoveAction: g => CalculateValue(g.Position),
-                onUpAction: g => pointerOffset = null
+                onUpAction: g => pointerOffset = null,
+                onHoveredAction: g=> g.SetCursor = CursorType.Hand
                 );
+
+            ApplyDefaultStyle();
+        }
+
+        protected virtual void ApplyDefaultStyle()
+        {
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColor) is Color thColor) ThumbColor = thColor;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorOver) is Color thColorOver) ThumbColorOver = thColorOver;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorPushed) is Color thColorPushed) ThumbColorPushed = thColorPushed;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorDisabled) is Color trColorDisabled) TrackColorDisabled = trColorDisabled;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorDisabled) is Color thColorDisabled) ThumbColorDisabled = thColorDisabled;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColor) is Color trColor) TrackColor = trColor;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorOver) is Color trColorOver) TrackColorOver = trColorOver;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorPushed) is Color trColorPushed) TrackColorPushed = trColorPushed;
+
+            ThumbDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemSliderThumbDrawable) as Drawable;
         }
 
         protected override void OnRender(Canvas canvas, float opacity)
@@ -139,6 +163,12 @@ namespace CrossX.Framework.UI.Controls
                     thumbColor = ThumbColorPushed;
                     trackColor = TrackColorPushed;
                     break;
+            }
+
+            if(!Enabled)
+            {
+                thumbColor = ThumbColorDisabled;
+                trackColor = TrackColorDisabled;
             }
 
             if (TrackDrawable != null)

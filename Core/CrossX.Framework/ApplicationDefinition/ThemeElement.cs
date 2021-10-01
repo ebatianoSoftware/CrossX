@@ -6,7 +6,8 @@ using Xx;
 
 namespace CrossX.Framework.ApplicationDefinition
 {
-    [XxSchemaExport(XxChildrenMode.Multiple, typeof(ColorElement), typeof(LengthElement), typeof(ImportElement))]
+    [XxSchemaExport(XxChildrenMode.Multiple, typeof(ColorElement), typeof(LengthElement), typeof(ImportElement),
+        typeof(FontWeightElement), typeof(FontMeasureElement), typeof(StringElement), typeof(ThicknessElement))]
     public class ThemeElement : IElementsContainer
     {
         private readonly IAppValues appValues;
@@ -20,7 +21,7 @@ namespace CrossX.Framework.ApplicationDefinition
         {
             foreach(var el in elements.Where( o=> o is IValueElement ).Cast<IValueElement>())
             {
-                appValues.RegisterValue(el.Key, el.Value);
+                appValues.RegisterValue(el.Key.Value, el.Value);
             }
         }
     }

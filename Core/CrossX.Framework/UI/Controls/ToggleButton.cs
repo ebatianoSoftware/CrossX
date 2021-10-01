@@ -1,5 +1,6 @@
 ﻿using CrossX.Framework.Binding;
 using CrossX.Framework.Graphics;
+using CrossX.Framework.Styles;
 
 namespace CrossX.Framework.UI.Controls
 {
@@ -51,6 +52,12 @@ namespace CrossX.Framework.UI.Controls
                         break;
                 }
 
+                if (!Enabled)
+                {
+                    foregroundColor = ForegroundColorDisabled;
+                    backgroundColor = BackgroundColorDisabled;
+                }
+
                 RenderButton(canvas, foregroundColor, backgroundColor, opacity);
                 return;
             }
@@ -61,6 +68,19 @@ namespace CrossX.Framework.UI.Controls
         {
             Checked = !Checked;
             base.OnClick();
+        }
+
+        protected override void ApplyDefaultStyle()
+        {
+            base.ApplyDefaultStyle();
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColor) is Color bgColor) CheckedBackgroundColor = bgColor;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorOver) is Color bgColorOver) CheckedBackgroundColorOver = bgColorOver;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorPushed) is Color bgColorPushed) CheckedBackgroundColorPushed = bgColorPushed;
+
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColor) is Color fgColor) CheckedForegroundColor = fgColor;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorOver) is Color fgColorOver) CheckedForegroundColorOver = fgColorOver;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorPushed) is Color fgColorPushed) CheckedForegroundColorPushed = fgColorPushed;
         }
     }
 }

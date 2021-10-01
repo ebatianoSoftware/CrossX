@@ -1,6 +1,7 @@
 ﻿using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.Styles;
 using CrossX.Framework.UI.Controls;
 using CrossX.Framework.XxTools;
 using System.Collections.Generic;
@@ -112,6 +113,8 @@ namespace CrossX.Framework.UI.Containers
                  },
                  onHoveredAction: g => SetCursorOverSplitter(g)
                 );
+
+            ApplyDefaultStyle();
         }
 
         public void InitChildren(IEnumerable<object> elements)
@@ -304,6 +307,15 @@ namespace CrossX.Framework.UI.Containers
 
             firstView?.Dispose();
             secondView?.Dispose();
+        }
+
+        protected virtual void ApplyDefaultStyle()
+        {
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColor) is Color bgColor) SplitterColor = bgColor;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorOver) is Color bgColorOver) SplitterColorOver = bgColorOver;
+            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorPushed) is Color bgColorPushed) SplitterColorPushed = bgColorPushed;
+
+            SplitterDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemSplitterDrawable) as Drawable;
         }
     }
 }

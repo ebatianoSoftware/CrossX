@@ -665,5 +665,40 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
+  <xsd:simpleType name="CrossX.Framework.Styles.ThemeValueKey">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="SystemBackgroundColor" />
+          <xsd:enumeration value="SystemForegroundColor" />
+          <xsd:enumeration value="SystemForegroundColorDisabled" />
+          <xsd:enumeration value="SystemButtonBackgroundColor" />
+          <xsd:enumeration value="SystemButtonBackgroundColorOver" />
+          <xsd:enumeration value="SystemButtonBackgroundColorPushed" />
+          <xsd:enumeration value="SystemButtonBackgroundColorDisabled" />
+          <xsd:enumeration value="SystemButtonForegroundColor" />
+          <xsd:enumeration value="SystemButtonForegroundColorOver" />
+          <xsd:enumeration value="SystemButtonForegroundColorPushed" />
+          <xsd:enumeration value="SystemButtonForegroundColorDisabled" />
+          <xsd:enumeration value="SystemButtonAccentBackgroundColor" />
+          <xsd:enumeration value="SystemButtonAccentBackgroundColorOver" />
+          <xsd:enumeration value="SystemButtonAccentBackgroundColorPushed" />
+          <xsd:enumeration value="SystemTextFontFamily" />
+          <xsd:enumeration value="SystemTextFontSize" />
+          <xsd:enumeration value="SystemTextFontWeight" />
+          <xsd:enumeration value="SystemButtonTextFontFamily" />
+          <xsd:enumeration value="SystemButtonTextFontSize" />
+          <xsd:enumeration value="SystemButtonTextFontWeight" />
+          <xsd:enumeration value="SystemButtonTextPadding" />
+          <xsd:enumeration value="SystemCheckRadioSize" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value=".*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
   <xsd:complexType name="System.Object" />
 </xsd:schema>

@@ -1,4 +1,6 @@
 ﻿using CrossX.Framework.Binding;
+using CrossX.Framework.Drawables;
+using CrossX.Framework.Styles;
 
 namespace CrossX.Framework.UI.Controls
 {
@@ -14,6 +16,7 @@ namespace CrossX.Framework.UI.Controls
 
         public RadioButton(IUIServices services) : base(services)
         {
+            ApplyDefaultStyle();
         }
 
         protected override bool IsChecked => Value == CurrentValue;
@@ -21,6 +24,14 @@ namespace CrossX.Framework.UI.Controls
         protected override void OnClick()
         {
             CurrentValue = Value;
+        }
+
+        protected override void ApplyDefaultStyle()
+        {
+            base.ApplyDefaultStyle();
+
+            BoxDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemRadioDrawable) as Drawable;
+            TickMarkDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemRadioTickDrawable) as Drawable;
         }
     }
 }

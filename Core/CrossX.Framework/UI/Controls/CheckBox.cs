@@ -1,4 +1,6 @@
 ﻿using CrossX.Framework.Binding;
+using CrossX.Framework.Drawables;
+using CrossX.Framework.Styles;
 
 namespace CrossX.Framework.UI.Controls
 {
@@ -13,11 +15,20 @@ namespace CrossX.Framework.UI.Controls
 
         public CheckBox(IUIServices services) : base(services)
         {
+            ApplyDefaultStyle();
         }
 
         protected override void OnClick()
         {
             Checked = !Checked;
+        }
+
+        protected override void ApplyDefaultStyle()
+        {
+            base.ApplyDefaultStyle();
+
+            BoxDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemCheckBoxDrawable) as Drawable;
+            TickMarkDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemCheckBoxTickDrawable) as Drawable;
         }
     }
 }
