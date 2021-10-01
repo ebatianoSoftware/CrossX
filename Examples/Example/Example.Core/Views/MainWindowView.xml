@@ -16,34 +16,34 @@
                EnableManipulation="True"
                SecondMinSize="960">
 
-    <FrameLayout BackgroundColor="#20000000">
+    <FrameLayout >
       <StackLayout VerticalAlignment="End" Spacing="20" HorizontalAlignment="Center">
 
-        <RadioButton Text="First value" ForegroundColor="{Theme ButtonForegroundColor}"
+        <RadioButton Text="First value"
           Value="1" CurrentValue="{Binding RadioValue}"
           FontMeasure="Extended"
           Spacing="8" HorizontalAlignment="Start"/>
 
-        <RadioButton Text="Second value" ForegroundColor="{Theme ButtonForegroundColor}"
+        <RadioButton Text="Second value"
           Value="2" CurrentValue="{Binding RadioValue}"
           FontMeasure="Extended"
           Spacing="8" HorizontalAlignment="Start"/>
 
-        <RadioButton Text="Third value" ForegroundColor="{Theme ButtonForegroundColor}"
+        <RadioButton Text="Third value"
           Value="3" CurrentValue="{Binding RadioValue}"
           FontMeasure="Extended"
           Spacing="8" HorizontalAlignment="Start"
           Margin="0,0,0,20"/>
 
 
-        <CheckBox Text="Test the checkbox" ForegroundColor="{Theme ButtonForegroundColor}"
+        <CheckBox Text="Test the checkbox"
                   FontMeasure="Extended"
                   Spacing="8" HorizontalAlignment="Start"
                   Checked="{Binding ShowTest}"
                   Enabled="{Binding ShowButton}"
                   />
 
-        <ToggleButton BackgroundDrawable="{Resource DefaultButtonBackground}"      
+        <ToggleButton
                 Checked="{Binding ShowTest}"
                 HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
                 Text="Toggle" Enabled="{Binding ShowButton}"/>
@@ -56,7 +56,7 @@
                  Stretch="UniformToFill"
                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200"/>
 
-      <FrameLayout BackgroundColor="Black" BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}" Opacity="{Binding SliderValue}"
+      <FrameLayout BackgroundColor="Black" BackgroundDrawable="{Resource ClockBackgroundDrawable}" Opacity="{Binding SliderValue}"
                    Width="400" Height="140" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
       <Label ForegroundColor="Black" Text="{Binding Stopwatch}" Margin="4,4,-4,-4"
@@ -67,23 +67,24 @@
               HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="100"
               FontMeasure="Strict" TextPadding="40"/>
 
-      <DefaultButton 
+      <Button 
               HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
               Text="Switch"
               Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
 
-      <ProgressBar BackgroundColor="#5B5B5B" ForegroundColor="#FB690E"
-                   MaxValue="1" Value="{Binding Progress}"
+      <ProgressBar MaxValue="1" Value="{Binding Progress}"
                    Margin="46" HorizontalAlignment="Center" VerticalAlignment="End"
-                   Width="100" Height="2" Mode="Query"
+                   Width="100" Mode="Query"
                    Visible="{Binding ShowProgress}"/>
 
       <StackLayout VerticalAlignment="Start" HorizontalAlignment="Center">
         <Label Text="Clock background opacity" FontMeasure="Extended" HorizontalAlignment="Center"/>
-        <Slider HorizontalAlignment="Stretch" Height="20" TrackThickness="2" Margin="0,15,0,15"
+        <Slider HorizontalAlignment="Stretch" Height="20" Margin="0,15,0,15"
               Value="{Binding SliderValue}" Enabled="{Binding ShowButton}"
               MinValue="0" MaxValue="1"
-              ValueResolution="0.1"/>
+              ValueResolution="0.1"
+                TrackThickness="2"
+              TrackDrawable="{Resource SliderTrackDrawable}"/>
 
         <Label Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit." FontMeasure="Extended" HorizontalAlignment="Center"/>
         <Label Text="Nullam vitae felis hendrerit, vestibulum eros eu, faucibus" FontMeasure="Extended" HorizontalAlignment="Center"/>

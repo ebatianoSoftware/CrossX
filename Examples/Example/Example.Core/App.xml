@@ -4,54 +4,13 @@
   xmlns:ui="https://crossx.support/Schemas/CrossX.Framework.UI"
   xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
-  <Theme>
-    <Color Key="SystemBackgroundColor" Value="#2e2e2e"/>
-    <Color Key="SystemForegroundColor" Value="#ffffff"/>
-    <Color Key="SystemForegroundColorDisabled" Value="#606060"/>
-    
-    <Color Key="SystemButtonBackgroundColor" Value="#5B5B5B"/>
-    <Color Key="SystemButtonBackgroundColorOver" Value="#6D6D6D"/>
-    <Color Key="SystemButtonBackgroundColorPushed" Value="#5B5B5B"/>
-    <Color Key="SystemButtonBackgroundColorDisabled" Value="#444"/>
-    
-    <Color Key="SystemButtonAccentBackgroundColor" Value="#FB690E"/>
-    <Color Key="SystemButtonAccentBackgroundColorOver" Value="#FC8236"/>
-    <Color Key="SystemButtonAccentBackgroundColorPushed" Value="#FB690E"/>
-
-    <Color Key="SystemButtonForegroundColor" Value="#ffffff"/>
-    <Color Key="SystemButtonForegroundColorOver" Value="#d0ffffff"/>
-    <Color Key="SystemButtonForegroundColorPushed" Value="#ffffff"/>
-    <Color Key="SystemButtonForegroundColorDisabled" Value="#606060"/>
-
-    <String Key="SystemTextFontFamily" Value="Segoe UI"/>
-    <String Key="SystemButtonTextFontFamily" Value="Segoe UI"/>
-
-    <Length Key="SystemTextFontSize" Value="14"/>
-    <Length Key="SystemButtonTextFontSize" Value="18"/>
-    
-    <FontWeight Key="SystemTextFontWeight" Value="Light"/>
-    <FontWeight Key="SystemButtonTextFontWeight" Value="Normal"/>
-
-    <Thickness Key="SystemButtonTextPadding" Value="12,8,12,8"/>
-    
-    <Length Key="SystemCheckRadioSize" Value="14"/>
-    
-  </Theme>
+  <Import Path="CrossX.Framework.Styles.Default.DarkTheme.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.OrangeTheme.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.DefaultStyles.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.HollowLook.xml;CrossX.Framework"/>
   
-  <Styles>
-    <!--<Import Path="CrossX.Framework.Assets.Styles.xml;CrossX.Framework"/>-->
-
-    <Style>
-      <ui:Button ForegroundColor="{Theme ForegroundColor}" BackgroundColor="{Theme ButtonBackgroundColor}"
-                 BackgroundDrawable="{Resource DefaultButtonBackground}"
-                 ForegroundColorOver="White"
-                 ForegroundColorPushed="White"/>
-    </Style>
-  </Styles>
-
+ 
   <Resources>
-
-    <!--<Import Path="CrossX.Framework.Assets.Transforms.xml;CrossX.Framework"/>-->
     <Resource Key="ButtonOverTransform">
       <t:StateTransform EnterDuration="100" LeaveDuration="50">
         <t:Group>
@@ -86,33 +45,9 @@
       </t:NavigationTransform>
     </Resource>
 
-    <Resource Key="SystemButtonBackgroundDrawable">
-      <d:RectangleDrawable Rx="3" Ry="3" FillColor="White"/>
-    </Resource>
-
-    <Resource Key="SystemCheckBoxDrawable">
-      <d:RectangleDrawable Rx="3" Ry="3" FillColor="#ddd" StrokeColor="White" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
-    </Resource>
-
-    <Resource Key="SystemCheckBoxTickDrawable">
-      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="15" FontWeight="Bold" Text="&#62102;" OffsetX="-0.5" OffsetY="1.5"/>
-    </Resource>
-
-    <Resource Key="SystemRadioDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="#ddd" StrokeColor="White" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
-    </Resource>
-
-    <Resource Key="SystemRadioTickDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White"  Padding="3,3.5,3,2.5"/>
+    <Resource Key="ClockBackgroundDrawable">
+      <d:RectangleDrawable FillColor="White" Ry="5" Rx="5"/>
     </Resource>
     
-    <Resource Key="SystemSplitterDrawable">
-      <d:SplitterDotsDrawable Rx="50%" Ry="50%" Count="3" Padding="1" Spacing="2" BackgroundTint="#40ffffff"/>
-    </Resource>
-
-    <Resource Key="SystemSliderThumbDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White"/>
-    </Resource>
-
   </Resources>
 </Application>

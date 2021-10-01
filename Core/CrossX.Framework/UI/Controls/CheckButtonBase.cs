@@ -70,33 +70,6 @@ namespace CrossX.Framework.UI.Controls
                 );
         }
 
-        protected override void ApplyDefaultStyle()
-        {
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColor) is Color bgColor) BoxColor = bgColor;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorOver) is Color bgColorOver) BoxColorOver = bgColorOver;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorPushed) is Color bgColorPushed) BoxColorPushed = bgColorPushed;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorDisabled) is Color bgColorDisabled) BoxColorDisabled = bgColorDisabled;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColor) is Color bgColor2) CheckedBoxColor = bgColor2;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorOver) is Color bgColorOver2) CheckedBoxColorOver = bgColorOver2;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorPushed) is Color bgColorPushed2) CheckedBoxColorPushed = bgColorPushed2;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColor) is Color fgColor) CheckedTickColor = fgColor;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorOver) is Color fgColorOver) CheckedTickColorOver = fgColorOver;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorPushed) is Color fgColorPushed) CheckedTickColorPushed = fgColorPushed;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorDisabled) is Color fgColorDisabled2) TickColorDisabled = fgColorDisabled2;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemForegroundColorDisabled) is Color fgColorDisabled) ForegroundColorDisabled = fgColorDisabled;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemTextFontFamily) is string fontFamily) FontFamily = fontFamily;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemTextFontSize) is Length fontSize) FontSize = fontSize;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemTextFontWeight) is FontWeight fontWeight) FontWeight = fontWeight;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemForegroundColor) is Color fgColor2) ForegroundColor = fgColor2;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemCheckRadioSize) is Length boxSize) BoxSize = boxSize;
-        }
-
         protected abstract void OnClick();
 
         

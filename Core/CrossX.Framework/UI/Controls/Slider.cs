@@ -2,7 +2,6 @@
 using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
-using CrossX.Framework.Styles;
 using System;
 using System.Numerics;
 
@@ -87,26 +86,9 @@ namespace CrossX.Framework.UI.Controls
                     CalculateValue(g.Position);
                 },
                 onMoveAction: g => CalculateValue(g.Position),
-                onUpAction: g => pointerOffset = null,
-                onHoveredAction: g=> g.SetCursor = CursorType.Hand
+                onUpAction: g => pointerOffset = null//,
+                //onHoveredAction: g=> g.SetCursor = CursorType.Hand
                 );
-
-            ApplyDefaultStyle();
-        }
-
-        protected virtual void ApplyDefaultStyle()
-        {
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColor) is Color thColor) ThumbColor = thColor;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorOver) is Color thColorOver) ThumbColorOver = thColorOver;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorPushed) is Color thColorPushed) ThumbColorPushed = thColorPushed;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorDisabled) is Color trColorDisabled) TrackColorDisabled = trColorDisabled;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorDisabled) is Color thColorDisabled) ThumbColorDisabled = thColorDisabled;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColor) is Color trColor) TrackColor = trColor;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorOver) is Color trColorOver) TrackColorOver = trColorOver;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorPushed) is Color trColorPushed) TrackColorPushed = trColorPushed;
-
-            ThumbDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemSliderThumbDrawable) as Drawable;
         }
 
         protected override void OnRender(Canvas canvas, float opacity)
@@ -135,8 +117,8 @@ namespace CrossX.Framework.UI.Controls
                 valueBounds = trackBounds;
                 thumbBounds.X += offset;
 
-                trackBounds.Left = thumbBounds.Center.X;
-                valueBounds.Right = thumbBounds.Center.X;
+                trackBounds.Left = thumbBounds.Right;
+                valueBounds.Right = thumbBounds.Left;
             }
             else
             {
@@ -145,8 +127,8 @@ namespace CrossX.Framework.UI.Controls
                 valueBounds = trackBounds;
                 thumbBounds.Y += area - offset;
 
-                trackBounds.Bottom = thumbBounds.Center.Y;
-                valueBounds.Top = thumbBounds.Center.Y;
+                trackBounds.Bottom = thumbBounds.Top;
+                valueBounds.Top = thumbBounds.Bottom;
             }
 
             var thumbColor = ThumbColor;

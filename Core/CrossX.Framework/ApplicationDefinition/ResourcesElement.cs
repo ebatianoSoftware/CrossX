@@ -6,7 +6,7 @@ using Xx;
 
 namespace CrossX.Framework.ApplicationDefinition
 {
-    [XxSchemaExport(XxChildrenMode.Multiple, typeof(ResourceElement), typeof(ImportElement))]
+    [XxSchemaExport(XxChildrenMode.Multiple, typeof(ResourceElement))]
     public sealed class ResourcesElement : IElementsContainer
     {
         private IAppValues appValues;

@@ -12,19 +12,11 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Import">
-    <xsd:complexContent>
-      <xsd:extension base="xx:System.Object">
-        <xsd:attribute type="aa:System.String" name="Path" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Styles">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="Style" type="xx:CrossX.Framework.ApplicationDefinition.Style" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
@@ -44,7 +36,6 @@
       <xsd:extension base="xx:System.Object">
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="Resource" type="xx:CrossX.Framework.ApplicationDefinition.Resource" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
@@ -103,12 +94,18 @@
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="Color" type="xx:CrossX.Framework.ApplicationDefinition.Color" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="Length" type="xx:CrossX.Framework.ApplicationDefinition.Length" minOccurs="0" maxOccurs="unbounded" />
-          <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="FontWeight" type="xx:CrossX.Framework.ApplicationDefinition.FontWeight" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="FontMeasure" type="xx:CrossX.Framework.ApplicationDefinition.FontMeasure" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="String" type="xx:CrossX.Framework.ApplicationDefinition.String" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="Thickness" type="xx:CrossX.Framework.ApplicationDefinition.Thickness" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.ApplicationDefinition.Import">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:attribute type="aa:System.String" name="Path" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -119,6 +116,7 @@
           <xsd:element name="Styles" type="xx:CrossX.Framework.ApplicationDefinition.Styles" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="Resources" type="xx:CrossX.Framework.ApplicationDefinition.Resources" minOccurs="0" maxOccurs="unbounded" />
           <xsd:element name="Theme" type="xx:CrossX.Framework.ApplicationDefinition.Theme" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="Import" type="xx:CrossX.Framework.ApplicationDefinition.Import" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
       </xsd:extension>
     </xsd:complexContent>
@@ -127,13 +125,6 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Style" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="Import">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Import" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
@@ -204,6 +195,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Theme" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Import">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.ApplicationDefinition.Import" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

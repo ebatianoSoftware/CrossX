@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CrossX.Framework.ApplicationDefinition
 {
-    public struct SelectorKey
+    public struct SelectorKey: IEquatable<SelectorKey>
     {
         public Type Type;
         public string Name;
-        public string State;
+
+        public bool Equals(SelectorKey other)
+        {
+            return Type == other.Type && Name == other.Name;
+        }
     }
 }

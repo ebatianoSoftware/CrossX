@@ -1,7 +1,5 @@
-﻿using CrossX.Framework.Drawables;
-using CrossX.Framework.Graphics;
+﻿using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
-using CrossX.Framework.Styles;
 using System;
 using System.Windows.Input;
 
@@ -12,22 +10,6 @@ namespace CrossX.Framework.UI.Controls
         Normal,
         Hover,
         Pushed
-    }
-
-    public class DefaultButton : Button
-    {
-        public DefaultButton(IUIServices services) : base(services)
-        {
-        }
-
-        protected override void ApplyDefaultStyle()
-        {
-            base.ApplyDefaultStyle();
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColor) is Color bgColor) BackgroundColor = bgColor;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorOver) is Color bgColorOver) BackgroundColorOver = bgColorOver;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonAccentBackgroundColorPushed) is Color bgColorPushed) BackgroundColorPushed = bgColorPushed;
-        }
     }
 
     public class Button : TextBasedControl
@@ -88,10 +70,9 @@ namespace CrossX.Framework.UI.Controls
         {
             buttonGesturesProcessor = new ButtonGesturesProcessor(
                 state => CurrentState = state,
-                OnClick
+                OnClick,
+                onHoveredAction: g => g.SetCursor = CursorType.Hand
                 );
-
-            ApplyDefaultStyle();
         }
 
         protected virtual void OnClick()
@@ -163,29 +144,6 @@ namespace CrossX.Framework.UI.Controls
         private void Command_CanExecuteChanged(object sender, EventArgs _)
         {
             Enabled = command?.CanExecute(CommandParameter) ?? true;
-        }
-
-        protected override void ApplyDefaultStyle()
-        {
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColor) is Color bgColor) BackgroundColor = bgColor;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorOver) is Color bgColorOver) BackgroundColorOver = bgColorOver;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorPushed) is Color bgColorPushed) BackgroundColorPushed = bgColorPushed;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonBackgroundColorDisabled) is Color bgColorDisabled) BackgroundColorDisabled = bgColorDisabled;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColor) is Color fgColor) ForegroundColor = fgColor;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorOver) is Color fgColorOver) ForegroundColorOver = fgColorOver;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorPushed) is Color fgColorPushed) ForegroundColorPushed = fgColorPushed;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonForegroundColorDisabled) is Color fgColorDisabled) ForegroundColorDisabled = fgColorDisabled;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonTextFontFamily) is string fontFamily) FontFamily = fontFamily;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonTextFontSize) is Length fontSize) FontSize = fontSize;
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonTextFontWeight) is FontWeight fontWeight) FontWeight = fontWeight;
-
-            if (Services.AppValues.GetValue(ThemeValueKey.SystemButtonTextPadding) is Thickness textPadding) TextPadding = textPadding;
-
-            BackgroundDrawable = Services.AppValues.GetResource(ResourceValueKey.SystemButtonBackgroundDrawable) as Drawable;
-
-            FontMeasure = FontMeasure.Strict;
         }
     }
 }

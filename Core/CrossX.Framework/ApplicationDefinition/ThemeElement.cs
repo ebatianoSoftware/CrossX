@@ -6,7 +6,7 @@ using Xx;
 
 namespace CrossX.Framework.ApplicationDefinition
 {
-    [XxSchemaExport(XxChildrenMode.Multiple, typeof(ColorElement), typeof(LengthElement), typeof(ImportElement),
+    [XxSchemaExport(XxChildrenMode.Multiple, typeof(ColorElement), typeof(LengthElement),
         typeof(FontWeightElement), typeof(FontMeasureElement), typeof(StringElement), typeof(ThicknessElement))]
     public class ThemeElement : IElementsContainer
     {

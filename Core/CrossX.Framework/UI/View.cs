@@ -1,16 +1,20 @@
 ﻿using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.XxTools;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Xx;
+using Xx.Definition;
 
 namespace CrossX.Framework.UI
 {
     [XxSchemaBindable(true)]
     [XxSchemaExport]
-    public abstract class View : UIBindingContext, IDisposable
+    public abstract class View : UIBindingContext, IDisposable, IStoreElement
     {
         private RectangleF bounds;
         private Alignment horizontalAlignment = Alignment.Stretch;
@@ -24,6 +28,8 @@ namespace CrossX.Framework.UI
 
         private IViewParent parent;
         private float opacity = 1;
+        private IReadOnlyDictionary<PropertyInfo, object> properties;
+
         protected readonly IUIServices Services;
 
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
@@ -47,8 +53,6 @@ namespace CrossX.Framework.UI
         }
 
         public Drawable BackgroundDrawable { get => backgroundDrawable; set => SetPropertyAndRedraw(ref backgroundDrawable, value); }
-
-
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Length Width { get => width; set => SetProperty(ref width, value); }
@@ -62,7 +66,7 @@ namespace CrossX.Framework.UI
         public Name Id { get; set; }
 
         [XxSchemaBindable(false)]
-        public Classes Classes { get; set; }
+        public Classes Classes { set { } }
 
         public bool Visible { get => visible; set => SetPropertyAndRecalcLayout(ref visible, value); }
 
@@ -84,6 +88,8 @@ namespace CrossX.Framework.UI
         }
 
         public bool DisplayVisible => Visible && (Parent?.DisplayVisible ?? true);
+
+        XxElement IStoreElement.Element { set => properties = value.Properties; }
 
         protected View(IUIServices services)
         {

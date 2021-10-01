@@ -39,6 +39,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="HorizontalTextAlignment" />
         <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="VerticalTextAlignment" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorDisabled" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -52,14 +53,8 @@
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BackgroundColorDisabled" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorPushed" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorOver" />
-        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorDisabled" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
       </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="CrossX.Framework.UI.Controls.DefaultButton">
-    <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button"></xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.CheckButtonBase">
@@ -68,6 +63,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColor" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColorOver" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="BoxColorDisabled" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBoxColor" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedTickColor" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBoxColorOver" />
@@ -75,6 +71,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedBoxColorPushed" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="CheckedTickColorPushed" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TickColorPushed" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TickColorDisabled" />
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="BoxSize" />
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Spacing" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
@@ -137,6 +134,8 @@
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ThumbColor" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TrackColor" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ThumbColorDisabled" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TrackColorDisabled" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ThumbColorOver" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="TrackColorOver" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ThumbColorPushed" />
@@ -235,13 +234,6 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button" />
-      </xsd:complexContent>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:element name="DefaultButton">
-    <xsd:complexType>
-      <xsd:complexContent>
-        <xsd:extension base="xx:CrossX.Framework.UI.Controls.DefaultButton" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

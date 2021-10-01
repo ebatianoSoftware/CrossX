@@ -13,6 +13,6 @@ namespace CrossX.Framework
             Values = values.Split(' ').Where(o => o.Length > 0).ToArray();
         }
 
-        public static implicit operator Classes(string str) => new Classes(str);
+        public static Classes Parse(string str) => new Classes(str);
     }
 }

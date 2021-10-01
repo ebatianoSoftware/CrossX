@@ -1,6 +1,9 @@
 ﻿using CrossX.Framework.ApplicationDefinition;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Xx;
 using Xx.Definition;
 
 namespace CrossX.Framework.Core
@@ -17,9 +20,28 @@ namespace CrossX.Framework.Core
             return null;
         }
 
-        public IEnumerable<StyleElement> GetStyles(Type type, string classes)
+        public IEnumerable<XxElement> GetStyles(Type type, string[] classes)
         {
-            throw new NotImplementedException();
+            foreach(var cl in classes)
+            {
+                if (styles.TryGetValue(new SelectorKey { Type = type, Name = cl }, out var classStyle))
+                {
+                    yield return classStyle;
+                }
+            }
+
+            if (styles.TryGetValue(new SelectorKey { Type = type, Name = "" }, out var typeStyle))
+            {
+                yield return typeStyle;
+            }
+
+            if( type.BaseType != typeof(object) && !type.BaseType.IsAbstract)
+            {
+                foreach(var style in GetStyles(type.BaseType, classes))
+                {
+                    yield return style;
+                }
+            }
         }
 
         public object GetValue(string name)

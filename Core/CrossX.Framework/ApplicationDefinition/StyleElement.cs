@@ -1,11 +1,9 @@
 ﻿using CrossX.Framework.Core;
 using CrossX.Framework.XxTools;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xx;
 using Xx.Definition;
-using Xx.Toolkit;
 
 namespace CrossX.Framework.ApplicationDefinition
 {
@@ -18,15 +16,7 @@ namespace CrossX.Framework.ApplicationDefinition
             set
             {
                 var key = keyValue;
-
-                var filters = value.Split(':');
-                var name = filters[0];
-
-                if (filters.Length == 2)
-                {
-                    key.State = filters[1];
-                }
-                key.Name = name;
+                key.Name = value;
                 keyValue = key;
             }
         }
@@ -48,6 +38,7 @@ namespace CrossX.Framework.ApplicationDefinition
                 var key = keyValue;
                 key.Type = element.Type;
 
+                if (key.Name == null) key.Name = "";
                 appValues.RegisterStyle(key, element);
             }
         }

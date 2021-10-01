@@ -63,10 +63,5 @@ namespace CrossX.Framework.UI.Controls
 
             return new SizeF(autoWidth ? sizeAuto.Width : Math.Max(size.Width, sizeAuto.Width), autoHeight ? sizeAuto.Height : Math.Max(size.Height, sizeAuto.Height));
         }
-
-        protected virtual void ApplyDefaultStyle()
-        {
-            
-        }
     }
 }

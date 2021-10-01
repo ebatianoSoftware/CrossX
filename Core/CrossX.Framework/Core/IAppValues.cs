@@ -7,7 +7,7 @@ namespace CrossX.Framework.Core
 {
     public interface IAppValues
     {
-        IEnumerable<StyleElement> GetStyles(Type type, string classes);
+        IEnumerable<XxElement> GetStyles(Type type, string[] classes);
         object GetValue(string name);
         object GetResource(string name);
 

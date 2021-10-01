@@ -29,7 +29,7 @@ namespace CrossX.Framework.UI.Containers
         private Color splitterColorOver;
         private Color splitterColorPushed;
         private ButtonState currentState = ButtonState.Normal;
-        private Vector2 downPosition;
+        private Vector2 downOffset;
         private Length firstMinSize = Length.Zero;
         private Length secondMinSize = Length.Zero;
         private readonly ButtonGesturesProcessor buttonGesturesProcessor;
@@ -85,7 +85,7 @@ namespace CrossX.Framework.UI.Containers
                  state => CurrentState = state,
                  onDownAction: g =>
                  {
-                     downPosition = g.Position;
+                     downOffset = g.Position - splitterBounds.Center;
                      SetCursorOverSplitter(g);
                  },
                  onUpAction: g=>
@@ -98,15 +98,9 @@ namespace CrossX.Framework.UI.Containers
                  },
                  onMoveAction: g =>
                  {
-                     var offset = g.Position - downPosition;
-                     downPosition = g.Position;
+                     var pos = g.Position - downOffset;
 
-                     float offsetValue = Orientation == Orientation.Horizontal ? offset.X : offset.Y;
-
-                     var refSize = Orientation == Orientation.Vertical ? ScreenBounds.Height : ScreenBounds.Width;
-                     var splitPosition = SplitPosition.Calculate(refSize);
-
-                     splitPosition += offsetValue;
+                     var splitPosition = Orientation == Orientation.Horizontal ? pos.X : pos.Y;
                      SplitPosition = SplitPositionFromValue(splitPosition);
 
                      SetCursorOverSplitter(g);
