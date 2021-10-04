@@ -112,7 +112,6 @@ namespace CrossX.Skia.Graphics
             var skPaint = skiaFont.SKPaint;
             skPaint.IsStroke = false;
             skPaint.IsAntialias = true;
-            skPaint.HintingLevel = SKPaintHinting.Full;
             skPaint.FilterQuality = SKFilterQuality.High;
             skPaint.Color = color.ToSkia();
 

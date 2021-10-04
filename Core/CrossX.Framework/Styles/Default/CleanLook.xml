@@ -5,23 +5,23 @@
 
   <Resources>
     <Resource Key="SystemButtonBackgroundDrawable">
-      <d:RectangleDrawable Rx="0" Ry="0" FillColor="White" StrokeColor="#4888" StrokeThickness="1"/>
+      <d:RectangleDrawable Rx="4" Ry="4" FillColor="White" StrokeColor="#4888" StrokeThickness="2"/>
     </Resource>
 
     <Resource Key="SystemCheckBoxDrawable">
-      <d:RectangleDrawable Rx="0" Ry="0" FillColor="White" StrokeColor="#4888" StrokeThickness="1" Padding="0,0.5,0,-0.5"/>
+      <d:RectangleDrawable Rx="4" Ry="4" FillColor="White" StrokeColor="#4888" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
     </Resource>
 
     <Resource Key="SystemCheckBoxTickDrawable">
-      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="15" FontWeight="Bold" Text="&#62102;" OffsetX="-0.5" OffsetY="1.5"/>
+      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="12" FontWeight="Bold" Text="&#62102;" OffsetX="0" OffsetY="1.5"/>
     </Resource>
 
     <Resource Key="SystemRadioDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White" StrokeColor="#4888" StrokeThickness="1" Padding="0,0.5,0,-0.5"/>
+      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White" StrokeColor="#4888" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
     </Resource>
 
     <Resource Key="SystemRadioTickDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White" Padding="3,3.5,3,2.5"/>
+      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White" StrokeColor="#4888" StrokeThickness="2" Padding="4,4.5,4,3.5"/>
     </Resource>
 
     <Resource Key="SystemSplitterDrawable">
@@ -29,7 +29,7 @@
     </Resource>
 
     <Resource Key="SystemSliderThumbDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White" StrokeColor="#4888" StrokeThickness="1"/>
+      <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White" StrokeColor="#4888" StrokeThickness="2"/>
     </Resource>
   </Resources>
 </Application>

@@ -13,7 +13,7 @@
                EnableManipulation="True"
                SecondMinSize="960">
 
-    <FrameLayout>
+    <FrameLayout BackgroundColor="#04000000">
     <StackLayout VerticalAlignment="End" Spacing="20" HorizontalAlignment="Center">
 
       <RadioButton Text="First value"
