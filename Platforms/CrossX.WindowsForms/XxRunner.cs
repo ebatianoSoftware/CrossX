@@ -8,7 +8,6 @@ namespace CrossX.WindowsForms
         public static void Run(Framework.Core.Application application)
         {
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             using (var mainForm = new MainForm(application))

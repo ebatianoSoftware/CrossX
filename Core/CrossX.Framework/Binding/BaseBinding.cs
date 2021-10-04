@@ -26,8 +26,6 @@ namespace CrossX.Framework.Binding
 
         private void OnSourcePropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            Debug.Assert(sender == Source);
-
             if(args.PropertyName == SourceProperty?.Name)
             {
                 SourceToTarget();

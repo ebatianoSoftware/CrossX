@@ -8,7 +8,7 @@
     <String Key="SystemTextFontFamily" Value="Segoe UI"/>
     <String Key="SystemButtonTextFontFamily" Value="Segoe UI"/>
 
-    <Length Key="SystemTextFontSize" Value="14"/>
+    <Length Key="SystemTextFontSize" Value="15"/>
     <Length Key="SystemButtonTextFontSize" Value="18"/>
 
     <FontWeight Key="SystemTextFontWeight" Value="Light"/>
@@ -16,7 +16,7 @@
 
     <Thickness Key="SystemButtonTextPadding" Value="12,8,12,8"/>
 
-    <Length Key="SystemCheckRadioSize" Value="14"/>
+    <Length Key="SystemCheckRadioSize" Value="15"/>
   </Theme>
   
   <Styles>

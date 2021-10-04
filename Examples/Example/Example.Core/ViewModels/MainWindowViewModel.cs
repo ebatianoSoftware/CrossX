@@ -16,18 +16,6 @@ namespace Example.Core.ViewModels
 {
     public class MainWindowViewModel : NavigationFrameViewModel
     {
-        public class TestButtonData
-        {
-            public string Text { get; }
-            public ICommand ClickCommand { get; }
-
-            public TestButtonData(string text, ICommand clickCommand)
-            {
-                Text = text;
-                ClickCommand = clickCommand;
-            }
-        }
-
         public ICommand TestCommand { get; }
 
         public ImageDescriptor Image { get => image; private set => SetProperty(ref image, value); }
@@ -36,7 +24,7 @@ namespace Example.Core.ViewModels
 
         public float SliderValue { get => sliderValue; set => SetProperty(ref sliderValue, value); }
 
-        public ObservableCollection<TestButtonData> Items { get; } = new ObservableCollection<TestButtonData>();
+        public ObservableCollection<ImageDescriptor> Items { get; } = new ObservableCollection<ImageDescriptor>();
 
         public bool ShowButton
         {
@@ -70,7 +58,9 @@ namespace Example.Core.ViewModels
         private readonly ISystemDispatcher systemDispatcher;
         private readonly IDispatcher dispatcher;
 
-        private ICommand addButtonTest;
+        public ICommand AddButtonTestCommand { get; }
+
+        
 
         public MainWindowViewModel(
             IObjectFactory objectFactory,
@@ -80,34 +70,12 @@ namespace Example.Core.ViewModels
         {
             TestCommand = new SyncCommand(Test);
 
-            addButtonTest = new SyncCommand(AddButtonTest, CanExecuteAddButtonTest);
-
             this.objectFactory = objectFactory;
             this.systemDispatcher = systemDispatcher;
             this.dispatcher = dispatcher;
 
-            for(var idx =0; idx < 20; ++idx)
-            {
-                Items.Add(new TestButtonData($"Test {idx}", addButtonTest));
-            }
-
             sequencer.Run(Count());
             Test();
-        }
-
-        private bool CanExecuteAddButtonTest(object parameter)
-        {
-            if (parameter == null) return false;
-
-            var oldTest = (TestButtonData)parameter;
-            if (oldTest.Text.EndsWith("1")) return false;
-            return true;
-        }
-
-        private void AddButtonTest(object parameter)
-        {
-            var oldTest = (TestButtonData)parameter;
-            Items.Insert(0, new TestButtonData(oldTest.Text, addButtonTest));
         }
 
         private IEnumerable<Sequence> Count()
@@ -136,7 +104,7 @@ namespace Example.Core.ViewModels
 
                 await Task.Run(async () =>
                {
-                   var request = WebRequest.Create("https://picsum.photos/3840/2160");
+                   var request = WebRequest.Create("https://picsum.photos/1920/1080");
 
                    Stream dataStream = null;
 
@@ -153,14 +121,33 @@ namespace Example.Core.ViewModels
                    try
                    {
                        var image = objectFactory.Create<Image>(dataStream);
+                       Image addThumb = null;
+
+
+                       if(Image.Image != null)
+                       {
+                           addThumb = Image.Image.Scale(0.1f);
+                       }
+
 
                        dispatcher.BeginInvoke(() =>
                        {
                            var oldImage = Image;
                            Image = image;
                            ShowButton = true;
-
                            oldImage.Image?.Dispose();
+
+                           if (addThumb != null)
+                           {
+                               Items.Add(new ImageDescriptor(addThumb));
+                           }
+
+                           if(Items.Count > 5)
+                           {
+                               var oldImageSrc = Items[0].Image;
+                               Items.RemoveAt(0);
+                               oldImageSrc.Dispose();
+                           }
                        });
                    }
                    catch

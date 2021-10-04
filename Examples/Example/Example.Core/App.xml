@@ -5,7 +5,7 @@
   xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
   <Import Path="CrossX.Framework.Styles.Default.DarkTheme.xml;CrossX.Framework"/>
-  <Import Path="CrossX.Framework.Styles.Default.WhiteTheme.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.BlueTheme.xml;CrossX.Framework"/>
   <Import Path="CrossX.Framework.Styles.Default.DefaultStyles.xml;CrossX.Framework"/>
   <Import Path="CrossX.Framework.Styles.Default.HollowLook.xml;CrossX.Framework"/>
   

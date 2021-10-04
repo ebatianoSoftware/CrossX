@@ -13,62 +13,39 @@
                EnableManipulation="True"
                SecondMinSize="960">
 
-      <SplitLayout SplitPosition="25%" Orientation="Vertical" SplitterSize="5"
-               EnableManipulation="True">
-        <FrameLayout>
-        <WrapLayout Orientation="Vertical" HorizontalAlignment="Start" Width="Auto" Spacing="0" Padding="5" BackgroundColor="Green"
-                    >
-          <Label Text="TEST1" TextPadding="10" BackgroundColor="Red"/>
-          <Label Text="TEST2d" TextPadding="5" BackgroundColor="Red"/>
-          <Label Text="TEST3 d" TextPadding="13" BackgroundColor="Red"/>
-          <Label Text="TEST5 dsd" TextPadding="8" BackgroundColor="Red"/>
-          <Label Text="TEST3a" TextPadding="10" BackgroundColor="Red"/>
-          <Label Text="TEST2 AA" TextPadding="11" BackgroundColor="Red"/>
-          <Label Text="TEST1" TextPadding="10" BackgroundColor="Red"/>
-          <Label Text="TEST2d" TextPadding="5" BackgroundColor="Red"/>
-          <Label Text="TEST3 d" TextPadding="13" BackgroundColor="Red"/>
-          <Label Text="TEST5 dsd" TextPadding="8" BackgroundColor="Red"/>
-          <Label Text="TEST3a" TextPadding="10" BackgroundColor="Red"/>
-          <Label Text="TEST2 AA" TextPadding="11" BackgroundColor="Red"/>
-        </WrapLayout>
-        </FrameLayout>
+    <FrameLayout>
+    <StackLayout VerticalAlignment="End" Spacing="20" HorizontalAlignment="Center">
 
-        <FrameLayout>
-      <StackLayout VerticalAlignment="End" Spacing="20" HorizontalAlignment="Center">
+      <RadioButton Text="First value"
+        Value="1" CurrentValue="{Binding RadioValue}"
+        FontMeasure="Extended"
+        Spacing="8" HorizontalAlignment="Start"/>
 
-        <RadioButton Text="First value"
-          Value="1" CurrentValue="{Binding RadioValue}"
-          FontMeasure="Extended"
-          Spacing="8" HorizontalAlignment="Start"/>
+      <RadioButton Text="Second value"
+        Value="2" CurrentValue="{Binding RadioValue}"
+        FontMeasure="Extended"
+        Spacing="8" HorizontalAlignment="Start"/>
 
-        <RadioButton Text="Second value"
-          Value="2" CurrentValue="{Binding RadioValue}"
-          FontMeasure="Extended"
-          Spacing="8" HorizontalAlignment="Start"/>
-
-        <RadioButton Text="Third value"
-          Value="3" CurrentValue="{Binding RadioValue}"
-          FontMeasure="Extended"
-          Spacing="8" HorizontalAlignment="Start"
-          Margin="0,0,0,20"/>
+      <RadioButton Text="Third value"
+        Value="3" CurrentValue="{Binding RadioValue}"
+        FontMeasure="Extended"
+        Spacing="8" HorizontalAlignment="Start"
+        Margin="0,0,0,20"/>
 
 
-        <CheckBox Text="Test the checkbox"
-                  FontMeasure="Extended"
-                  Spacing="8" HorizontalAlignment="Start"
-                  Checked="{Binding ShowTest}"
-                  Enabled="{Binding ShowButton}"
-                  />
-
-        <ToggleButton
+      <CheckBox Text="Test the checkbox"
+                FontMeasure="Extended"
+                Spacing="8" HorizontalAlignment="Start"
                 Checked="{Binding ShowTest}"
-                HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
-                Text="Toggle" Enabled="{Binding ShowButton}"/>
-      </StackLayout>
-        </FrameLayout>
-      </SplitLayout>
-    
+                Enabled="{Binding ShowButton}"
+                />
 
+      <ToggleButton
+              Checked="{Binding ShowTest}"
+              HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
+              Text="Toggle" Enabled="{Binding ShowButton}"/>
+    </StackLayout>
+    </FrameLayout>
     <FrameLayout Margin="10">
 
       <ImageView Source="{Binding Image}"
@@ -86,15 +63,31 @@
               HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="100"
               FontMeasure="Strict" TextPadding="40"/>
 
-      <Button
-              HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
-              Text="Switch"
-              Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
+      <StackLayout VerticalAlignment="End" Spacing="20" Margin="30" HorizontalAlignment="Center">
+        
+        <ItemsView Items="{Binding Items}" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+          <DataTemplate>
+            <FrameLayout BackgroundColor="Black" Width="100" Height="100" Padding="1" VerticalAlignment="Center">
+            <ImageView Source="{Binding}" Stretch="UniformToFill" />
+            </FrameLayout>
+          </DataTemplate>
+          <ContainerTemplate>
+            <StackLayout Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center"/>
+          </ContainerTemplate>
+        </ItemsView>
 
-      <ProgressBar MaxValue="1" Value="{Binding Progress}"
-                   Margin="46" HorizontalAlignment="Center" VerticalAlignment="End"
-                   Width="100" Mode="Query"
-                   Visible="{Binding ShowProgress}"/>
+        <FrameLayout Height="30" HorizontalAlignment="Center">
+        <Button
+                HorizontalAlignment="Center"
+                Text="Switch"
+                Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
+
+        <ProgressBar MaxValue="1" Value="{Binding Progress}"
+                     Margin="10" HorizontalAlignment="Center"
+                     Width="100" Mode="Query"
+                     Visible="{Binding ShowProgress}"/>
+        </FrameLayout>
+      </StackLayout>
 
       <StackLayout VerticalAlignment="Start" HorizontalAlignment="Center">
         <Label Text="Clock background opacity" FontMeasure="Extended" HorizontalAlignment="Center"/>
@@ -110,14 +103,7 @@
         <Label Text="arcu. Aenean in finibus lectus. Etiam cursus sem sit amet" FontMeasure="Extended" HorizontalAlignment="Center"/>
         <Label Text="diam gravida tempus. Nulla interdum placerat libero et." FontMeasure="Extended" HorizontalAlignment="Center"/>
 
-        <ItemsView Items="{Binding Items}" HorizontalAlignment="Stretch" BackgroundColor="DarkGray">
-          <DataTemplate>
-            <Button Text="{Binding Text}" TextPadding="5" BackgroundColor="Gray" HorizontalAlignment="Center" Command="{Binding ClickCommand}" CommandParameter="{Binding}"/>
-          </DataTemplate>
-          <ContainerTemplate>
-            <WrapLayout Orientation="Vertical" Height="200" Spacing="5" Padding="5" LineHorizontalAlignment="Center" LineVerticalAlignment="Center"/>
-          </ContainerTemplate>
-        </ItemsView>
+        
       </StackLayout>
       
     </FrameLayout>
