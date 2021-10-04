@@ -84,11 +84,21 @@ namespace CrossX.Framework.UI.Controls
                 {
                     pointerOffset = null;
                     CalculateValue(g.Position);
+                    SetCursorOnDrag(g);
                 },
-                onMoveAction: g => CalculateValue(g.Position),
-                onUpAction: g => pointerOffset = null//,
-                //onHoveredAction: g=> g.SetCursor = CursorType.Hand
+                onMoveAction: g =>
+                {
+                    CalculateValue(g.Position);
+                    SetCursorOnDrag(g);
+                },
+                onUpAction: g => pointerOffset = null,
+                onHoveredAction: g=> g.SetCursor = CursorType.Hand
                 );
+        }
+
+        private void SetCursorOnDrag(Gesture gesture)
+        {
+            gesture.SetCursor = Bounds.Width > Bounds.Height ? CursorType.SizeWE : CursorType.SizeNS;
         }
 
         protected override void OnRender(Canvas canvas, float opacity)
@@ -103,8 +113,8 @@ namespace CrossX.Framework.UI.Controls
 
             var trackThickness = TrackThickness.Calculate(thumbSize);
 
+            RectangleF valueBounds;
             var trackBounds = bounds;
-            var valueBounds = bounds;
             var thumbBounds = bounds;
 
             thumbBounds.Width = thumbBounds.Height = thumbSize;

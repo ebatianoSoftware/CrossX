@@ -7,7 +7,7 @@
 
   <Theme>
     <Color Key="SystemBackgroundColor" Value="#2e2e2e"/>
-    <Color Key="SystemForegroundColor" Value="#ffffff"/>
+    <Color Key="SystemForegroundColor" Value="#f0f0f0"/>
     <Color Key="SystemForegroundColorDisabled" Value="#606060"/>
 
     <Color Key="SystemButtonBackgroundColor" Value="#5B5B5B"/>
@@ -16,7 +16,7 @@
     <Color Key="SystemButtonBackgroundColorDisabled" Value="#444"/>
 
     <Color Key="SystemButtonForegroundColor" Value="#ffffff"/>
-    <Color Key="SystemButtonForegroundColorOver" Value="#d0ffffff"/>
+    <Color Key="SystemButtonForegroundColorOver" Value="#e0ffffff"/>
     <Color Key="SystemButtonForegroundColorPushed" Value="#ffffff"/>
     <Color Key="SystemButtonForegroundColorDisabled" Value="#606060"/>
     

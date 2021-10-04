@@ -366,6 +366,12 @@ namespace CrossX.WindowsForms
 
                 case CursorType.HSplit:
                     return Cursors.HSplit;
+
+                case CursorType.SizeNS:
+                    return Cursors.SizeNS;
+
+                case CursorType.SizeWE:
+                    return Cursors.SizeWE;
             }
             return Cursors.Default;
         }
