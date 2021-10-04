@@ -8,6 +8,8 @@
         Move,
         Wait,
         VSplit,
-        HSplit
+        HSplit,
+        SizeNS,
+        SizeWE
     }
 }

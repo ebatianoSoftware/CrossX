@@ -122,6 +122,10 @@ namespace Example.Core.ViewModels
                            oldImage.Image?.Dispose();
                        });
                    }
+                   catch
+                   {
+                       ShowButton = true;
+                   }
                    finally
                    {
                        dataStream.Dispose();
@@ -130,7 +134,7 @@ namespace Example.Core.ViewModels
             }
             catch
             {
-
+                ShowButton = true;
             }
         }
 
