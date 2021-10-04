@@ -230,6 +230,19 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.WrapLayout">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Containers.ViewContainer">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="aa:CrossX.Framework.Orientation-Bindable" name="Orientation" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Spacing" />
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="LineHorizontalAlignment" />
+        <xsd:attribute type="aa:CrossX.Framework.Alignment-Bindable" name="LineVerticalAlignment" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:element name="Button">
     <xsd:complexType>
       <xsd:complexContent>
@@ -325,6 +338,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Containers.StackLayout" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="WrapLayout">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.WrapLayout" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

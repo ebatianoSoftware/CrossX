@@ -9,14 +9,29 @@
   Title="CrossX Example Application">
 
   <SplitLayout SplitPosition="25%" Orientation="Horizontal" SplitterSize="5"
-               SplitterColor="{Theme ButtonBackgroundColor}"
-               SplitterColorOver="{Theme ButtonBackgroundColorOver}"
-               SplitterColorPushed="{Theme ButtonBackgroundColorPushed}"
-               SplitterDrawable="{Resource SplitterDrawable}"
                EnableManipulation="True"
                SecondMinSize="960">
 
-    <FrameLayout >
+      <SplitLayout SplitPosition="25%" Orientation="Vertical" SplitterSize="5"
+               EnableManipulation="True">
+        <FrameLayout>
+        <WrapLayout Orientation="Vertical" HorizontalAlignment="Start" Width="Auto" Spacing="5" Padding="10" BackgroundColor="Green">
+          <Label Text="TEST1" TextPadding="10" BackgroundColor="Red"/>
+          <Label Text="TEST2d" TextPadding="5" BackgroundColor="Red"/>
+          <Label Text="TEST3 d" TextPadding="13" BackgroundColor="Red"/>
+          <Label Text="TEST5 dsd" TextPadding="8" BackgroundColor="Red"/>
+          <Label Text="TEST3a" TextPadding="10" BackgroundColor="Red"/>
+          <Label Text="TEST2 AA" TextPadding="11" BackgroundColor="Red"/>
+          <Label Text="TEST1" TextPadding="10" BackgroundColor="Red"/>
+          <Label Text="TEST2d" TextPadding="5" BackgroundColor="Red"/>
+          <Label Text="TEST3 d" TextPadding="13" BackgroundColor="Red"/>
+          <Label Text="TEST5 dsd" TextPadding="8" BackgroundColor="Red"/>
+          <Label Text="TEST3a" TextPadding="10" BackgroundColor="Red"/>
+          <Label Text="TEST2 AA" TextPadding="11" BackgroundColor="Red"/>
+        </WrapLayout>
+        </FrameLayout>
+
+        <FrameLayout>
       <StackLayout VerticalAlignment="End" Spacing="20" HorizontalAlignment="Center">
 
         <RadioButton Text="First value"
@@ -48,7 +63,9 @@
                 HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
                 Text="Toggle" Enabled="{Binding ShowButton}"/>
       </StackLayout>
-    </FrameLayout>
+        </FrameLayout>
+      </SplitLayout>
+    
 
     <FrameLayout Margin="10">
 
@@ -67,7 +84,7 @@
               HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Digital-7 Mono" FontSize="100"
               FontMeasure="Strict" TextPadding="40"/>
 
-      <Button 
+      <Button
               HorizontalAlignment="Center" VerticalAlignment="End" Margin="30"
               Text="Switch"
               Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
