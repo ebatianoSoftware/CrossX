@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 
 namespace CrossX.Framework.UI.Containers
@@ -143,7 +142,7 @@ namespace CrossX.Framework.UI.Containers
                 ++idx;
             }
 
-            lineHeights.Add(currentHeight + Spacing.Calculate());
+            lineHeights.Add(currentHeight - Spacing.Calculate());
             lineWidths.Add(currentWidth + Spacing.Calculate());
 
             int index = 0;
@@ -177,11 +176,11 @@ namespace CrossX.Framework.UI.Containers
                     switch (LineVerticalAlignment)
                     {
                         case Alignment.Center:
-                            offset.Y = (size.Height - lineHeight) / 2;
+                            offset.Y = (size.Height - Padding.Height - lineHeight) / 2;
                             break;
 
                         case Alignment.End:
-                            offset.Y = (size.Height - lineHeight);
+                            offset.Y = (size.Height - Padding.Height - lineHeight);
                             break;
                     }
 
@@ -239,7 +238,7 @@ namespace CrossX.Framework.UI.Containers
                 ++idx;
             }
 
-            lineWidths.Add(currentWidth + Spacing.Calculate());
+            lineWidths.Add(currentWidth - Spacing.Calculate());
             lineHeights.Add(currentHeight + Spacing.Calculate());
 
             int index = 0;
@@ -262,11 +261,11 @@ namespace CrossX.Framework.UI.Containers
                     switch(LineHorizontalAlignment)
                     {
                         case Alignment.Center:
-                            offset.X = (size.Width - lineWidth) / 2;
+                            offset.X = (size.Width - Padding.Width - lineWidth) / 2;
                             break;
 
                         case Alignment.End:
-                            offset.X = (size.Width - lineWidth);
+                            offset.X = (size.Width - Padding.Width - lineWidth);
                             break;
                     }
 

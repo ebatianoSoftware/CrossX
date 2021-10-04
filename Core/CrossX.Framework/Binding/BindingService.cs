@@ -1,5 +1,4 @@
-﻿using CrossX.Abstractions.Mvvm;
-using CrossX.Framework.Core;
+﻿using CrossX.Framework.Core;
 using CrossX.Framework.UI;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +119,6 @@ namespace CrossX.Framework.Binding
             var parts = binding.Split(',').Select(o => o.Trim()).ToArray();
             var srcProperty = parts[0];
 
-            // TODO: use property properly
             var mode = property.GetCustomAttribute<BindingModeAttribute>()?.Mode ?? BindingMode.OneWay;
             AddBinding(new ContextBinding(target, property, nameof(UIBindingContext.DataContext), srcProperty, mode, conversionService));
         }

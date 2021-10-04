@@ -77,6 +77,9 @@ namespace CrossX.Framework.UI.Controls
                     break;
 
                 case GestureType.PointerMove:
+
+                    if (!enabled) return false;
+
                     if (lockedPointer == PointerId.None)
                     {
                         if (bounds.Contains(gesture.Position))

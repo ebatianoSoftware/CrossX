@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace CrossX.Framework.UI.Containers
@@ -16,25 +17,32 @@ namespace CrossX.Framework.UI.Containers
         {
             if (args.Action == NotifyCollectionChangedAction.Add || args.Action == NotifyCollectionChangedAction.Replace)
             {
-                foreach (var item in args.NewItems)
+                if (args.NewItems != null)
                 {
-                    if (item is View view)
+                    foreach (var item in args.NewItems)
                     {
-                        view.Parent = owner;
+                        if (item is View view)
+                        {
+                            view.Parent = owner;
+                        }
                     }
                 }
             }
 
-            if (args.Action == NotifyCollectionChangedAction.Remove || args.Action == NotifyCollectionChangedAction.Reset || args.Action == NotifyCollectionChangedAction.Replace)
+            if(args.Action == NotifyCollectionChangedAction.Reset || args.Action == NotifyCollectionChangedAction.Replace)
             {
-                foreach (var item in args.OldItems)
+                if (args.OldItems != null)
                 {
-                    if (item is View view)
+                    foreach (var item in args.OldItems)
                     {
-                        view.Parent = owner;
+                        if (item is IDisposable disp)
+                        {
+                            disp.Dispose();
+                        }
                     }
                 }
             }
+
             owner.InvalidateLayout();
             base.OnCollectionChanged(args);
         }

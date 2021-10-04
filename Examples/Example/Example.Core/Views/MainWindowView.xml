@@ -2,6 +2,7 @@
   xmlns="https://crossx.support/Schemas/CrossX.Framework.UI"
   xmlns:g="https://crossx.support/Schemas/CrossX.Framework.UI.Global"
   xmlns:ex="https://crossx.support/Schemas/CrossX.Example"
+  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.UI.Templates"
   Desktop.MinWidth="960" Desktop.MinHeight="540"
   Desktop.InitialWidth="1280" Desktop.InitialHeight="720"
   Desktop.StartMode="Normal"
@@ -15,7 +16,8 @@
       <SplitLayout SplitPosition="25%" Orientation="Vertical" SplitterSize="5"
                EnableManipulation="True">
         <FrameLayout>
-        <WrapLayout Orientation="Vertical" HorizontalAlignment="Start" Width="Auto" Spacing="5" Padding="10" BackgroundColor="Green">
+        <WrapLayout Orientation="Vertical" HorizontalAlignment="Start" Width="Auto" Spacing="0" Padding="5" BackgroundColor="Green"
+                    >
           <Label Text="TEST1" TextPadding="10" BackgroundColor="Red"/>
           <Label Text="TEST2d" TextPadding="5" BackgroundColor="Red"/>
           <Label Text="TEST3 d" TextPadding="13" BackgroundColor="Red"/>
@@ -108,9 +110,18 @@
         <Label Text="arcu. Aenean in finibus lectus. Etiam cursus sem sit amet" FontMeasure="Extended" HorizontalAlignment="Center"/>
         <Label Text="diam gravida tempus. Nulla interdum placerat libero et." FontMeasure="Extended" HorizontalAlignment="Center"/>
 
+        <ItemsView Items="{Binding Items}" HorizontalAlignment="Stretch" BackgroundColor="DarkGray">
+          <DataTemplate>
+            <Button Text="{Binding Text}" TextPadding="5" BackgroundColor="Gray" HorizontalAlignment="Center" Command="{Binding ClickCommand}" CommandParameter="{Binding}"/>
+          </DataTemplate>
+          <ContainerTemplate>
+            <WrapLayout Orientation="Vertical" Height="200" Spacing="5" Padding="5" LineHorizontalAlignment="Center" LineVerticalAlignment="Center"/>
+          </ContainerTemplate>
+        </ItemsView>
       </StackLayout>
-
+      
     </FrameLayout>
+    
   </SplitLayout>
 </g:Window>
 

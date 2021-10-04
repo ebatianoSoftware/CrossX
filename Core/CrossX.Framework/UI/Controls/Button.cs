@@ -30,6 +30,7 @@ namespace CrossX.Framework.UI.Controls
                     if (command != null)
                     {
                         command.CanExecuteChanged += Command_CanExecuteChanged;
+                        Command_CanExecuteChanged(this, EventArgs.Empty);
                     }
                 }
             }
@@ -137,6 +138,10 @@ namespace CrossX.Framework.UI.Controls
                 case nameof(Visible):
                     buttonGesturesProcessor.Reset();
                     Services.RedrawService.RequestRedraw();
+                    break;
+
+                case nameof(CommandParameter):
+                    Command_CanExecuteChanged(this, EventArgs.Empty);
                     break;
             }
         }

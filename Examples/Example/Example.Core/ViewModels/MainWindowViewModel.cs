@@ -6,6 +6,7 @@ using CrossX.Framework.Async;
 using CrossX.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -15,6 +16,18 @@ namespace Example.Core.ViewModels
 {
     public class MainWindowViewModel : NavigationFrameViewModel
     {
+        public class TestButtonData
+        {
+            public string Text { get; }
+            public ICommand ClickCommand { get; }
+
+            public TestButtonData(string text, ICommand clickCommand)
+            {
+                Text = text;
+                ClickCommand = clickCommand;
+            }
+        }
+
         public ICommand TestCommand { get; }
 
         public ImageDescriptor Image { get => image; private set => SetProperty(ref image, value); }
@@ -22,6 +35,8 @@ namespace Example.Core.ViewModels
         public string Stopwatch { get => stopwatch; private set => SetProperty(ref stopwatch, value); }
 
         public float SliderValue { get => sliderValue; set => SetProperty(ref sliderValue, value); }
+
+        public ObservableCollection<TestButtonData> Items { get; } = new ObservableCollection<TestButtonData>();
 
         public bool ShowButton
         {
@@ -55,6 +70,8 @@ namespace Example.Core.ViewModels
         private readonly ISystemDispatcher systemDispatcher;
         private readonly IDispatcher dispatcher;
 
+        private ICommand addButtonTest;
+
         public MainWindowViewModel(
             IObjectFactory objectFactory,
             ISequencer sequencer,
@@ -62,11 +79,35 @@ namespace Example.Core.ViewModels
             IDispatcher dispatcher) : base(objectFactory)
         {
             TestCommand = new SyncCommand(Test);
+
+            addButtonTest = new SyncCommand(AddButtonTest, CanExecuteAddButtonTest);
+
             this.objectFactory = objectFactory;
             this.systemDispatcher = systemDispatcher;
             this.dispatcher = dispatcher;
+
+            for(var idx =0; idx < 20; ++idx)
+            {
+                Items.Add(new TestButtonData($"Test {idx}", addButtonTest));
+            }
+
             sequencer.Run(Count());
             Test();
+        }
+
+        private bool CanExecuteAddButtonTest(object parameter)
+        {
+            if (parameter == null) return false;
+
+            var oldTest = (TestButtonData)parameter;
+            if (oldTest.Text.EndsWith("1")) return false;
+            return true;
+        }
+
+        private void AddButtonTest(object parameter)
+        {
+            var oldTest = (TestButtonData)parameter;
+            Items.Insert(0, new TestButtonData(oldTest.Text, addButtonTest));
         }
 
         private IEnumerable<Sequence> Count()

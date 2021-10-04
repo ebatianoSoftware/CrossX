@@ -44,4 +44,11 @@ namespace CrossX.Framework.Meta
         public override string SchemaOutputFile => "crossx-framework-ui-global.xsd";
         public override string RootNamespace => "CrossX.Framework.UI.Global";
     }
+
+    //public class UITemplates_ShemaInfo : XxShemaInfo
+    //{
+    //    public override string Namespace => "https://crossx.support/Schemas/CrossX.Framework.UI.Templates";
+    //    public override string SchemaOutputFile => "crossx-framework-ui-templates.xsd";
+    //    public override string RootNamespace => "CrossX.Framework.UI.Templates";
+    //}
 }

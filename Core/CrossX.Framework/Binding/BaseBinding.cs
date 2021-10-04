@@ -47,7 +47,7 @@ namespace CrossX.Framework.Binding
 
         protected void SetProperty(object to, PropertyInfo toInfo, object from, PropertyInfo fromInfo)
         {
-            object value = fromInfo.GetValue(from);
+            object value = fromInfo?.GetValue(from) ?? from;
             value = conversionService.Convert(value, toInfo.PropertyType);
 
             if (value == null) return;
@@ -69,10 +69,17 @@ namespace CrossX.Framework.Binding
 
             if (Source != null)
             {
-                SourceProperty = Source.GetType().GetProperty(SourcePropertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
-                if(SourceProperty == null)
+                if (string.IsNullOrWhiteSpace(SourcePropertyName))
                 {
-                    Source = null;
+                    SourceProperty = null;
+                }
+                else
+                {
+                    SourceProperty = Source.GetType().GetProperty(SourcePropertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
+                    if (SourceProperty == null)
+                    {
+                        Source = null;
+                    }
                 }
             }
 

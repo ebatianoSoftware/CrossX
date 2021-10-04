@@ -2,6 +2,24 @@
 <xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework.UI" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework.UI" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework">
   <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework" />
   <xsd:complexType name="System.Object" />
+  <xsd:complexType name="CrossX.Framework.UI.Templates.ContainerTemplate">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Templates.DataTemplate">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.UIBindingContext">
     <xsd:complexContent>
       <xsd:extension base="xx:System.Object">
@@ -190,6 +208,17 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.ItemsView">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:element name="DataTemplate" type="xx:CrossX.Framework.UI.Templates.DataTemplate" minOccurs="0" maxOccurs="unbounded" />
+          <xsd:element name="ContainerTemplate" type="xx:CrossX.Framework.UI.Templates.ContainerTemplate" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:choice>
+        <xsd:attribute type="aa:unknown" name="Items" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Containers.NavigationFrame">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.View">
@@ -243,6 +272,20 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:element name="ContainerTemplate">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Templates.ContainerTemplate" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="DataTemplate">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Templates.DataTemplate" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
   <xsd:element name="Button">
     <xsd:complexType>
       <xsd:complexContent>
@@ -317,6 +360,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Containers.FrameLayout" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ItemsView">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.ItemsView" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

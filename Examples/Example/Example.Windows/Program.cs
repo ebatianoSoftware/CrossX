@@ -1,6 +1,7 @@
 ﻿using CrossX.WindowsForms;
 using Example.Core;
 using System;
+using System.Threading.Tasks;
 
 namespace Example.Windows
 {
@@ -12,7 +13,13 @@ namespace Example.Windows
         [STAThread]
         static void Main()
         {
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             XxRunner.Run(new App());
+        }
+
+        private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs args)
+        {
+            Console.WriteLine(args.Exception);
         }
     }
 }
