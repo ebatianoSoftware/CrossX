@@ -31,6 +31,8 @@ namespace CrossX.Framework.Core
 
         void ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
+            LoadFonts(servicesProvider.GetService<IFontManager>());
+
             var assembly = GetType().Assembly;
             var builder = new ScopeBuilder(servicesProvider);
             var elementTypeMapping = new ElementTypeMapping(assembly);
@@ -55,6 +57,14 @@ namespace CrossX.Framework.Core
 
             RedrawService = servicesProvider.GetService<IRedrawService>();
             ObjectFactory = Services.GetService<IObjectFactory>();
+        }
+
+        protected virtual void LoadFonts(IFontManager fontManager)
+        {
+            using(var stream = typeof(Application).Assembly.GetManifestResourceStream("CrossX.Framework.Styles.Fonts.FluentSystemIcons-Filled.ttf"))
+            {
+                fontManager.LoadTTF(stream);
+            }
         }
 
         private void LoadApplicationDefinition(IAppValues appValues, IBindingService bindingService, IElementTypeMapping elementTypeMapping, IObjectFactory objectFactory)

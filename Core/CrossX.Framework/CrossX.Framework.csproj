@@ -14,6 +14,8 @@
     <None Remove="Styles\Default\LightTheme.xml" />
     <None Remove="Styles\Default\OrangeTheme.xml" />
     <None Remove="Styles\Default\WhiteTheme.xml" />
+    <None Remove="Styles\Fonts\FluentSystemIcons-Filled.ttf" />
+    <None Remove="Styles\Fonts\FluentSystemIcons-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +28,8 @@
     <EmbeddedResource Include="Styles\Default\DefaultLook.xml" />
     <EmbeddedResource Include="Styles\Default\BlueTheme.xml" />
     <EmbeddedResource Include="Styles\Default\OrangeTheme.xml" />
+    <EmbeddedResource Include="Styles\Fonts\FluentSystemIcons-Filled.ttf" />
+    <EmbeddedResource Include="Styles\Fonts\FluentSystemIcons-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>

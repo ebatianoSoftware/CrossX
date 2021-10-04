@@ -21,10 +21,12 @@ namespace CrossX.WindowsForms
         private readonly ISkiaCanvas skiaCanvas;
         private readonly ICoreApplication app;
         private readonly ISystemDispatcher systemDispatcher;
-        public MainLoop MainLoop { get; }
+        
         private FormBorderStyle lastFormBorderStyle = FormBorderStyle.Sizable;
         private DrawingRectangle lastNormalPosition;
         private FormWindowState lastNotFullscreenWindowState;
+
+        public MainLoop MainLoop { get; }
 
         string INativeWindow.Title
         {
