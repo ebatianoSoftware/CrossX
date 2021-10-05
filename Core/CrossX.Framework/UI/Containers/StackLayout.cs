@@ -21,6 +21,8 @@ namespace CrossX.Framework.UI.Containers
 
         public StackLayout(IUIServices services) : base(services)
         {
+            HorizontalAlignment = Alignment.Start;
+            VerticalAlignment = Alignment.Start;
         }
 
         protected override void RecalculateLayout()
@@ -30,7 +32,6 @@ namespace CrossX.Framework.UI.Containers
             var bounds = Bounds.Deflate(Padding);
             var offset = bounds.TopLeft - Bounds.TopLeft;
             var spacing = Spacing.Calculate();
-
 
             if (orientation == Orientation.Horizontal)
             {
@@ -72,13 +73,13 @@ namespace CrossX.Framework.UI.Containers
 
             if (Orientation == Orientation.Horizontal)
             {
-                if (Height.IsAuto) size.Height = 0;
+                if (Height.IsAuto && VerticalAlignment != Alignment.Stretch) size.Height = 0;
                 size = CalculateWidth(size);
                 
             }
             else
             {
-                if (Width.IsAuto) size.Width = 0;
+                if (Width.IsAuto && HorizontalAlignment != Alignment.Stretch) size.Width = 0;
                 size = CalculateHeight(size);
             }
             return size;

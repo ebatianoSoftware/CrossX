@@ -12,6 +12,7 @@ namespace CrossX.Framework.UI.Templates
     public class DataTemplateElement: IElementsContainer
     {
         public XxElement Element { get; private set; }
+        public string DataType { get; set; }
 
         public void InitChildren(IEnumerable<object> elements)
         {

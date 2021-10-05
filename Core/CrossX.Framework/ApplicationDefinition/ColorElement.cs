@@ -17,6 +17,13 @@ namespace CrossX.Framework.ApplicationDefinition
         [XxSchemaBindable]
         public Color Value { get; set; }
 
-        object IValueElement.Value => Value;
+        [XxSchemaBindable]
+        public Color MixBase { get; set; } = Color.Transparent;
+
+        public float Opacity { get; set; } = 1;
+
+        public float Mix { get; set; } = 1;
+
+        object IValueElement.Value => MixBase.Mix(Value, Mix) * Opacity;
     }
 }

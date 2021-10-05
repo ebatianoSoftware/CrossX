@@ -43,7 +43,8 @@ namespace CrossX.Framework.UI.Controls
                 {
                     case Alignment.Start:
                     case Alignment.End:
-                        sizeAuto.Width += spacing + iconSize.Width;
+                        sizeAuto.Width += iconSize.Width;
+                        sizeAuto.Width += string.IsNullOrEmpty(Text) ? 0 : spacing;
                         sizeAuto.Height = Math.Max(sizeAuto.Height, iconSize.Height + TextPadding.Height);
                         break;
                 }
@@ -52,7 +53,8 @@ namespace CrossX.Framework.UI.Controls
                 {
                     case Alignment.Start:
                     case Alignment.End:
-                        sizeAuto.Height += spacing + iconSize.Height;
+                        sizeAuto.Height += iconSize.Height;
+                        sizeAuto.Height += string.IsNullOrEmpty(Text) ? 0 : spacing;
                         sizeAuto.Width = Math.Max(sizeAuto.Width, iconSize.Width + TextPadding.Width);
                         break;
                 }

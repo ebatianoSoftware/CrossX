@@ -156,6 +156,30 @@ namespace CrossX.Framework.UI.Containers
             var splitPosition = SplitPosition.Calculate(refSize);
             var splitterSize = SplitterSize.Calculate(refSize);
 
+            if(SplitPosition.IsAuto)
+            {
+                var mySize = new SizeF(Orientation == Orientation.Vertical ? Bounds.Width : 0, Orientation == Orientation.Horizontal ? Bounds.Height : 0);
+
+                var firstSize = firstView.CalculateSize(mySize);
+                var secondSize = secondView.CalculateSize(mySize);
+
+                var firstSizeL = Orientation == Orientation.Vertical ? firstSize.Height : firstSize.Width;
+                var secondSizeL = Orientation == Orientation.Vertical ? secondSize.Height : secondSize.Width;
+
+                if(firstSizeL > 0 && secondSizeL > 0)
+                {
+                    splitPosition = firstSizeL / (firstSizeL + secondSizeL);
+                }
+                else if(firstSizeL > 0)
+                {
+                    splitPosition = firstSizeL + splitterSize / 2;
+                }
+                else if ( secondSizeL > 0)
+                {
+                    splitPosition = refSize - secondSizeL - splitterSize / 2;
+                }
+            }
+
             splitPosition -= splitterSize / 2;
 
             var bounds1 = Bounds;
@@ -180,14 +204,14 @@ namespace CrossX.Framework.UI.Containers
                 checkMin = false;
             }
 
-            if (checkMin && bounds2Length < SecondMinSize.Calculate(refSize))
+            if (checkMin && SecondMinSize != Length.Zero &&  bounds2Length < SecondMinSize.Calculate(refSize))
             {
                 SplitPosition = SplitPositionFromValue(refSize - SecondMinSize.Calculate(refSize) - splitterSize / 2);
                 RecalculateLayout(false);
                 return;
             }
 
-            if (checkMin && bounds1Length < FirstMinSize.Calculate(refSize))
+            if (checkMin && FirstMinSize != Length.Zero && bounds1Length < FirstMinSize.Calculate(refSize))
             {
                 SplitPosition = SplitPositionFromValue(FirstMinSize.Calculate(refSize) + splitterSize / 2);
                 RecalculateLayout(false);

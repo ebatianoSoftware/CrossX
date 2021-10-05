@@ -5,8 +5,8 @@
   xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
   <Theme>
-    <String Key="SystemTextFontFamily" Value="Segoe UI"/>
-    <String Key="SystemButtonTextFontFamily" Value="Segoe UI"/>
+    <String Key="SystemTextFontFamily" Value="Default"/>
+    <String Key="SystemButtonTextFontFamily" Value="Default"/>
 
     <Length Key="SystemTextFontSize" Value="15"/>
     <Length Key="SystemButtonTextFontSize" Value="18"/>
@@ -16,8 +16,11 @@
 
     <Thickness Key="SystemButtonTextPadding" Value="12,8,12,8"/>
     <Length Key="SystemIconButtonSpacing" Value="8"/>
+    <Length Key="SystemIconButtonIconSize" Value="20"/>
 
+    <String Key="SystemIconFontFace" Value="FluentSystemIcons-Filled"/>
     <Length Key="SystemCheckRadioSize" Value="15"/>
+
   </Theme>
   
   <Styles>
@@ -53,10 +56,10 @@
                      TextPadding="{Theme SystemButtonTextPadding}"
                      BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}"
                      FontMeasure="Strict"
-                     IconFontFace="FluentSystemIcons-Filled"
+                     IconFontFace="{Theme SystemIconFontFace}"
                      HorizontalTextAlignment="End"
                      IconFontMeasure="Extended"
-                     IconSize="20"
+                     IconSize="{Theme SystemIconButtonIconSize}"
                      Spacing="{Theme SystemIconButtonSpacing}"
                      IconText="&#62036;"
                  />

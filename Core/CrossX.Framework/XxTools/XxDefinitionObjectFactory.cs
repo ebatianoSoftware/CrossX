@@ -26,7 +26,7 @@ namespace CrossX.Framework.XxTools
             this.elementTypeMapping = elementTypeMapping;
         }
 
-        public TInstance CreateObject<TInstance>(XxElement element)
+        public TInstance CreateObject<TInstance>(XxElement element, bool resolveBindings = true)
         {
             if (!typeof(TInstance).IsAssignableFrom(element.Type)) throw new InvalidDataException($"Cannot create {typeof(TInstance).Name} from {element.Type.Name}!");
             var instance = objectFactory.Create(element.Type, this, elementTypeMapping);
@@ -42,7 +42,7 @@ namespace CrossX.Framework.XxTools
             {
                 if (prop.Value is XxBindingString binding)
                 {
-                    if (prop.Key.GetCustomAttribute<XxBindingStringAttribute>() != null)
+                    if (prop.Key.GetCustomAttribute<XxBindingStringAttribute>() != null || !resolveBindings)
                     {
                         prop.Key.SetValue(instance, $"{{{binding.Value}}}");
                     }
@@ -85,7 +85,7 @@ namespace CrossX.Framework.XxTools
                         }
                         else
                         {
-                            var child = CreateObject<object>(childElement);
+                            var child = CreateObject<object>(childElement, !childrenAsDefinitions && resolveBindings);
                             children.Add(child);
                         }
                     }

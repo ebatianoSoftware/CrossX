@@ -87,7 +87,7 @@ namespace CrossX.Framework.Core
                     }
                     else
                     {
-                        dispatcher.Wait(10);
+                        dispatcher.Wait(16);
                     }
                 }
                 catch (Exception ex)

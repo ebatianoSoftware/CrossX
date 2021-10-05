@@ -39,6 +39,39 @@ namespace CrossX.Framework.UI.Controls
             this.onHoveredAction = onHoveredAction;
         }
 
+        public bool PreviewGesture(Gesture gesture, RectangleF bounds)
+        {
+            if (gesture.PointerId.Kind == PointerKind.MouseMiddleButton || gesture.PointerId.Kind == PointerKind.MouseRightButton) return false;
+
+            switch (gesture.GestureType)
+            {
+                case GestureType.PointerMove:
+
+                    if (lockedPointer == PointerId.None)
+                    {
+                        if (!bounds.Contains(gesture.Position))
+                        {
+                            hoverPointers.Remove(gesture.PointerId);
+                            if(hoverPointers.Count == 0)
+                            {
+                                CurrentState = ButtonState.Normal;
+                            }
+                        }
+                    }
+                    break;
+
+                case GestureType.CancelPointer:
+                    if (lockedPointer == gesture.PointerId)
+                    {
+                        CurrentState = ButtonState.Normal;
+                        lockedPointer = PointerId.None;
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
         public bool ProcessGesture(Gesture gesture, RectangleF bounds, bool enabled)
         {
             if (gesture.PointerId.Kind == PointerKind.MouseMiddleButton || gesture.PointerId.Kind == PointerKind.MouseRightButton) return false;
@@ -82,7 +115,7 @@ namespace CrossX.Framework.UI.Controls
 
                     if (lockedPointer == PointerId.None)
                     {
-                        if (bounds.Contains(gesture.Position))
+                        if (bounds.Contains(gesture.Position) && gesture.PointerId.Kind != PointerKind.MouseLeftButton)
                         {
                             if (!hoverPointers.Contains(gesture.PointerId))
                             {

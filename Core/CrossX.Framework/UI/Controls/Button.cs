@@ -72,7 +72,9 @@ namespace CrossX.Framework.UI.Controls
             buttonGesturesProcessor = new ButtonGesturesProcessor(
                 state => CurrentState = state,
                 OnClick,
-                onHoveredAction: g => g.SetCursor = CursorType.Hand
+                onHoveredAction: g => g.SetCursor = CursorType.Hand,
+                onUpAction: g => g.SetCursor = CursorType.Hand,
+                onDownAction: g => g.SetCursor = CursorType.Hand
                 );
         }
 
@@ -122,6 +124,12 @@ namespace CrossX.Framework.UI.Controls
             var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
             var bounds = ScreenBounds.Deflate(TextPadding);
             canvas.DrawText(Text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), foregroundColor * opacity, FontMeasure);
+        }
+
+        protected override bool OnPreviewGesture(Gesture gesture)
+        {
+            buttonGesturesProcessor.PreviewGesture(gesture, ScreenBounds);
+            return false;
         }
 
         protected override bool OnProcessGesture(Gesture gesture)

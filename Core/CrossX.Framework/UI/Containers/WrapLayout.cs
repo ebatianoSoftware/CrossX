@@ -52,11 +52,13 @@ namespace CrossX.Framework.UI.Containers
 
                 if (Orientation == Orientation.Horizontal)
                 {
-                    PositionHorizontal(Bounds.Size);
+                    var size = PositionHorizontal(Bounds.Size);
+                    if (Bounds.Size != size) Parent?.InvalidateLayout();
                 }
                 else
                 {
-                    PositionVertical(Bounds.Size);
+                    var size = PositionVertical(Bounds.Size);
+                    if (Bounds.Size != size) Parent?.InvalidateLayout();
                 }
             }
 

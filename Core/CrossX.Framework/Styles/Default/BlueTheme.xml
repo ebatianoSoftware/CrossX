@@ -6,9 +6,9 @@
   xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
   
   <Theme>
-    <Color Key="SystemButtonAccentBackgroundColor" Value="#0E69FB"/>
-    <Color Key="SystemButtonAccentBackgroundColorOver" Value="#3682FC"/>
-    <Color Key="SystemButtonAccentBackgroundColorPushed" Value="#0E69FB"/>
+    <Color Key="SystemButtonAccentBackgroundColor" Value="#0E79FF"/>
+    <Color Key="SystemButtonAccentBackgroundColorOver" Value="#3692FF"/>
+    <Color Key="SystemButtonAccentBackgroundColorPushed" Value="#0E79FF"/>
   </Theme>
   
 </Application>

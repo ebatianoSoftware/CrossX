@@ -17,7 +17,7 @@ namespace CrossX.WindowsForms
                 {
                     mainForm.MainLoop.ProcessSystemDispatcher();
                     Application.DoEvents();
-                    Thread.Sleep(1);
+                    Thread.Sleep(5);
                 }
             }
         }

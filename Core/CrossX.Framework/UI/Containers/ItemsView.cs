@@ -16,10 +16,11 @@ namespace CrossX.Framework.UI.Containers
     public class ItemsView : View, IElementsContainer, IViewParent
     {
         private readonly XxDefinitionObjectFactory definitionObjectFactory;
-        private XxElement dataTemplate;
+        private Dictionary<Type, XxElement> dataTemplates = new Dictionary<Type, XxElement>();
+        private XxElement defaultDataTemplate;
+
         private ViewContainer container;
         private IList items;
-        private bool layoutInvalid;
 
         public IList Items
         {
@@ -83,7 +84,18 @@ namespace CrossX.Framework.UI.Containers
 
         private void CreateItem(int index, object item)
         {
-            var view = definitionObjectFactory.CreateObject<View>(dataTemplate);
+            var type = item.GetType();
+            XxElement element = null;
+
+            while(type != typeof(object))
+            {
+                if (dataTemplates.TryGetValue(type, out element)) break;
+                type = type.BaseType;
+            }
+
+            element = element ?? defaultDataTemplate;
+
+            var view = definitionObjectFactory.CreateObject<View>(element);
             view.DataContext = item;
 
             container.Children.Insert(index, view);
@@ -107,7 +119,21 @@ namespace CrossX.Framework.UI.Containers
 
         public void InitChildren(IEnumerable<object> elements)
         {
-            dataTemplate = elements.Where(o => o is DataTemplateElement).Cast<DataTemplateElement>().First().Element;
+            foreach(var dataTemplate in elements.Where(o => o is DataTemplateElement).Cast<DataTemplateElement>())
+            {
+                if(dataTemplate.DataType == null)
+                {
+                    defaultDataTemplate = dataTemplate.Element;
+                }
+                else
+                {
+                    var type = Type.GetType(dataTemplate.DataType.Replace(';',','));
+                    if(type != null)
+                    {
+                        dataTemplates.Add(type, dataTemplate.Element);
+                    }
+                }
+            }
             var containerTemplate = elements.Where(o => o is ContainerTemplateElement).Cast<ContainerTemplateElement>().First().Element;
 
             container = definitionObjectFactory.CreateObject<ViewContainer>(containerTemplate);
@@ -122,23 +148,13 @@ namespace CrossX.Framework.UI.Containers
         protected override void RecalculateLayout()
         {
             base.RecalculateLayout();
-            container.Bounds = new RectangleF(0, 0, ScreenBounds.Width, ScreenBounds.Height);   
+            container.Bounds = new RectangleF(0, 0, Bounds.Width, Bounds.Height);
         }
 
-        public void InvalidateLayout()
-        {
-            layoutInvalid = true;
-            Parent?.InvalidateLayout();
-        }
+        public void InvalidateLayout() => Parent?.InvalidateLayout();
 
         protected override void OnUpdate(float time)
         {
-            if (layoutInvalid)
-            {
-                RecalculateLayout();
-                Services.RedrawService.RequestRedraw();
-            }
-
             base.OnUpdate(time);
             container.Update(time);
         }

@@ -95,10 +95,13 @@ namespace CrossX.Framework
 
         public Color Mix(Color other, float mix)
         {
+            var alpha = Af * (1 - mix) + other.Af * mix;
+
+            mix = mix * (1 - other.Af) + mix * other.Af;
+
             var red = Rf * (1 - mix) + other.Rf * mix;
             var green = Gf * (1 - mix) + other.Gf * mix;
             var blue = Bf * (1 - mix) + other.Bf * mix;
-            var alpha = Af * (1 - mix) + other.Af * mix;
 
             return new Color(red, green, blue, alpha);
         }

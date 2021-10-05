@@ -19,7 +19,7 @@
     <Color Key="SystemButtonForegroundColorOver" Value="#8000"/>
     <Color Key="SystemButtonForegroundColorPushed" Value="#a000"/>
     <Color Key="SystemButtonForegroundColorDisabled" Value="#3000"/>
-    
+    <Color Key="SystemSeparatorColor" Value="#8888"/>
   </Theme>
 
 </Application>

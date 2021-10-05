@@ -45,6 +45,9 @@
       <xsd:extension base="xx:System.Object">
         <xsd:attribute type="aa:CrossX.Framework.Styles.ThemeValueKey" name="Key" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="Value" />
+        <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="MixBase" />
+        <xsd:attribute type="aa:System.Float" name="Opacity" />
+        <xsd:attribute type="aa:System.Float" name="Mix" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
