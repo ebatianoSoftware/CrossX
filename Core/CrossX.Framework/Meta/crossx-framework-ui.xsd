@@ -110,6 +110,16 @@
       <xsd:extension base="xx:CrossX.Framework.UI.View"></xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Controls.IconButton">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.Button">
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="IconSize" />
+        <xsd:attribute type="aa:System.String-Bindable" name="IconText" />
+        <xsd:attribute type="aa:System.String-Bindable" name="IconFontFace" />
+        <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Spacing" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.ImageView">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.View">
@@ -304,6 +314,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Controls.Fill" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="IconButton">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Controls.IconButton" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

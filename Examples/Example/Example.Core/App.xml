@@ -7,7 +7,7 @@
   <Import Path="CrossX.Framework.Styles.Default.DarkTheme.xml;CrossX.Framework"/>
   <Import Path="CrossX.Framework.Styles.Default.OrangeTheme.xml;CrossX.Framework"/>
   <Import Path="CrossX.Framework.Styles.Default.DefaultStyles.xml;CrossX.Framework"/>
-  <Import Path="CrossX.Framework.Styles.Default.CleanLook.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.HollowLook.xml;CrossX.Framework"/>
   
  
   <Resources>

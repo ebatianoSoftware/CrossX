@@ -108,7 +108,7 @@ namespace CrossX.Framework.UI.Controls
             RenderButton(canvas, foregroundColor, backgroundColor, opacity);
         }
 
-        protected void RenderButton(Canvas canvas, Color foregroundColor, Color backgroundColor, float opacity)
+        protected virtual void RenderButton(Canvas canvas, Color foregroundColor, Color backgroundColor, float opacity)
         {
             if (BackgroundDrawable == null)
             {

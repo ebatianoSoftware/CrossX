@@ -77,9 +77,10 @@
         </ItemsView>
 
         <FrameLayout Height="30" HorizontalAlignment="Center">
-        <Button
+        <IconButton
                 HorizontalAlignment="Center"
                 Text="Switch"
+                IconText="&#65515;"
                 Command="{Binding TestCommand}" Visible="{Binding ShowButton}"/>
 
         <ProgressBar MaxValue="1" Value="{Binding Progress}"

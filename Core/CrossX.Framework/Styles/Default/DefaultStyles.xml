@@ -15,6 +15,7 @@
     <FontWeight Key="SystemButtonTextFontWeight" Value="Normal"/>
 
     <Thickness Key="SystemButtonTextPadding" Value="12,8,12,8"/>
+    <Length Key="SystemIconButtonSpacing" Value="8"/>
 
     <Length Key="SystemCheckRadioSize" Value="15"/>
   </Theme>
@@ -35,6 +36,29 @@
                  TextPadding="{Theme SystemButtonTextPadding}"
                  BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}"
                  FontMeasure="Strict"
+                 />
+    </Style>
+    <Style>
+      <ui:IconButton BackgroundColor="{Theme SystemButtonBackgroundColor}"
+                     BackgroundColorOver="{Theme SystemButtonBackgroundColorOver}"
+                     BackgroundColorPushed="{Theme SystemButtonBackgroundColorPushed}"
+                     BackgroundColorDisabled="{Theme SystemButtonBackgroundColorDisabled}"
+                     ForegroundColor="{Theme SystemButtonForegroundColor}"
+                     ForegroundColorOver="{Theme SystemButtonForegroundColorOver}"
+                     ForegroundColorPushed="{Theme SystemButtonForegroundColorPushed}"
+                     ForegroundColorDisabled="{Theme SystemButtonForegroundColorDisabled}"
+                     FontFamily="{Theme SystemButtonTextFontFamily}"
+                     FontSize="{Theme SystemButtonTextFontSize}"
+                     FontWeight="{Theme SystemButtonTextFontWeight}"
+                     TextPadding="{Theme SystemButtonTextPadding}"
+                     BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}"
+                     FontMeasure="Strict"
+                     IconFontFace="FluentSystemIcons-Filled"
+                     HorizontalTextAlignment="End"
+                     IconFontMeasure="Extended"
+                     IconSize="20"
+                     Spacing="{Theme SystemIconButtonSpacing}"
+                     IconText="&#62036;"
                  />
     </Style>
     <Style Selector="Accented">

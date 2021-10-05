@@ -38,5 +38,21 @@ namespace CrossX.Framework
             }
             return align;
         }
+
+        public static Alignment Oposite(this Alignment align)
+        {
+            switch(align)
+            {
+                case Alignment.Start:
+                    return Alignment.End;
+
+                case Alignment.Center:
+                    return Alignment.Center;
+
+                case Alignment.End:
+                    return Alignment.Start;
+            }
+            return Alignment.Stretch;
+        }
     }
 }
