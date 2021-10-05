@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace CrossX.Framework.Navigation
 {
-    internal class NavigationImpl : INavigation, INavigationController
+    internal class NavigationImpl : INavigationController
     {
         private ConcurrentStack<object> viewModels = new ConcurrentStack<object>();
+
         private readonly IObjectFactory objectFactory;
         private readonly IDispatcher dispatcher;
 
         public IServicesProvider Services { get; }
 
         public event EventHandler<NavigationRequest> NavigationRequested;
+        public event Action<object> NavigatedTo;
 
         public NavigationImpl(IServicesProvider servicesProvider, IDispatcher dispatcher)
         {
@@ -88,16 +90,17 @@ namespace CrossX.Framework.Navigation
             });
         }
 
-        private Task NavigateIntenal(object viewModel)
+        private async Task NavigateIntenal(object viewModel)
         {
             var request = new NavigationRequest(viewModel);
             NavigationRequested?.Invoke(this, request);
 
             if (request.NavigationTasks != null)
             {
-                return Task.WhenAll(request.NavigationTasks);
+                await Task.WhenAll(request.NavigationTasks);
             }
-            return Task.CompletedTask;
+
+            NavigatedTo?.Invoke(viewModel);
         }
     }
 }

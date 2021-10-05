@@ -47,7 +47,8 @@ namespace CrossX.Framework.Core
                 .WithInstance(elementTypeMapping).As<IElementTypeMapping>()
                 .WithInstance(appValues).As<IAppValues>()
                 .WithInstance(bindingService).As<IBindingService>()
-                .WithType<UIServices>().As<IUIServices>().AsSingleton();
+                .WithType<UIServices>().As<IUIServices>().AsSingleton()
+                .WithType<XxFileParserImpl>().As<IXxFileParser>().AsSingleton();
 
             BeforeInitServices?.Invoke(servicesProvider, builder);
             InitServices(servicesProvider, builder);
@@ -128,7 +129,7 @@ namespace CrossX.Framework.Core
 
         }
 
-        protected virtual (string path, Assembly assembly) LocateView(object viewModel)
+        public virtual (string path, Assembly assembly) LocateView(object viewModel)
         {
             var vmType = viewModel.GetType();
             var viewNamespace = vmType.Namespace.Replace("ViewModels", "Views");
@@ -145,16 +146,10 @@ namespace CrossX.Framework.Core
             var (viewPath, assembly) = LocateView(vm);
             viewPath += ".xml";
 
-            XxElement viewElement;
+            XxElement viewElement = Services.GetService<IXxFileParser>().Parse(assembly, viewPath);
 
             try
             {
-                using (var stream = assembly.GetManifestResourceStream(viewPath))
-                {
-                    var parser = ObjectFactory.Create<XxFileParser>();
-                    viewElement = parser.Parse(stream);
-                }
-
                 var defObjectFactory = ObjectFactory.Create<XxDefinitionObjectFactory>();
                 Window = defObjectFactory.CreateObject<Window>(viewElement);
                 Window.DataContext = vm;

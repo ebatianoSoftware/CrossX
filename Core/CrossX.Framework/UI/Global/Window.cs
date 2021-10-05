@@ -2,6 +2,7 @@
 using CrossX.Framework.Binding;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
+using CrossX.Framework.UI.Containers;
 using CrossX.Framework.XxTools;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace CrossX.Framework.UI.Global
                 rootView = value;
             }
         }
+
+        Window IViewParent.Window => this;
 
         [XxSchemaBindable(true)]
         public string Title
@@ -138,17 +141,22 @@ namespace CrossX.Framework.UI.Global
         private readonly IBindingService bindingService;
         private Color backgroundColor = Color.Black;
 
+        private FrameLayout mainFrame;
+
         public Window(IServicesProvider servicesProvider)
         {
             servicesProvider.TryResolveInstance(out nativeWindow);
             bindingService = servicesProvider.GetService<IBindingService>();
+            mainFrame = servicesProvider.GetService<IObjectFactory>().Create<FrameLayout>();
+            mainFrame.Parent = this;
         }
 
         public void InitChildren(IEnumerable<object> elements)
         {
             if (elements.Count() != 1) throw new InvalidOperationException("Window must have only one child - root view.");
             RootView = (View)elements.First();
-            RootView.Parent = this;
+
+            mainFrame.Children.Add(RootView);
             RecalculateLayout();
         }
 
@@ -203,10 +211,7 @@ namespace CrossX.Framework.UI.Global
         private void RecalculateLayout()
         {
             layoutInvalid = false;
-            var child = RootView;
-            var size = child.CalculateSize(ScaledSize);
-            var position = child.CalculatePosition(size, ScaledSize);
-            child.Bounds = new RectangleF(position, size);
+            mainFrame.Bounds = new RectangleF(Vector2.Zero, ScaledSize);
         }
     }
 }

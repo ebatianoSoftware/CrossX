@@ -3,6 +3,7 @@ using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.Styles;
 using CrossX.Framework.UI.Controls;
+using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System.Collections.Generic;
 using System.Numerics;
@@ -34,7 +35,7 @@ namespace CrossX.Framework.UI.Containers
         private Length secondMinSize = Length.Zero;
         private readonly ButtonGesturesProcessor buttonGesturesProcessor;
 
-
+        public Window Window => Parent?.Window;
         public Orientation Orientation { get => orientation; set => SetPropertyAndRecalcLayout(ref orientation, value); }
 
         public bool EnableManipulation { get => enableManipulation; set => SetPropertyAndRedraw(ref enableManipulation, value); }

@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.Async;
+using CrossX.Abstractions.IoC;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
@@ -13,5 +14,6 @@ namespace CrossX.Framework.UI
         IDispatcher Dispatcher { get; }
         IImageCache ImageCache { get; }
         IAppValues AppValues { get; }
+        IObjectFactory ObjectFactory { get; }
     }
 }

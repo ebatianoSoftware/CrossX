@@ -1,5 +1,6 @@
 ﻿using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.UI.Global;
 using CrossX.Framework.UI.Templates;
 using CrossX.Framework.XxTools;
 using System;
@@ -30,6 +31,8 @@ namespace CrossX.Framework.UI.Containers
                 UpdateItems(value);
             }
         }
+
+        public Window Window => Parent?.Window;
 
         private void UpdateItems(IList value)
         {

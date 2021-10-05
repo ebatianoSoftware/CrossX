@@ -1,5 +1,6 @@
 ﻿using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System.Collections.Generic;
 using Xx;
@@ -25,6 +26,8 @@ namespace CrossX.Framework.UI.Containers
                 }
             }
         }
+
+        public Window Window => Parent?.Window;
 
         public ViewContainer(IUIServices services) : base(services)
         {

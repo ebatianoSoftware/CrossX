@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.Async;
+using CrossX.Abstractions.IoC;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
@@ -13,8 +14,9 @@ namespace CrossX.Framework.UI
         public IDispatcher Dispatcher { get; }
         public IImageCache ImageCache { get; }
         public IAppValues AppValues { get; }
+        public IObjectFactory ObjectFactory { get; }
 
-        public UIServices(IRedrawService redrawService, IBindingService bindingService, IFontManager fontManager, IDispatcher dispatcher, IImageCache imageCache, IAppValues appValues)
+        public UIServices(IRedrawService redrawService, IBindingService bindingService, IFontManager fontManager, IDispatcher dispatcher, IImageCache imageCache, IAppValues appValues, IObjectFactory objectFactory)
         {
             RedrawService = redrawService;
             BindingService = bindingService;
@@ -22,6 +24,7 @@ namespace CrossX.Framework.UI
             Dispatcher = dispatcher;
             ImageCache = imageCache;
             AppValues = appValues;
+            ObjectFactory = objectFactory;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.IoC;
+using System;
 using System.Threading.Tasks;
 
 namespace CrossX.Abstractions.Navigation
@@ -10,5 +11,7 @@ namespace CrossX.Abstractions.Navigation
         Task Navigate(object viewModel);
         Task NavigateBack();
         Task NavigateBackTo<TViewModel>();
+
+        event Action<object> NavigatedTo;
     }
 }
