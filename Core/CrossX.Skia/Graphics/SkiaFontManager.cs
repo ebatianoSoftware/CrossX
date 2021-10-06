@@ -78,7 +78,14 @@ namespace CrossX.Skia.Graphics
                 {
                     typeface = SKTypeface.FromFamilyName(familyName, fontWeight.ToSkia(), SKFontStyleWidth.Normal, italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
                 }
-                font = new SkiaFont(typeface.ToFont(fontSize));
+
+                var skFont = typeface.ToFont(fontSize);
+                font = new SkiaFont(skFont);
+                if (fontWeight == FontWeight.Bold && typeface.FontWeight < (int)SKFontStyleWeight.SemiBold)
+                {
+                    font.SKPaint.FakeBoldText = true;
+                }
+                
                 fonts.Add(fd, font);
             }
 

@@ -1,5 +1,6 @@
 ﻿using CrossX.Abstractions.IoC;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using Xx.Definition;
@@ -16,7 +17,7 @@ namespace CrossX.Framework.XxTools
     {
         private readonly IObjectFactory objectFactory;
 
-        private Dictionary<Tuple<Assembly, string>, XxElement> cache = new Dictionary<Tuple<Assembly, string>, XxElement>();
+        private ConcurrentDictionary<Tuple<Assembly, string>, XxElement> cache = new ConcurrentDictionary<Tuple<Assembly, string>, XxElement>();
 
         public XxFileParserImpl(IObjectFactory objectFactory)
         {
@@ -38,7 +39,7 @@ namespace CrossX.Framework.XxTools
 
                 if(cache)
                 {
-                    this.cache.Add(key, element);
+                    this.cache.TryAdd(key, element);
                 }
             }
             catch (Exception ex)

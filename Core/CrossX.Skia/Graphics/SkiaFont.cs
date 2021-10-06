@@ -15,6 +15,7 @@ namespace CrossX.Skia.Graphics
             {
                 IsStroke = false,
                 IsAntialias = true,
+                SubpixelText = true,
                 //HintingLevel = SKPaintHinting.Normal,
                 //IsAutohinted = true,
                 //LcdRenderText = true,

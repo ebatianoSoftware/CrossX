@@ -10,6 +10,7 @@ using CrossX.Framework.XxTools;
 using System;
 using System.Numerics;
 using System.Reflection;
+using System.Threading;
 using Xx.Definition;
 using Xx.Toolkit;
 
@@ -28,6 +29,8 @@ namespace CrossX.Framework.Core
 
         protected IRedrawService RedrawService { get; private set; }
         protected Window Window { get; private set; }
+
+        public AutoResetEvent MainWindowReady { get; } = new AutoResetEvent(false);
 
         void ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
@@ -159,6 +162,7 @@ namespace CrossX.Framework.Core
                 Console.WriteLine(ex);
                 throw;
             }
+            MainWindowReady.Set();
             return true;
         }
 

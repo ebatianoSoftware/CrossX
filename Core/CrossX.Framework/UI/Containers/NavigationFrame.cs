@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Core;
+﻿using CrossX.Abstractions.Async;
+using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.Navigation;
@@ -7,6 +8,7 @@ using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
 using System.Numerics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xx.Definition;
 using Xx.Toolkit;
@@ -18,6 +20,7 @@ namespace CrossX.Framework.UI.Containers
         private ICommand attachedToFrameCommand;
         private readonly Application application;
         private readonly IXxFileParser fileParser;
+        private readonly IDispatcher dispatcher;
         private INavigationController navigationController;
 
         private View currentView = null;
@@ -62,34 +65,43 @@ namespace CrossX.Framework.UI.Containers
         public NavigationTransform NavigateFromTransform { get; set; }
         
 
-        public NavigationFrame(IUIServices services, Application application, IXxFileParser fileParser) : base(services)
+        public NavigationFrame(IUIServices services, Application application, IXxFileParser fileParser, IDispatcher dispatcher) : base(services)
         {
             this.application = application;
             this.fileParser = fileParser;
+            this.dispatcher = dispatcher;
         }
 
         private void OnNavigationRequested(object sender, NavigationRequest request)
         {
-            (var path, var assembly) = application.LocateView(request.ViewModel);
-            path += ".xml";
-
-            XxElement viewElement = fileParser.Parse(assembly, path, true);
-
-            try
+            var task = Task.Run(() =>
             {
-                var defObjectFactory = Services.ObjectFactory.Create<XxDefinitionObjectFactory>();
-                var page = defObjectFactory.CreateObject<Page>(viewElement);
-                page.RootView.DataContext = request.ViewModel;
-                page.RootView.Parent = this;
-                currentView?.Dispose();
-                currentView = page.RootView;
-                RecalculateLayout();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
+               (var path, var assembly) = application.LocateView(request.ViewModel);
+               path += ".xml";
+
+               XxElement viewElement = fileParser.Parse(assembly, path, true);
+
+               try
+               {
+                    var defObjectFactory = Services.ObjectFactory.Create<XxDefinitionObjectFactory>();
+                    var page = defObjectFactory.CreateObject<Page>(viewElement);
+
+                    dispatcher.BeginInvoke(() =>
+                    {
+                        page.RootView.DataContext = request.ViewModel;
+                        page.RootView.Parent = this;
+                        currentView?.Dispose();
+                        currentView = page.RootView;
+                        RecalculateLayout();
+                    });
+               }
+               catch (Exception ex)
+               {
+                   Console.WriteLine(ex);
+                   throw;
+               }
+            });
+            request.AddNavigationTask(task);
         }
 
         protected override void OnRender(Canvas canvas, float opacity)

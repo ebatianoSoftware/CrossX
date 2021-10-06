@@ -24,25 +24,20 @@ namespace CrossX.Framework.ApplicationDefinition
         {
             set
             {
-                var parts = value.Split(';');
-                if (parts.Length == 2)
+                using (var stream = Utils.OpenEmbededResource(value))
                 {
-                    var assembly = Assembly.Load(parts[1]);
-                    using (var stream = assembly.GetManifestResourceStream(parts[0]))
+                    if (stream != null)
                     {
-                        if (stream != null)
+                        try
                         {
-                            try
-                            {
-                                var parser = objectFactory.Create<XxFileParser>(elementTypeMapping);
-                                var element = parser.Parse(stream);
+                            var parser = objectFactory.Create<XxFileParser>(elementTypeMapping);
+                            var element = parser.Parse(stream);
 
-                                definitionObjectFactory.CreateObject<ApplicationElement>(element);
-                            }
-                            catch
-                            {
+                            definitionObjectFactory.CreateObject<ApplicationElement>(element);
+                        }
+                        catch
+                        {
 
-                            }
                         }
                     }
                 }

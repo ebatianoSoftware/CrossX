@@ -84,21 +84,9 @@ namespace CrossX.Framework.Graphics
 
         private Task<Image> LoadImageFromResource(string uri)
         {
-            var assemblyMatches = Regex.Matches(uri, @"\[[A-Za-z0-9\.]+\]");
-            if (assemblyMatches.Count != 1)
-            {
-                throw new InvalidDataException();
-            }
-            var assemblyName = assemblyMatches[0].Value.Trim('[', ']');
-            var path = uri.Split(']').Last();
-            var resourcePath = assemblyName + path.Replace('/', '.');
-            var resourceAssembly = AppDomain.CurrentDomain.GetAssemblies().First(o => o.GetName().Name == assemblyName);
-
-            if (resourceAssembly == null) throw new InvalidDataException();
-
             return systemDispatcher.InvokeAsync(() =>
-            {
-                using (var stream = resourceAssembly.GetManifestResourceStream(resourcePath))
+            {       
+                using (var stream = Utils.OpenEmbededResource(uri))
                 {
                     var image = objectFactory.Create<Image>(stream);
                     return AddImage(uri, image);

@@ -7,6 +7,20 @@ namespace CrossX.Abstractions.Mvvm
     {
         private readonly Action<object> execute;
         private readonly Func<object, bool> canExecute;
+        private bool enabled = true;
+
+        public bool Enabled
+        {
+            get => enabled; 
+            set
+            {
+                enabled = value;
+                if (canExecute == null)
+                {
+                    FireCanExecuteChanged();
+                }
+            }
+        }
 
         public event EventHandler CanExecuteChanged;
 
@@ -27,7 +41,7 @@ namespace CrossX.Abstractions.Mvvm
             this.canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter) => canExecute?.Invoke(parameter) ?? true;
+        public bool CanExecute(object parameter) => canExecute?.Invoke(parameter) ?? enabled;
         public void Execute(object parameter) => execute?.Invoke(parameter);
 
         public void FireCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);

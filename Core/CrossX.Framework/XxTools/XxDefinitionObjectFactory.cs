@@ -119,9 +119,10 @@ namespace CrossX.Framework.XxTools
             {
                 foreach(var prop in style.Properties)
                 {
-                    if(!newDictionary.ContainsKey(prop.Key))
+                    var propInfo = type.GetProperty(prop.Key.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
+                    if (!newDictionary.ContainsKey(propInfo))
                     {
-                        newDictionary.Add(prop.Key, prop.Value);
+                        newDictionary.Add(propInfo, prop.Value);
                     }
                 }
             }

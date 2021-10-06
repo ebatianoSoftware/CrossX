@@ -20,6 +20,7 @@ namespace CrossX.Framework.Navigation
 
         public event EventHandler<NavigationRequest> NavigationRequested;
         public event Action<object> NavigatedTo;
+        public event Action<object> NavigationStarted;
 
         public NavigationImpl(IServicesProvider servicesProvider, IDispatcher dispatcher)
         {
@@ -92,6 +93,8 @@ namespace CrossX.Framework.Navigation
 
         private async Task NavigateIntenal(object viewModel)
         {
+            NavigationStarted?.Invoke(viewModel);
+
             var request = new NavigationRequest(viewModel);
             NavigationRequested?.Invoke(this, request);
 

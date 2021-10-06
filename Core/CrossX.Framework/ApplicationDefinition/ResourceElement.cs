@@ -11,6 +11,8 @@ namespace CrossX.Framework.ApplicationDefinition
         public Name Key { get; set; }
         public object Value { get; private set; }
 
+        public Name Base { get; set; }
+
         public void InitChildren(IEnumerable<object> elements)
         {
             Value = elements.FirstOrDefault();

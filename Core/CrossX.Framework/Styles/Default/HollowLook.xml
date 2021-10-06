@@ -13,7 +13,7 @@
     </Resource>
 
     <Resource Key="SystemCheckBoxTickDrawable">
-      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="15" FontWeight="Bold" Text="&#62102;" OffsetX="-0.5" OffsetY="1.5"/>
+      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="13" FontWeight="Bold" Text="&#62102;" OffsetX="-0.3" OffsetY="1.5"/>
     </Resource>
 
     <Resource Key="SystemRadioDrawable">

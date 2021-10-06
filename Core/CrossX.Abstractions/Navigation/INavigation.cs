@@ -12,6 +12,7 @@ namespace CrossX.Abstractions.Navigation
         Task NavigateBack();
         Task NavigateBackTo<TViewModel>();
 
+        event Action<object> NavigationStarted;
         event Action<object> NavigatedTo;
     }
 }

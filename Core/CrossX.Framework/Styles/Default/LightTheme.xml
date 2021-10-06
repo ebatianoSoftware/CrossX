@@ -7,6 +7,9 @@
 
   <Theme>
     <Color Key="SystemBackgroundColor" Value="#eee"/>
+    <Color Key="SystemPanelBackgroundColor" Value="#e4e4e4"/>
+    <Color Key="SystemPanelBackgroundColorLevel2" Value="#ddd"/>
+    
     <Color Key="SystemForegroundColor" Value="#222"/>
     <Color Key="SystemForegroundColorDisabled" Value="#3000"/>
 

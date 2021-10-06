@@ -1,5 +1,7 @@
 ﻿using CrossX.Framework.Graphics;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace CrossX.Framework
 {
@@ -53,6 +55,20 @@ namespace CrossX.Framework
                     return Alignment.Start;
             }
             return Alignment.Stretch;
+        }
+
+        public static Stream OpenEmbededResource(string uri)
+        {
+            var parts = uri.Split(';');
+            if (parts.Length == 2)
+            {
+                var assembly = Assembly.Load(parts[1]);
+                var stream = assembly.GetManifestResourceStream(parts[0]);
+
+                if (stream == null) throw new FileNotFoundException();
+                return stream;
+            }
+            throw new ArgumentException("Invalid uri for embeded resource", nameof(uri));
         }
     }
 }

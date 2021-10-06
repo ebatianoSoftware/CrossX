@@ -11,6 +11,10 @@
     <Length Key="SystemTextFontSize" Value="15"/>
     <Length Key="SystemButtonTextFontSize" Value="18"/>
 
+    <Length Key="SystemH1FontSize" Value="40"/>
+    <Length Key="SystemH2FontSize" Value="30"/>
+    <Length Key="SystemH3FontSize" Value="20"/>
+    
     <FontWeight Key="SystemTextFontWeight" Value="Light"/>
     <FontWeight Key="SystemButtonTextFontWeight" Value="Normal"/>
 
@@ -20,10 +24,27 @@
 
     <String Key="SystemIconFontFace" Value="FluentSystemIcons-Filled"/>
     <Length Key="SystemCheckRadioSize" Value="15"/>
+    <Length Key="SystemCheckRadioSpacing" Value="6"/>
 
   </Theme>
   
   <Styles>
+    <Style Selector="H1">
+      <ui:Label FontSize="{Theme SystemH1FontSize}"/>
+    </Style>
+
+    <Style Selector="H2">
+      <ui:Label FontSize="{Theme SystemH2FontSize}"/>
+    </Style>
+
+    <Style Selector="H3">
+      <ui:Label FontSize="{Theme SystemH3FontSize}"/>
+    </Style>
+
+    <Style Selector="H4">
+      <ui:Label FontSize="{Theme SystemTextFontSize}" FontWeight="SemiBold" Margin="0,10,0,0"/>
+    </Style>
+    
     <Style>
       <ui:Button BackgroundColor="{Theme SystemButtonBackgroundColor}"
                  BackgroundColorOver="{Theme SystemButtonBackgroundColorOver}"
@@ -102,6 +123,7 @@
                    FontWeight="{Theme SystemTextFontWeight}"
                    ForegroundColor="{Theme SystemForegroundColor}"
                    BoxSize="{Theme SystemCheckRadioSize}"
+                   Spacing="{Theme SystemCheckRadioSpacing}"
                    BoxDrawable="{Resource SystemCheckBoxDrawable}"
                    TickMarkDrawable="{Resource SystemCheckBoxTickDrawable}"
                    />
@@ -124,6 +146,7 @@
                       FontWeight="{Theme SystemTextFontWeight}"
                       ForegroundColor="{Theme SystemForegroundColor}"
                       BoxSize="{Theme SystemCheckRadioSize}"
+                      Spacing="{Theme SystemCheckRadioSpacing}"
                       BoxDrawable="{Resource SystemRadioDrawable}"
                       TickMarkDrawable="{Resource SystemRadioTickDrawable}"
                       />

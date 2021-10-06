@@ -145,9 +145,9 @@ namespace CrossX.WindowsForms
 
         public MainForm(ICoreApplication app, IServicesProvider servicesProvider = null)
         {
-            Hide();
+            Visible = false;
             InitializeComponent();
-            Hide();
+            Visible = false;
 
             var scopeBuilder = new ScopeBuilder(servicesProvider);
             scopeBuilder.WithSkia();
@@ -169,16 +169,19 @@ namespace CrossX.WindowsForms
             skglControl.PaintSurface += SkglControl_PaintSurface;
             app.Initialize(services);
             this.app = app;
-
+            
             MainLoop.Initialize();
-            Show();
-            BringToFront();
-            skglControl.Invalidate();
+            
             skglControl.KeyDown += SkglControl_KeyDown;
             skglControl.MouseMove += SkglControl_MouseMove;
             skglControl.MouseDown += SkglControl_MouseDown;
             skglControl.MouseUp += SkglControl_MouseUp;
             skglControl.MouseLeave += SkglControl_MouseLeave;
+
+            app.MainWindowReady.WaitOne();
+            skglControl.Invalidate();
+            BringToFront();
+            Visible = true;
         }
 
         private void SkglControl_MouseLeave(object sender, EventArgs args)

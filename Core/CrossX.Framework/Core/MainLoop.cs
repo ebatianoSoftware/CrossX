@@ -63,8 +63,6 @@ namespace CrossX.Framework.Core
             _stopwatch.Start();
             coreApplication.Run();
 
-            RequestRedraw();
-
             var lastUpdateTimeSpan = _stopwatch.Elapsed;
             
             while (!cancellationToken.IsCancellationRequested)
@@ -115,7 +113,7 @@ namespace CrossX.Framework.Core
                 RequestRedraw();
             }
 
-            if(systemDispatcher != null)
+            if (systemDispatcher != null)
             {
                 systemDispatcher.DispatcherThread = Thread.CurrentThread;
             }

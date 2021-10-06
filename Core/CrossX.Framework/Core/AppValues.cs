@@ -28,18 +28,30 @@ namespace CrossX.Framework.Core
                 {
                     yield return classStyle;
                 }
+
+                var baseType = type.BaseType;
+                while(baseType != typeof(object) && !baseType.IsAbstract)
+                {
+                    if (styles.TryGetValue(new SelectorKey { Type = baseType, Name = cl }, out var classStyle2))
+                    {
+                        yield return classStyle2;
+                    }
+                    baseType = baseType.BaseType;
+                }
             }
 
             if (styles.TryGetValue(new SelectorKey { Type = type, Name = "" }, out var typeStyle))
             {
                 yield return typeStyle;
-            }
 
-            if( type.BaseType != typeof(object) && !type.BaseType.IsAbstract)
-            {
-                foreach(var style in GetStyles(type.BaseType, classes))
+                var baseType = type.BaseType;
+                while (baseType != typeof(object) && !baseType.IsAbstract)
                 {
-                    yield return style;
+                    if (styles.TryGetValue(new SelectorKey { Type = baseType, Name = "" }, out var classStyle2))
+                    {
+                        yield return classStyle2;
+                    }
+                    baseType = baseType.BaseType;
                 }
             }
         }

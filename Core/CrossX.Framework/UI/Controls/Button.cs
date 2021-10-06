@@ -151,6 +151,9 @@ namespace CrossX.Framework.UI.Controls
                 case nameof(CommandParameter):
                     Command_CanExecuteChanged(this, EventArgs.Empty);
                     break;
+
+                case nameof(BackgroundDrawable):
+                    break;
             }
         }
 

@@ -68,6 +68,10 @@ namespace CrossX.Framework.UI.Controls
                 OnClick,
                 onHoveredAction: g=>g.SetCursor = CursorType.Hand
                 );
+
+            HorizontalAlignment = Alignment.Start;
+            VerticalAlignment = Alignment.Start;
+
         }
 
         protected abstract void OnClick();

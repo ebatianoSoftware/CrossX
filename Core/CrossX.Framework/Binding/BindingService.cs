@@ -3,6 +3,7 @@ using CrossX.Framework.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Collections.Concurrent;
 
 namespace CrossX.Framework.Binding
 {
@@ -20,42 +21,51 @@ namespace CrossX.Framework.Binding
 
         private void AddBinding(BaseBinding binding)
         {
-            for (var idx = 0; idx < bindings.Count;)
+            lock (bindings)
             {
-                if(bindings[idx].Target == binding.Target && bindings[idx].TargetProperty == binding.TargetProperty)
+                for (var idx = 0; idx < bindings.Count;)
                 {
-                    bindings[idx].Dispose();
-                    bindings.RemoveAt(idx);
-                    continue;
+                    if (bindings[idx].Target == binding.Target && bindings[idx].TargetProperty == binding.TargetProperty)
+                    {
+                        bindings[idx].Dispose();
+                        bindings.RemoveAt(idx);
+                        continue;
+                    }
+                    ++idx;
                 }
-                ++idx;
+                bindings.Add(binding);
             }
-            bindings.Add(binding);
         }
 
         public void RemoveBindings(object target)
         {
-            for(var idx =0; idx < bindings.Count;)
+            lock (bindings)
             {
-                if(bindings[idx].Target == target)
+                for (var idx = 0; idx < bindings.Count;)
                 {
-                    bindings.RemoveAt(idx);
-                    continue;
+                    if (bindings[idx].Target == target)
+                    {
+                        bindings.RemoveAt(idx);
+                        continue;
+                    }
+                    ++idx;
                 }
-                ++idx;
             }
         }
 
         public void RemoveBinding(object target, string propertyName)
         {
-            for (var idx = 0; idx < bindings.Count;)
+            lock (bindings)
             {
-                if (bindings[idx].Target == target && bindings[idx].TargetProperty.Name == propertyName)
+                for (var idx = 0; idx < bindings.Count;)
                 {
-                    bindings.RemoveAt(idx);
-                    continue;
+                    if (bindings[idx].Target == target && bindings[idx].TargetProperty.Name == propertyName)
+                    {
+                        bindings.RemoveAt(idx);
+                        continue;
+                    }
+                    ++idx;
                 }
-                ++idx;
             }
         }
 

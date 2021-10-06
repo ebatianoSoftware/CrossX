@@ -13,6 +13,7 @@ namespace CrossX.Framework.UI.Controls
 
         public CheckBox(IUIServices services) : base(services)
         {
+
         }
 
         protected override void OnClick()

@@ -3,6 +3,7 @@ using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using System;
 using System.Numerics;
+using System.Threading;
 
 namespace CrossX.Framework.Core
 {
@@ -17,5 +18,6 @@ namespace CrossX.Framework.Core
         void OnPointerUp(PointerId pointerId, Vector2 position);
         void OnPointerMove(PointerId pointerId, Vector2 position);
         void OnPointerCancel(PointerId pointerId);
+        AutoResetEvent MainWindowReady { get; }
     }
 }
