@@ -28,7 +28,7 @@ namespace CrossX.Framework.UI.Controls
             {
                 if(SetProperty(ref stretch, value))
                 {
-                    Services.RedrawService.RequestRedraw();
+                    Invalidate();
                 }
             }
         }

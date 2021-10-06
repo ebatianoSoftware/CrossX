@@ -53,7 +53,7 @@ namespace CrossX.Framework.UI.Containers
             if (layoutInvalid)
             {
                 RecalculateLayout();
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
             }
 
             for (var idx = 0; idx < Children.Count; ++idx)

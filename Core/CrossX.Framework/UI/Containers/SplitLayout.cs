@@ -140,7 +140,7 @@ namespace CrossX.Framework.UI.Containers
             if (layoutInvalid)
             {
                 RecalculateLayout();
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
             }
 
             firstView?.Update(time);

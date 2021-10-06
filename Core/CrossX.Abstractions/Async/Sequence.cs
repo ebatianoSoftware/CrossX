@@ -6,10 +6,10 @@ namespace CrossX.Abstractions.Async
 {
     public abstract class Sequence
     {
-        internal delegate Sequence CreateSequenceDelegate(int frames, double seconds, Func<bool> condition, IEnumerator<Sequence> enumerator);
+        public delegate Sequence CreateSequenceDelegate(int frames, double seconds, Func<bool> condition, IEnumerator<Sequence> enumerator);
 
-        internal static CreateSequenceDelegate CreateSequenceFunc;
-        internal static Sequence NextFrameSequence;
+        public static CreateSequenceDelegate CreateSequenceFunc;
+        public static Sequence NextFrameSequence;
 
         public abstract bool IsFinished { get; }
         public abstract bool IsCanceled { get; }

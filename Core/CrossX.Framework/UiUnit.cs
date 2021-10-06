@@ -2,6 +2,6 @@
 {
     public static class UiUnit
     {
-        public static float PixelsPerUnit { internal set; get; } = 1;
+        public static float PixelsPerUnit { set; get; } = 1;
     }
 }

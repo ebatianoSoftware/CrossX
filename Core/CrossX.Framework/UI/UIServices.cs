@@ -9,7 +9,6 @@ namespace CrossX.Framework.UI
 {
     public class UIServices : IUIServices
     {
-        public IRedrawService RedrawService { get; }
         public IBindingService BindingService { get; }
         public IFontManager FontManager { get; }
         public IDispatcher Dispatcher { get; }
@@ -18,11 +17,10 @@ namespace CrossX.Framework.UI
         public IObjectFactory ObjectFactory { get; }
         public ITooltipService TooltipService { get; }
 
-        public UIServices(IRedrawService redrawService, IBindingService bindingService, IFontManager fontManager, 
+        public UIServices(IBindingService bindingService, IFontManager fontManager, 
             IDispatcher dispatcher, IImageCache imageCache, IAppValues appValues, 
             IObjectFactory objectFactory, ITooltipService tooltipService)
         {
-            RedrawService = redrawService;
             BindingService = bindingService;
             FontManager = fontManager;
             Dispatcher = dispatcher;

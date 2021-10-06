@@ -19,6 +19,7 @@ namespace CrossX.Framework.UI.Containers
         private readonly Application application;
         private readonly IXxFileParser fileParser;
         private readonly IDispatcher dispatcher;
+        private readonly IViewLocator viewLocator;
         private INavigationController navigationController;
 
         private View currentView = null;
@@ -63,18 +64,19 @@ namespace CrossX.Framework.UI.Containers
         public NavigationTransform NavigateFromTransform { get; set; }
         
 
-        public NavigationFrame(IUIServices services, Application application, IXxFileParser fileParser, IDispatcher dispatcher) : base(services)
+        public NavigationFrame(IUIServices services, Application application, IXxFileParser fileParser, IDispatcher dispatcher, IViewLocator viewLocator) : base(services)
         {
             this.application = application;
             this.fileParser = fileParser;
             this.dispatcher = dispatcher;
+            this.viewLocator = viewLocator;
         }
 
         private void OnNavigationRequested(object sender, NavigationRequest request)
         {
             var task = Task.Run(() =>
             {
-               (var path, var assembly) = application.LocateView(request.ViewModel);
+               (var path, var assembly) = viewLocator.LocateView(request.ViewModel);
                path += ".xml";
 
                XxElement viewElement = fileParser.Parse(assembly, path, true);
@@ -142,7 +144,7 @@ namespace CrossX.Framework.UI.Containers
             var size = child.CalculateSize(Bounds.Size);
             var position = child.CalculatePosition(size, Bounds.Size);
             child.Bounds = new RectangleF(position, size);
-            Services.RedrawService.RequestRedraw();
+            Invalidate();
         }
 
         public void InvalidateLayout()

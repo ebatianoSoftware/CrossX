@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CrossX.Framework.Async
 {
-    internal sealed class Sequencer : ISequencer
+    public sealed class Sequencer : ISequencer
     {
         private readonly List<Sequence> sequences = new List<Sequence>();
         private readonly object objLock = new object();

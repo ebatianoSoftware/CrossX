@@ -47,7 +47,7 @@ namespace CrossX.Framework.UI
                     RaisePropertyChanged(nameof(ActualWidth));
                     RaisePropertyChanged(nameof(ActualHeight));
                     RecalculateLayout();
-                    Services.RedrawService.RequestRedraw();
+                    Invalidate();
                 }
             }
         }
@@ -233,7 +233,7 @@ namespace CrossX.Framework.UI
         {
             if (SetProperty(ref property, value, propertyName))
             {
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
                 return true;
             }
             return false;
@@ -244,10 +244,12 @@ namespace CrossX.Framework.UI
             if (SetProperty(ref property, value, propertyName))
             {
                 Parent?.InvalidateLayout();
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
                 return true;
             }
             return false;
         }
+
+        protected void Invalidate() => Parent?.Window?.Redraw();
     }
 }

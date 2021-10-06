@@ -2,38 +2,28 @@
 using CrossX.Framework.ApplicationDefinition;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Graphics;
-using CrossX.Framework.Input;
 using CrossX.Framework.IoC;
 using CrossX.Framework.Services;
 using CrossX.Framework.UI;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
-using System.Numerics;
-using System.Reflection;
-using System.Threading;
 using Xx.Definition;
 using Xx.Toolkit;
 
 namespace CrossX.Framework.Core
 {
+    public delegate void InitServicesDelegate(IServicesProvider systemServices, IScopeBuilder scopeBuilder);
+
     public abstract class Application: ICoreApplication
     {
-        public delegate void InitServicesDelegate(IServicesProvider systemServices, IScopeBuilder scopeBuilder);
         protected IServicesProvider Services { get; private set; }
-        protected IObjectFactory ObjectFactory { get; private set; }
-
-        private readonly GestureProcessor gestureProcessor = new GestureProcessor();
+        protected IWindowsService WindowsService { get; private set; }
 
         public event InitServicesDelegate BeforeInitServices;
         public event InitServicesDelegate AfterInitServices;
 
-        protected IRedrawService RedrawService { get; private set; }
-        protected Window Window { get; private set; }
-
-        public AutoResetEvent MainWindowReady { get; } = new AutoResetEvent(false);
-
-        void ICoreApplication.Initialize(IServicesProvider servicesProvider)
+        IServicesProvider ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
             LoadFonts(servicesProvider.GetService<IFontManager>());
 
@@ -57,12 +47,18 @@ namespace CrossX.Framework.Core
 
             BeforeInitServices?.Invoke(servicesProvider, builder);
             InitServices(servicesProvider, builder);
+
+            if (!builder.TryResolveInstance<IViewLocator>(out var _))
+            {
+                builder.WithType<DefaultViewLocator>().As<IViewLocator>().AsSingleton();
+            }
+
             AfterInitServices?.Invoke(servicesProvider, builder);
 
             Services = builder.Build();
+            WindowsService = Services.GetService<IWindowsService>();
 
-            RedrawService = servicesProvider.GetService<IRedrawService>();
-            ObjectFactory = Services.GetService<IObjectFactory>();
+            return Services;
         }
 
         protected virtual void LoadFonts(IFontManager fontManager)
@@ -103,108 +99,18 @@ namespace CrossX.Framework.Core
             }
         }
 
-        void ICoreApplication.Run()
+        void ICoreApplication.Load()
         {
             StartApp();
         }
 
-        void ICoreApplication.DoRender(Canvas canvas) => Render(canvas);
-
-        void ICoreApplication.DoUpdate(TimeSpan ellapsedTime, Size size) => Update(ellapsedTime, size);
-
         protected abstract void StartApp();
-
-        protected virtual void Update(TimeSpan ellapsedTime, Size size)
-        {
-            if (Window.Size != size)
-            {
-                Window.Size = size;
-                RedrawService.RequestRedraw();
-            }
-
-            Window.Update((float)ellapsedTime.TotalSeconds);
-        }
-
-        protected virtual void Render(Canvas canvas)
-        {
-            Window?.Render(canvas);
-        }
 
         protected virtual void InitServices(IServicesProvider systemServices, IScopeBuilder scopeBuilder)
         {
 
         }
 
-        public virtual (string path, Assembly assembly) LocateView(object viewModel)
-        {
-            var vmType = viewModel.GetType();
-            var viewNamespace = vmType.Namespace.Replace("ViewModels", "Views");
-            var viewName = vmType.Name.Replace("ViewModel", "View");
-            return (viewNamespace + '.' + viewName, vmType.Assembly);
-        }
-
-        protected bool Load<TViewModel>(TViewModel vm = null) where TViewModel: class
-        {
-            if(vm == null)
-            {
-                vm = ObjectFactory.Create<TViewModel>();
-            }
-            var (viewPath, assembly) = LocateView(vm);
-            viewPath += ".xml";
-
-            XxElement viewElement = Services.GetService<IXxFileParser>().Parse(assembly, viewPath);
-
-            try
-            {
-                var defObjectFactory = ObjectFactory.Create<XxDefinitionObjectFactory>();
-                Window = defObjectFactory.CreateObject<Window>(viewElement);
-                Window.DataContext = vm;
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
-            MainWindowReady.Set();
-            return true;
-        }
-
-        void ICoreApplication.OnPointerDown(PointerId pointerId, Vector2 position)
-        {
-            var gesture = gestureProcessor.OnPointerDown(pointerId, position);
-            PropagateGesture(gesture);
-        }
-
-        void ICoreApplication.OnPointerUp(PointerId pointerId, Vector2 position)
-        {
-            var gesture = gestureProcessor.OnPointerUp(pointerId, position);
-            PropagateGesture(gesture);
-        }
-
-        void ICoreApplication.OnPointerMove(PointerId pointerId, Vector2 position)
-        {
-            var gesture = gestureProcessor.OnPointerMove(pointerId, position);
-            PropagateGesture(gesture);
-        }
-
-        void ICoreApplication.OnPointerCancel(PointerId pointerId)
-        {
-            var gesture = gestureProcessor.OnPointerCancel(pointerId);
-            PropagateGesture(gesture);
-        }
-
-        private void PropagateGesture(Gesture gesture)
-        {
-            if (gesture == null) return;
-
-            if(!Window.RootView.PreviewGesture(gesture))
-            {
-                Window.RootView.ProcessGesture(gesture);
-            }
-
-            Services.GetService<INativeWindow>().Cursor = gesture.SetCursor;
-        }
-
-        public void Dispose() => Window.Dispose();
+        public void Dispose() { }
     }
 }
