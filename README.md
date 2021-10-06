@@ -14,11 +14,42 @@ CrossX comes with many built in layouts and controls to build and design apps qu
 
 ⚠️*Framework is in early stage of development and cannot be used yet. Please come back later to check its app development readiness status.*
 
+✔️Label
+✔️Button
+✔️IconButton
+✔️ImageView 
+✔️Slider 
+✔️ProgressBar
+✔️ToggleButton 
+✔️CheckBox
+✔️RadioButton
+✔️ItemsView
+✔️FrameLayout
+✔️StackLayout
+✔️WrapLayout
+✔️SplitLayout
+✔️ToolTips
+
+🔻ContextMenu
+🔻ScrollBar
+🔻ScrollView
+🔻TreeView
+🔻ListBox
+🔻TextBox
+🔻Text
+🔻HtmlView
+
+
+
+
 ## MVVM Pattern
 The framework is strongly based on Model-View-ViewModel pattern. No view code by default (can be realised though with specialized control subclassing) and heavy use of bindings force you to think in Model->ViewModel->View direction in every aspect.
 
 ## Skia based rendering
 Rendering currently is realised with [SkiaSharp](https://github.com/mono/SkiaSharp) which allows you to create beautiful applications.
+
+## Other backends planned
+I plan adding more backends - DirectX, OpenGL, Metal for fast rendering (skipping Skia backend totally) with possibility to access those backends native APIs.
 
 ## XX Definition Files
 XX definition files are XML files used to describe views and define styles and resources. I chose a XAML-like approach but simpler in its form. The XX "language" will surely evolve into something more in the future. 
@@ -45,8 +76,8 @@ To improve developer experience, a small tool - XxSchemaGenerator (xxsgen) was c
   
   <Button Width="200" Text="Test Button" Margin="0,0,0,50"
           HorizontalAlignment="Center" VerticalAlignment="End"
-          BackgroundColor="White" TextColor="{Binding BackgroundColor, Source: Parent}"
-          Command="{Binding TestCommand}" CommandParameter="{Binding Text, Source: Self}"/>
+          BackgroundColor="{Theme SystemBackgroundColor}"
+          Command="{Binding TestCommand}" CommandParameter="{Binding}"/>
   
 </FrameLayout>
 ```
