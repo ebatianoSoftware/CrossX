@@ -1,27 +1,37 @@
-﻿using CrossX.Framework.Graphics;
-using CrossX.Framework.UI.Containers;
+﻿using CrossX.Framework.Drawables;
+using CrossX.Framework.Graphics;
+using CrossX.Framework.Input;
+using CrossX.Framework.XxTools;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Xx;
+using Xx.Definition;
 
 namespace CrossX.Framework.UI
 {
     [XxSchemaBindable(true)]
     [XxSchemaExport]
-    public abstract class View : INotifyPropertyChanged
+    public abstract class View : UIBindingContext, IDisposable, IStoreElement
     {
         private RectangleF bounds;
-        private Alignment horizontalAlignment;
-        private Alignment verticalAlignment;
+        private Alignment horizontalAlignment = Alignment.Stretch;
+        private Alignment verticalAlignment = Alignment.Stretch;
         private Length width = Length.Auto;
         private Length height = Length.Auto;
         private Color backgroundColor = Color.Transparent;
         private Thickness margin = Thickness.Zero;
-        private bool visible;
+        private bool visible = true;
+        private Drawable backgroundDrawable;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private IViewParent parent;
+        private float opacity = 1;
+        private IReadOnlyDictionary<PropertyInfo, object> properties;
+
+        protected readonly IUIServices Services;
+
         public RectangleF ScreenBounds => Parent == null ? Bounds : Bounds.Offset(Parent.ScreenBounds.TopLeft);
 
         [XxSchemaIgnore]
@@ -34,34 +44,62 @@ namespace CrossX.Framework.UI
                 if (bounds != value)
                 {
                     bounds = value;
-                    OnPropertyChanged(nameof(ActualWidth));
-                    OnPropertyChanged(nameof(ActualHeight));
+                    RaisePropertyChanged(nameof(ActualWidth));
+                    RaisePropertyChanged(nameof(ActualHeight));
                     RecalculateLayout();
+                    Services.RedrawService.RequestRedraw();
                 }
             }
         }
+
+        public Drawable BackgroundDrawable { get => backgroundDrawable; set => SetPropertyAndRedraw(ref backgroundDrawable, value); }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
         public Length Width { get => width; set => SetProperty(ref width, value); }
         public Length Height { get => height; set => SetProperty(ref height, value); }
         public Thickness Margin { get => margin; set => SetProperty(ref margin, value); }
-        public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
+        public Color BackgroundColor { get => backgroundColor; set => SetPropertyAndRedraw(ref backgroundColor, value); }
+
+        public float Opacity { get => opacity; set => SetPropertyAndRedraw(ref opacity, value); }
 
         [XxSchemaBindable(false)]
         public Name Id { get; set; }
 
         [XxSchemaBindable(false)]
-        public Classes Classes { get; set; }
+        public Classes Classes { set { } }
 
-        public bool Visible { get => visible; set => SetProperty(ref visible, value); }
+        public bool Visible { get => visible; set => SetPropertyAndRecalcLayout(ref visible, value); }
+
         public float ActualWidth => Bounds.Width;
+
         public float ActualHeight => Bounds.Height;
 
-        public ViewContainer Parent { get; internal set; }
-
-        public void Render(Canvas canvas)
+        public IViewParent Parent
         {
-            OnRender(canvas);
+            get => parent;
+            internal set
+            {
+                parent = value;
+                if (DataContext == null && parent != null)
+                {
+                    Services.BindingService.AddDataContextBinding(this, parent);
+                }
+            }
+        }
+
+        public bool DisplayVisible => Visible && (Parent?.DisplayVisible ?? true);
+
+        XxElement IStoreElement.Element { set => properties = value.Properties; }
+
+        protected View(IUIServices services)
+        {
+            Services = services;
+        }
+
+        public void Render(Canvas canvas, float opacity = 1)
+        {
+            if (!Visible) return;
+            OnRender(canvas, opacity * Opacity);
         }
 
         public void Update(float time)
@@ -69,16 +107,23 @@ namespace CrossX.Framework.UI
             OnUpdate(time);
         }
 
-        public virtual void RecalculateLayout()
+        protected virtual void RecalculateLayout()
         {
 
         }
 
-        protected virtual void OnRender(Canvas canvas)
+        protected virtual void OnRender(Canvas canvas, float opacity)
         {
             if (BackgroundColor.A > 0)
             {
-                canvas.FillRect(ScreenBounds, BackgroundColor);
+                if (BackgroundDrawable == null)
+                {
+                    canvas.FillRect(ScreenBounds, BackgroundColor * opacity);
+                }
+                else
+                {
+                    BackgroundDrawable.Draw(canvas, ScreenBounds, BackgroundColor * opacity);
+                }
             }
         }
 
@@ -89,24 +134,20 @@ namespace CrossX.Framework.UI
 
         public virtual SizeF CalculateSize(SizeF parentSize)
         {
-            float onePixelUnit = 1;
+            var parentWidth = parentSize.Width - Margin.Left.Calculate() - Margin.Right.Calculate();
+            var parentHeight = parentSize.Height - Margin.Top.Calculate() - Margin.Bottom.Calculate();
 
-            var parentWidth = parentSize.Width - Margin.Left.Calculate(onePixelUnit) - Margin.Right.Calculate(onePixelUnit);
-            var parentHeight = parentSize.Height - Margin.Top.Calculate(onePixelUnit) - Margin.Bottom.Calculate(onePixelUnit);
-
-            var width = Width.IsAuto ? parentWidth : Width.Calculate(onePixelUnit, parentWidth);
-            var height = Height.IsAuto ? parentHeight : Height.Calculate(onePixelUnit, parentHeight);
+            var width = Width.IsAuto ? parentWidth : Width.Calculate(parentWidth);
+            var height = Height.IsAuto ? parentHeight : Height.Calculate(parentHeight);
             return new SizeF(width, height);
         }
 
         public virtual Vector2 CalculatePosition(SizeF calculatedSize, SizeF parentSize)
         {
-            float onePixelUnit = 1;
-
-            var marginLeft = Margin.Left.Calculate(onePixelUnit);
-            var marginRight = Margin.Right.Calculate(onePixelUnit);
-            var marginTop = Margin.Top.Calculate(onePixelUnit);
-            var marginBottom = Margin.Bottom.Calculate(onePixelUnit);
+            var marginLeft = Margin.Left.Calculate();
+            var marginRight = Margin.Right.Calculate();
+            var marginTop = Margin.Top.Calculate();
+            var marginBottom = Margin.Bottom.Calculate();
 
             float x = marginLeft;
             float y = marginTop;
@@ -136,18 +177,77 @@ namespace CrossX.Framework.UI
             return new Vector2(x, y);
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        public bool PreviewGesture(Gesture gesture)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (!DisplayVisible || !Visible) return false;
+            if (OnPreviewGesture(gesture)) return true;
+            return false;
         }
 
-        protected bool SetProperty<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
+        protected virtual bool OnPreviewGesture(Gesture gesture)
         {
-            if (EqualityComparer<T>.Default.Equals(property, value)) return false;
+            return false;
+        }
 
-            property = value;
-            OnPropertyChanged(propertyName);
-            return true;
+        public bool ProcessGesture(Gesture gesture)
+        {
+            if (!DisplayVisible || !Visible) return false;
+            if (OnProcessGesture(gesture)) return true;
+            return ScreenBounds.Contains(gesture.Position);
+        }
+        protected virtual bool OnProcessGesture(Gesture gesture)
+        {
+            return false;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            Services.BindingService.RemoveBindings(this);
+            Services.TooltipService.HideTooltip(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                
+            }
+        }
+
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case nameof(Width):
+                case nameof(Height):
+                case nameof(HorizontalAlignment):
+                case nameof(VerticalAlignment):
+                case nameof(Margin):
+                    Parent?.InvalidateLayout();
+                    break;
+            }
+        }
+
+        protected virtual bool SetPropertyAndRedraw<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
+        {
+            if (SetProperty(ref property, value, propertyName))
+            {
+                Services.RedrawService.RequestRedraw();
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual bool SetPropertyAndRecalcLayout<T>(ref T property, T value, [CallerMemberName] string propertyName = "")
+        {
+            if (SetProperty(ref property, value, propertyName))
+            {
+                Parent?.InvalidateLayout();
+                Services.RedrawService.RequestRedraw();
+                return true;
+            }
+            return false;
         }
     }
 }

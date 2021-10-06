@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema attributeFormDefault="unqualified" targetNamespace="https://crossx.support/Schemas/CrossX.Framework.UI.Global" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xx="https://crossx.support/Schemas/CrossX.Framework.UI.Global" xmlns:aa="https://crossx.support/Schemas/CrossX.Framework.UI" xmlns:ab="https://crossx.support/Schemas/CrossX.Framework">
+  <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework.UI" />
+  <xsd:import namespace="https://crossx.support/Schemas/CrossX.Framework" />
+  <xsd:simpleType name="CrossX.Framework.UI.Global.WindowState">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Normal" />
+          <xsd:enumeration value="Maximized" />
+          <xsd:enumeration value="Fullscreen" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:complexType name="System.Object" />
+  <xsd:complexType name="CrossX.Framework.UI.Global.Page">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Global.Window">
+    <xsd:complexContent>
+      <xsd:extension base="aa:CrossX.Framework.UI.UIBindingContext">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="ab:System.String-Bindable" name="Title" />
+        <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MinWidth" />
+        <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MinHeight" />
+        <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MaxWidth" />
+        <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MaxHeight" />
+        <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.InitialWidth" />
+        <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.InitialHeight" />
+        <xsd:attribute type="ab:System.Boolean" name="Desktop.CanMaximize" />
+        <xsd:attribute type="ab:System.Boolean" name="Desktop.CanResize" />
+        <xsd:attribute type="xx:CrossX.Framework.UI.Global.WindowState" name="Desktop.StartMode" />
+        <xsd:attribute type="ab:CrossX.Framework.Color-Bindable" name="BackgroundColor" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Page">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Global.Page" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Window">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Global.Window" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

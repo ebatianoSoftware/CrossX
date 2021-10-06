@@ -1,11 +1,13 @@
 ﻿using CrossX.Framework.Graphics;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace CrossX.Framework
 {
     public static class Utils
     {
-        public static T Set<T>(this T obj, Action<T> action)
+        public static T Set<T>(this T obj, Action<T> action) where T: class
         {
             action(obj);
             return obj;
@@ -37,6 +39,36 @@ namespace CrossX.Framework
                     break;
             }
             return align;
+        }
+
+        public static Alignment Oposite(this Alignment align)
+        {
+            switch(align)
+            {
+                case Alignment.Start:
+                    return Alignment.End;
+
+                case Alignment.Center:
+                    return Alignment.Center;
+
+                case Alignment.End:
+                    return Alignment.Start;
+            }
+            return Alignment.Stretch;
+        }
+
+        public static Stream OpenEmbededResource(string uri)
+        {
+            var parts = uri.Split(';');
+            if (parts.Length == 2)
+            {
+                var assembly = Assembly.Load(parts[1]);
+                var stream = assembly.GetManifestResourceStream(parts[0]);
+
+                if (stream == null) throw new FileNotFoundException();
+                return stream;
+            }
+            throw new ArgumentException("Invalid uri for embeded resource", nameof(uri));
         }
     }
 }

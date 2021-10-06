@@ -16,18 +16,52 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.Transforms.NavigationTransform">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="aa:System.Int" name="Duration" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.Transforms.Offset">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.Transforms.TransformationBase">
-        <xsd:attribute type="aa:System.Float" name="X" />
-        <xsd:attribute type="aa:System.Float" name="Y" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="X1" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Y1" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="X0" />
+        <xsd:attribute type="aa:CrossX.Framework.Length" name="Y0" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.Transforms.Rotation">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.Transforms.TransformationBase">
-        <xsd:attribute type="aa:System.Float" name="Angle" />
+        <xsd:attribute type="aa:System.Float" name="Angle0" />
+        <xsd:attribute type="aa:System.Float" name="Angle1" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.Transforms.Scale">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.Transforms.TransformationBase">
+        <xsd:attribute type="aa:System.Float" name="X1" />
+        <xsd:attribute type="aa:System.Float" name="Y1" />
+        <xsd:attribute type="aa:System.Float" name="X0" />
+        <xsd:attribute type="aa:System.Float" name="Y0" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.Transforms.StateTransform">
+    <xsd:complexContent>
+      <xsd:extension base="xx:System.Object">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="aa:System.Int" name="EnterDuration" />
+        <xsd:attribute type="aa:System.Int" name="LeaveDuration" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -35,6 +69,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.Transforms.Group" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="NavigationTransform">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.Transforms.NavigationTransform" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>
@@ -49,6 +90,20 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.Transforms.Rotation" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Scale">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.Transforms.Scale" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="StateTransform">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.Transforms.StateTransform" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

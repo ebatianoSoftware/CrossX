@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrossX.Abstractions.IoC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,21 +38,20 @@ namespace CrossX.Framework.IoC
 
         private bool builded = false;
 
-        public ScopeBuilder()
+        public ScopeBuilder(IServicesProvider parentServicesProvider = null)
         {
             servicesProvider.ObjectFactory = objectFactory;
             servicesProvider.TypeMapping = abstractTypeMapping;
             objectFactory.ServicesProvider = servicesProvider;
             objectFactory.TypeMapping = abstractTypeMapping;
-        }
 
-        public ScopeBuilder WithParent(IServicesProvider parent)
-        {
-            if (parent == null) return this;
+            WithType<ScopeBuilder>().As<IScopeBuilder>();
 
-            servicesProvider.Parent = parent;
-            abstractTypeMapping.Parent = parent.GetService<IAbstractTypeMapping>();
-            return this;
+            if (parentServicesProvider != null)
+            {
+                servicesProvider.Parent = parentServicesProvider;
+                abstractTypeMapping.Parent = parentServicesProvider.GetService<IAbstractTypeMapping>();
+            }
         }
 
         public ScopeBuilder WithType<TType>()

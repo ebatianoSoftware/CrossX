@@ -1,28 +1,53 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application 
+﻿<Application 
   xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
-  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms">
+  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms"
+  xmlns:ui="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
 
-  <Styles>
-    <Style Selector="Button">
-      <Setter Property="TextColor" Value="#c0c0c0"/>
-    </Style>
-    <Style Selector="Button:over">
-      <Setter Property="TextColor" Value="White"/>
-      <Setter Property="Transform" Value="{Resource ButtonOver}"/>
-    </Style>
-    <Style Selector="Button:down">
-      <Setter Property="TextColor" Value="White"/>
-    </Style>
-  </Styles>
-
-  <Resources>
-    <Transform Key="ButtonOver" EnterDuration="100" LeaveDuration="50">
-      <t:Group>
-        <t:Rotation Angle="35"/>
-        <t:Offset X="100" Y="30"/>
-      </t:Group>
-    </Transform>
-  </Resources>
+  <Import Path="CrossX.Framework.Styles.Default.DarkTheme.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.OrangeTheme.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.DefaultStyles.xml;CrossX.Framework"/>
+  <Import Path="CrossX.Framework.Styles.Default.HollowLook.xml;CrossX.Framework"/>
   
+ 
+  <Resources>
+    <Resource Key="ButtonOverTransform">
+      <t:StateTransform EnterDuration="100" LeaveDuration="50">
+        <t:Group>
+          <t:Rotation Angle1="35"/>
+          <t:Scale X1="1.4" Y1="1.2"/>
+        </t:Group>
+      </t:StateTransform>
+    </Resource>
+
+    <Resource Key="ButtonDownTransform">
+      <t:StateTransform EnterDuration="100" LeaveDuration="50">
+        <t:Group>
+          <t:Rotation Angle1="-20"/>
+          <t:Scale X1="0.8" Y1="0.9"/>
+        </t:Group>
+      </t:StateTransform>
+    </Resource>
+
+    <Resource Key="PageNavigationToTransform">
+      <t:NavigationTransform Duration="250">
+        <t:Group>
+          <t:Offset X0="100%" X1="0"/>
+        </t:Group>
+      </t:NavigationTransform>
+    </Resource>
+
+    <Resource Key="PageNavigationFromTransform">
+      <t:NavigationTransform Duration="250">
+        <t:Group>
+          <t:Offset X0="0" X1="-100%"/>
+        </t:Group>
+      </t:NavigationTransform>
+    </Resource>
+
+    <Resource Key="ClockBackgroundDrawable">
+      <d:RectangleDrawable FillColor="White" Ry="5" Rx="5"/>
+    </Resource>
+    
+  </Resources>
 </Application>

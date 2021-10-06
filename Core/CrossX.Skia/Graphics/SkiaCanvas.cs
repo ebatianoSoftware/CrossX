@@ -1,16 +1,22 @@
 ﻿using CrossX.Framework;
 using CrossX.Framework.Graphics;
 using SkiaSharp;
+using System;
 using System.Numerics;
 
 namespace CrossX.Skia.Graphics
 {
-    internal class SkiaCanvas: Canvas, ISkiaCanvas
+    internal class SkiaCanvas : Canvas, ISkiaCanvas
     {
         private SKCanvas skCanvas;
-        private SKPaint skPaint = new SKPaint();
-        private Size size;
+        private SKPaint skPaint = new SKPaint
+        {
+            IsAntialias = true,
+            SubpixelText = true,
+            FilterQuality = SKFilterQuality.High
+        };
 
+        private Size size;
         public override Size Size => size;
 
         public Canvas Canvas => this;
@@ -22,7 +28,19 @@ namespace CrossX.Skia.Graphics
         }
 
         public override void Clear(Color color) => skCanvas.Clear(color.ToSkia());
-        public override void ClipRect(RectangleF clip) => skCanvas.ClipRect(clip.ToSkia(), SKClipOperation.Intersect);
+        public override void ClipRect(RectangleF rect) => skCanvas.ClipRect(rect.ToSkia(), SKClipOperation.Intersect, true);
+
+        private SKPath path = new SKPath();
+        private SKPath GetTempPath()
+        {
+            if(path.Handle == IntPtr.Zero)
+            {
+                path = new SKPath();
+            }
+            path.Reset();
+            return path;
+        }
+
         public override void DrawTriangles(VertexBuffer vertexBuffer, Image image)
         {
             var vb = (SkiaVertexBuffer)vertexBuffer;
@@ -85,23 +103,73 @@ namespace CrossX.Skia.Graphics
         public override Vector2 DrawText(string line, Font font, RectangleF target, TextAlign textAlign, Color color, FontMeasure fontMeasure = FontMeasure.Extended)
         {
             if (font == null) return Vector2.Zero;
+            if (line == null) return Vector2.Zero;
+
             var skiaFont = (SkiaFont)font;
 
             var position = CalculateTargetPosition(font, line, target, textAlign, fontMeasure, out var size);
 
             var skPaint = skiaFont.SKPaint;
             skPaint.IsStroke = false;
+            skPaint.IsAntialias = true;
+            skPaint.FilterQuality = SKFilterQuality.High;
             skPaint.Color = color.ToSkia();
 
             skCanvas.DrawText(line, position.X, position.Y, skPaint);
             return size;
         }
 
+        public override void DrawEllipse(RectangleF rect, Color color, float thickness)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+            skCanvas.DrawOval(rect.ToSkia(), skPaint);
+        }
+
+        public override void FillEllipse(RectangleF rect, Color color)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = false;
+            skCanvas.DrawOval(rect.ToSkia(), skPaint);
+        }
+
+
         public override void FillRect(RectangleF rect, Color color)
         {
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = false;
             skCanvas.DrawRect(rect.ToSkia(), skPaint);
+        }
+
+        public override void DrawRect(RectangleF rect, Color color, float thickness)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+            skCanvas.DrawRect(rect.ToSkia(), skPaint);
+        }
+
+        public override void FillRoundRect(RectangleF rect, Vector2 roundness, Color color)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = false;
+            skCanvas.DrawRoundRect(rect.ToSkia(), new SKSize(roundness.X, roundness.Y), skPaint);
+        }
+
+        public override void DrawRoundRect(RectangleF rect, Vector2 roundness, Color color, float thickness)
+        {
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+            skCanvas.DrawRoundRect(rect.ToSkia(), new SKSize(roundness.X, roundness.Y), skPaint);
+        }
+
+        public override void DrawImage(Image image, RectangleF target, RectangleF source, float opacity)
+        {
+            var skiaImage = (SkiaImage)image;
+            skPaint.Color = new SKColor(255, 255, 255, (byte)(opacity * 255));
+            skCanvas.DrawImage(skiaImage.SKImage, source.ToSkia(), target.ToSkia(), skPaint);
         }
     }
 }

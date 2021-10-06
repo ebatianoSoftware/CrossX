@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
+  xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
+
+  <Resources>
+    <Resource Key="SystemButtonBackgroundDrawable">
+      <d:RectangleDrawable Rx="10" Ry="50%" StrokeColor="White" StrokeThickness="2"/>
+    </Resource>
+
+    <Resource Key="SystemCheckBoxDrawable">
+      <d:RectangleDrawable Rx="3" Ry="50%" StrokeColor="White" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
+    </Resource>
+
+    <Resource Key="SystemCheckBoxTickDrawable">
+      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="13" FontWeight="Bold" Text="&#62102;" OffsetX="-0.3" OffsetY="1.5"/>
+    </Resource>
+
+    <Resource Key="SystemRadioDrawable">
+      <d:RectangleDrawable Rx="50%" Ry="50%" StrokeColor="White" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
+    </Resource>
+
+    <Resource Key="SystemRadioTickDrawable">
+      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="10" FontWeight="Bold" Text="&#62313;" OffsetX="-0.5" OffsetY="1"/>
+    </Resource>
+
+    <Resource Key="SystemSplitterDrawable">
+      <d:SplitterDotsDrawable Rx="50%" Ry="50%" Count="3" Padding="0.75" Spacing="4" BackgroundTint="#08ffffff"/>
+    </Resource>
+
+    <Resource Key="SystemSliderThumbDrawable">
+      <d:RectangleDrawable Rx="50%" Ry="50%" StrokeColor="White" StrokeThickness="2"/>
+    </Resource>
+
+    <Resource Key="SystemTooltipBackgroundDrawable">
+      <d:RectangleDrawable Rx="2" Ry="2" FillColor="White" StrokeColor="#4888" StrokeThickness="2"/>
+    </Resource>
+    
+  </Resources>
+</Application>

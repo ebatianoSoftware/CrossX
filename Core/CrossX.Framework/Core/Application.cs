@@ -1,10 +1,18 @@
-﻿using CrossX.Framework.Graphics;
+﻿using CrossX.Abstractions.IoC;
+using CrossX.Framework.ApplicationDefinition;
+using CrossX.Framework.Binding;
+using CrossX.Framework.Graphics;
+using CrossX.Framework.Input;
 using CrossX.Framework.IoC;
+using CrossX.Framework.Services;
 using CrossX.Framework.UI;
-using CrossX.Framework.UI.Containers;
-using CrossX.Framework.UI.Controls;
+using CrossX.Framework.UI.Global;
+using CrossX.Framework.XxTools;
 using System;
+using System.Numerics;
 using System.Reflection;
+using System.Threading;
+using Xx.Definition;
 using Xx.Toolkit;
 
 namespace CrossX.Framework.Core
@@ -15,35 +23,89 @@ namespace CrossX.Framework.Core
         protected IServicesProvider Services { get; private set; }
         protected IObjectFactory ObjectFactory { get; private set; }
 
+        private readonly GestureProcessor gestureProcessor = new GestureProcessor();
+
         public event InitServicesDelegate BeforeInitServices;
         public event InitServicesDelegate AfterInitServices;
 
         protected IRedrawService RedrawService { get; private set; }
+        protected Window Window { get; private set; }
 
-        protected View MainView { get; private set; }
+        public AutoResetEvent MainWindowReady { get; } = new AutoResetEvent(false);
 
         void ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
-            var builder = new ScopeBuilder().WithParent(servicesProvider);
-            builder.WithInstance(this).As<Application>().As(GetType());
+            LoadFonts(servicesProvider.GetService<IFontManager>());
 
-            var elementTypeMapping = new ElementTypeMapping(GetType().Assembly);
-            builder.WithInstance(elementTypeMapping).As<IElementTypeMapping>();
+            var assembly = GetType().Assembly;
+            var builder = new ScopeBuilder(servicesProvider);
+            var elementTypeMapping = new ElementTypeMapping(assembly);
+            var appValues = new AppValues();
+            var conversionService = new ConversionService(assembly);
+            var bindingService = new BindingService(appValues, conversionService);
 
-            RedrawService = servicesProvider.GetService<IRedrawService>();
+            LoadApplicationDefinition(appValues, bindingService, elementTypeMapping, servicesProvider.GetService<IObjectFactory>());
+
+            builder
+                .WithInstance(this).As<Application>().As(GetType())
+                .WithInstance(elementTypeMapping).As<IElementTypeMapping>()
+                .WithInstance(appValues).As<IAppValues>()
+                .WithInstance(bindingService).As<IBindingService>()
+                .WithType<TooltipService>().As<ITooltipService>().AsSingleton()
+                .WithType<UIServices>().As<IUIServices>().AsSingleton()
+                .WithType<XxFileParserImpl>().As<IXxFileParser>().AsSingleton();
 
             BeforeInitServices?.Invoke(servicesProvider, builder);
             InitServices(servicesProvider, builder);
             AfterInitServices?.Invoke(servicesProvider, builder);
 
             Services = builder.Build();
+
+            RedrawService = servicesProvider.GetService<IRedrawService>();
             ObjectFactory = Services.GetService<IObjectFactory>();
         }
 
-        void ICoreApplication.Run(Size size)
+        protected virtual void LoadFonts(IFontManager fontManager)
+        {
+            using(var stream = typeof(Application).Assembly.GetManifestResourceStream("CrossX.Framework.Styles.Fonts.FluentSystemIcons-Filled.ttf"))
+            {
+                fontManager.LoadTTF(stream);
+            }
+        }
+
+        private void LoadApplicationDefinition(IAppValues appValues, IBindingService bindingService, IElementTypeMapping elementTypeMapping, IObjectFactory objectFactory)
+        {
+            try
+            {
+                XxElement element;
+                using (var stream = GetType().Assembly.GetManifestResourceStream(GetType().Assembly.GetName().Name + ".App.xml"))
+                {
+                    var parser = objectFactory.Create<XxFileParser>(elementTypeMapping);
+                    element = parser.Parse(stream);
+                }
+
+                var scopeBuilder = objectFactory.Create<IScopeBuilder>();
+
+                scopeBuilder
+                    .WithInstance(elementTypeMapping).As<IElementTypeMapping>()
+                    .WithInstance(appValues).As<IAppValues>()
+                    .WithInstance(bindingService).As<IBindingService>();
+
+                var services = scopeBuilder.Build();
+                var defObjectFactory = services.GetService<IObjectFactory>().Create<XxDefinitionObjectFactory>();
+
+                defObjectFactory.CreateObject<ApplicationElement>(element);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
+
+        void ICoreApplication.Run()
         {
             StartApp();
-            MainView.Bounds = new RectangleF(0, 0, size.Width, size.Height);
         }
 
         void ICoreApplication.DoRender(Canvas canvas) => Render(canvas);
@@ -54,18 +116,18 @@ namespace CrossX.Framework.Core
 
         protected virtual void Update(TimeSpan ellapsedTime, Size size)
         {
-            var bounds = new RectangleF(0, 0, size.Width, size.Height);
-            if (MainView.Bounds != bounds)
+            if (Window.Size != size)
             {
-                MainView.Bounds = bounds;
+                Window.Size = size;
                 RedrawService.RequestRedraw();
             }
-            MainView.Update((float)ellapsedTime.TotalSeconds);
+
+            Window.Update((float)ellapsedTime.TotalSeconds);
         }
 
         protected virtual void Render(Canvas canvas)
         {
-            MainView?.Render(canvas);
+            Window?.Render(canvas);
         }
 
         protected virtual void InitServices(IServicesProvider systemServices, IScopeBuilder scopeBuilder)
@@ -73,7 +135,7 @@ namespace CrossX.Framework.Core
 
         }
 
-        protected virtual (string path, Assembly assembly) LocateView(object viewModel)
+        public virtual (string path, Assembly assembly) LocateView(object viewModel)
         {
             var vmType = viewModel.GetType();
             var viewNamespace = vmType.Namespace.Replace("ViewModels", "Views");
@@ -87,32 +149,62 @@ namespace CrossX.Framework.Core
             {
                 vm = ObjectFactory.Create<TViewModel>();
             }
-            var viewPath = LocateView(vm) + ".xml";
+            var (viewPath, assembly) = LocateView(vm);
+            viewPath += ".xml";
 
-            var frameLayout = new FrameLayout
-            {
-                BackgroundColor = Color.DarkSlateBlue,
-                Padding = new Thickness(100, 0, 0, 0)
-            };
+            XxElement viewElement = Services.GetService<IXxFileParser>().Parse(assembly, viewPath);
 
-            frameLayout.Children.Add(ObjectFactory.Create<Label>().Set(l =>
+            try
             {
-                l.Text = "\xe88a";
-                l.FontFamily = "Material Icons";
-                l.TextColor = Color.White;
-                l.BackgroundColor = Color.Green;
-                l.FontSize = 128;
-                l.Margin = new Thickness(0, 0, 100, 0);
-                l.HorizontalAlignment = Alignment.Center;
-                l.VerticalAlignment = Alignment.Center;
-                l.HorizontalTextAlignment = Alignment.Center;
-                l.VerticalTextAlignment = Alignment.Center;
-                l.Height = 100;
-                l.Width = 500;
-                l.FontMeasure = FontMeasure.Extended;
-            }));
-            MainView = frameLayout;
+                var defObjectFactory = ObjectFactory.Create<XxDefinitionObjectFactory>();
+                Window = defObjectFactory.CreateObject<Window>(viewElement);
+                Window.DataContext = vm;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+            MainWindowReady.Set();
             return true;
         }
+
+        void ICoreApplication.OnPointerDown(PointerId pointerId, Vector2 position)
+        {
+            var gesture = gestureProcessor.OnPointerDown(pointerId, position);
+            PropagateGesture(gesture);
+        }
+
+        void ICoreApplication.OnPointerUp(PointerId pointerId, Vector2 position)
+        {
+            var gesture = gestureProcessor.OnPointerUp(pointerId, position);
+            PropagateGesture(gesture);
+        }
+
+        void ICoreApplication.OnPointerMove(PointerId pointerId, Vector2 position)
+        {
+            var gesture = gestureProcessor.OnPointerMove(pointerId, position);
+            PropagateGesture(gesture);
+        }
+
+        void ICoreApplication.OnPointerCancel(PointerId pointerId)
+        {
+            var gesture = gestureProcessor.OnPointerCancel(pointerId);
+            PropagateGesture(gesture);
+        }
+
+        private void PropagateGesture(Gesture gesture)
+        {
+            if (gesture == null) return;
+
+            if(!Window.RootView.PreviewGesture(gesture))
+            {
+                Window.RootView.ProcessGesture(gesture);
+            }
+
+            Services.GetService<INativeWindow>().Cursor = gesture.SetCursor;
+        }
+
+        public void Dispose() => Window.Dispose();
     }
 }

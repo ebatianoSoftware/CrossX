@@ -4,7 +4,7 @@ namespace Xx
 {
     public class XxSchemaBindable : Attribute
     {
-        public XxSchemaBindable(bool bindable)
+        public XxSchemaBindable(bool bindable = true)
         {
             Bindable = bindable;
         }

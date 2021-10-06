@@ -4,8 +4,8 @@ namespace CrossX.Framework
 {
     public struct Size : IEquatable<Size>
     {
-        public readonly int Width;
-        public readonly int Height;
+        public int Width;
+        public int Height;
 
         public Size(int width, int height)
         {

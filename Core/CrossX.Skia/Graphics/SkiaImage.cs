@@ -31,6 +31,11 @@ namespace CrossX.Skia.Graphics
             SKImage = SKImage.FromEncodedData(stream);
         }
 
+        public SkiaImage(SKImage img)
+        {
+            SKImage = img;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (skShader != null && skShader.Handle != IntPtr.Zero)
@@ -38,6 +43,18 @@ namespace CrossX.Skia.Graphics
                 skShader.Dispose();
             }
             SKImage.Dispose();
+        }
+
+        public override Image Scale(float scale)
+        {
+            using (var oldBitmap = SKBitmap.FromImage(SKImage))
+            {
+                SKImageInfo resizeInfo = new SKImageInfo( (int)(SKImage.Width * scale), (int)(SKImage.Height * scale));
+                using (var resizedSKBitmap = oldBitmap.Resize(resizeInfo, SKFilterQuality.High))
+                {
+                    return new SkiaImage(SKImage.FromBitmap(resizedSKBitmap));
+                }
+            }
         }
     }
 }

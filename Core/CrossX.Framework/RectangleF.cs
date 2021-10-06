@@ -5,12 +5,12 @@ namespace CrossX.Framework
 {
     public struct RectangleF : IEquatable<RectangleF>
     {
-        public readonly float X;
-        public readonly float Y;
+        public float X;
+        public float Y;
 
-        public readonly float Width;
+        public float Width;
 
-        public readonly float Height;
+        public float Height;
 
         public Vector2 TopLeft => new Vector2(X, Y);
         public Vector2 TopRight => new Vector2(X + Width, Y);
@@ -20,11 +20,43 @@ namespace CrossX.Framework
 
         public Vector2 Center => new Vector2(X + Width / 2, Y + Height / 2);
 
-        public float Left => X;
-        public float Top => Y;
+        public float Left 
+        { 
+            get => X;
+            set
+            {
+                Width -= value - X;
+                X = value;
+            }
+        }
 
-        public float Right => X + Width;
-        public float Bottom => Y + Height;
+        public float Top
+        {
+            get => Y;
+            set
+            {
+                Height -= value - Y;
+                Y = value;
+            }
+        }
+
+        public float Right
+        {
+            get => X + Width;
+            set
+            {
+                Width = value - X;
+            }
+        }
+
+        public float Bottom
+        {
+            get => Y + Height;
+            set
+            {
+                Height = value - Y;
+            }
+        }
 
         public bool IsEmpty => Width <= 0 || Height <= 0;
 
@@ -49,19 +81,35 @@ namespace CrossX.Framework
             return new RectangleF(X + offset.X, Y + offset.Y, Width, Height);
         }
 
-        public RectangleF Inflate(Thickness padding, float onePixelUnit)
+        public RectangleF Deflate(Thickness padding, SizeF? size = null)
         {
-            var marginLeft = padding.Left.Calculate(onePixelUnit);
-            var marginRight = padding.Right.Calculate(onePixelUnit);
-            var marginTop = padding.Top.Calculate(onePixelUnit);
-            var marginBottom = padding.Bottom.Calculate(onePixelUnit);
+            var marginLeft = padding.Left.Calculate(size.GetValueOrDefault().Width);
+            var marginRight = padding.Right.Calculate(size.GetValueOrDefault().Width);
+            var marginTop = padding.Top.Calculate(size.GetValueOrDefault().Height);
+            var marginBottom = padding.Bottom.Calculate(size.GetValueOrDefault().Height);
 
             return new RectangleF(X + marginLeft, Y + marginTop, Width - marginLeft - marginRight, Height - marginTop - marginBottom);
+        }
+
+        public RectangleF Deflate(float w, float h)
+        {
+            return new RectangleF(X + w, Y + h, Width - w * 2, Height - h * 2);
         }
 
         public override bool Equals(object obj)
         {
             return obj is RectangleF f && Equals(f);
+        }
+
+        public RectangleF Intersect(RectangleF other)
+        {
+            var left = Math.Max(other.X, X);
+            var right = Math.Min(other.Right, Right);
+
+            var top = Math.Max(other.Y, Y);
+            var bottom = Math.Min(other.Bottom, Bottom);
+
+            return new RectangleF(left, top, right - left, bottom - top);
         }
 
         public bool Equals(RectangleF other)
@@ -79,5 +127,16 @@ namespace CrossX.Framework
 
         public static bool operator ==(RectangleF r1, RectangleF r2) => r1.Equals(r2);
         public static bool operator !=(RectangleF r1, RectangleF r2) => !r1.Equals(r2);
+
+        public bool Contains(Vector2 position)
+        {
+            if (position.X > Right) return false;
+            if (position.Y > Bottom) return false;
+
+            if (position.X < X) return false;
+            if (position.Y < Y) return false;
+
+            return true;
+        }
     }
 }

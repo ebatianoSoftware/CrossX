@@ -2,7 +2,10 @@
 {
     public class Offset : TransformationBase
     {
-        public float X { get; set; }
-        public float Y { get; set; }
+        public Length X1 { get; set; }
+        public Length Y1 { get; set; }
+
+        public Length X0 { get; set; }
+        public Length Y0 { get; set; }
     }
 }

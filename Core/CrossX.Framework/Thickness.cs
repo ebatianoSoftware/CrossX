@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using Xx;
 
 namespace CrossX.Framework
@@ -51,6 +52,14 @@ namespace CrossX.Framework
         public Length Top;
         public Length Right;
         public Length Bottom;
+
+        public float Width => Left.Calculate() + Right.Calculate();
+        public float Height => Top.Calculate() + Bottom.Calculate();
+
+        public Thickness(Length size) : this(size, size, size, size)
+        {
+
+        }
 
         public Thickness(Length left, Length top, Length right, Length bottom)
         {

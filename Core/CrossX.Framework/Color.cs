@@ -10,6 +10,8 @@ namespace CrossX.Framework
     [XxSchemaPattern(@"#[\dA-Fa-f]{6}([\dA-Fa-f][\dA-Fa-f])?|#[\dA-Fa-f]{3}([\dA-Fa-f])?")]
     public partial struct Color : IEquatable<Color>
     {
+        
+
         private static Dictionary<string, Color> builtInColors = null;
 
         private static void InitBuiltInValues()
@@ -35,7 +37,7 @@ namespace CrossX.Framework
             if (builtInColors.TryGetValue(text, out var color)) return color;
 
             string colorcode = text;
-            colorcode = colorcode.TrimStart('#');
+            colorcode = colorcode.TrimStart('#').ToUpperInvariant();
 
             switch(colorcode.Length)
             {
@@ -93,10 +95,10 @@ namespace CrossX.Framework
 
         public Color Mix(Color other, float mix)
         {
+            var alpha = Af * (1 - mix) + other.Af * mix;
             var red = Rf * (1 - mix) + other.Rf * mix;
             var green = Gf * (1 - mix) + other.Gf * mix;
             var blue = Bf * (1 - mix) + other.Bf * mix;
-            var alpha = Af * (1 - mix) + other.Af * mix;
 
             return new Color(red, green, blue, alpha);
         }

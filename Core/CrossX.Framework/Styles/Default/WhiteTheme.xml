@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
+  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms"
+  xmlns:ui="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
+  
+  <Theme>
+    <Color Key="SystemButtonAccentBackgroundColor" Value="#fff"/>
+    <Color Key="SystemButtonAccentBackgroundColorOver" Value="#fbfbfb"/>
+    <Color Key="SystemButtonAccentBackgroundColorPushed" Value="#fff"/>
+  </Theme>
+  
+</Application>

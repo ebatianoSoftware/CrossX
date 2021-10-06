@@ -2,7 +2,7 @@
 
 namespace CrossX.Framework
 {
-    [XxSchemaPattern("[A-Za-z_]{1}[A-Za-z0-9_]*")]
+    [XxSchemaPattern(@"[A-Za-z_]{1}[A-Za-z0-9_]*")]
     public struct Name
     {
         public string Value { get; }
@@ -10,5 +10,7 @@ namespace CrossX.Framework
 
         public static implicit operator Name(string str) => new Name(str);
         public static implicit operator string(Name name) => name.Value;
+
+        public static Name Parse(string val) => new Name(val);
     }
 }

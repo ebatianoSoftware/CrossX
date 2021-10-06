@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
+  xmlns:ui="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
+
+  <Theme>
+    <String Key="SystemTextFontFamily" Value="Default"/>
+    <String Key="SystemButtonTextFontFamily" Value="Default"/>
+
+    <Length Key="SystemTextFontSize" Value="15"/>
+    <Length Key="SystemButtonTextFontSize" Value="18"/>
+
+    <Length Key="SystemH1FontSize" Value="40"/>
+    <Length Key="SystemH2FontSize" Value="30"/>
+    <Length Key="SystemH3FontSize" Value="20"/>
+    
+    <FontWeight Key="SystemTextFontWeight" Value="Light"/>
+    <FontWeight Key="SystemButtonTextFontWeight" Value="Normal"/>
+
+    <Thickness Key="SystemButtonTextPadding" Value="12,8,12,8"/>
+    <Length Key="SystemIconButtonSpacing" Value="8"/>
+    <Length Key="SystemIconButtonIconSize" Value="20"/>
+
+    <String Key="SystemIconFontFace" Value="FluentSystemIcons-Filled"/>
+    <Length Key="SystemCheckRadioSize" Value="15"/>
+    <Length Key="SystemCheckRadioSpacing" Value="6"/>
+
+  </Theme>
+  
+  <Styles>
+    <Style Selector="H1">
+      <ui:Label FontSize="{Theme SystemH1FontSize}"/>
+    </Style>
+
+    <Style Selector="H2">
+      <ui:Label FontSize="{Theme SystemH2FontSize}"/>
+    </Style>
+
+    <Style Selector="H3">
+      <ui:Label FontSize="{Theme SystemH3FontSize}"/>
+    </Style>
+
+    <Style Selector="H4">
+      <ui:Label FontSize="{Theme SystemTextFontSize}" FontWeight="SemiBold" Margin="0,10,0,0"/>
+    </Style>
+    
+    <Style>
+      <ui:Button BackgroundColor="{Theme SystemButtonBackgroundColor}"
+                 BackgroundColorOver="{Theme SystemButtonBackgroundColorOver}"
+                 BackgroundColorPushed="{Theme SystemButtonBackgroundColorPushed}"
+                 BackgroundColorDisabled="{Theme SystemButtonBackgroundColorDisabled}"
+                 ForegroundColor="{Theme SystemButtonForegroundColor}"
+                 ForegroundColorOver="{Theme SystemButtonForegroundColorOver}"
+                 ForegroundColorPushed="{Theme SystemButtonForegroundColorPushed}"
+                 ForegroundColorDisabled="{Theme SystemButtonForegroundColorDisabled}"
+                 FontFamily="{Theme SystemButtonTextFontFamily}"
+                 FontSize="{Theme SystemButtonTextFontSize}"
+                 FontWeight="{Theme SystemButtonTextFontWeight}"
+                 TextPadding="{Theme SystemButtonTextPadding}"
+                 BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}"
+                 FontMeasure="Strict"
+                 />
+    </Style>
+    <Style>
+      <ui:IconButton BackgroundColor="{Theme SystemButtonBackgroundColor}"
+                     BackgroundColorOver="{Theme SystemButtonBackgroundColorOver}"
+                     BackgroundColorPushed="{Theme SystemButtonBackgroundColorPushed}"
+                     BackgroundColorDisabled="{Theme SystemButtonBackgroundColorDisabled}"
+                     ForegroundColor="{Theme SystemButtonForegroundColor}"
+                     ForegroundColorOver="{Theme SystemButtonForegroundColorOver}"
+                     ForegroundColorPushed="{Theme SystemButtonForegroundColorPushed}"
+                     ForegroundColorDisabled="{Theme SystemButtonForegroundColorDisabled}"
+                     FontFamily="{Theme SystemButtonTextFontFamily}"
+                     FontSize="{Theme SystemButtonTextFontSize}"
+                     FontWeight="{Theme SystemButtonTextFontWeight}"
+                     TextPadding="{Theme SystemButtonTextPadding}"
+                     BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}"
+                     FontMeasure="Strict"
+                     IconFontFace="{Theme SystemIconFontFace}"
+                     HorizontalTextAlignment="End"
+                     IconFontMeasure="Extended"
+                     IconSize="{Theme SystemIconButtonIconSize}"
+                     Spacing="{Theme SystemIconButtonSpacing}"
+                     IconText="&#62036;"
+                 />
+    </Style>
+    <Style Selector="Accented">
+      <ui:Button BackgroundColor="{Theme SystemButtonAccentBackgroundColor}"
+                 BackgroundColorOver="{Theme SystemButtonAccentBackgroundColorOver}"
+                 BackgroundColorPushed="{Theme SystemButtonAccentBackgroundColorPushed}"/>
+    </Style>
+    <Style>
+      <ui:ToggleButton CheckedBackgroundColor="{Theme SystemButtonAccentBackgroundColor}"
+                       CheckedBackgroundColorOver="{Theme SystemButtonAccentBackgroundColorOver}"
+                       CheckedBackgroundColorPushed="{Theme SystemButtonAccentBackgroundColorPushed}"
+                       CheckedForegroundColor="{Theme SystemButtonForegroundColor}"
+                       CheckedForegroundColorOver="{Theme SystemButtonForegroundColorOver}"
+                       CheckedForegroundColorPushed="{Theme SystemButtonForegroundColorPushed}"/>
+    </Style>
+    <Style>
+      <ui:Label ForegroundColor="{Theme SystemForegroundColor}"
+                ForegroundColorDisabled="{Theme SystemForegroundColorDisabled}"
+                FontFamily="{Theme SystemTextFontFamily}"
+                FontSize="{Theme SystemTextFontSize}"
+                FontWeight="{Theme SystemTextFontWeight}"/>
+    </Style>
+    <Style>
+      <ui:CheckBox BoxColor="{Theme SystemButtonBackgroundColor}"
+                   BoxColorOver="{Theme SystemButtonBackgroundColorOver}"
+                   BoxColorPushed="{Theme SystemButtonBackgroundColorPushed}"
+                   BoxColorDisabled="{Theme SystemButtonBackgroundColorDisabled}"
+                   CheckedBoxColor="{Theme SystemButtonAccentBackgroundColor}"
+                   CheckedBoxColorOver="{Theme SystemButtonAccentBackgroundColorOver}"
+                   CheckedBoxColorPushed="{Theme SystemButtonAccentBackgroundColorPushed}"
+                   CheckedTickColor="{Theme SystemButtonForegroundColor}"
+                   CheckedTickColorOver="{Theme SystemButtonForegroundColorOver}"
+                   CheckedTickColorPushed="{Theme SystemButtonForegroundColorPushed}"
+                   TickColorDisabled="{Theme SystemButtonForegroundColorDisabled}"
+                   ForegroundColorDisabled="{Theme SystemForegroundColorDisabled}"
+                   FontFamily="{Theme SystemTextFontFamily}"
+                   FontSize="{Theme SystemTextFontSize}"
+                   FontWeight="{Theme SystemTextFontWeight}"
+                   ForegroundColor="{Theme SystemForegroundColor}"
+                   BoxSize="{Theme SystemCheckRadioSize}"
+                   Spacing="{Theme SystemCheckRadioSpacing}"
+                   BoxDrawable="{Resource SystemCheckBoxDrawable}"
+                   TickMarkDrawable="{Resource SystemCheckBoxTickDrawable}"
+                   />
+    </Style>
+    <Style>
+      <ui:RadioButton BoxColor="{Theme SystemButtonBackgroundColor}"
+                      BoxColorOver="{Theme SystemButtonBackgroundColorOver}"
+                      BoxColorPushed="{Theme SystemButtonBackgroundColorPushed}"
+                      BoxColorDisabled="{Theme SystemButtonBackgroundColorDisabled}"
+                      CheckedBoxColor="{Theme SystemButtonAccentBackgroundColor}"
+                      CheckedBoxColorOver="{Theme SystemButtonAccentBackgroundColorOver}"
+                      CheckedBoxColorPushed="{Theme SystemButtonAccentBackgroundColorPushed}"
+                      CheckedTickColor="{Theme SystemButtonForegroundColor}"
+                      CheckedTickColorOver="{Theme SystemButtonForegroundColorOver}"
+                      CheckedTickColorPushed="{Theme SystemButtonForegroundColorPushed}"
+                      TickColorDisabled="{Theme SystemButtonForegroundColorDisabled}"
+                      ForegroundColorDisabled="{Theme SystemForegroundColorDisabled}"
+                      FontFamily="{Theme SystemTextFontFamily}"
+                      FontSize="{Theme SystemTextFontSize}"
+                      FontWeight="{Theme SystemTextFontWeight}"
+                      ForegroundColor="{Theme SystemForegroundColor}"
+                      BoxSize="{Theme SystemCheckRadioSize}"
+                      Spacing="{Theme SystemCheckRadioSpacing}"
+                      BoxDrawable="{Resource SystemRadioDrawable}"
+                      TickMarkDrawable="{Resource SystemRadioTickDrawable}"
+                      />
+    </Style>
+    <Style>
+      <ui:ProgressBar BackgroundColor="{Theme SystemButtonBackgroundColor}" ForegroundColor="{Theme SystemButtonAccentBackgroundColor}" Height="2"/>
+    </Style>
+    <Style>
+      <ui:Slider ThumbColor="{Theme SystemButtonAccentBackgroundColor}"
+                 ThumbColorOver="{Theme SystemButtonAccentBackgroundColorOver}"
+                 ThumbColorPushed="{Theme SystemButtonAccentBackgroundColorPushed}"
+                 TrackColorDisabled="{Theme SystemButtonBackgroundColorDisabled}"
+                 ThumbColorDisabled="{Theme SystemButtonBackgroundColorDisabled}"
+                 TrackColor="{Theme SystemButtonBackgroundColor}"
+                 TrackColorOver="{Theme SystemButtonBackgroundColorOver}"
+                 TrackColorPushed="{Theme SystemButtonBackgroundColorPushed}"
+                 ThumbDrawable="{Resource SystemSliderThumbDrawable}"
+                 TrackDrawable="{Resource SystemSliderTrackDrawable}"
+                 TrackThickness="2"
+                 />
+    </Style>
+  </Styles>
+
+  <Resources>
+    <Resource Key="SystemSliderTrackDrawable">
+      <d:RectangleDrawable FillColor="White" Ry="1" Rx="1"/>
+    </Resource>
+  </Resources>
+  
+</Application>

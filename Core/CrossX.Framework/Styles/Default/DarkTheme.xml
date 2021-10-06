@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application
+  xmlns="https://crossx.support/Schemas/CrossX.Framework.ApplicationDefinition"
+  xmlns:t="https://crossx.support/Schemas/CrossX.Framework.Transforms"
+  xmlns:ui="https://crossx.support/Schemas/CrossX.Framework.UI"
+  xmlns:d="https://crossx.support/Schemas/CrossX.Framework.Drawables">
+
+  <Theme>
+    <Color Key="SystemBackgroundColor" Value="#2e2e2e"/>
+    <Color Key="SystemPanelBackgroundColor" Value="#343434"/>
+    <Color Key="SystemPanelBackgroundColorLevel2" Value="#3e3e3e"/>
+    <Color Key="SystemForegroundColor" Value="#bbb"/>
+    <Color Key="SystemForegroundColorDisabled" Value="#606060"/>
+
+    <Color Key="SystemTooltipBackgroundColor" Value="#eee"/>
+    <Color Key="SystemTooltipForegroundColor" Value="#444"/>
+    
+    <Color Key="SystemButtonBackgroundColor" Value="#5B5B5B"/>
+    <Color Key="SystemButtonBackgroundColorOver" Value="#6D6D6D"/>
+    <Color Key="SystemButtonBackgroundColorPushed" Value="#5B5B5B"/>
+    <Color Key="SystemButtonBackgroundColorDisabled" Value="#444"/>
+
+    <Color Key="SystemButtonForegroundColor" Value="#bbb"/>
+    <Color Key="SystemButtonForegroundColorOver" Value="#e0bbbbbb"/>
+    <Color Key="SystemButtonForegroundColorPushed" Value="#bbb"/>
+    <Color Key="SystemButtonForegroundColorDisabled" Value="#606060"/>
+
+    <Color Key="SystemSeparatorColor" Value="#8888"/>
+  </Theme>
+
+</Application>

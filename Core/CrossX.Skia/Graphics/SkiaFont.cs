@@ -14,7 +14,12 @@ namespace CrossX.Skia.Graphics
             SKPaint = new SKPaint(font)
             {
                 IsStroke = false,
-                IsAntialias = true
+                IsAntialias = true,
+                SubpixelText = true,
+                HintingLevel = SKPaintHinting.NoHinting,
+                //IsAutohinted = true,
+                //LcdRenderText = true,
+                FilterQuality = SKFilterQuality.High
             };
         }
 

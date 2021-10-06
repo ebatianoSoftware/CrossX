@@ -3,6 +3,7 @@
 
     public class Rotation : TransformationBase
     {
-        public float Angle { get; set; }
+        public float Angle0 { get; set; }
+        public float Angle1 { get; set; }
     }
 }

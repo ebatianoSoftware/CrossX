@@ -1,10 +1,14 @@
 ﻿using CrossX.Framework.Graphics;
+using CrossX.Framework.Input;
+using CrossX.Framework.UI.Global;
+using CrossX.Framework.XxTools;
+using System.Collections.Generic;
 using Xx;
 
 namespace CrossX.Framework.UI.Containers
 {
     [XxSchemaExport(XxChildrenMode.Multiple)]
-    public abstract class ViewContainer : View
+    public abstract class ViewContainer : View, IElementsContainer, IViewParent
     {
         private bool layoutInvalid;
         private Thickness padding;
@@ -23,37 +27,89 @@ namespace CrossX.Framework.UI.Containers
             }
         }
 
-        public ViewContainer()
+        public Window Window => Parent?.Window;
+
+        public ViewContainer(IUIServices services) : base(services)
         {
             Children = new ChildrenCollection(this);
         }
 
-        protected override void OnRender(Canvas canvas)
+        protected override void OnRender(Canvas canvas, float opacity)
         {
-            base.OnRender(canvas);
+            base.OnRender(canvas, opacity);
 
             for (var idx = 0; idx < Children.Count; ++idx)
             {
                 var child = Children[idx];
-                child.Render(canvas);
+                child.Render(canvas, opacity);
             }
         }
 
-        public void InvalidateLayout() => layoutInvalid = true;
+
+        public virtual void InvalidateLayout() => layoutInvalid = true;
 
         protected override void OnUpdate(float time)
         {
-            base.OnUpdate(time);
             if (layoutInvalid)
             {
                 RecalculateLayout();
+                Services.RedrawService.RequestRedraw();
             }
+
+            for (var idx = 0; idx < Children.Count; ++idx)
+            {
+                var child = Children[idx];
+                child.Update(time);
+            }
+
+            base.OnUpdate(time);
         }
 
-        public override void RecalculateLayout()
+        protected override void RecalculateLayout()
         {
-            base.RecalculateLayout();
             layoutInvalid = false;
+        }
+
+        public void InitChildren(IEnumerable<object> elements)
+        {
+            foreach(var element in elements)
+            {
+                if(element is View view)
+                {
+                    Children.Add(view);
+                }
+            }
+            InvalidateLayout();
+        }
+
+        protected override bool OnPreviewGesture(Gesture gesture)
+        {
+            for (var idx = Children.Count-1; idx >=0; --idx)
+            {
+                if (Children[idx].PreviewGesture(gesture)) return true;
+            }
+            return false;
+        }
+
+        protected override bool OnProcessGesture(Gesture gesture)
+        {
+            for (var idx = Children.Count - 1; idx >= 0; --idx)
+            {
+                if (Children[idx].ProcessGesture(gesture)) return true;
+            }
+            return false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (!disposing) return;
+
+            for (var idx = 0; idx < Children.Count; ++idx)
+            {
+                Children[idx].Dispose();
+            }
         }
     }
 }

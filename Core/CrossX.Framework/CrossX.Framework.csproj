@@ -5,11 +5,40 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Styles\Default\BlueTheme.xml" />
+    <None Remove="Styles\Default\CleanLook.xml" />
+    <None Remove="Styles\Default\DarkTheme.xml" />
+    <None Remove="Styles\Default\DefaultLook.xml" />
+    <None Remove="Styles\Default\DefaultStyles.xml" />
+    <None Remove="Styles\Default\HollowLook.xml" />
+    <None Remove="Styles\Default\LightTheme.xml" />
+    <None Remove="Styles\Default\OrangeTheme.xml" />
+    <None Remove="Styles\Default\WhiteTheme.xml" />
+    <None Remove="Styles\Fonts\FluentSystemIcons-Filled.ttf" />
+    <None Remove="Styles\Fonts\FluentSystemIcons-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Styles\Default\WhiteTheme.xml" />
+    <EmbeddedResource Include="Styles\Default\CleanLook.xml" />
+    <EmbeddedResource Include="Styles\Default\LightTheme.xml" />
+    <EmbeddedResource Include="Styles\Default\DarkTheme.xml" />
+    <EmbeddedResource Include="Styles\Default\DefaultStyles.xml" />
+    <EmbeddedResource Include="Styles\Default\HollowLook.xml" />
+    <EmbeddedResource Include="Styles\Default\DefaultLook.xml" />
+    <EmbeddedResource Include="Styles\Default\BlueTheme.xml" />
+    <EmbeddedResource Include="Styles\Default\OrangeTheme.xml" />
+    <EmbeddedResource Include="Styles\Fonts\FluentSystemIcons-Filled.ttf" />
+    <EmbeddedResource Include="Styles\Fonts\FluentSystemIcons-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Xx\Xx\Xx.csproj" />
+    <ProjectReference Include="..\CrossX.Abstractions\CrossX.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

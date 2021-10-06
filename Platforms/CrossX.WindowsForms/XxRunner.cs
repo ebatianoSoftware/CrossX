@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 using System.Windows.Forms;
 
 namespace CrossX.WindowsForms
@@ -8,12 +8,17 @@ namespace CrossX.WindowsForms
         public static void Run(Framework.Core.Application application)
         {
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             using (var mainForm = new MainForm(application))
             {
-                Application.Run(mainForm);
+                mainForm.Show();
+                while (!mainForm.IsDisposed)
+                {
+                    mainForm.MainLoop.ProcessSystemDispatcher();
+                    Application.DoEvents();
+                    Thread.Sleep(5);
+                }
             }
         }
     }
