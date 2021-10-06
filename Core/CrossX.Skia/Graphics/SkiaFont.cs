@@ -16,7 +16,7 @@ namespace CrossX.Skia.Graphics
                 IsStroke = false,
                 IsAntialias = true,
                 SubpixelText = true,
-                //HintingLevel = SKPaintHinting.Normal,
+                HintingLevel = SKPaintHinting.NoHinting,
                 //IsAutohinted = true,
                 //LcdRenderText = true,
                 FilterQuality = SKFilterQuality.High

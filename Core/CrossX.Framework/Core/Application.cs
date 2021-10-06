@@ -4,6 +4,7 @@ using CrossX.Framework.Binding;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.IoC;
+using CrossX.Framework.Services;
 using CrossX.Framework.UI;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
@@ -50,6 +51,7 @@ namespace CrossX.Framework.Core
                 .WithInstance(elementTypeMapping).As<IElementTypeMapping>()
                 .WithInstance(appValues).As<IAppValues>()
                 .WithInstance(bindingService).As<IBindingService>()
+                .WithType<TooltipService>().As<ITooltipService>().AsSingleton()
                 .WithType<UIServices>().As<IUIServices>().AsSingleton()
                 .WithType<XxFileParserImpl>().As<IXxFileParser>().AsSingleton();
 
@@ -119,6 +121,7 @@ namespace CrossX.Framework.Core
                 Window.Size = size;
                 RedrawService.RequestRedraw();
             }
+
             Window.Update((float)ellapsedTime.TotalSeconds);
         }
 

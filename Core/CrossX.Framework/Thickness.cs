@@ -56,6 +56,11 @@ namespace CrossX.Framework
         public float Width => Left.Calculate() + Right.Calculate();
         public float Height => Top.Calculate() + Bottom.Calculate();
 
+        public Thickness(Length size) : this(size, size, size, size)
+        {
+
+        }
+
         public Thickness(Length left, Length top, Length right, Length bottom)
         {
             Left = left;

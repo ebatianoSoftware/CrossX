@@ -1,7 +1,9 @@
-﻿namespace CrossX.Framework.Graphics
+﻿using System.Runtime.CompilerServices;
+
+namespace CrossX.Framework.Graphics
 {
     public interface IRedrawService
     {
-        void RequestRedraw();
+        void RequestRedraw([CallerMemberName] string caller = "", [CallerFilePath] string path = "");
     }
 }

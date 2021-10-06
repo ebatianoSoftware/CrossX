@@ -12,6 +12,9 @@
     <Color Key="SystemForegroundColor" Value="#bbb"/>
     <Color Key="SystemForegroundColorDisabled" Value="#606060"/>
 
+    <Color Key="SystemTooltipBackgroundColor" Value="#eee"/>
+    <Color Key="SystemTooltipForegroundColor" Value="#444"/>
+    
     <Color Key="SystemButtonBackgroundColor" Value="#5B5B5B"/>
     <Color Key="SystemButtonBackgroundColorOver" Value="#6D6D6D"/>
     <Color Key="SystemButtonBackgroundColorPushed" Value="#5B5B5B"/>

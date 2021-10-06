@@ -47,6 +47,8 @@ namespace CrossX.Framework.UI.Controls
 
         public bool Enabled { get => enabled; set => SetProperty(ref enabled, value); }
 
+        public string Tooltip { get; set; }
+
         protected ButtonState CurrentState
         {
             get => currentState;
@@ -81,6 +83,20 @@ namespace CrossX.Framework.UI.Controls
         protected virtual void OnClick()
         {
             Command?.Execute(CommandParameter);
+        }
+
+        protected override void OnUpdate(float time)
+        {
+            base.OnUpdate(time);
+
+            if (CurrentState == ButtonState.Hover)
+            {
+                Services.TooltipService.ShowTooltip(this, Tooltip, ScreenBounds.BottomLeft);
+            }
+            else
+            {
+                Services.TooltipService.HideTooltip(this);
+            }
         }
 
         protected override void OnRender(Canvas canvas, float opacity)

@@ -31,6 +31,8 @@ namespace CrossX.Framework.UI.Global
             }
         }
 
+        public FrameLayout MainFrame => mainFrame;
+
         Window IViewParent.Window => this;
 
         [XxSchemaBindable(true)]
@@ -183,7 +185,7 @@ namespace CrossX.Framework.UI.Global
         public void Update(float timeDelta)
         {
             if(layoutInvalid) RecalculateLayout();
-            RootView?.Update(timeDelta);
+            mainFrame.Update(timeDelta);
         }
 
         public void Render(Canvas canvas)
@@ -193,13 +195,13 @@ namespace CrossX.Framework.UI.Global
 
             canvas.FillRect(ScreenBounds, BackgroundColor);
 
-            RootView?.Render(canvas);
+            mainFrame.Render(canvas);
             canvas.Restore();
         }
 
         public void Dispose()
         {
-            RootView.Dispose();
+            mainFrame.Dispose();
             bindingService.RemoveBindings(this);
         }
 

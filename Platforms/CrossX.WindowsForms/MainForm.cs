@@ -13,6 +13,7 @@ using System.Numerics;
 
 using DrawingSize = System.Drawing.Size;
 using DrawingRectangle = System.Drawing.Rectangle;
+using SkiaSharp;
 
 namespace CrossX.WindowsForms
 {
@@ -70,7 +71,7 @@ namespace CrossX.WindowsForms
         {
             set => systemDispatcher.BeginInvoke(() =>
                  {
-                     FormBorderStyle = value ? FormBorderStyle.Sizable : FormBorderStyle.Fixed3D;
+                     FormBorderStyle = value ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
                      lastFormBorderStyle = FormBorderStyle;
                  });
         }
@@ -143,10 +144,13 @@ namespace CrossX.WindowsForms
         private Cursor cursor = Cursors.Default;
         private CursorType cursorType = CursorType.Default;
 
+        private DateTime lastRedraw = DateTime.Now;
+
         public MainForm(ICoreApplication app, IServicesProvider servicesProvider = null)
         {
             Visible = false;
             InitializeComponent();
+
             Visible = false;
 
             var scopeBuilder = new ScopeBuilder(servicesProvider);
@@ -287,10 +291,34 @@ namespace CrossX.WindowsForms
             Cursor = cursor;
         }
 
+#if DEBUG
+        SKPaint skPaint = new SKPaint
+        {
+            IsStroke = false
+        };
+#endif
+
         private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs args)
         {
             skiaCanvas.Prepare(args.Surface.Canvas, args.BackendRenderTarget.Width, args.BackendRenderTarget.Height);
             MainLoop.OnPaintSurface(skiaCanvas.Canvas);
+
+#if DEBUG
+            //var fps = Math.Round(1.0 / (DateTime.Now - lastRedraw).TotalSeconds);
+            //lastRedraw = DateTime.Now;
+
+            //string fpsText = $"FPS: {fps}";
+
+            //var tl = skPaint.MeasureText("FPS: 234");
+            //skPaint.IsStroke = true;
+            //skPaint.StrokeWidth = 2;
+            //skPaint.Color = new SKColor(0, 0, 0);
+            //args.Surface.Canvas.DrawText(fpsText, new SKPoint(args.BackendRenderTarget.Width / 2 - tl / 2, 20), skPaint);
+
+            //skPaint.IsStroke = false;
+            //skPaint.Color = new SKColor(255, 255, 255);
+            //args.Surface.Canvas.DrawText(fpsText, new SKPoint(args.BackendRenderTarget.Width / 2 - tl / 2, 20), skPaint);
+#endif
         }
 
         protected override void OnHandleDestroyed(EventArgs args)

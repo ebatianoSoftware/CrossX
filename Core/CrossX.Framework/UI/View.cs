@@ -203,13 +203,15 @@ namespace CrossX.Framework.UI
         public void Dispose()
         {
             Dispose(true);
+            Services.BindingService.RemoveBindings(this);
+            Services.TooltipService.HideTooltip(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                Services.BindingService.RemoveBindings(this);
+                
             }
         }
 

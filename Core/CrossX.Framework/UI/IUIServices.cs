@@ -3,6 +3,7 @@ using CrossX.Abstractions.IoC;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
+using CrossX.Framework.Services;
 
 namespace CrossX.Framework.UI
 {
@@ -15,5 +16,6 @@ namespace CrossX.Framework.UI
         IImageCache ImageCache { get; }
         IAppValues AppValues { get; }
         IObjectFactory ObjectFactory { get; }
+        ITooltipService TooltipService { get; }
     }
 }

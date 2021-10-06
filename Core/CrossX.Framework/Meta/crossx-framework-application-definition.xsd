@@ -28,6 +28,7 @@
           <xsd:any />
         </xsd:choice>
         <xsd:attribute type="aa:CrossX.Framework.Name" name="Key" />
+        <xsd:attribute type="aa:CrossX.Framework.Name" name="Base" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

@@ -73,6 +73,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorPushed" />
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="ForegroundColorOver" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
+        <xsd:attribute type="aa:System.String-Bindable" name="Tooltip" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -94,6 +95,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="BoxSize" />
         <xsd:attribute type="aa:CrossX.Framework.Length-Bindable" name="Spacing" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
+        <xsd:attribute type="aa:System.String-Bindable" name="Tooltip" />
         <xsd:attribute type="aa:unknown" name="BoxDrawable" />
         <xsd:attribute type="aa:unknown" name="TickMarkDrawable" />
       </xsd:extension>
@@ -239,10 +241,21 @@
   <xsd:complexType name="CrossX.Framework.UI.Containers.NavigationFrame">
     <xsd:complexContent>
       <xsd:extension base="xx:CrossX.Framework.UI.View">
-        <xsd:attribute type="aa:unknown" name="AttachedToFrameCommand" />
         <xsd:attribute type="aa:unknown" name="NavigationController" />
+        <xsd:attribute type="aa:unknown" name="AttachedToFrameCommand" />
         <xsd:attribute type="aa:unknown" name="NavigateToTransform" />
         <xsd:attribute type="aa:unknown" name="NavigateFromTransform" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CrossX.Framework.UI.Containers.RotationView">
+    <xsd:complexContent>
+      <xsd:extension base="xx:CrossX.Framework.UI.View">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:any />
+        </xsd:choice>
+        <xsd:attribute type="aa:System.Float-Bindable" name="Rotation" />
+        <xsd:attribute type="aa:System.Float-Bindable" name="RotationSpeed" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -405,6 +418,13 @@
     <xsd:complexType>
       <xsd:complexContent>
         <xsd:extension base="xx:CrossX.Framework.UI.Containers.NavigationFrame" />
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="RotationView">
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="xx:CrossX.Framework.UI.Containers.RotationView" />
       </xsd:complexContent>
     </xsd:complexType>
   </xsd:element>

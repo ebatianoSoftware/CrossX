@@ -7,11 +7,9 @@ using CrossX.Framework.Transforms;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
-using System.Numerics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xx.Definition;
-using Xx.Toolkit;
 
 namespace CrossX.Framework.UI.Containers
 {

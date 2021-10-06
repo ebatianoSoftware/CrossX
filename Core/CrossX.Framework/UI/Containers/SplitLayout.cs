@@ -152,6 +152,8 @@ namespace CrossX.Framework.UI.Containers
         protected override void RecalculateLayout() => RecalculateLayout(true);
         private void RecalculateLayout(bool checkMin)
         {
+            layoutInvalid = false;
+
             var refSize = Orientation == Orientation.Vertical ? ScreenBounds.Height : ScreenBounds.Width;
 
             var splitPosition = SplitPosition.Calculate(refSize);

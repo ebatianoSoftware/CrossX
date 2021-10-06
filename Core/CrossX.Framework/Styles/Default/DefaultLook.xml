@@ -31,5 +31,10 @@
     <Resource Key="SystemSliderThumbDrawable">
       <d:RectangleDrawable Rx="50%" Ry="50%" FillColor="White"/>
     </Resource>
+
+    <Resource Key="SystemTooltipBackgroundDrawable">
+      <d:RectangleDrawable FillColor="White"/>
+    </Resource>
+    
   </Resources>
 </Application>

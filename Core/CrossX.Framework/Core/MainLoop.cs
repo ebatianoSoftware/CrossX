@@ -5,6 +5,7 @@ using CrossX.Framework.Graphics;
 using CrossX.Framework.Utility;
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,7 +65,11 @@ namespace CrossX.Framework.Core
             coreApplication.Run();
 
             var lastUpdateTimeSpan = _stopwatch.Elapsed;
-            
+            var lastRedraw = _stopwatch.Elapsed;
+
+            TimeSpan cumullatedTime = TimeSpan.Zero;
+            TimeSpan frameTime = TimeSpan.FromTicks(166667);
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
@@ -73,9 +78,23 @@ namespace CrossX.Framework.Core
                     var currentTimeSpan = _stopwatch.Elapsed;
                     var timeDelta = currentTimeSpan - lastUpdateTimeSpan;
                     sequencer.Update(timeDelta);
-                    coreApplication.DoUpdate(timeDelta, size);
+
+                    cumullatedTime += timeDelta;
+
+                    while (cumullatedTime >= frameTime)
+                    {
+                        coreApplication.DoUpdate(frameTime, size);
+                        cumullatedTime -= frameTime;
+                    }
+
                     lastUpdateTimeSpan = currentTimeSpan;
                     _updatedEvent.Set();
+
+                    if( (_stopwatch.Elapsed - lastRedraw).TotalMilliseconds > 1000)
+                    {
+                        lastRedraw = _stopwatch.Elapsed;
+                        RequestRedraw();
+                    }
 
                     if (redrawRequest > 0)
                     {
@@ -137,10 +156,10 @@ namespace CrossX.Framework.Core
             systemDispatcher?.Process();
         }
 
-        public void RequestRedraw()
+        public void RequestRedraw([CallerMemberName] string caller = "", [CallerFilePath] string path = "")
         {
+            //Console.WriteLine("Redraw by {0} / {1}", caller, path);
             redrawRequest++;
-            dispatcher.Touch();
         }
 
         public void Finish()

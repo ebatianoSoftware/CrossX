@@ -2,6 +2,7 @@
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.Styles;
+using System.Numerics;
 
 namespace CrossX.Framework.UI.Controls
 {
@@ -50,6 +51,8 @@ namespace CrossX.Framework.UI.Controls
         public Length Spacing { get => spacing; set => SetPropertyAndRecalcLayout(ref spacing, value); }
         public bool Enabled { get => enabled; set => SetPropertyAndRedraw(ref enabled, value); }
 
+        public string Tooltip { get; set; }
+
         public Drawable BoxDrawable { get; set; }
         public Drawable TickMarkDrawable { get; set; }
 
@@ -71,12 +74,28 @@ namespace CrossX.Framework.UI.Controls
 
             HorizontalAlignment = Alignment.Start;
             VerticalAlignment = Alignment.Start;
-
         }
 
         protected abstract void OnClick();
 
-        
+        protected override void OnUpdate(float time)
+        {
+            base.OnUpdate(time);
+
+            if (CurrentState == ButtonState.Hover)
+            {
+                var boxSize = BoxSize.Calculate(ScreenBounds.Height);
+                var spacing = Spacing.Calculate(ScreenBounds.Height);
+
+                Services.TooltipService.ShowTooltip(this, Tooltip, ScreenBounds.BottomLeft + new Vector2(boxSize + spacing, 0));
+            }
+            else
+            {
+                Services.TooltipService.HideTooltip(this);
+            }
+        }
+
+
         protected override void OnRender(Canvas canvas, float opacity)
         {
             base.OnRender(canvas, opacity);
