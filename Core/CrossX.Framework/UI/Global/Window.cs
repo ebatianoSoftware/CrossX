@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.IoC;
+using CrossX.Abstractions.Windows;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Windows.Input;
 using Xx;
 
 namespace CrossX.Framework.UI.Global
@@ -90,7 +92,10 @@ namespace CrossX.Framework.UI.Global
         [XxSchemaBindable(true)]
         public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
 
-        
+        public event Action Disposed;
+        public event Action CloseNativeWindow;
+
+        public ICommand WindowDisposedCommand { get; set; }
 
         private View rootView;
         private bool layoutInvalid;
@@ -150,6 +155,11 @@ namespace CrossX.Framework.UI.Global
 
         private readonly GestureProcessor gestureProcessor = new GestureProcessor();
 
+        public void Close()
+        {
+            CloseNativeWindow?.Invoke();
+        }
+
         public void Update(float timeDelta)
         {
             if (layoutInvalid) RecalculateLayout();
@@ -167,6 +177,8 @@ namespace CrossX.Framework.UI.Global
         {
             mainFrame.Dispose();
             bindingService.RemoveBindings(this);
+            WindowDisposedCommand?.Execute(this);
+            Disposed?.Invoke();
         }
 
         public void InvalidateLayout()

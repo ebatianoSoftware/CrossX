@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.IoC;
+using CrossX.Abstractions.Windows;
 using CrossX.Framework.ApplicationDefinition;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Graphics;

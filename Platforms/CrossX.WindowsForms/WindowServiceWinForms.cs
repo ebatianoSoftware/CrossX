@@ -1,5 +1,6 @@
 ﻿using CrossX.Abstractions.Async;
 using CrossX.Abstractions.IoC;
+using CrossX.Abstractions.Windows;
 using CrossX.Framework.Core;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
@@ -10,6 +11,8 @@ namespace CrossX.WindowsForms
 {
     internal class WindowServiceWinForms: WindowService
     {
+        public WindowHost MainWindowHost { get; private set; }
+
         private readonly List<WindowHost> windows = new List<WindowHost>();
         private readonly IObjectFactory objectFactory;
         private readonly IDispatcher dispatcher;
@@ -22,22 +25,44 @@ namespace CrossX.WindowsForms
             this.dispatcher = dispatcher;
         }
 
-        public override void ShowWindow(Window window) => ShowWindow(window, false);
-
-        private void ShowWindow(Window window, bool modal)
+        public override void ShowWindow(Window window, CreateWindowMode createMode)
         {
-            var host = new WindowHost(window, objectFactory);
+            var host = new WindowHost(window, objectFactory, createMode);
+
+            switch(createMode)
+            {
+                case CreateWindowMode.MainWindow:
+                    MainWindowHost = host;
+                    MainWindow = window;
+                    break;
+
+                case CreateWindowMode.Global:
+                    if (MainWindowHost == null)
+                    {
+                        MainWindowHost = host;
+                        MainWindow = window;
+                    }
+                    break;
+
+                case CreateWindowMode.ChildToMain:
+                    host.ShowInTaskbar = false;
+                    host.MinimizeBox = false;
+                    host.ShowIcon = false;
+                    MainWindowHost.AddChild(host);
+                    break;
+
+                case CreateWindowMode.Modal:
+                    host.ShowInTaskbar = false;
+                    host.MinimizeBox = false;
+                    host.ShowIcon = false;
+                    MainWindowHost.AddModal(host);
+                    break;
+            }
+
             host.Disposed += Host_Disposed;
             windows.Add(host);
 
-            if (modal)
-            {
-                host.ShowDialog();
-            }
-            else
-            {
-                host.Show();
-            }
+            host.Show();
         }
 
         private void Host_Disposed(object sender, EventArgs _)

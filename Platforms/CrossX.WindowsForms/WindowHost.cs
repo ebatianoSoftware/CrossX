@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.IoC;
+using CrossX.Abstractions.Windows;
 using CrossX.Framework;
 using CrossX.Framework.Input;
 using CrossX.Framework.UI.Global;
@@ -9,13 +10,13 @@ using System.Windows.Forms;
 
 namespace CrossX.WindowsForms
 {
-    public partial class WindowHost : Form
+    public partial class WindowHost : BaseHostForm
     {
         public readonly Window Window;
         private readonly ISkiaCanvas skiaCanvas;
-        private CursorType cursorType;
 
-        private CursorType CursorType
+        private CursorType cursorType;
+        protected override CursorType CursorType
         {
             set
             {
@@ -27,23 +28,33 @@ namespace CrossX.WindowsForms
             }
         }
 
-        public WindowHost(Window window, IObjectFactory objectFactory)
+        protected override bool EnableManipulation { set => skglControl.Enabled = value; }
+
+        public WindowHost(Window window, IObjectFactory objectFactory, CreateWindowMode createMode)
         {
             InitializeComponent();
             Window = window;
 
             skiaCanvas = objectFactory.Create<ISkiaCanvas>();
 
+            //if (createMode == CreateWindowMode.Modal || createMode == CreateWindowMode.ChildToMain)
+            //{
+            //    FormBorderStyle = window.Desktop_CanResize ? FormBorderStyle.SizableToolWindow : FormBorderStyle.FixedToolWindow;
+            //}
+            //else
+            {
+                FormBorderStyle = window.Desktop_CanResize ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
+            }
+
             ClientSize = new System.Drawing.Size(window.Desktop_InitialWidth.Pixels, window.Desktop_InitialHeight.Pixels);
 
             MaximizeBox = window.Desktop_CanMaximize;
             MinimizeBox = true;
 
+            Text = Window.Title;
+
             var diff = Size - ClientSize;
-
             MinimumSize = new System.Drawing.Size(window.Desktop_MinWidth.Pixels + diff.Width, window.Desktop_MinHeight.Pixels + diff.Height);
-
-            FormBorderStyle = window.Desktop_CanResize ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
 
             skglControl.PaintSurface += SkglControl_PaintSurface;
             skglControl.SizeChanged += SkglControl_SizeChanged;
@@ -52,7 +63,16 @@ namespace CrossX.WindowsForms
             skglControl.MouseUp += SkglControl_MouseUp;
             skglControl.MouseLeave += SkglControl_MouseLeave;
 
+            window.CloseNativeWindow += Window_CloseNativeWindow;
+
             SkglControl_SizeChanged(this, EventArgs.Empty);
+        }
+
+        private void Window_CloseNativeWindow()
+        {
+            Close();
+            DestroyHandle();
+            Dispose();
         }
 
         public void Redraw() => skglControl.Invalidate();

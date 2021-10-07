@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.IoC;
+using CrossX.Abstractions.Windows;
 using System;
 
 namespace CrossX.Framework.Core
