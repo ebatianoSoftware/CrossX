@@ -27,7 +27,7 @@ namespace CrossX.WindowsForms.Input
         public string lfFaceName = string.Empty;
     }
 
-    internal class NativeTextBox : RichTextBox, INativeTextBox
+    internal class NativeTextBox : TextBox, INativeTextBox
     {
         private readonly INativeTextBoxControl crossControl;
 

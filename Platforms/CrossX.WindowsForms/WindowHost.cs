@@ -34,7 +34,9 @@ namespace CrossX.WindowsForms
         public WindowHost(Window window, IObjectFactory objectFactory)
         {
             InitializeComponent();
-            
+
+            SetStyle(ControlStyles.AllPaintingInWmPaint |ControlStyles.UserPaint |ControlStyles.DoubleBuffer, true);
+
             Window = window;
             BackColor = System.Drawing.Color.FromArgb(Window.BackgroundColor.R, Window.BackgroundColor.G, Window.BackgroundColor.B);
             skiaCanvas = objectFactory.Create<ISkiaCanvas>();

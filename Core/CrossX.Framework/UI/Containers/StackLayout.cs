@@ -1,5 +1,4 @@
-﻿using CrossX.Framework.Graphics;
-using System;
+﻿using System;
 
 namespace CrossX.Framework.UI.Containers
 {
