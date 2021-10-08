@@ -41,15 +41,10 @@ namespace CrossX.WindowsForms
         {
             currentChild = host;
             currentChild.Disposed += CurrentChild_Disposed;
+            currentChild.LocationChanged += CurrentChild_LocationChanged;
 
             host.StartPosition = FormStartPosition.Manual;
-            currentChild.Shown += CurrentChild_Shown;
 
-            AddOwnedForm(host);
-        }
-
-        private void CurrentChild_Shown(object sender, EventArgs e)
-        {
             var offset = PointToScreen(Point.Empty);
             offset.X -= Location.X;
             offset.Y -= Location.Y;
@@ -58,9 +53,8 @@ namespace CrossX.WindowsForms
             offset.Y += (ClientSize.Height - currentChild.Size.Height) / 2;
 
             childRelativePosition = offset;
-            currentChild.Shown -= CurrentChild_Shown;
 
-            currentChild.LocationChanged += CurrentChild_LocationChanged;
+            AddOwnedForm(host);
             OnLocationChanged(this, EventArgs.Empty);
         }
 

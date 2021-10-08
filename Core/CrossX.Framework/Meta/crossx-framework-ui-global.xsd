@@ -44,7 +44,9 @@
         <xsd:attribute type="ab:System.Boolean" name="Desktop.CanMaximize" />
         <xsd:attribute type="ab:System.Boolean" name="Desktop.CanResize" />
         <xsd:attribute type="xx:CrossX.Framework.UI.Global.WindowState" name="Desktop.StartMode" />
+        <xsd:attribute type="ab:System.Boolean" name="Desktop.HasCaption" />
         <xsd:attribute type="ab:CrossX.Framework.Color-Bindable" name="BackgroundColor" />
+        <xsd:attribute type="ab:unknown" name="WindowDisposedCommand" />
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>

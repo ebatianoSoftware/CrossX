@@ -7,6 +7,7 @@ namespace CrossX.Framework.UI.Controls
     public class ImageView : View
     {
         private ImageDescriptor source;
+        private Thickness padding;
 
         public ImageDescriptor Source
         {
@@ -45,6 +46,18 @@ namespace CrossX.Framework.UI.Controls
             }
         }
 
+        public Thickness Padding
+        {
+            get => padding;
+            set
+            {
+                if (SetProperty(ref padding, value))
+                {
+                    Parent?.InvalidateLayout();
+                }
+            }
+        }
+
         private Image image;
         private float scale = 1;
         private Stretch stretch = Stretch.Uniform;
@@ -70,30 +83,32 @@ namespace CrossX.Framework.UI.Controls
 
             source = new Rectangle(0, 0, image.Size.Width, image.Size.Height);
 
+            var screenBounds = ScreenBounds.Deflate(Padding);
+
             switch (Stretch)
             {
                 case Stretch.None:
-                    var pos = ScreenBounds.Center - new Vector2(width / 2, height / 2);
+                    var pos = screenBounds.Center - new Vector2(width / 2, height / 2);
                     target = new RectangleF(pos, new SizeF(width, height));
                     return;
 
                 case Stretch.Fill:
-                    target = ScreenBounds;
+                    target = screenBounds;
                     return;
 
                 case Stretch.Uniform:
-                    var scale = Math.Min(ScreenBounds.Width / image.Size.Width, ScreenBounds.Height / image.Size.Height);
+                    var scale = Math.Min(screenBounds.Width / image.Size.Width, screenBounds.Height / image.Size.Height);
                     width = image.Size.Width * scale;
                     height = image.Size.Height * scale;
-                    var pos2 = ScreenBounds.Center - new Vector2(width / 2, height / 2);
+                    var pos2 = screenBounds.Center - new Vector2(width / 2, height / 2);
                     target = new RectangleF(pos2, new SizeF(width, height));
                     return;
 
                 case Stretch.UniformToFill:
-                    var scale2 = Math.Max(ScreenBounds.Width / image.Size.Width, ScreenBounds.Height / image.Size.Height);
+                    var scale2 = Math.Max(screenBounds.Width / image.Size.Width, screenBounds.Height / image.Size.Height);
                     width = image.Size.Width * scale2;
                     height = image.Size.Height * scale2;
-                    target = ScreenBounds;
+                    target = screenBounds;
 
                     var cutW = (width - target.Width) / scale2;
                     var cutH = (height - target.Height) / scale2;
@@ -145,14 +160,15 @@ namespace CrossX.Framework.UI.Controls
 
             if (Width.IsAuto && HorizontalAlignment != Alignment.Stretch)
             {
-                size.Width = image?.Size.Width * Scale ?? 0;
+                size.Width = image?.Size.Width * Scale ?? 0 + Padding.Width;
             }
 
             if (Height.IsAuto && VerticalAlignment != Alignment.Stretch)
             {
-                size.Height = image?.Size.Height * Scale ?? 0;
+                size.Height = image?.Size.Height * Scale ?? 0 + Padding.Height;
             }
-            return size;
+
+            return new SizeF(size.Width, size.Height);
         }
     }
 }

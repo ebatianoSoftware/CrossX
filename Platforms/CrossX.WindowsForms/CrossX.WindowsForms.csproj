@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ControlzEx" Version="5.0.1" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.80.3" />
   </ItemGroup>
 

@@ -11,16 +11,19 @@ namespace CrossX.Skia.Graphics
         public SkiaFont(SKFont font)
         {
             SKFont = font;
+            
             SKPaint = new SKPaint(font)
             {
                 IsStroke = false,
                 IsAntialias = true,
                 SubpixelText = true,
-                HintingLevel = SKPaintHinting.NoHinting,
+                HintingLevel = SKPaintHinting.Full,
                 //IsAutohinted = true,
                 //LcdRenderText = true,
                 FilterQuality = SKFilterQuality.High
             };
+
+            FamilyName = font.Typeface.FamilyName;
         }
 
         public override SizeF MeasureText(string text, FontMeasure measure)

@@ -1,5 +1,4 @@
 ﻿using CrossX.Abstractions.IoC;
-using CrossX.Abstractions.Windows;
 using CrossX.Framework.Binding;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
@@ -14,12 +13,6 @@ using Xx;
 
 namespace CrossX.Framework.UI.Global
 {
-    public enum WindowState
-    {
-        Normal,
-        Maximized,
-        Fullscreen
-    }
 
     [XxSchemaExport(XxChildrenMode.OnlyOne)]
     public class Window : UIBindingContext, IElementsContainer, IDisposable, IViewParent
@@ -89,11 +82,14 @@ namespace CrossX.Framework.UI.Global
             get => desktop_StartMode; set => SetProperty(ref desktop_StartMode, value);
         }
 
+        public bool Desktop_HasCaption { get; set; } = true;
+
         [XxSchemaBindable(true)]
         public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
 
         public event Action Disposed;
-        public event Action CloseNativeWindow;
+        
+        public INativeWindow NativeWindow { get; internal set; }
 
         public ICommand WindowDisposedCommand { get; set; }
 
@@ -103,7 +99,7 @@ namespace CrossX.Framework.UI.Global
         private Color backgroundColor = Color.Black;
 
         private FrameLayout mainFrame;
-        private string title;
+        private string title = "";
 
         private Length desktop_MinWidth;
         private Length desktop_MinHeight;
@@ -157,7 +153,7 @@ namespace CrossX.Framework.UI.Global
 
         public void Close()
         {
-            CloseNativeWindow?.Invoke();
+            NativeWindow?.Close();
         }
 
         public void Update(float timeDelta)

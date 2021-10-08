@@ -4,7 +4,6 @@
     {
         MainWindow,
         Global,
-        ChildToMain,
         Modal
     }
 }

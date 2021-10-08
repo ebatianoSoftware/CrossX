@@ -112,7 +112,7 @@ namespace CrossX.Skia.Graphics
             var skPaint = skiaFont.SKPaint;
             skPaint.IsStroke = false;
             skPaint.IsAntialias = true;
-            skPaint.FilterQuality = SKFilterQuality.High;
+            skPaint.FilterQuality = SKFilterQuality.Low;
             skPaint.Color = color.ToSkia();
 
             skCanvas.DrawText(line, position.X, position.Y, skPaint);

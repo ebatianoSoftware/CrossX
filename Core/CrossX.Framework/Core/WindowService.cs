@@ -24,7 +24,7 @@ namespace CrossX.Framework.Core
             this.viewLocator = viewLocator;
         }
 
-        public TViewModel CreateWindow<TViewModel>(CreateWindowMode createMode = CreateWindowMode.ChildToMain, TViewModel vm = null) where TViewModel : class
+        public TViewModel CreateWindow<TViewModel>(CreateWindowMode createMode = CreateWindowMode.Modal, TViewModel vm = null) where TViewModel : class
         {
             var window = Load(vm);
             ShowWindow(window, createMode);
@@ -90,6 +90,14 @@ namespace CrossX.Framework.Core
             });
         }
 
-        public abstract void ShowWindow(Window window, CreateWindowMode windowMode);
+        public void ShowWindow(Window window, CreateWindowMode windowMode)
+        {
+            var nativeWindow = CreateNativeWindow(window, windowMode);
+            window.NativeWindow = nativeWindow;
+        }
+
+        protected abstract INativeWindow CreateNativeWindow(Window window, CreateWindowMode windowMode);
+
+        public void Exit() => MainWindow?.Close();
     }
 }

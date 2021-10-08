@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.Async;
+using CrossX.Abstractions.IO;
 using CrossX.Abstractions.IoC;
 using CrossX.Abstractions.Windows;
 using CrossX.Framework;
@@ -6,6 +7,7 @@ using CrossX.Framework.Async;
 using CrossX.Framework.Core;
 using CrossX.Framework.IoC;
 using CrossX.Skia;
+using CrossX.WindowsForms.Services;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -38,7 +40,8 @@ namespace CrossX.WindowsForms
             scopeBuilder.WithSkia()
                         .WithCrossTypes()
                         .WithInstance(dispatcher).As<ISystemDispatcher>().As<IDispatcher>()
-                        .WithInstance(sequencer).As<ISequencer>();
+                        .WithInstance(sequencer).As<ISequencer>()
+                        .WithType<SelectFileServiceWinForms>().As<ISelectFileService>().AsSingleton();
 
             
             var services = scopeBuilder.Build();
@@ -58,7 +61,7 @@ namespace CrossX.WindowsForms
 
             TimeSpan lastUpdateTimeSpan = stopwatch.Elapsed;
 
-            while (windowsService.Windows.Count > 0)
+            while (windowsService.MainWindow != null)
             {
                 TimeSpan currentTimeSpan = stopwatch.Elapsed;
                 TimeSpan timeDelta = currentTimeSpan - lastUpdateTimeSpan;
@@ -80,6 +83,11 @@ namespace CrossX.WindowsForms
 
                 FormsApplication.DoEvents();
                 Thread.Sleep(1);
+            }
+
+            foreach(var wnd in windowsService.Windows)
+            {
+                wnd.Window.Close();
             }
         }
     }

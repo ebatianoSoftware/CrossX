@@ -33,12 +33,17 @@ namespace CrossX.Framework.Async
         {
             T result = default;
 
-            if(!events.TryDequeue(out var evnt))
+            if (InvokeOnDispatcherThread( ()=> result = func()))
+            {
+                return Task.FromResult(result);
+            }
+
+            if (!events.TryDequeue(out var evnt))
             {
                 evnt = new AutoResetEvent(false);
             }
 
-            BeginInvoke(() =>
+            EnqueueAction(() =>
             {
                 result = func();
                 evnt.Set();

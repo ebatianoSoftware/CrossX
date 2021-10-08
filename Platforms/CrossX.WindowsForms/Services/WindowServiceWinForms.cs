@@ -7,33 +7,49 @@ using CrossX.Framework.XxTools;
 using System;
 using System.Collections.Generic;
 
-namespace CrossX.WindowsForms
+namespace CrossX.WindowsForms.Services
 {
-    internal class WindowServiceWinForms: WindowService
+    internal class WindowServiceWinForms : WindowService
     {
         public WindowHost MainWindowHost { get; private set; }
 
         private readonly List<WindowHost> windows = new List<WindowHost>();
         private readonly IObjectFactory objectFactory;
         private readonly IDispatcher dispatcher;
+        private readonly ISequencer sequencer;
 
         public IReadOnlyList<WindowHost> Windows => windows;
 
-        public WindowServiceWinForms(IObjectFactory objectFactory, IXxFileParser xxFileParser, IViewLocator viewLocator, IDispatcher dispatcher) : base(objectFactory, xxFileParser, viewLocator)
+        public WindowServiceWinForms(IObjectFactory objectFactory, IXxFileParser xxFileParser, IViewLocator viewLocator, IDispatcher dispatcher,
+            ISequencer sequencer) : base(objectFactory, xxFileParser, viewLocator)
         {
             this.objectFactory = objectFactory;
             this.dispatcher = dispatcher;
+            this.sequencer = sequencer;
         }
 
-        public override void ShowWindow(Window window, CreateWindowMode createMode)
+        private IEnumerable<Sequence> ShowWindow(WindowHost host)
         {
-            var host = new WindowHost(window, objectFactory, createMode);
+            host.Opacity = 0;
+            host.Show();
 
-            switch(createMode)
+            yield return Sequence.WaitForNextFrame();
+            host.Opacity = 1;
+        }
+
+        protected override INativeWindow CreateNativeWindow(Window window, CreateWindowMode createMode)
+        {
+            var host = new WindowHost(window, objectFactory);
+
+            switch (createMode)
             {
                 case CreateWindowMode.MainWindow:
+                    var oldMain = MainWindow;
                     MainWindowHost = host;
+                    MainWindowHost.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
                     MainWindow = window;
+                    oldMain?.Close();
+                    GC.Collect(2);
                     break;
 
                 case CreateWindowMode.Global:
@@ -41,14 +57,8 @@ namespace CrossX.WindowsForms
                     {
                         MainWindowHost = host;
                         MainWindow = window;
+                        host.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
                     }
-                    break;
-
-                case CreateWindowMode.ChildToMain:
-                    host.ShowInTaskbar = false;
-                    host.MinimizeBox = false;
-                    host.ShowIcon = false;
-                    MainWindowHost.AddChild(host);
                     break;
 
                 case CreateWindowMode.Modal:
@@ -62,15 +72,25 @@ namespace CrossX.WindowsForms
             host.Disposed += Host_Disposed;
             windows.Add(host);
 
-            host.Show();
+            sequencer.Run(ShowWindow(host));
+            return host;
         }
 
         private void Host_Disposed(object sender, EventArgs _)
         {
-            if(sender is WindowHost wh)
+            if (sender is WindowHost wh)
             {
                 wh.Disposed -= Host_Disposed;
-                dispatcher.EnqueueAction(() => windows.Remove(wh));
+                dispatcher.EnqueueAction(() =>
+                {
+                    windows.Remove(wh);
+                    if (MainWindowHost == wh)
+                    {
+                        MainWindowHost = null;
+                        MainWindow = null;
+                    }
+                    GC.Collect(2);
+                });
             }
         }
     }

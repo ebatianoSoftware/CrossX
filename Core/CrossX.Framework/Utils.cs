@@ -13,6 +13,12 @@ namespace CrossX.Framework
             return obj;
         }
 
+        public static Rectangle GetPixelsRect(this RectangleF rect)
+        {
+            return new Rectangle((int)(rect.X * UiUnit.PixelsPerUnit), (int)(rect.Y * UiUnit.PixelsPerUnit),
+                (int)(rect.Width * UiUnit.PixelsPerUnit), (int)(rect.Height * UiUnit.PixelsPerUnit));
+        }
+
         public static TextAlign GetTextAlign(Alignment horzAlign, Alignment vertAlign)
         {
             TextAlign align = TextAlign.Left;

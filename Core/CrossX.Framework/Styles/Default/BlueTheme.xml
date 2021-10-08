@@ -9,6 +9,8 @@
     <Color Key="SystemButtonAccentBackgroundColor" Value="#0E79FF"/>
     <Color Key="SystemButtonAccentBackgroundColorOver" Value="#3692FF"/>
     <Color Key="SystemButtonAccentBackgroundColorPushed" Value="#0E79FF"/>
+
+    <Color Key="SystemActiveFrameColor" Value="#3692FF"/>
   </Theme>
   
 </Application>

@@ -52,6 +52,9 @@ namespace CrossX.Framework.UI
             }
         }
 
+        public bool InputTransparent { get; set; }
+        public bool NativeDraggable { get; set; }
+
         public Drawable BackgroundDrawable { get => backgroundDrawable; set => SetPropertyAndRedraw(ref backgroundDrawable, value); }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
         public Alignment VerticalAlignment { get => verticalAlignment; set => SetProperty(ref verticalAlignment, value); }
@@ -179,6 +182,7 @@ namespace CrossX.Framework.UI
 
         public bool PreviewGesture(Gesture gesture)
         {
+            if (InputTransparent) return false;
             if (!DisplayVisible || !Visible) return false;
             if (OnPreviewGesture(gesture)) return true;
             return false;
@@ -191,9 +195,23 @@ namespace CrossX.Framework.UI
 
         public bool ProcessGesture(Gesture gesture)
         {
+            if (InputTransparent) return false;
             if (!DisplayVisible || !Visible) return false;
             if (OnProcessGesture(gesture)) return true;
-            return ScreenBounds.Contains(gesture.Position);
+
+            if(ScreenBounds.Contains(gesture.Position))
+            {
+                if(NativeDraggable)
+                {
+                    gesture.SetCursor = CursorType.NativeDrag;
+                }
+
+                if (BackgroundColor.A > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         protected virtual bool OnProcessGesture(Gesture gesture)
         {

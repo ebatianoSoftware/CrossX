@@ -1,5 +1,4 @@
 ﻿using CrossX.Abstractions.IoC;
-using CrossX.Abstractions.Windows;
 using CrossX.Framework;
 using CrossX.Framework.Input;
 using CrossX.Framework.UI.Global;
@@ -7,6 +6,7 @@ using CrossX.Skia;
 using System;
 using System.Numerics;
 using System.Windows.Forms;
+using DrawingPoint = System.Drawing.Point;
 
 namespace CrossX.WindowsForms
 {
@@ -16,6 +16,7 @@ namespace CrossX.WindowsForms
         private readonly ISkiaCanvas skiaCanvas;
 
         private CursorType cursorType;
+
         protected override CursorType CursorType
         {
             set
@@ -28,34 +29,33 @@ namespace CrossX.WindowsForms
             }
         }
 
-        protected override bool EnableManipulation { set => skglControl.Enabled = value; }
+        protected override bool EnableManipulation {set => skglControl.Enabled = value; }
 
-        public WindowHost(Window window, IObjectFactory objectFactory, CreateWindowMode createMode)
+        public WindowHost(Window window, IObjectFactory objectFactory)
         {
             InitializeComponent();
+            
             Window = window;
-
+            BackColor = System.Drawing.Color.FromArgb(Window.BackgroundColor.R, Window.BackgroundColor.G, Window.BackgroundColor.B);
             skiaCanvas = objectFactory.Create<ISkiaCanvas>();
 
-            //if (createMode == CreateWindowMode.Modal || createMode == CreateWindowMode.ChildToMain)
-            //{
-            //    FormBorderStyle = window.Desktop_CanResize ? FormBorderStyle.SizableToolWindow : FormBorderStyle.FixedToolWindow;
-            //}
-            //else
-            {
-                FormBorderStyle = window.Desktop_CanResize ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
-            }
-
+            FormBorderStyle = window.Desktop_HasCaption ? FormBorderStyle.Sizable : FormBorderStyle.None;
             ClientSize = new System.Drawing.Size(window.Desktop_InitialWidth.Pixels, window.Desktop_InitialHeight.Pixels);
 
             MaximizeBox = window.Desktop_CanMaximize;
             MinimizeBox = true;
 
+            if (!window.Desktop_HasCaption)
+            {
+                ControlBox = false;
+            }
+            
             Text = Window.Title;
 
             var diff = Size - ClientSize;
             MinimumSize = new System.Drawing.Size(window.Desktop_MinWidth.Pixels + diff.Width, window.Desktop_MinHeight.Pixels + diff.Height);
 
+            skglControl.Hide();
             skglControl.PaintSurface += SkglControl_PaintSurface;
             skglControl.SizeChanged += SkglControl_SizeChanged;
             skglControl.MouseMove += SkglControl_MouseMove;
@@ -63,16 +63,14 @@ namespace CrossX.WindowsForms
             skglControl.MouseUp += SkglControl_MouseUp;
             skglControl.MouseLeave += SkglControl_MouseLeave;
 
-            window.CloseNativeWindow += Window_CloseNativeWindow;
-
             SkglControl_SizeChanged(this, EventArgs.Empty);
+            Shown += WindowHost_Shown;
         }
 
-        private void Window_CloseNativeWindow()
+        private void WindowHost_Shown(object sender, EventArgs e)
         {
-            Close();
-            DestroyHandle();
-            Dispose();
+            skglControl.Show();
+            Shown -= WindowHost_Shown;
         }
 
         public void Redraw() => skglControl.Invalidate();
@@ -88,6 +86,24 @@ namespace CrossX.WindowsForms
             args.Surface.Canvas.Scale(UiUnit.PixelsPerUnit);
             Window.Render(skiaCanvas.Canvas);
             args.Surface.Canvas.ResetMatrix();
+        }
+
+        DrawingPoint lastMousePosition;
+        protected override void OnMouseMove(MouseEventArgs args)
+        {
+            base.OnMouseMove(args);
+            if (!Capture) return;
+
+            var locationX = Location.X + args.Location.X - lastMousePosition.X;
+            var locationY = Location.Y + args.Location.Y - lastMousePosition.Y;
+
+            Location = new DrawingPoint(locationX, locationY);
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            Capture = false;
         }
 
         private void SkglControl_MouseLeave(object sender, EventArgs args)
@@ -144,7 +160,17 @@ namespace CrossX.WindowsForms
 
             if (pointerKind != 0)
             {
-                CursorType = Window.OnPointerDown(new PointerId(pointerKind), position);
+                var cursorType = Window.OnPointerDown(new PointerId(pointerKind), position);
+                CursorType = cursorType;
+                if (cursorType == CursorType.NativeDrag)
+                {
+                    Capture = true;
+                    lastMousePosition = args.Location;
+                }
+                else
+                {
+                    
+                }
             }
         }
 
@@ -187,10 +213,12 @@ namespace CrossX.WindowsForms
 
         private Cursor MapCursor(CursorType cursorType)
         {
+            if (skglControl.Enabled == false) return Cursors.Default;
+
             switch (cursorType)
             {
                 case CursorType.Default:
-                    return Cursors.Default;
+                    return Cursors.Arrow;
 
                 case CursorType.Cross:
                     return Cursors.Cross;
@@ -215,8 +243,30 @@ namespace CrossX.WindowsForms
 
                 case CursorType.SizeWE:
                     return Cursors.SizeWE;
+
+                case CursorType.IBeam:
+                    return Cursors.IBeam;
+
+                case CursorType.NativeDrag:
+                    return Cursors.SizeAll;
             }
+            
             return Cursors.Default;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (!Window.Desktop_CanResize)
+            {
+                switch (m.Msg)
+                {
+                    case 0x0084:
+                        m.Result = (IntPtr)0x01;
+                        return;
+                }
+            }
+
+            base.WndProc(ref m);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrossX.Framework.Graphics;
+using System;
 
 namespace CrossX.Framework.UI.Containers
 {
@@ -75,7 +76,6 @@ namespace CrossX.Framework.UI.Containers
             {
                 if (Height.IsAuto && VerticalAlignment != Alignment.Stretch) size.Height = 0;
                 size = CalculateWidth(size);
-                
             }
             else
             {
@@ -91,7 +91,7 @@ namespace CrossX.Framework.UI.Containers
             var height = size.Height;
 
             var spacing = Spacing.Calculate();
-            var mySize = new SizeF(0, size.Height);
+            var mySize = new SizeF(0, size.Height - Padding.Height);
 
             int visibleChildren = 0;
 
@@ -120,7 +120,7 @@ namespace CrossX.Framework.UI.Containers
             var width = size.Width;
 
             var spacing = Spacing.Calculate();
-            var mySize = new SizeF(size.Width, 0);
+            var mySize = new SizeF(size.Width - Padding.Width, 0);
 
             int visibleChildren = 0;
 

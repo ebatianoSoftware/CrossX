@@ -24,7 +24,6 @@
     <Color Key="SystemButtonForegroundColorOver" Value="#e0bbbbbb"/>
     <Color Key="SystemButtonForegroundColorPushed" Value="#bbb"/>
     <Color Key="SystemButtonForegroundColorDisabled" Value="#606060"/>
-
     <Color Key="SystemSeparatorColor" Value="#8888"/>
   </Theme>
 

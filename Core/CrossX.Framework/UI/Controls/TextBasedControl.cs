@@ -27,11 +27,12 @@ namespace CrossX.Framework.UI.Controls
             get => textPadding;
             set => SetPropertyAndRecalcLayout(ref textPadding, value);
         }
-        public string Text 
+        public virtual string Text 
         { 
             get => text;
             set => SetPropertyAndRecalcLayout(ref text, value);
         }
+
         public string FontFamily { get => fontFamily; set => SetPropertyAndRecalcLayout(ref fontFamily, value); }
         public Length FontSize { get => fontSize; set => SetPropertyAndRecalcLayout(ref fontSize, value); }
         public FontWeight FontWeight { get => fontWeight; set => SetPropertyAndRecalcLayout(ref fontWeight, value); }
