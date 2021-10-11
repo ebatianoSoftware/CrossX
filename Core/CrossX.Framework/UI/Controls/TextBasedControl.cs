@@ -62,7 +62,7 @@ namespace CrossX.Framework.UI.Controls
             sizeAuto.Width += TextPadding.Width;
             sizeAuto.Height += TextPadding.Height;
 
-            return new SizeF(autoWidth ? sizeAuto.Width : Math.Max(size.Width, sizeAuto.Width), autoHeight ? sizeAuto.Height : Math.Max(size.Height, sizeAuto.Height));
+            return new SizeF(autoWidth ? sizeAuto.Width : size.Width, autoHeight ? sizeAuto.Height : size.Height);
         }
     }
 }

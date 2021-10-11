@@ -139,7 +139,9 @@
   </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.Label">
     <xsd:complexContent>
-      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl"></xsd:extension>
+      <xsd:extension base="xx:CrossX.Framework.UI.Controls.TextBasedControl">
+        <xsd:attribute type="aa:System.Boolean-Bindable" name="Elipsis" />
+      </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CrossX.Framework.UI.Controls.ProgressBar">

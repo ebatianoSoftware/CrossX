@@ -6,7 +6,6 @@ using CrossX.Framework.Graphics;
 using CrossX.Framework.IoC;
 using CrossX.Framework.Services;
 using CrossX.Framework.UI;
-using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
 using Xx.Definition;

@@ -24,18 +24,18 @@ namespace CrossX.Framework.Core
             this.viewLocator = viewLocator;
         }
 
-        public TViewModel CreateWindow<TViewModel>(CreateWindowMode createMode = CreateWindowMode.Modal, TViewModel vm = null) where TViewModel : class
+        public TViewModel CreateWindow<TViewModel>(CreateWindowMode createMode = CreateWindowMode.Modal, TViewModel vm = null, params object[] parameters) where TViewModel : class
         {
-            var window = Load(vm);
+            var window = Load(vm, parameters);
             ShowWindow(window, createMode);
             return (TViewModel)window.DataContext;
         }
 
-        public Window Load<TViewModel>(TViewModel vm = null) where TViewModel : class
+        public Window Load<TViewModel>(TViewModel vm = null, params object[] parameters) where TViewModel : class
         {
             if(vm == null)
             {
-                vm = objectFactory.Create<TViewModel>();
+                vm = objectFactory.Create<TViewModel>(parameters);
             }
             var (viewPath, assembly) = viewLocator.LocateView(vm);
             viewPath += ".xml";
@@ -56,9 +56,9 @@ namespace CrossX.Framework.Core
             }
         }
 
-        public Task<TResult> ShowPopup<TResult, TViewModel>(TResult defaultResult = default) where TViewModel : class, IModalContext<TResult>
+        public Task<TResult> ShowPopup<TResult, TViewModel>(TResult defaultResult = default, TViewModel viewModel = null) where TViewModel : class, IModalContext<TResult>
         {
-            var window = Load<TViewModel>();
+            var window = Load(viewModel);
             ShowWindow(window, CreateWindowMode.Modal);
 
             var context = (IModalContext<TResult>)window.DataContext;
