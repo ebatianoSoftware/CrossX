@@ -34,6 +34,8 @@ namespace CrossX.Framework.UI.Controls
         [BindingMode(BindingMode.TwoWay)]
         public override string Text { get => base.Text; set => base.Text = value; }
 
+        public int MaxLength { get; set; } = int.MaxValue;
+
         public string Hint { get => hint; set => SetPropertyAndRedraw(ref hint, value); }
 
         protected ButtonState CurrentState
@@ -62,34 +64,153 @@ namespace CrossX.Framework.UI.Controls
         private INativeTextBox nativeTextBox = null;
         private Color selectionColor;
 
+        private int selectionStart = 0;
+        private int selectionLength = 0;
+
+        private float selectionStartPosition = 0;
+        private float selectionEndPosition = 0;
+
+        private int initialSelectionStart = 0;
+
+        private int nativeControlIsToRelease = 0;
+
         public TextBox(IUIServices services) : base(services)
         {
             buttonGesturesProcessor = new ButtonGesturesProcessor(
                 state => CurrentState = state,
                 null,
-                onHoveredAction: g => g.SetCursor = CursorType.IBeam,
-                onUpAction: g => g.SetCursor = CursorType.IBeam,
+                onHoveredAction: OnHovered,
+                onUpAction: OnHovered,
                 onDownAction: OnDown,
-                onMoveAction: g => g.SetCursor = CursorType.IBeam
+                onMoveAction: OnMove
                 );
+        }
+
+        private void OnHovered(Gesture gesture)
+        {
+            var bounds = ScreenBounds.Deflate(TextPadding);
+            gesture.SetCursor = bounds.Contains(gesture.Position) ? CursorType.IBeam : CursorType.Default;
+        }
+
+        private void OnMove(Gesture gesture)
+        {
+            if(nativeTextBox != null && initialSelectionStart >= 0)
+            {
+                var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
+
+                var bounds = ScreenBounds.Deflate(TextPadding);
+                var offset = gesture.Position.X - bounds.X + font.MeasureText("I", FontMeasure.Extended).Width / 2;
+                var selection = font.BreakText(Text, offset);
+
+                var selStart = initialSelectionStart;
+                var selEnd = selection;
+
+                if (selStart > selEnd)
+                {
+                    var end = selStart;
+                    selStart = selEnd;
+                    selEnd = end;
+                }
+
+                if(nativeTextBox.Selection.start != selStart || nativeTextBox.Selection.length != selEnd - selStart)
+                {
+                    nativeTextBox.Selection = (selStart, selEnd - selStart);
+                }
+
+                gesture.SetCursor = CursorType.IBeam;
+            }
         }
 
         private async void OnDown(Gesture gesture)
         {
-            gesture.SetCursor = CursorType.IBeam;
-
             try
             {
+                nativeControlIsToRelease = 0;
+
                 if (nativeTextBox == null)
                 {
                     nativeTextBox = await Parent.Window.NativeWindow.CreateNativeTextBox(this, gesture.Position);
-                    Services.Dispatcher.EnqueueAction(Invalidate);
-                    Invalidate();
                 }
+                else
+                {
+                    nativeTextBox.Focus();
+                }
+
+                var bounds = ScreenBounds.Deflate(TextPadding);
+
+                if (bounds.Contains(gesture.Position))
+                {
+
+                    var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
+                    var offset = gesture.Position.X - bounds.X + font.MeasureText("I", FontMeasure.Extended).Width / 2;
+                    var selection = font.BreakText(Text, offset);
+                    nativeTextBox.Selection = (selection, 0);
+                    initialSelectionStart = selection;
+                    gesture.SetCursor = CursorType.IBeam;
+                }
+                else
+                {
+                    initialSelectionStart = -1;
+                    nativeTextBox.Selection = (0, Text.Length);
+                    gesture.SetCursor = CursorType.Default;
+                }
+                Services.Dispatcher.EnqueueAction(Invalidate);
+                Invalidate();
+
             }
             catch (Exception ex)
             {
+            }
+        }
 
+        protected override void OnUpdate(float time)
+        {
+            base.OnUpdate(time);
+
+            if(nativeControlIsToRelease > 0)
+            {
+                nativeControlIsToRelease--;
+                if(nativeControlIsToRelease == 0)
+                {
+                    nativeTextBox?.Release();
+                    nativeTextBox = null;
+                }
+            }
+
+            if (nativeTextBox != null)
+            {
+                var sel = nativeTextBox.Selection;
+                if (sel.start != selectionStart || sel.length != selectionLength)
+                {
+                    Invalidate();
+
+                    selectionStart = sel.start;
+                    selectionLength = sel.length;
+
+                    if (selectionStart >= 0)
+                    {
+                        var textBefore = Text.Substring(0, selectionStart);
+                        var textIn = Text.Substring(0, selectionStart + selectionLength);
+
+                        var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
+
+                        selectionStartPosition = font.MeasureText(textBefore, FontMeasure).Width;
+                        selectionEndPosition = font.MeasureText(textIn, FontMeasure).Width;
+                    }
+                    else
+                    {
+                        selectionStartPosition = -1;
+                        selectionEndPosition = -1;
+                    }
+                }
+            }
+            else
+            {
+                selectionStart = -1;
+                selectionLength = -1;
+
+                selectionStartPosition = -1;
+                selectionEndPosition = -1;
             }
         }
 
@@ -137,11 +258,19 @@ namespace CrossX.Framework.UI.Controls
                 canvas.DrawRect(ScreenBounds, frameColor * opacity, 1);
             }
 
+            
+
             var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
             var bounds = ScreenBounds.Deflate(TextPadding);
             var text = string.IsNullOrEmpty(Text) ? Hint : Text;
 
-            if (!string.IsNullOrEmpty(text) && nativeTextBox == null)
+            if (selectionStartPosition >= 0)
+            {
+                var selectionRect = new RectangleF(bounds.X + selectionStartPosition - 0.5f, bounds.Y, selectionEndPosition - selectionStartPosition + 1f, bounds.Height);
+                canvas.FillRect(selectionRect, SelectionColor);
+            }
+
+            if (!string.IsNullOrEmpty(text) )
             {
                 canvas.DrawText(text, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment, VerticalTextAlignment), foregroundColor * opacity, FontMeasure);
             }
@@ -176,8 +305,7 @@ namespace CrossX.Framework.UI.Controls
 
         void INativeTextBoxControl.OnLostFocus()
         {
-            nativeTextBox.Release();
-            nativeTextBox = null;
+            nativeControlIsToRelease = 2;
             Invalidate();
         }
     }

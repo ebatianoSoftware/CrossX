@@ -35,6 +35,8 @@
           <xsd:any />
         </xsd:choice>
         <xsd:attribute type="ab:System.String-Bindable" name="Title" />
+        <xsd:attribute type="ab:System.String" name="TypeName" />
+        <xsd:attribute type="ab:unknown" name="Menu" />
         <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MinWidth" />
         <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MinHeight" />
         <xsd:attribute type="ab:CrossX.Framework.Length" name="Desktop.MaxWidth" />

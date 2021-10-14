@@ -46,6 +46,7 @@ namespace CrossX.Framework.UI.Controls
             }
 
             var maxWidth = ActualWidth - TextPadding.Width;
+            if (maxWidth == 0) return;
 
             var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
 

@@ -14,16 +14,14 @@ namespace CrossX.WindowsForms.Services
         public WindowHost MainWindowHost { get; private set; }
 
         private readonly List<WindowHost> windows = new List<WindowHost>();
-        private readonly IObjectFactory objectFactory;
         private readonly IDispatcher dispatcher;
         private readonly ISequencer sequencer;
 
         public IReadOnlyList<WindowHost> Windows => windows;
 
-        public WindowServiceWinForms(IObjectFactory objectFactory, IXxFileParser xxFileParser, IViewLocator viewLocator, IDispatcher dispatcher,
-            ISequencer sequencer) : base(objectFactory, xxFileParser, viewLocator)
+        public WindowServiceWinForms(IXxFileParser xxFileParser, IViewLocator viewLocator, IDispatcher dispatcher,
+            ISequencer sequencer, AppColorTable appColorTable) : base(xxFileParser, viewLocator)
         {
-            this.objectFactory = objectFactory;
             this.dispatcher = dispatcher;
             this.sequencer = sequencer;
         }

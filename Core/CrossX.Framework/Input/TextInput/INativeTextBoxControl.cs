@@ -11,5 +11,6 @@
         string FontFamily { get; }
         FontWeight FontWeight { get; }
         Length FontSize { get; }
+        int MaxLength { get; }
     }
 }

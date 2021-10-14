@@ -6,14 +6,15 @@ namespace CrossX.Skia
 {
     public static class CrossXSkiaServices
     {
-        public static IScopeBuilder WithSkia(this IScopeBuilder builder)
+        public static IScopeBuilder WithSkia<TSkiaFontManager>(this IScopeBuilder builder) where TSkiaFontManager: SkiaFontManager
         {
             return builder
                 .WithType<SkiaImage>().As<Image>()
                 .WithType<SkiaCanvas>().As<Canvas>().As<ISkiaCanvas>()
                 .WithType<SkiaVertexBuffer>().As<VertexBuffer>()
                 .WithType<SkiaFont>().As<Font>()
-                .WithType<SkiaFontManager>().As<IFontManager>().AsSingleton();
+                .WithType<TSkiaFontManager>().As<IFontManager>().AsSingleton()
+                .WithType<SkiaEffectsFactory>().As<IEffectsFactory>().AsSingleton();
         }
     }
 }

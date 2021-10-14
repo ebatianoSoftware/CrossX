@@ -4,5 +4,9 @@
     {
         string Text { get; set; }
         void Release();
+        
+        (int start, int length) Selection { get; set; }
+
+        void Focus();
     }
 }

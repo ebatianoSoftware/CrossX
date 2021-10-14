@@ -25,8 +25,6 @@ namespace CrossX.Framework.Core
 
         IServicesProvider ICoreApplication.Initialize(IServicesProvider servicesProvider)
         {
-            LoadFonts(servicesProvider.GetService<IFontManager>());
-
             var assembly = GetType().Assembly;
             var builder = new ScopeBuilder(servicesProvider);
             var elementTypeMapping = new ElementTypeMapping(assembly);
@@ -55,9 +53,12 @@ namespace CrossX.Framework.Core
 
             AfterInitServices?.Invoke(servicesProvider, builder);
 
-            Services = builder.Build();
-            WindowsService = Services.GetService<IWindowsService>();
 
+            Services = builder.Build();
+
+            LoadFonts(Services.GetService<IFontManager>());
+            WindowsService = Services.GetService<IWindowsService>();
+            ((WindowService)WindowsService).ObjectFactory = Services.GetService<IObjectFactory>();
             return Services;
         }
 

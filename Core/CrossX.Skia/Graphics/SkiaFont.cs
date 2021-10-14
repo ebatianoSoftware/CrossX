@@ -43,8 +43,13 @@ namespace CrossX.Skia.Graphics
                     height = SKFont.Size + SKFont.Metrics.Descent;
                     break;
             }
-            
+
             return new SizeF(width, height);
+        }
+
+        public override int BreakText(string text, float position)
+        {
+            return (int)SKPaint.BreakText(text, position);
         }
     }
 }

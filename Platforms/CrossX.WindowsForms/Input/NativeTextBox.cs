@@ -1,5 +1,5 @@
-﻿using ControlzEx.Standard;
-using CrossX.Framework.Input.TextInput;
+﻿using CrossX.Framework.Input.TextInput;
+using CrossX.WindowsForms.Services;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -33,22 +33,26 @@ namespace CrossX.WindowsForms.Input
 
         public NativeTextBox(WindowHost form, INativeTextBoxControl control, Point clickPosition)
         {
-            form.SuspendLayout();
+            var fontManager = form.Window.ServicesProvider.GetService<FormsFontManager>();
+
+            //form.WindowState = FormWindowState.Normal;
+            //form.SuspendLayout();
             var bounds = control.Bounds.ToDrawing();
             
-            var fontFace = control.FontFamily;
+            var fontFamily = control.FontFamily;
 
-            float fontSize = control.FontSize.Calculate() * 72 / 96 * 0.99f;
+            float fontSize = control.FontSize.Pixels;
             
             Visible = true;
             BorderStyle = BorderStyle.None;
             Multiline = false;
-            
+
             BackColor = control.BackgroundColor.ToDrawing();
             ForeColor = control.TextColor.ToDrawing();
 
-            Font = new Font(fontFace, fontSize, GraphicsUnit.Point);
+            MaxLength = control.MaxLength;
 
+            Font = fontManager.CreateFont(fontFamily, fontSize, GraphicsUnit.Pixel);
             bounds.Inflate(1, 1);
 
             bounds.X -= DefaultPadding.Left;
@@ -63,7 +67,7 @@ namespace CrossX.WindowsForms.Input
             MaximumSize = Size;
 
             form.Controls.Add(this);
-            form.Controls.SetChildIndex(this, 0);
+            //form.Controls.SetChildIndex(this, 0);
 
             Disposed += (o, e) =>
             {
@@ -72,8 +76,8 @@ namespace CrossX.WindowsForms.Input
             };
             Focus();
 
-            form.ResumeLayout();
-            form.PerformLayout();
+            //form.ResumeLayout();
+            //form.PerformLayout();
 
             crossControl = control;
             Text = control.Text;
@@ -82,6 +86,18 @@ namespace CrossX.WindowsForms.Input
             clickPosition.Y -= Location.Y;
 
             SelectAll();
+            Show();
+        }
+
+        public (int start, int length) Selection
+        {
+            get => (SelectionStart, SelectionLength);
+
+            set
+            {
+                SelectionStart = value.start;
+                SelectionLength = value.length;
+            }
         }
 
         public void Release()
@@ -89,6 +105,15 @@ namespace CrossX.WindowsForms.Input
             Parent.Controls.Remove(this);
             DestroyHandle();
             Dispose();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                crossControl.OnLostFocus();
+            }
+            base.OnKeyDown(e);
         }
 
         protected override void OnLostFocus(EventArgs e)
@@ -104,6 +129,11 @@ namespace CrossX.WindowsForms.Input
             {
                 crossControl.Text = Text;
             }
+        }
+
+        void INativeTextBox.Focus()
+        {
+            Focus();
         }
     }
 }

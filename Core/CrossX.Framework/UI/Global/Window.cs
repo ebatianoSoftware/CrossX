@@ -5,6 +5,7 @@ using CrossX.Framework.Input;
 using CrossX.Framework.UI.Containers;
 using CrossX.Framework.XxTools;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -35,6 +36,12 @@ namespace CrossX.Framework.UI.Global
         {
             get => title; set => SetProperty(ref title, value);
         }
+
+        public string TypeName { get; set; }
+
+        // TODO: Make posibility to have rendered menu (not native one)
+        [XxSchemaBindable(true)]
+        public IList Menu { get => menu; set => SetProperty(ref menu, value); }
 
         public Length Desktop_MinWidth
         {
@@ -88,7 +95,7 @@ namespace CrossX.Framework.UI.Global
         public Color BackgroundColor { get => backgroundColor; set => SetProperty(ref backgroundColor, value); }
 
         public event Action Disposed;
-        
+
         public INativeWindow NativeWindow { get; internal set; }
 
         public ICommand WindowDisposedCommand { get; set; }
@@ -98,7 +105,7 @@ namespace CrossX.Framework.UI.Global
         private readonly IBindingService bindingService;
         private Color backgroundColor = Color.Black;
 
-        private FrameLayout mainFrame;
+        protected FrameLayout mainFrame { get; private set; }
         private string title = "";
 
         private Length desktop_MinWidth;
@@ -116,6 +123,7 @@ namespace CrossX.Framework.UI.Global
             bindingService = servicesProvider.GetService<IBindingService>();
             mainFrame = servicesProvider.GetService<IObjectFactory>().Create<FrameLayout>();
             mainFrame.Parent = this;
+            ServicesProvider = servicesProvider;
         }
 
         public void InitChildren(IEnumerable<object> elements)
@@ -142,12 +150,14 @@ namespace CrossX.Framework.UI.Global
         }
 
         SizeF size = new SizeF(800, 600);
+        private IList menu;
 
         public RectangleF ScreenBounds => new RectangleF(0, 0, Size.Width, Size.Height);
 
         bool IViewParent.DisplayVisible => true;
 
-        public bool IsDirty { get; private set; }
+        public bool IsDirty { get; protected set; }
+        public IServicesProvider ServicesProvider { get; }
 
         private readonly GestureProcessor gestureProcessor = new GestureProcessor();
 
@@ -156,13 +166,13 @@ namespace CrossX.Framework.UI.Global
             NativeWindow?.Close();
         }
 
-        public void Update(float timeDelta)
+        public virtual void Update(float timeDelta)
         {
             if (layoutInvalid) RecalculateLayout();
             mainFrame.Update(timeDelta);
         }
 
-        public void Render(Canvas canvas)
+        public virtual void Render(Canvas canvas)
         {
             IsDirty = false;
             canvas.FillRect(ScreenBounds, BackgroundColor);

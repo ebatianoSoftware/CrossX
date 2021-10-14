@@ -5,8 +5,12 @@ using CrossX.Abstractions.Windows;
 using CrossX.Framework;
 using CrossX.Framework.Async;
 using CrossX.Framework.Core;
+using CrossX.Framework.Graphics;
+using CrossX.Framework.Input;
+using CrossX.Framework.Input.Gamepad;
 using CrossX.Framework.IoC;
 using CrossX.Skia;
+using CrossX.WindowsForms.Input;
 using CrossX.WindowsForms.Services;
 using System;
 using System.Diagnostics;
@@ -20,6 +24,8 @@ namespace CrossX.WindowsForms
     {
         private readonly Dispatcher dispatcher = new Dispatcher();
         private readonly Sequencer sequencer = new Sequencer();
+        private readonly OpenTkGamePads gamePads = new OpenTkGamePads();
+        private readonly OpenTkKeyboard keyboard = new OpenTkKeyboard();
 
         public void Run(ICoreApplication application, IServicesProvider servicesProvider = null)
         {
@@ -37,7 +43,10 @@ namespace CrossX.WindowsForms
             }
 
             var scopeBuilder = new ScopeBuilder(servicesProvider);
-            scopeBuilder.WithSkia()
+            scopeBuilder.WithSkia<FormsFontManager>()
+                        .WithInstance(gamePads).As<IGamePads>()
+                        .WithInstance(keyboard).As<IKeyboard>()
+                        .WithType<UiInput>().As<IUiInput>().AsSingleton()
                         .WithCrossTypes()
                         .WithInstance(dispatcher).As<ISystemDispatcher>().As<IDispatcher>()
                         .WithInstance(sequencer).As<ISequencer>()
@@ -48,7 +57,11 @@ namespace CrossX.WindowsForms
 
             application.AfterInitServices += (s,b) =>
             {
-                b.WithType<WindowServiceWinForms>().AsSelf().As<IWindowsService>().AsSingleton();
+                var fontManager = (b as IServicesProvider).GetService<IFontManager>() as FormsFontManager;
+
+                b.WithType<WindowServiceWinForms>().AsSelf().As<IWindowsService>().AsSingleton()
+                 .WithType<AppColorTable>().AsSelf().AsSingleton()
+                 .WithInstance(fontManager).AsSelf();
             };
 
             services = application.Initialize(services);
@@ -67,10 +80,11 @@ namespace CrossX.WindowsForms
                 TimeSpan timeDelta = currentTimeSpan - lastUpdateTimeSpan;
                 lastUpdateTimeSpan = currentTimeSpan;
 
+                gamePads.Update();
                 dispatcher.Process();
                 sequencer.Update(timeDelta);
 
-                for(var idx = 0; idx < windowsService.Windows.Count; ++idx)
+                for (var idx = 0; idx < windowsService.Windows.Count; ++idx)
                 {
                     var hostWindow = windowsService.Windows[idx];
 

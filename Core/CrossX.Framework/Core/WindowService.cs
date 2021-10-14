@@ -13,13 +13,14 @@ namespace CrossX.Framework.Core
     {
         public Window MainWindow { get; protected set; }
 
-        private readonly IObjectFactory objectFactory;
+        internal IObjectFactory ObjectFactory { set => objectFactory = value; }
+        protected IObjectFactory objectFactory;
+
         private readonly IXxFileParser xxFileParser;
         private readonly IViewLocator viewLocator;
 
-        protected WindowService(IObjectFactory objectFactory, IXxFileParser xxFileParser, IViewLocator viewLocator)
+        protected WindowService(IXxFileParser xxFileParser, IViewLocator viewLocator)
         {
-            this.objectFactory = objectFactory;
             this.xxFileParser = xxFileParser;
             this.viewLocator = viewLocator;
         }

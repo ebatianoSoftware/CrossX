@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace CrossX.Skia.Graphics
 {
-    internal class SkiaFontManager : IFontManager
+    public class SkiaFontManager : IFontManager
     {
         struct FontDesc : IEquatable<FontDesc>
         {
@@ -126,7 +126,7 @@ namespace CrossX.Skia.Graphics
             return false;
         }
 
-        public void LoadTTF(Stream stream)
+        public virtual void LoadTTF(Stream stream)
         {
             var tf = SKFontManager.Default.CreateTypeface(stream);
 

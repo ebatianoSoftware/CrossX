@@ -1,18 +1,28 @@
 ﻿using CrossX.Abstractions.IoC;
+using CrossX.Abstractions.Menu;
 using CrossX.Framework;
 using CrossX.Framework.Input;
+using CrossX.Framework.Input.TextInput;
 using CrossX.Framework.UI.Global;
 using CrossX.Skia;
+using CrossX.WindowsForms.Input;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ICommand = System.Windows.Input.ICommand;
 using DrawingPoint = System.Drawing.Point;
+using CrossX.WindowsForms.Services;
 
 namespace CrossX.WindowsForms
 {
-    public partial class WindowHost : BaseHostForm
+    public partial class WindowHost : BaseHostForm, INativeWindow
     {
         public readonly Window Window;
+        private readonly IObjectFactory objectFactory;
         private readonly ISkiaCanvas skiaCanvas;
 
         private CursorType cursorType;
@@ -31,13 +41,16 @@ namespace CrossX.WindowsForms
 
         protected override bool EnableManipulation {set => skglControl.Enabled = value; }
 
-        public WindowHost(Window window, IObjectFactory objectFactory)
+        internal WindowHost(Window window, IObjectFactory objectFactory)
         {
             InitializeComponent();
 
             SetStyle(ControlStyles.AllPaintingInWmPaint |ControlStyles.UserPaint |ControlStyles.DoubleBuffer, true);
 
             Window = window;
+            this.objectFactory = objectFactory;
+            InitMenu();
+
             BackColor = System.Drawing.Color.FromArgb(Window.BackgroundColor.R, Window.BackgroundColor.G, Window.BackgroundColor.B);
             skiaCanvas = objectFactory.Create<ISkiaCanvas>();
 
@@ -47,9 +60,16 @@ namespace CrossX.WindowsForms
             MaximizeBox = window.Desktop_CanMaximize;
             MinimizeBox = true;
 
+            WindowState = Window.Desktop_StartMode == Framework.UI.Global.WindowState.Maximized ? FormWindowState.Maximized : FormWindowState.Normal;
+
             if (!window.Desktop_HasCaption)
             {
                 ControlBox = false;
+
+                if (WindowState == FormWindowState.Maximized)
+                {
+                    UiUnit.PixelsPerUnit = (float)ClientSize.Height / Window.Desktop_InitialHeight.Calculate();
+                }
             }
             
             Text = Window.Title;
@@ -164,14 +184,10 @@ namespace CrossX.WindowsForms
             {
                 var cursorType = Window.OnPointerDown(new PointerId(pointerKind), position);
                 CursorType = cursorType;
-                if (cursorType == CursorType.NativeDrag)
+                if (cursorType == CursorType.NativeDrag && WindowState != FormWindowState.Maximized)
                 {
                     Capture = true;
                     lastMousePosition = args.Location;
-                }
-                else
-                {
-                    
                 }
             }
         }
@@ -250,10 +266,28 @@ namespace CrossX.WindowsForms
                     return Cursors.IBeam;
 
                 case CursorType.NativeDrag:
+                    if(WindowState == FormWindowState.Maximized)
+                    {
+                        return Cursors.Arrow;
+                    }
                     return Cursors.SizeAll;
             }
             
             return Cursors.Default;
+        }
+
+        void INativeWindow.Close()
+        {
+            Close();
+            DestroyHandle();
+            Dispose();
+        }
+
+        Task<INativeTextBox> INativeWindow.CreateNativeTextBox(INativeTextBoxControl control, Vector2 position)
+        {
+            position *= UiUnit.PixelsPerUnit;
+            var nativeTextBox = new NativeTextBox(this, control, new DrawingPoint((int)position.X, (int)position.Y));
+            return Task.FromResult<INativeTextBox>(nativeTextBox);
         }
 
         protected override void WndProc(ref Message m)
@@ -269,6 +303,115 @@ namespace CrossX.WindowsForms
             }
 
             base.WndProc(ref m);
+        }
+
+        private IList menu;
+
+        private void InitMenu()
+        {
+            Window.PropertyChanged += Window_PropertyChanged;
+            ReinitMenu();
+        }
+
+        private void Window_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(Window.Menu))
+            {
+                ReinitMenu();
+            }
+        }
+
+        private void ReinitMenu()
+        {
+            menu = Window.Menu;
+            RegenerateMenu();
+        }
+
+        private void RegenerateMenu()
+        {
+            if (menu == null)
+            {
+                MainMenuStrip = null;
+                return;
+            }
+
+            if (MainMenuStrip == null)
+            {
+                MainMenuStrip = new MenuStrip();
+            }
+
+            var renderer = objectFactory.Create<AppToolStripRenderer>();
+            MainMenuStrip.Renderer = renderer;
+            MainMenuStrip.Items.Clear();
+            var items = GetItems(menu, renderer).ToArray();
+            
+            foreach(var item in items)
+            {
+                item.Image = null;
+            }
+
+            MainMenuStrip.Items.AddRange(items);
+            MainMenuStrip.Show();
+
+            MainMenuStrip.BackColor = renderer.ColorTable.ToolStripDropDownBackground;
+            MainMenuStrip.ForeColor = (renderer.ColorTable as AppColorTable).ForegroundColor;
+            Controls.Add(MainMenuStrip);
+        }
+
+        private IEnumerable<ToolStripItem> GetItems(IList list, ToolStripProfessionalRenderer renderer)
+        {
+            var colorTable = (AppColorTable)renderer.ColorTable;
+            foreach (var item in list)
+            {
+                string title = null;
+                ICommand command = null;
+                IList items = null;
+                (string fontFamily, string iconText) icon = (null, null);
+
+                if (item is ITitleContainer tc)
+                {
+                    title = tc.Title;
+                }
+
+                if (item is ICommandContainer cc)
+                {
+                    command = cc.Command;
+                }
+
+                if (item is IItemsContainer ic)
+                {
+                    items = ic.Items;
+                }
+
+                if (item is IFontIconContainer fic)
+                {
+                    icon = fic.Icon;
+                }
+
+                if (command != null && title != null)
+                {
+                    yield return new MenuItemEx(item, title, command)
+                    {
+                        ForeColor = colorTable.ForegroundColor,
+                        DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                        Icon = icon
+                    };
+                }
+                else if (items != null && title != null)
+                {
+                    var menuItems = GetItems(items, renderer).ToArray();
+                    yield return new MenuItemEx(item, title, menuItems)
+                    {
+                        ForeColor = colorTable.ForegroundColor,
+                        DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                        Icon = icon
+                    };
+                }
+                else
+                {
+                    yield return new ToolStripSeparator();
+                }
+            }
         }
     }
 }

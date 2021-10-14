@@ -203,6 +203,7 @@
         <xsd:attribute type="aa:CrossX.Framework.Color-Bindable" name="SelectionColor" />
         <xsd:attribute type="aa:System.Boolean-Bindable" name="Enabled" />
         <xsd:attribute type="aa:System.String-Bindable" name="Text" />
+        <xsd:attribute type="aa:System.Int-Bindable" name="MaxLength" />
         <xsd:attribute type="aa:System.String-Bindable" name="Hint" />
       </xsd:extension>
     </xsd:complexContent>
