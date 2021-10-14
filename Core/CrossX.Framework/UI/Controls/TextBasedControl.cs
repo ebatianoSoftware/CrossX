@@ -4,7 +4,7 @@ namespace CrossX.Framework.UI.Controls
 {
     public abstract class TextBasedControl: View
     {
-        private string text;
+        private string text = "";
         private string fontFamily;
         private Length fontSize = new Length(10);
         private FontWeight fontWeight = FontWeight.Normal;
