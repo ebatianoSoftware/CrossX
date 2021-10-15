@@ -148,6 +148,15 @@ namespace CrossX.Skia.Graphics
             skCanvas.DrawOval(rect.ToSkia(), skPaint);
         }
 
+        public override void FillArc(RectangleF rect, float angle, float sweep, Color color)
+        {
+            PreparePaint(skPaint);
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = false;
+
+            skCanvas.DrawArc(rect.ToSkia(), angle, sweep, true, skPaint);
+
+        }
 
         public override void FillRect(RectangleF rect, Color color)
         {

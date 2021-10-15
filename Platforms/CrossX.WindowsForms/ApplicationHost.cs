@@ -81,6 +81,7 @@ namespace CrossX.WindowsForms
                 lastUpdateTimeSpan = currentTimeSpan;
 
                 gamePads.Update();
+                keyboard.Update();
                 dispatcher.Process();
                 sequencer.Update(timeDelta);
 
