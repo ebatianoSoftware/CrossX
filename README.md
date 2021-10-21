@@ -29,13 +29,12 @@ CrossX comes with many built in layouts and controls to build and design apps qu
 ✔️WrapLayout
 ✔️SplitLayout
 ✔️ToolTips
-
+✔️TextBox
 🔻ContextMenu
 🔻ScrollBar
 🔻ScrollView
 🔻TreeView
 🔻ListBox
-🔻TextBox
 🔻Text
 🔻HtmlView
 
