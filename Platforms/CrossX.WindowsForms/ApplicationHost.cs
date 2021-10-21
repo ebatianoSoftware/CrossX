@@ -43,7 +43,7 @@ namespace CrossX.WindowsForms
             }
 
             var scopeBuilder = new ScopeBuilder(servicesProvider);
-            scopeBuilder.WithSkia<FormsFontManager>()
+            scopeBuilder.WithSkia()
                         .WithInstance(gamePads).As<IGamePads>()
                         .WithInstance(keyboard).As<IKeyboard>()
                         .WithType<UiInput>().As<IUiInput>().AsSingleton()
@@ -57,11 +57,8 @@ namespace CrossX.WindowsForms
 
             application.AfterInitServices += (s,b) =>
             {
-                var fontManager = (b as IServicesProvider).GetService<IFontManager>() as FormsFontManager;
-
                 b.WithType<WindowServiceWinForms>().AsSelf().As<IWindowsService>().AsSingleton()
-                 .WithType<AppColorTable>().AsSelf().AsSingleton()
-                 .WithInstance(fontManager).AsSelf();
+                 .WithType<AppColorTable>().AsSelf().AsSingleton();
             };
 
             services = application.Initialize(services);

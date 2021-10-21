@@ -1,6 +1,8 @@
-﻿using CrossX.Framework.Drawables;
+﻿using CrossX.Abstractions.Input;
+using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
 using System.Collections.Generic;
@@ -52,6 +54,8 @@ namespace CrossX.Framework.UI
             }
         }
 
+        public IUiInputHandler UiInputHandler { get; set; }
+
         public bool InputTransparent { get; set; }
         public bool NativeDraggable { get; set; }
 
@@ -93,6 +97,8 @@ namespace CrossX.Framework.UI
         public bool DisplayVisible => Visible && (Parent?.DisplayVisible ?? true);
 
         XxElement IStoreElement.Element { set => properties = value.Properties; }
+
+        public Window Window => Parent?.Window;
 
         protected View(IUIServices services)
         {
@@ -213,6 +219,23 @@ namespace CrossX.Framework.UI
             }
             return false;
         }
+
+        public bool ProcessUiKey(UiInputKey key)
+        {
+            if (InputTransparent) return false;
+            if (!DisplayVisible || !Visible) return false;
+            return OnProcesssUiKey(key);
+        }
+
+        protected virtual bool OnProcesssUiKey(UiInputKey key)
+        {
+            if(UiInputHandler != null)
+            {
+                if (UiInputHandler.Handle(key)) return true;
+            }
+            return false;
+        }
+
         protected virtual bool OnProcessGesture(Gesture gesture)
         {
             return false;
@@ -269,5 +292,13 @@ namespace CrossX.Framework.UI
         }
 
         protected void Invalidate() => Parent?.Window?.Redraw();
+
+        public virtual void GetFocusables(IList<IFocusable> list) 
+        {
+            if(this is IFocusable focusable)
+            {
+                list.Add(focusable);
+            }
+        }
     }
 }

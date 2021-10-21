@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.Async;
+using CrossX.Abstractions.Input;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
@@ -7,6 +8,7 @@ using CrossX.Framework.Transforms;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xx.Definition;
@@ -108,6 +110,18 @@ namespace CrossX.Framework.UI.Containers
         {
             base.OnRender(canvas, opacity);
             currentView?.Render(canvas, opacity);
+        }
+
+        protected override bool OnProcesssUiKey(UiInputKey key)
+        {
+            if (currentView?.ProcessUiKey(key) == true) return true;
+            return false;
+        }
+
+        public override void GetFocusables(IList<IFocusable> list)
+        {
+            currentView?.GetFocusables(list);
+            base.GetFocusables(list);
         }
 
         protected override void OnUpdate(float time)

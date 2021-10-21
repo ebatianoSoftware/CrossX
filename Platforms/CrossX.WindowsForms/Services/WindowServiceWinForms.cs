@@ -1,5 +1,4 @@
 ﻿using CrossX.Abstractions.Async;
-using CrossX.Abstractions.IoC;
 using CrossX.Abstractions.Windows;
 using CrossX.Framework.Core;
 using CrossX.Framework.UI.Global;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 
 namespace CrossX.WindowsForms.Services
 {
+    
     internal class WindowServiceWinForms : WindowService
     {
         public WindowHost MainWindowHost { get; private set; }
@@ -16,14 +16,16 @@ namespace CrossX.WindowsForms.Services
         private readonly List<WindowHost> windows = new List<WindowHost>();
         private readonly IDispatcher dispatcher;
         private readonly ISequencer sequencer;
+        private readonly IScaleProvider scaleProvider;
 
         public IReadOnlyList<WindowHost> Windows => windows;
 
         public WindowServiceWinForms(IXxFileParser xxFileParser, IViewLocator viewLocator, IDispatcher dispatcher,
-            ISequencer sequencer, AppColorTable appColorTable) : base(xxFileParser, viewLocator)
+            ISequencer sequencer, AppColorTable appColorTable, WindowsServiceParams parameters = null, IScaleProvider scaleProvider = null) : base(xxFileParser, viewLocator, parameters)
         {
             this.dispatcher = dispatcher;
             this.sequencer = sequencer;
+            this.scaleProvider = scaleProvider;
         }
 
         private IEnumerable<Sequence> ShowWindow(WindowHost host)
@@ -37,7 +39,7 @@ namespace CrossX.WindowsForms.Services
 
         protected override INativeWindow CreateNativeWindow(Window window, CreateWindowMode createMode)
         {
-            var host = new WindowHost(window, objectFactory);
+            var host = new WindowHost(window, objectFactory, scaleProvider);
 
             switch (createMode)
             {

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICommand = System.Windows.Input.ICommand;
 using DrawingPoint = System.Drawing.Point;
-using CrossX.WindowsForms.Services;
+using CrossX.Framework.Core;
 
 namespace CrossX.WindowsForms
 {
@@ -23,6 +23,7 @@ namespace CrossX.WindowsForms
     {
         public readonly Window Window;
         private readonly IObjectFactory objectFactory;
+        private readonly IScaleProvider scaleProvider;
         private readonly ISkiaCanvas skiaCanvas;
 
         private CursorType cursorType;
@@ -33,15 +34,25 @@ namespace CrossX.WindowsForms
             {
                 if (cursorType != value)
                 {
-                    Cursor = MapCursor(value);
-                    cursorType = value;
+                    if (Window.Desktop_EnableMouse)
+                    {
+                        Cursor.Show();
+                        Cursor = MapCursor(value);
+                        cursorType = value;
+                    }
+                    else
+                    {
+                        Cursor.Hide();
+                    }
                 }
             }
         }
 
         protected override bool EnableManipulation {set => skglControl.Enabled = value; }
 
-        internal WindowHost(Window window, IObjectFactory objectFactory)
+        RectangleF INativeWindow.Bounds => new RectangleF(Vector2.Zero, Window.Size);
+
+        internal WindowHost(Window window, IObjectFactory objectFactory, IScaleProvider scaleProvider)
         {
             InitializeComponent();
 
@@ -49,6 +60,7 @@ namespace CrossX.WindowsForms
 
             Window = window;
             this.objectFactory = objectFactory;
+            this.scaleProvider = scaleProvider;
             InitMenu();
 
             BackColor = System.Drawing.Color.FromArgb(Window.BackgroundColor.R, Window.BackgroundColor.G, Window.BackgroundColor.B);
@@ -99,6 +111,10 @@ namespace CrossX.WindowsForms
 
         private void SkglControl_SizeChanged(object sender, EventArgs _)
         {
+            if (scaleProvider != null)
+            {
+                UiUnit.PixelsPerUnit = scaleProvider.CalculateScale(UiUnit.PixelsPerUnit, new SizeF(skglControl.Size.Width, skglControl.Size.Height));
+            }
             Window.Size = new SizeF(skglControl.Size.Width / UiUnit.PixelsPerUnit, skglControl.Size.Height / UiUnit.PixelsPerUnit);
         }
 
@@ -138,7 +154,7 @@ namespace CrossX.WindowsForms
 
         private void SkglControl_MouseUp(object sender, MouseEventArgs args)
         {
-            var position = new Vector2(args.Location.X, args.Location.Y);
+            var position = new Vector2(args.Location.X, args.Location.Y) / UiUnit.PixelsPerUnit;
             PointerKind pointerKind = 0;
             switch (args.Button)
             {
@@ -163,7 +179,9 @@ namespace CrossX.WindowsForms
 
         private void SkglControl_MouseDown(object sender, MouseEventArgs args)
         {
-            var position = new Vector2(args.Location.X, args.Location.Y);
+            if (!Window.Desktop_EnableMouse) return;
+
+            var position = new Vector2(args.Location.X, args.Location.Y) / UiUnit.PixelsPerUnit;
             PointerKind pointerKind = 0;
             switch (args.Button)
             {
@@ -194,7 +212,13 @@ namespace CrossX.WindowsForms
 
         private void SkglControl_MouseMove(object sender, MouseEventArgs args)
         {
-            var position = new Vector2(args.Location.X, args.Location.Y);
+            if (!Window.Desktop_EnableMouse)
+            {
+                Cursor.Hide();
+                return;
+            }
+
+            var position = new Vector2(args.Location.X, args.Location.Y) / UiUnit.PixelsPerUnit;
             var button = args.Button;
 
 
@@ -283,10 +307,9 @@ namespace CrossX.WindowsForms
             Dispose();
         }
 
-        Task<INativeTextBox> INativeWindow.CreateNativeTextBox(INativeTextBoxControl control, Vector2 position)
+        Task<INativeTextBox> INativeWindow.CreateNativeTextBox(INativeTextBoxControl control)
         {
-            position *= UiUnit.PixelsPerUnit;
-            var nativeTextBox = new NativeTextBox(this, control, new DrawingPoint((int)position.X, (int)position.Y));
+            var nativeTextBox = new NativeTextBox(this, control);
             return Task.FromResult<INativeTextBox>(nativeTextBox);
         }
 

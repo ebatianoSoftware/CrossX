@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Input.Gamepad;
+﻿using CrossX.Abstractions.Input;
+using CrossX.Framework.Input.Gamepad;
 
 namespace CrossX.Framework.Input
 {

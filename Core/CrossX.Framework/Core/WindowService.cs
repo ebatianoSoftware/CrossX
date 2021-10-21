@@ -9,6 +9,17 @@ using Xx.Definition;
 
 namespace CrossX.Framework.Core
 {
+    public enum WindowModalMode
+    {
+        SystemNative,
+        InsideMainWindow
+    }
+
+    public class WindowsServiceParams
+    {
+        public WindowModalMode ModalMode { get; set; }
+    }
+
     public abstract class WindowService : IWindowsService
     {
         public Window MainWindow { get; protected set; }
@@ -19,8 +30,11 @@ namespace CrossX.Framework.Core
         private readonly IXxFileParser xxFileParser;
         private readonly IViewLocator viewLocator;
 
-        protected WindowService(IXxFileParser xxFileParser, IViewLocator viewLocator)
+        private readonly WindowModalMode modalMode;
+
+        protected WindowService(IXxFileParser xxFileParser, IViewLocator viewLocator, WindowsServiceParams parameters = null)
         {
+            modalMode = parameters?.ModalMode ?? WindowModalMode.SystemNative;
             this.xxFileParser = xxFileParser;
             this.viewLocator = viewLocator;
         }
@@ -28,7 +42,7 @@ namespace CrossX.Framework.Core
         public TViewModel CreateWindow<TViewModel>(CreateWindowMode createMode = CreateWindowMode.Modal, TViewModel vm = null, params object[] parameters) where TViewModel : class
         {
             var window = Load(vm, parameters);
-            ShowWindow(window, createMode);
+            ShowWindow(window, createMode);            
             return (TViewModel)window.DataContext;
         }
 
@@ -80,12 +94,15 @@ namespace CrossX.Framework.Core
             window.Disposed += () =>
             {
                 autoresetEvent.Set();
+                if (context is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             };
 
             return Task.Run(() =>
             {
                 autoresetEvent.WaitOne();
-
                 if (!resultIsValid) return defaultResult;
                 return result;
             });
@@ -93,6 +110,12 @@ namespace CrossX.Framework.Core
 
         public void ShowWindow(Window window, CreateWindowMode windowMode)
         {
+            if (windowMode == CreateWindowMode.Modal && modalMode == WindowModalMode.InsideMainWindow)
+            {
+                new NativeWindow(window, MainWindow);
+                return;
+            }
+
             var nativeWindow = CreateNativeWindow(window, windowMode);
             window.NativeWindow = nativeWindow;
         }

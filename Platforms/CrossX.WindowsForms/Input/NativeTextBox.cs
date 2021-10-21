@@ -1,5 +1,4 @@
 ﻿using CrossX.Framework.Input.TextInput;
-using CrossX.WindowsForms.Services;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -31,62 +30,33 @@ namespace CrossX.WindowsForms.Input
     {
         private readonly INativeTextBoxControl crossControl;
 
-        public NativeTextBox(WindowHost form, INativeTextBoxControl control, Point clickPosition)
+        public NativeTextBox(WindowHost form, INativeTextBoxControl control)
         {
-            var fontManager = form.Window.ServicesProvider.GetService<FormsFontManager>();
-
-            //form.WindowState = FormWindowState.Normal;
-            //form.SuspendLayout();
             var bounds = control.Bounds.ToDrawing();
-            
-            var fontFamily = control.FontFamily;
 
-            float fontSize = control.FontSize.Pixels;
-            
             Visible = true;
+            Location = Point.Empty;
+            Size = new Size(200, 30);
             BorderStyle = BorderStyle.None;
             Multiline = false;
 
-            BackColor = control.BackgroundColor.ToDrawing();
-            ForeColor = control.TextColor.ToDrawing();
+            BackColor = Color.White;
+            ForeColor = Color.Black;
 
             MaxLength = control.MaxLength;
 
-            Font = fontManager.CreateFont(fontFamily, fontSize, GraphicsUnit.Pixel);
-            bounds.Inflate(1, 1);
-
-            bounds.X -= DefaultPadding.Left;
-            bounds.Y -= DefaultPadding.Top;
-
-            bounds.Width += DefaultPadding.Size.Width;
-            bounds.Height += DefaultPadding.Size.Height;
-
-            Location = bounds.Location;
-            Size = new Size(bounds.Size.Width, bounds.Size.Height);
-            MinimumSize = Size;
-            MaximumSize = Size;
-
             form.Controls.Add(this);
-            //form.Controls.SetChildIndex(this, 0);
+            AcceptsReturn = true;
 
             Disposed += (o, e) =>
             {
                 form.Redraw();
-                Font.Dispose();
             };
+            Show();
             Focus();
-
-            //form.ResumeLayout();
-            //form.PerformLayout();
 
             crossControl = control;
             Text = control.Text;
-
-            clickPosition.X -= Location.X;
-            clickPosition.Y -= Location.Y;
-
-            SelectAll();
-            Show();
         }
 
         public (int start, int length) Selection
@@ -112,7 +82,19 @@ namespace CrossX.WindowsForms.Input
             if(e.KeyCode == Keys.Enter)
             {
                 crossControl.OnLostFocus();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                return;
             }
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                crossControl.OnLostFocus();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             base.OnKeyDown(e);
         }
 

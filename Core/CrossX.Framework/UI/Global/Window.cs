@@ -1,5 +1,8 @@
-﻿using CrossX.Abstractions.IoC;
+﻿using CrossX.Abstractions.Async;
+using CrossX.Abstractions.Input;
+using CrossX.Abstractions.IoC;
 using CrossX.Framework.Binding;
+using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.UI.Containers;
@@ -89,6 +92,8 @@ namespace CrossX.Framework.UI.Global
             get => desktop_StartMode; set => SetProperty(ref desktop_StartMode, value);
         }
 
+        public bool Desktop_EnableMouse { get; set; }
+
         public bool Desktop_HasCaption { get; set; } = true;
 
         [XxSchemaBindable(true)]
@@ -97,6 +102,22 @@ namespace CrossX.Framework.UI.Global
         public event Action Disposed;
 
         public INativeWindow NativeWindow { get; internal set; }
+
+        public IFocusable CurrentFocus
+        {
+            get => currentFocus; 
+            
+            set
+            {
+                if (currentFocus?.ResignFocus() ?? true)
+                {
+                    if (SetProperty(ref currentFocus, value))
+                    {
+                        Redraw();
+                    }
+                }
+            }
+        }
 
         public ICommand WindowDisposedCommand { get; set; }
 
@@ -117,12 +138,19 @@ namespace CrossX.Framework.UI.Global
         private bool desktop_CanMaximize = true;
         private bool desktop_CanResize = true;
         private WindowState desktop_StartMode;
+        protected readonly IAppValues appValues;
+        private readonly IDispatcher dispatcher;
+        private readonly IUiInput uiInput;
+        protected NativeWindow Popup { get; private set; }
 
         public Window(IServicesProvider servicesProvider)
         {
             bindingService = servicesProvider.GetService<IBindingService>();
             mainFrame = servicesProvider.GetService<IObjectFactory>().Create<FrameLayout>();
             mainFrame.Parent = this;
+            appValues = servicesProvider.GetService<IAppValues>();
+            uiInput = servicesProvider.GetService<IUiInput>();
+            dispatcher = servicesProvider.GetService<IDispatcher>();
             ServicesProvider = servicesProvider;
         }
 
@@ -151,14 +179,20 @@ namespace CrossX.Framework.UI.Global
 
         SizeF size = new SizeF(800, 600);
         private IList menu;
+        private bool isDirty;
+        private IFocusable currentFocus;
 
-        public RectangleF ScreenBounds => new RectangleF(0, 0, Size.Width, Size.Height);
+        public RectangleF ScreenBounds => new RectangleF(NativeWindow.Bounds.TopLeft, Size);
 
         bool IViewParent.DisplayVisible => true;
 
-        public bool IsDirty { get; protected set; }
-        public IServicesProvider ServicesProvider { get; }
+        public bool IsDirty
+        {
+            get => isDirty || (Popup?.Window?.IsDirty ?? false);
+            protected set => isDirty = value;
+        }
 
+        public IServicesProvider ServicesProvider { get; }
         private readonly GestureProcessor gestureProcessor = new GestureProcessor();
 
         public void Close()
@@ -169,7 +203,25 @@ namespace CrossX.Framework.UI.Global
         public virtual void Update(float timeDelta)
         {
             if (layoutInvalid) RecalculateLayout();
+
             mainFrame.Update(timeDelta);
+            Popup?.Window?.Update(timeDelta);
+
+            if (Popup == null)
+            {
+                foreach (var val in Enum.GetValues(typeof(UiInputKey)))
+                {
+                    var button = (UiInputKey)val;
+
+                    if (uiInput.IsJustPressed(button))
+                    {
+                        if (CurrentFocus == null || !CurrentFocus.HandleUiKey(button))
+                        {
+                            mainFrame.ProcessUiKey(button);
+                        }
+                    }
+                }
+            }
         }
 
         public virtual void Render(Canvas canvas)
@@ -177,6 +229,15 @@ namespace CrossX.Framework.UI.Global
             IsDirty = false;
             canvas.FillRect(ScreenBounds, BackgroundColor);
             mainFrame.Render(canvas);
+
+            if (Popup != null)
+            {
+                if (appValues.GetValue("SystemPopupOverlayColor") is Color color)
+                {
+                    canvas.FillRect(ScreenBounds, color);
+                }
+                Popup.Window.Render(canvas);
+            }
         }
 
         public void Dispose()
@@ -190,6 +251,7 @@ namespace CrossX.Framework.UI.Global
         public void InvalidateLayout()
         {
             layoutInvalid = true;
+            Popup?.Window?.InvalidateLayout();
         }
 
         public void Redraw() => IsDirty = true;
@@ -202,6 +264,8 @@ namespace CrossX.Framework.UI.Global
 
         public CursorType OnPointerDown(PointerId pointerId, Vector2 position)
         {
+            if (Popup != null) return Popup.Window.OnPointerDown(pointerId, position);
+
             var gesture = gestureProcessor.OnPointerDown(pointerId, position);
             PropagateGesture(gesture);
             return gesture.SetCursor;
@@ -209,6 +273,8 @@ namespace CrossX.Framework.UI.Global
 
         public CursorType OnPointerMove(PointerId pointerId, Vector2 position)
         {
+            if (Popup != null) return Popup.Window.OnPointerMove(pointerId, position);
+
             var gesture = gestureProcessor.OnPointerMove(pointerId, position);
             PropagateGesture(gesture);
             return gesture.SetCursor;
@@ -216,6 +282,8 @@ namespace CrossX.Framework.UI.Global
 
         public CursorType OnPointerUp(PointerId pointerId, Vector2 position)
         {
+            if (Popup != null) return Popup.Window.OnPointerUp(pointerId, position);
+
             var gesture = gestureProcessor.OnPointerUp(pointerId, position);
             PropagateGesture(gesture);
             return gesture.SetCursor;
@@ -223,6 +291,8 @@ namespace CrossX.Framework.UI.Global
 
         public CursorType OnPointerCancel(PointerId pointerId)
         {
+            if (Popup != null) return Popup.Window.OnPointerCancel(pointerId);
+
             var gesture = gestureProcessor.OnPointerCancel(pointerId);
             PropagateGesture(gesture);
             return gesture.SetCursor;
@@ -236,6 +306,78 @@ namespace CrossX.Framework.UI.Global
             {
                 MainFrame.ProcessGesture(gesture);
             }
+        }
+
+        internal void AddPopup(NativeWindow nativeWindow)
+        {
+            if (Popup != null) throw new InvalidOperationException();
+            Popup = nativeWindow;
+            Redraw();
+        }
+
+        internal void RemovePopup(NativeWindow nativeWindow)
+        {
+            if (Popup != nativeWindow) throw new InvalidOperationException();
+
+            dispatcher.EnqueueAction(() =>
+            {
+                Popup?.Window?.Dispose();
+                Popup = null;
+                Redraw();
+            });
+        }
+
+        public bool NavigateFocus(UiInputKey key)
+        {
+            switch(key)
+            {
+                case UiInputKey.Select:
+                case UiInputKey.Menu:
+                case UiInputKey.MenuOrBack:
+                case UiInputKey.Back:
+                    return false;
+            }
+
+            var list = new List<IFocusable>();
+            mainFrame.GetFocusables(list);
+
+            if (currentFocus == null)
+            {
+                CurrentFocus = list.FirstOrDefault();
+                return true;
+            }
+
+            IEnumerable<IFocusable> focusables = list;
+
+            var bounds = currentFocus.ScreenBounds;
+            switch (key)
+            {
+                case UiInputKey.Up:
+                    focusables = focusables.Where(o => o.ScreenBounds.Bottom < bounds.Top);
+                    break;
+
+                case UiInputKey.Down:
+                    focusables = focusables.Where(o => o.ScreenBounds.Top > bounds.Bottom);
+                    break;
+
+                case UiInputKey.Left:
+                    focusables = focusables.Where(o => o.ScreenBounds.Right < bounds.Left);
+                    break;
+
+                case UiInputKey.Right:
+                    focusables = focusables.Where(o => o.ScreenBounds.Left > bounds.Right);
+                    break;
+            }
+
+            focusables = focusables.OrderBy(o => (o.ScreenBounds.Center - bounds.Center).LengthSquared());
+
+            var newFocus = focusables.FirstOrDefault();
+            if(newFocus != null)
+            {
+                CurrentFocus = newFocus;
+                return true;
+            }
+            return false;
         }
     }
 }

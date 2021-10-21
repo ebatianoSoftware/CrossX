@@ -126,14 +126,16 @@ namespace CrossX.Skia.Graphics
             return false;
         }
 
-        public virtual void LoadTTF(Stream stream)
+        public virtual void LoadTTF(Stream stream, string name)
         {
             var tf = SKFontManager.Default.CreateTypeface(stream);
 
-            if(!typefaces.TryGetValue(tf.FamilyName, out var list))
+            name = name ?? tf.FamilyName;
+
+            if (!typefaces.TryGetValue(name, out var list))
             {
                 list = new List<SKTypeface>();
-                typefaces.Add(tf.FamilyName, list);
+                typefaces.Add(name, list);
             }
             list.Add(tf);
         }

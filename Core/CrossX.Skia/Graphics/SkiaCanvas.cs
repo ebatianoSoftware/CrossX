@@ -38,6 +38,9 @@ namespace CrossX.Skia.Graphics
                 path = new SKPath();
             }
             path.Reset();
+
+            
+
             return path;
         }
 
@@ -146,6 +149,16 @@ namespace CrossX.Skia.Graphics
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = false;
             skCanvas.DrawOval(rect.ToSkia(), skPaint);
+        }
+
+        public override void DrawArc(RectangleF rect, float angle, float sweep, Color color, bool close, float thickness)
+        {
+            PreparePaint(skPaint);
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+
+            skCanvas.DrawArc(rect.ToSkia(), angle, sweep, close, skPaint);
         }
 
         public override void FillArc(RectangleF rect, float angle, float sweep, Color color)

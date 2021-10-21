@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Graphics;
+﻿using CrossX.Abstractions.Input;
+using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
@@ -100,6 +101,15 @@ namespace CrossX.Framework.UI.Containers
             return false;
         }
 
+        protected override bool OnProcesssUiKey(UiInputKey key)
+        {
+            for (var idx = Children.Count - 1; idx >= 0; --idx)
+            {
+                if (Children[idx].ProcessUiKey(key)) return true;
+            }
+            return base.OnProcesssUiKey(key);
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -110,6 +120,15 @@ namespace CrossX.Framework.UI.Containers
             {
                 Children[idx].Dispose();
             }
+        }
+
+        public override void GetFocusables(IList<IFocusable> list)
+        {
+            for (var idx = 0; idx < Children.Count; ++idx)
+            {
+                Children[idx].GetFocusables(list);
+            }
+            base.GetFocusables(list);
         }
     }
 }

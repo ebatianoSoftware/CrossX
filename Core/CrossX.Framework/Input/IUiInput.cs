@@ -1,4 +1,6 @@
-﻿namespace CrossX.Framework.Input
+﻿using CrossX.Abstractions.Input;
+
+namespace CrossX.Framework.Input
 {
     public interface IUiInput
     {

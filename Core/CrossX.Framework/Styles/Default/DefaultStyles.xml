@@ -64,8 +64,7 @@
                  FontWeight="{Theme SystemButtonTextFontWeight}"
                  TextPadding="{Theme SystemButtonTextPadding}"
                  BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}"
-                 FontMeasure="Strict"
-                 />
+                 FontMeasure="Strict"/>
     </Style>
     <Style>
       <ui:IconButton BackgroundColor="{Theme SystemButtonBackgroundColor}"

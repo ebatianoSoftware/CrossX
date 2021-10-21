@@ -22,12 +22,12 @@ namespace CrossX.Framework.UI.Controls
             }
         }
 
-        public Stretch Stretch 
-        { 
+        public Stretch Stretch
+        {
             get => stretch;
             set
             {
-                if(SetProperty(ref stretch, value))
+                if (SetProperty(ref stretch, value))
                 {
                     Invalidate();
                 }
@@ -58,11 +58,14 @@ namespace CrossX.Framework.UI.Controls
             }
         }
 
+        public bool FlipHorizontal { get => flipHorizontal; set => SetPropertyAndRedraw(ref flipHorizontal, value); }
+
         private Image image;
         private float scale = 1;
         private Stretch stretch = Stretch.Uniform;
+        private bool flipHorizontal;
 
-        public ImageView(IUIServices services): base(services)
+        public ImageView(IUIServices services) : base(services)
         {
         }
 
@@ -73,7 +76,18 @@ namespace CrossX.Framework.UI.Controls
             if (image == null) return;
 
             CalculateSourceAndTarget(out var target, out var source);
-            canvas.DrawImage(image, target, source, opacity);
+
+            if (FlipHorizontal)
+            {
+                canvas.SaveState();
+                canvas.Transform(Matrix3x2.CreateScale(-1, 1, target.Center));
+                canvas.DrawImage(image, target, source, opacity);
+                canvas.Restore();
+            }
+            else
+            {
+                canvas.DrawImage(image, target, source, opacity);
+            }
         }
 
         private void CalculateSourceAndTarget(out RectangleF target, out RectangleF source)
@@ -127,8 +141,8 @@ namespace CrossX.Framework.UI.Controls
                 Parent?.InvalidateLayout();
                 return;
             }
-            
-            if(desc.Uri == "")
+
+            if (desc.Uri == "")
             {
                 image = null;
             }

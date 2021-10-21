@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Binding;
+﻿using CrossX.Abstractions.Input;
+using CrossX.Framework.Binding;
 using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
@@ -7,7 +8,7 @@ using System;
 
 namespace CrossX.Framework.UI.Controls
 {
-    public class TextBox : Label, INativeTextBoxControl
+    public class TextBox : Label, INativeTextBoxControl, IFocusable
     {
         private Drawable frameDrawable;
         private Color frameColor;
@@ -17,6 +18,7 @@ namespace CrossX.Framework.UI.Controls
         private bool enabled = true;
         private readonly ButtonGesturesProcessor buttonGesturesProcessor;
 
+        public bool FocusOnOver { get; set; }
         public Drawable FrameDrawable { get => frameDrawable; set => SetPropertyAndRedraw(ref frameDrawable, value); }
 
         public Color FrameColor { get => frameColor; set => SetPropertyAndRedraw(ref frameColor, value); }
@@ -90,6 +92,11 @@ namespace CrossX.Framework.UI.Controls
         {
             var bounds = ScreenBounds.Deflate(TextPadding);
             gesture.SetCursor = bounds.Contains(gesture.Position) ? CursorType.IBeam : CursorType.Default;
+
+            if (FocusOnOver)
+            {
+                Parent.Window.CurrentFocus = this;
+            }
         }
 
         private void OnMove(Gesture gesture)
@@ -129,7 +136,7 @@ namespace CrossX.Framework.UI.Controls
 
                 if (nativeTextBox == null)
                 {
-                    nativeTextBox = await Parent.Window.NativeWindow.CreateNativeTextBox(this, gesture.Position);
+                    nativeTextBox = await Parent.Window.NativeWindow.CreateNativeTextBox(this);
                 }
                 else
                 {
@@ -140,7 +147,6 @@ namespace CrossX.Framework.UI.Controls
 
                 if (bounds.Contains(gesture.Position))
                 {
-
                     var font = Services.FontManager.FindFont(FontFamily, FontSize.Calculate(), FontWeight, FontItalic);
                     var offset = gesture.Position.X - bounds.X + font.MeasureText("I", FontMeasure.Extended).Width / 2;
                     var selection = font.BreakText(Text, offset);
@@ -228,6 +234,11 @@ namespace CrossX.Framework.UI.Controls
                     break;
             }
 
+            if(Parent.Window.CurrentFocus == this)
+            {
+                frameColor = FrameColorOver;
+            }
+
             if (!Enabled)
             {
                 backgroundColor = BackgroundColorDisabled;
@@ -307,6 +318,54 @@ namespace CrossX.Framework.UI.Controls
         {
             nativeControlIsToRelease = 2;
             Invalidate();
+        }
+
+        private void Select()
+        {
+            var gesture = new Gesture
+            {
+                Position = ScreenBounds.TopLeft
+            };
+            OnDown(gesture);
+        }
+
+        public bool HandleUiKey(UiInputKey key)
+        {
+            switch(key)
+            {
+                case UiInputKey.MenuOrBack:
+                case UiInputKey.Back:
+                    if(nativeTextBox != null)
+                    {
+                        nativeControlIsToRelease = 1;
+                    }
+                    return true;
+
+                case UiInputKey.Select:
+                    if(nativeTextBox == null)
+                    {
+                        Services.Dispatcher.EnqueueAction(Select);
+                    }
+                    return true;
+            }
+
+            if (nativeTextBox != null) return false;
+            return Window.NavigateFocus(key);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (Window.CurrentFocus == this)
+            {
+                Window.CurrentFocus = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        public bool ResignFocus()
+        {
+            return nativeTextBox == null;
         }
     }
 }

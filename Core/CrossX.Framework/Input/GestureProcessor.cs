@@ -10,7 +10,7 @@ namespace CrossX.Framework.Input
         {
             gesture.GestureType = GestureType.PointerDown;
             gesture.PointerId = pointerId;
-            gesture.Position = position / UiUnit.PixelsPerUnit;
+            gesture.Position = position;
             gesture.SetCursor = CursorType.Default;
             return gesture;
         }
@@ -19,7 +19,7 @@ namespace CrossX.Framework.Input
         {
             gesture.GestureType = GestureType.PointerUp;
             gesture.PointerId = pointerId;
-            gesture.Position = position / UiUnit.PixelsPerUnit;
+            gesture.Position = position;
             gesture.SetCursor = CursorType.Default;
             return gesture;
         }
@@ -28,7 +28,7 @@ namespace CrossX.Framework.Input
         {
             gesture.GestureType = GestureType.PointerMove;
             gesture.PointerId = pointerId;
-            gesture.Position = position / UiUnit.PixelsPerUnit;
+            gesture.Position = position;
             gesture.SetCursor = CursorType.Default;
             return gesture;
         }

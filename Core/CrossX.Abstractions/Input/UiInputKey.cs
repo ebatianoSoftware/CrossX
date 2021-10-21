@@ -1,4 +1,4 @@
-﻿namespace CrossX.Framework.Input
+﻿namespace CrossX.Abstractions.Input
 {
     public enum UiInputKey
     {
