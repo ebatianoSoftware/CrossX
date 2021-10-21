@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Drawables;
+﻿using CrossX.Abstractions.Input;
+using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using CrossX.Framework.Styles;
@@ -140,13 +141,27 @@ namespace CrossX.Framework.UI.Containers
             if (layoutInvalid)
             {
                 RecalculateLayout();
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
             }
 
             firstView?.Update(time);
             secondView?.Update(time);
 
             base.OnUpdate(time);
+        }
+
+        protected override bool OnProcesssUiKey(UiInputKey key)
+        {
+            if (firstView?.ProcessUiKey(key) == true) return true;
+            if (secondView?.ProcessUiKey(key) == true) return true;
+            return false;
+        }
+
+        public override void GetFocusables(IList<IFocusable> list)
+        {
+            firstView?.GetFocusables(list);
+            secondView?.GetFocusables(list);
+            base.GetFocusables(list);
         }
 
         protected override void RecalculateLayout() => RecalculateLayout(true);

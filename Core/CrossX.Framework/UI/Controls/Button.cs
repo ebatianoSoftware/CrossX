@@ -1,4 +1,5 @@
-﻿using CrossX.Framework.Graphics;
+﻿using CrossX.Abstractions.Input;
+using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
 using System;
 using System.Windows.Input;
@@ -12,7 +13,7 @@ namespace CrossX.Framework.UI.Controls
         Pushed
     }
 
-    public class Button : TextBasedControl
+    public class Button : TextBasedControl, IFocusable
     {
         public ICommand Command
         {
@@ -39,13 +40,16 @@ namespace CrossX.Framework.UI.Controls
         public object CommandParameter { get => commandParameter; set => SetProperty(ref commandParameter, value); }
         public Color BackgroundColorPushed { get => backgroundColorPushed; set => SetProperty(ref backgroundColorPushed, value); }
         public Color BackgroundColorOver { get => backgroundColorOver; set => SetProperty(ref backgroundColorOver, value); }
-
         public Color BackgroundColorDisabled { get => backgroundColorDisabled; set => SetProperty(ref backgroundColorDisabled, value); }
-
         public Color ForegroundColorPushed { get => foregroundColorPushed; set => SetProperty(ref foregroundColorPushed, value); }
         public Color ForegroundColorOver { get => foregroundColorOver; set => SetProperty(ref foregroundColorOver, value); }
-
+        public bool FocusOnOver { get; set; }
         public bool Enabled { get => enabled; set => SetProperty(ref enabled, value); }
+
+        public bool InitiallyFocused 
+        {
+            private get; set;
+        }
 
         public string Tooltip { get; set; }
 
@@ -74,10 +78,19 @@ namespace CrossX.Framework.UI.Controls
             buttonGesturesProcessor = new ButtonGesturesProcessor(
                 state => CurrentState = state,
                 OnClick,
-                onHoveredAction: g => g.SetCursor = CursorType.Hand,
+                onHoveredAction: OnHover,
                 onUpAction: g => g.SetCursor = CursorType.Hand,
                 onDownAction: g => g.SetCursor = CursorType.Hand
                 );
+        }
+
+        protected virtual void OnHover(Gesture gesture)
+        {
+            gesture.SetCursor = CursorType.Hand;
+            if(FocusOnOver)
+            {
+                Parent.Window.CurrentFocus = this;
+            }
         }
 
         protected virtual void OnClick()
@@ -87,6 +100,11 @@ namespace CrossX.Framework.UI.Controls
 
         protected override void OnUpdate(float time)
         {
+            if(InitiallyFocused)
+            {
+                InitiallyFocused = false;
+                Window.CurrentFocus = this;
+            }
             base.OnUpdate(time);
 
             if (CurrentState == ButtonState.Hover)
@@ -104,7 +122,14 @@ namespace CrossX.Framework.UI.Controls
             Color foregroundColor = ForegroundColor;
             Color backgroundColor = BackgroundColor;
 
-            switch (CurrentState)
+            var state = CurrentState;
+
+            if(Parent.Window.CurrentFocus == this)
+            {
+                state = ButtonState.Hover;
+            }
+
+            switch (state)
             {
                 case ButtonState.Hover:
                     foregroundColor = ForegroundColorOver;
@@ -161,7 +186,7 @@ namespace CrossX.Framework.UI.Controls
                 case nameof(Enabled):
                 case nameof(Visible):
                     buttonGesturesProcessor.Reset();
-                    Services.RedrawService.RequestRedraw();
+                    Invalidate();
                     break;
 
                 case nameof(CommandParameter):
@@ -177,5 +202,30 @@ namespace CrossX.Framework.UI.Controls
         {
             Enabled = command?.CanExecute(CommandParameter) ?? true;
         }
+
+        public bool HandleUiKey(UiInputKey key)
+        {
+            if (!Visible || !Enabled) return false;
+
+            switch (key)
+            {
+                case UiInputKey.Select:
+                    OnClick();
+                    return true;
+            }
+            return Window.NavigateFocus(key);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (Window.CurrentFocus == this)
+            {
+                Window.CurrentFocus = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        public bool ResignFocus() => true;
     }
 }

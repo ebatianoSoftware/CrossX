@@ -112,7 +112,7 @@ namespace CrossX.Framework.UI.Controls
             if (Visible && Mode != ProgressDisplayMode.Determinate)
             {
                 step += time * IndeterminateSpeed.Calculate(ScreenBounds.Width);
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
             }
         }
 

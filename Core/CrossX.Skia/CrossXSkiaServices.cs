@@ -13,7 +13,8 @@ namespace CrossX.Skia
                 .WithType<SkiaCanvas>().As<Canvas>().As<ISkiaCanvas>()
                 .WithType<SkiaVertexBuffer>().As<VertexBuffer>()
                 .WithType<SkiaFont>().As<Font>()
-                .WithType<SkiaFontManager>().As<IFontManager>().AsSingleton();
+                .WithType<SkiaFontManager>().As<IFontManager>().AsSingleton()
+                .WithType<SkiaEffectsFactory>().As<IEffectsFactory>().AsSingleton();
         }
     }
 }

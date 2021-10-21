@@ -4,7 +4,7 @@ namespace CrossX.Framework.UI.Controls
 {
     public abstract class TextBasedControl: View
     {
-        private string text;
+        private string text = "";
         private string fontFamily;
         private Length fontSize = new Length(10);
         private FontWeight fontWeight = FontWeight.Normal;
@@ -27,11 +27,12 @@ namespace CrossX.Framework.UI.Controls
             get => textPadding;
             set => SetPropertyAndRecalcLayout(ref textPadding, value);
         }
-        public string Text 
+        public virtual string Text 
         { 
             get => text;
             set => SetPropertyAndRecalcLayout(ref text, value);
         }
+
         public string FontFamily { get => fontFamily; set => SetPropertyAndRecalcLayout(ref fontFamily, value); }
         public Length FontSize { get => fontSize; set => SetPropertyAndRecalcLayout(ref fontSize, value); }
         public FontWeight FontWeight { get => fontWeight; set => SetPropertyAndRecalcLayout(ref fontWeight, value); }
@@ -61,7 +62,7 @@ namespace CrossX.Framework.UI.Controls
             sizeAuto.Width += TextPadding.Width;
             sizeAuto.Height += TextPadding.Height;
 
-            return new SizeF(autoWidth ? sizeAuto.Width : Math.Max(size.Width, sizeAuto.Width), autoHeight ? sizeAuto.Height : Math.Max(size.Height, sizeAuto.Height));
+            return new SizeF(autoWidth ? sizeAuto.Width : size.Width, autoHeight ? sizeAuto.Height : size.Height);
         }
     }
 }

@@ -238,7 +238,7 @@ namespace CrossX.Framework.UI.Controls
             valueNormalized = Math.Max(0, Math.Min(1, valueNormalized));
 
             Value = SnapValue(MinValue + valueNormalized * (MaxValue - MinValue));
-            Services.RedrawService.RequestRedraw();
+            Invalidate();
         }
 
         private float SnapValue(float value)

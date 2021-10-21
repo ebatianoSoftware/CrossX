@@ -1,6 +1,8 @@
-﻿using CrossX.Framework.Drawables;
+﻿using CrossX.Abstractions.Input;
+using CrossX.Framework.Drawables;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
+using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
 using System.Collections.Generic;
@@ -47,10 +49,15 @@ namespace CrossX.Framework.UI
                     RaisePropertyChanged(nameof(ActualWidth));
                     RaisePropertyChanged(nameof(ActualHeight));
                     RecalculateLayout();
-                    Services.RedrawService.RequestRedraw();
+                    Invalidate();
                 }
             }
         }
+
+        public IUiInputHandler UiInputHandler { get; set; }
+
+        public bool InputTransparent { get; set; }
+        public bool NativeDraggable { get; set; }
 
         public Drawable BackgroundDrawable { get => backgroundDrawable; set => SetPropertyAndRedraw(ref backgroundDrawable, value); }
         public Alignment HorizontalAlignment { get => horizontalAlignment; set => SetProperty(ref horizontalAlignment, value); }
@@ -90,6 +97,8 @@ namespace CrossX.Framework.UI
         public bool DisplayVisible => Visible && (Parent?.DisplayVisible ?? true);
 
         XxElement IStoreElement.Element { set => properties = value.Properties; }
+
+        public Window Window => Parent?.Window;
 
         protected View(IUIServices services)
         {
@@ -179,6 +188,7 @@ namespace CrossX.Framework.UI
 
         public bool PreviewGesture(Gesture gesture)
         {
+            if (InputTransparent) return false;
             if (!DisplayVisible || !Visible) return false;
             if (OnPreviewGesture(gesture)) return true;
             return false;
@@ -191,10 +201,41 @@ namespace CrossX.Framework.UI
 
         public bool ProcessGesture(Gesture gesture)
         {
+            if (InputTransparent) return false;
             if (!DisplayVisible || !Visible) return false;
             if (OnProcessGesture(gesture)) return true;
-            return ScreenBounds.Contains(gesture.Position);
+
+            if(ScreenBounds.Contains(gesture.Position))
+            {
+                if(NativeDraggable)
+                {
+                    gesture.SetCursor = CursorType.NativeDrag;
+                }
+
+                if (BackgroundColor.A > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
+
+        public bool ProcessUiKey(UiInputKey key)
+        {
+            if (InputTransparent) return false;
+            if (!DisplayVisible || !Visible) return false;
+            return OnProcesssUiKey(key);
+        }
+
+        protected virtual bool OnProcesssUiKey(UiInputKey key)
+        {
+            if(UiInputHandler != null)
+            {
+                if (UiInputHandler.Handle(key)) return true;
+            }
+            return false;
+        }
+
         protected virtual bool OnProcessGesture(Gesture gesture)
         {
             return false;
@@ -233,7 +274,7 @@ namespace CrossX.Framework.UI
         {
             if (SetProperty(ref property, value, propertyName))
             {
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
                 return true;
             }
             return false;
@@ -244,10 +285,20 @@ namespace CrossX.Framework.UI
             if (SetProperty(ref property, value, propertyName))
             {
                 Parent?.InvalidateLayout();
-                Services.RedrawService.RequestRedraw();
+                Invalidate();
                 return true;
             }
             return false;
+        }
+
+        protected void Invalidate() => Parent?.Window?.Redraw();
+
+        public virtual void GetFocusables(IList<IFocusable> list) 
+        {
+            if(this is IFocusable focusable)
+            {
+                list.Add(focusable);
+            }
         }
     }
 }

@@ -6,6 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MainForm.cs" />
+    <Compile Remove="MainForm.Designer.cs" />
+    <Compile Remove="XxRunner.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="MainForm.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.80.3" />
   </ItemGroup>
 

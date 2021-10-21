@@ -7,6 +7,6 @@ namespace CrossX.Abstractions.Async
     {
         void BeginInvoke(Action action);
         Task<T> InvokeAsync<T>(Func<T> func);
-
+        void EnqueueAction(Action action);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CrossX.Framework.Async
 {
-    internal class SequenceImpl: Sequence
+    public class SequenceImpl: Sequence
     {
         private int frames;
         private double seconds;
@@ -63,7 +63,7 @@ namespace CrossX.Framework.Async
             }
         }
 
-        internal static Sequence Create(int frames, double seconds, Func<bool> condition, IEnumerator<Sequence> enumerator)
+        public static Sequence Create(int frames, double seconds, Func<bool> condition, IEnumerator<Sequence> enumerator)
         {
             return new SequenceImpl
             {
