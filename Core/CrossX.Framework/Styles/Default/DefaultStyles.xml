@@ -22,9 +22,14 @@
     <Length Key="SystemIconButtonSpacing" Value="8"/>
     <Length Key="SystemIconButtonIconSize" Value="20"/>
 
+    <Thickness Key="SystemTextBoxPadding" Value="12,8,12,8"/>
+    
     <String Key="SystemIconFontFace" Value="FluentSystemIcons-Filled"/>
     <Length Key="SystemCheckRadioSize" Value="15"/>
     <Length Key="SystemCheckRadioSpacing" Value="6"/>
+
+    <Color Key="SystemHintColor" Value="{Theme SystemForegroundColor}" Opacity="0.5"/>
+    <Color Key="SystemHintColorDisabled" Value="{Theme SystemForegroundColorDisabled}" Opacity="0.5"/>
 
   </Theme>
   
@@ -59,8 +64,7 @@
                  FontWeight="{Theme SystemButtonTextFontWeight}"
                  TextPadding="{Theme SystemButtonTextPadding}"
                  BackgroundDrawable="{Resource SystemButtonBackgroundDrawable}"
-                 FontMeasure="Strict"
-                 />
+                 FontMeasure="Strict"/>
     </Style>
     <Style>
       <ui:IconButton BackgroundColor="{Theme SystemButtonBackgroundColor}"
@@ -88,7 +92,11 @@
     <Style Selector="Accented">
       <ui:Button BackgroundColor="{Theme SystemButtonAccentBackgroundColor}"
                  BackgroundColorOver="{Theme SystemButtonAccentBackgroundColorOver}"
-                 BackgroundColorPushed="{Theme SystemButtonAccentBackgroundColorPushed}"/>
+                 BackgroundColorPushed="{Theme SystemButtonAccentBackgroundColorPushed}"
+                 FontWeight="Normal"/>
+    </Style>
+    <Style Selector="Accented">
+      <ui:IconButton IconFontWeight="SemiBold"/>
     </Style>
     <Style>
       <ui:ToggleButton CheckedBackgroundColor="{Theme SystemButtonAccentBackgroundColor}"
@@ -105,6 +113,26 @@
                 FontSize="{Theme SystemTextFontSize}"
                 FontWeight="{Theme SystemTextFontWeight}"/>
     </Style>
+
+    <Style>
+      <ui:TextBox ForegroundColor="{Theme SystemForegroundColor}"
+                  ForegroundColorDisabled="{Theme SystemForegroundColorDisabled}"
+                  FontFamily="{Theme SystemTextFontFamily}"
+                  FontSize="{Theme SystemTextFontSize}"
+                  FontWeight="Normal"
+                  TextPadding="{Theme SystemTextBoxPadding}"
+                  FontMeasure="Extended"
+                  HorizontalTextAlignment="Start"
+                  BackgroundColor="{Theme SystemPanelBackgroundColor}"
+                  BackgroundDrawable="{Resource SystemTextBoxBackgroundDrawable}"
+                  FrameDrawable="{Resource SystemTextBoxFrameDrawable}"
+                  FrameColor="{Theme SystemButtonBackgroundColor}"
+                  FrameColorOver="{Theme SystemButtonBackgroundColorOver}"
+                  FrameColorActive="{Theme SystemActiveFrameColor}"
+                  SelectionColor="{Theme SystemActiveFrameColor}"
+                  HintColor="{Theme SystemHintColor}"/>
+    </Style>
+    
     <Style>
       <ui:CheckBox BoxColor="{Theme SystemButtonBackgroundColor}"
                    BoxColorOver="{Theme SystemButtonBackgroundColorOver}"
@@ -174,6 +202,16 @@
     <Resource Key="SystemSliderTrackDrawable">
       <d:RectangleDrawable FillColor="White" Ry="1" Rx="1"/>
     </Resource>
+
+    <Resource Key="SystemTextBoxBackgroundDrawable">
+      <d:RectangleDrawable FillColor="White" Ry="5" Rx="5"/>
+    </Resource>
+
+    <Resource Key="SystemTextBoxFrameDrawable">
+      <d:RectangleDrawable Ry="5" Rx="5" StrokeColor="White" StrokeThickness="1"/>
+    </Resource>
+    
+
   </Resources>
   
 </Application>

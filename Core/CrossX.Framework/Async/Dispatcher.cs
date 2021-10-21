@@ -1,12 +1,11 @@
-﻿using CrossX.Abstractions.Async;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CrossX.Framework.Async
 {
-    internal class Dispatcher : IDispatcher
+    public class Dispatcher : ISystemDispatcher
     {
         public Thread DispatcherThread { get; set; }
 
@@ -24,7 +23,7 @@ namespace CrossX.Framework.Async
             }
         }
 
-        protected void EnqueueAction(Action action)
+        public void EnqueueAction(Action action)
         {
             queue.Enqueue(action);
             waitEvent.Set();
@@ -34,12 +33,17 @@ namespace CrossX.Framework.Async
         {
             T result = default;
 
-            if(!events.TryDequeue(out var evnt))
+            if (InvokeOnDispatcherThread( ()=> result = func()))
+            {
+                return Task.FromResult(result);
+            }
+
+            if (!events.TryDequeue(out var evnt))
             {
                 evnt = new AutoResetEvent(false);
             }
 
-            BeginInvoke(() =>
+            EnqueueAction(() =>
             {
                 result = func();
                 evnt.Set();

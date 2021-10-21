@@ -1,4 +1,5 @@
 ﻿using CrossX.Framework.UI.Global;
+using System.Collections.Generic;
 
 namespace CrossX.Framework.UI
 {

@@ -28,8 +28,18 @@ namespace CrossX.Framework.XxTools
 
         public TInstance CreateObject<TInstance>(XxElement element, bool resolveBindings = true)
         {
-            if (!typeof(TInstance).IsAssignableFrom(element.Type)) throw new InvalidDataException($"Cannot create {typeof(TInstance).Name} from {element.Type.Name}!");
-            var instance = objectFactory.Create(element.Type, this, elementTypeMapping);
+            const string TypeNameProperty = "TypeName";
+            var type = element.Type;
+            var typeDef = element.Properties.FirstOrDefault(o => o.Key.Name == TypeNameProperty);
+
+            var typeName = typeDef.Value as string;
+            if(!string.IsNullOrEmpty(typeName))
+            {
+                type = Type.GetType(typeName.Replace(';', ',')) ?? type;
+            }
+
+            if (!typeof(TInstance).IsAssignableFrom(type)) throw new InvalidDataException($"Cannot create {typeof(TInstance).Name} from {type.Name}!");
+            var instance = objectFactory.Create(type, this, elementTypeMapping);
 
             if(instance is IStoreElement storeElement)
             {

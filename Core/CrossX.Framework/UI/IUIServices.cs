@@ -9,7 +9,6 @@ namespace CrossX.Framework.UI
 {
     public interface IUIServices
     {
-        IRedrawService RedrawService { get; }
         IBindingService BindingService { get; }
         IFontManager FontManager { get; }
         IDispatcher Dispatcher { get; }

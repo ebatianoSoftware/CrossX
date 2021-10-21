@@ -62,6 +62,8 @@ namespace CrossX.Framework
 
         public bool IsAuto => type == Type.Auto;
 
+        public int Pixels => (int)(Calculate() * UiUnit.PixelsPerUnit);
+
         public Length(float value, Type type = Type.Units)
         {
             this.value = value;

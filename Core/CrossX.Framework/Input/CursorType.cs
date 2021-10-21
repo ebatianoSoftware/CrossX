@@ -10,6 +10,8 @@
         VSplit,
         HSplit,
         SizeNS,
-        SizeWE
+        SizeWE,
+        IBeam,
+        NativeDrag
     }
 }

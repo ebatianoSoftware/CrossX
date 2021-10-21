@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX.XAudio2" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\CrossX.Abstractions\CrossX.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Core\CrossX.Audio\CrossX.Audio.csproj" />
+  </ItemGroup>
+
+</Project>

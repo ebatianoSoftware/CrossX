@@ -9,9 +9,11 @@ namespace CrossX.Framework.UI.Controls
         private string iconFontFace = "FluentSystemIcons-Filled";
         private Length spacing;
         private FontMeasure iconFontMeasure = FontMeasure.Strict;
+        private FontWeight iconFontWeight = FontWeight.Normal;
 
         public Length IconSize { get => iconSize; set => SetPropertyAndRecalcLayout(ref iconSize, value); }
         public string IconText { get => iconText; set => SetPropertyAndRecalcLayout(ref iconText, value); }
+        public FontWeight IconFontWeight { get => iconFontWeight; set => SetPropertyAndRecalcLayout(ref iconFontWeight, value); }
         public string IconFontFace { get => iconFontFace; set => SetPropertyAndRecalcLayout(ref iconFontFace, value); }
         public FontMeasure IconFontMeasure { get => iconFontMeasure; set => SetPropertyAndRecalcLayout(ref iconFontMeasure, value); }
         public Length Spacing { get => spacing; set => SetPropertyAndRecalcLayout(ref spacing, value); }
@@ -36,7 +38,7 @@ namespace CrossX.Framework.UI.Controls
             if (!string.IsNullOrEmpty(iconText) && IconSize != Length.Zero && !string.IsNullOrEmpty(IconFontFace))
             {
                 var spacing = Spacing.Calculate();
-                var iconFont = Services.FontManager.FindFont(IconFontFace, IconSize.Calculate(), FontWeight.Normal, false);
+                var iconFont = Services.FontManager.FindFont(IconFontFace, IconSize.Calculate(), IconFontWeight, false);
                 var iconSize = iconFont.MeasureText(IconText, FontMeasure.Strict);
 
                 switch (HorizontalTextAlignment)
@@ -67,7 +69,7 @@ namespace CrossX.Framework.UI.Controls
         {
             base.RenderButton(canvas, foregroundColor, backgroundColor, opacity);
 
-            var font = Services.FontManager.FindFont(IconFontFace, IconSize.Calculate(), FontWeight.Normal, false);
+            var font = Services.FontManager.FindFont(IconFontFace, IconSize.Calculate(), IconFontWeight, false);
 
             var bounds = ScreenBounds.Deflate(TextPadding);
             canvas.DrawText(IconText, font, bounds, Utils.GetTextAlign(HorizontalTextAlignment.Oposite(), VerticalTextAlignment.Oposite()), foregroundColor * opacity, IconFontMeasure);

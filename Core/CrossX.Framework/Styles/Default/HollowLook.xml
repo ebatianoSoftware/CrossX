@@ -5,11 +5,11 @@
 
   <Resources>
     <Resource Key="SystemButtonBackgroundDrawable">
-      <d:RectangleDrawable Rx="10" Ry="50%" StrokeColor="White" StrokeThickness="2"/>
+      <d:RectangleDrawable Rx="10" Ry="50%" StrokeColor="White" StrokeThickness="1"/>
     </Resource>
 
     <Resource Key="SystemCheckBoxDrawable">
-      <d:RectangleDrawable Rx="3" Ry="50%" StrokeColor="White" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
+      <d:RectangleDrawable Rx="3" Ry="3" StrokeColor="White" StrokeThickness="1" Padding="0,0.5,0,-0.5"/>
     </Resource>
 
     <Resource Key="SystemCheckBoxTickDrawable">
@@ -17,11 +17,13 @@
     </Resource>
 
     <Resource Key="SystemRadioDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" StrokeColor="White" StrokeThickness="2" Padding="0,0.5,0,-0.5"/>
+      <d:RectangleDrawable Rx="50%" Ry="50%" StrokeColor="White" StrokeThickness="1" Padding="0,0.5,0,-0.5"/>
     </Resource>
 
     <Resource Key="SystemRadioTickDrawable">
-      <d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="10" FontWeight="Bold" Text="&#62313;" OffsetX="-0.5" OffsetY="1"/>
+      <d:RectangleDrawable Padding="5,5.5,4.5,4" FillColor="White" Rx="50%" Ry="50%"/>
+      <!--<d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="12" FontWeight="Bold" Text="&#62102;" OffsetX="-0.3" OffsetY="1.5"/>-->
+      <!--<d:TextIconDrawable FontFamily="FluentSystemIcons-Filled" FontSize="10" FontWeight="Bold" Text="&#62313;" OffsetX="-0.5" OffsetY="1"/>-->
     </Resource>
 
     <Resource Key="SystemSplitterDrawable">
@@ -29,11 +31,11 @@
     </Resource>
 
     <Resource Key="SystemSliderThumbDrawable">
-      <d:RectangleDrawable Rx="50%" Ry="50%" StrokeColor="White" StrokeThickness="2"/>
+      <d:RectangleDrawable Rx="50%" Ry="50%" StrokeColor="White" StrokeThickness="1"/>
     </Resource>
 
     <Resource Key="SystemTooltipBackgroundDrawable">
-      <d:RectangleDrawable Rx="2" Ry="2" FillColor="White" StrokeColor="#4888" StrokeThickness="2"/>
+      <d:RectangleDrawable Rx="2" Ry="2" FillColor="White" StrokeColor="#4888" StrokeThickness="1"/>
     </Resource>
     
   </Resources>

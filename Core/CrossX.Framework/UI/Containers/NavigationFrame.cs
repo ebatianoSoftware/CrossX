@@ -1,4 +1,5 @@
 ﻿using CrossX.Abstractions.Async;
+using CrossX.Abstractions.Input;
 using CrossX.Framework.Core;
 using CrossX.Framework.Graphics;
 using CrossX.Framework.Input;
@@ -7,6 +8,7 @@ using CrossX.Framework.Transforms;
 using CrossX.Framework.UI.Global;
 using CrossX.Framework.XxTools;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xx.Definition;
@@ -19,6 +21,7 @@ namespace CrossX.Framework.UI.Containers
         private readonly Application application;
         private readonly IXxFileParser fileParser;
         private readonly IDispatcher dispatcher;
+        private readonly IViewLocator viewLocator;
         private INavigationController navigationController;
 
         private View currentView = null;
@@ -63,18 +66,19 @@ namespace CrossX.Framework.UI.Containers
         public NavigationTransform NavigateFromTransform { get; set; }
         
 
-        public NavigationFrame(IUIServices services, Application application, IXxFileParser fileParser, IDispatcher dispatcher) : base(services)
+        public NavigationFrame(IUIServices services, Application application, IXxFileParser fileParser, IDispatcher dispatcher, IViewLocator viewLocator) : base(services)
         {
             this.application = application;
             this.fileParser = fileParser;
             this.dispatcher = dispatcher;
+            this.viewLocator = viewLocator;
         }
 
         private void OnNavigationRequested(object sender, NavigationRequest request)
         {
             var task = Task.Run(() =>
             {
-               (var path, var assembly) = application.LocateView(request.ViewModel);
+               (var path, var assembly) = viewLocator.LocateView(request.ViewModel);
                path += ".xml";
 
                XxElement viewElement = fileParser.Parse(assembly, path, true);
@@ -106,6 +110,18 @@ namespace CrossX.Framework.UI.Containers
         {
             base.OnRender(canvas, opacity);
             currentView?.Render(canvas, opacity);
+        }
+
+        protected override bool OnProcesssUiKey(UiInputKey key)
+        {
+            if (currentView?.ProcessUiKey(key) == true) return true;
+            return false;
+        }
+
+        public override void GetFocusables(IList<IFocusable> list)
+        {
+            currentView?.GetFocusables(list);
+            base.GetFocusables(list);
         }
 
         protected override void OnUpdate(float time)
@@ -142,7 +158,7 @@ namespace CrossX.Framework.UI.Containers
             var size = child.CalculateSize(Bounds.Size);
             var position = child.CalculatePosition(size, Bounds.Size);
             child.Bounds = new RectangleF(position, size);
-            Services.RedrawService.RequestRedraw();
+            Invalidate();
         }
 
         public void InvalidateLayout()

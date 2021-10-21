@@ -198,7 +198,7 @@ namespace CrossX.Framework.UI.Controls
                 case nameof(Enabled):
                 case nameof(Visible):
                     buttonGesturesProcessor.Reset();
-                    Services.RedrawService.RequestRedraw();
+                    Invalidate();
                     break;
             }
         }

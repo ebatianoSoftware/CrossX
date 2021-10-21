@@ -38,6 +38,9 @@ namespace CrossX.Skia.Graphics
                 path = new SKPath();
             }
             path.Reset();
+
+            
+
             return path;
         }
 
@@ -46,6 +49,7 @@ namespace CrossX.Skia.Graphics
             var vb = (SkiaVertexBuffer)vertexBuffer;
             var img = (SkiaImage)image;
 
+            PreparePaint(skPaint);
             skPaint.Color = Color.White.ToSkia();
             skPaint.Shader = img.SKShader;
 
@@ -102,6 +106,7 @@ namespace CrossX.Skia.Graphics
 
         public override Vector2 DrawText(string line, Font font, RectangleF target, TextAlign textAlign, Color color, FontMeasure fontMeasure = FontMeasure.Extended)
         {
+            
             if (font == null) return Vector2.Zero;
             if (line == null) return Vector2.Zero;
 
@@ -110,17 +115,28 @@ namespace CrossX.Skia.Graphics
             var position = CalculateTargetPosition(font, line, target, textAlign, fontMeasure, out var size);
 
             var skPaint = skiaFont.SKPaint;
+            PreparePaint(skPaint);
             skPaint.IsStroke = false;
             skPaint.IsAntialias = true;
-            skPaint.FilterQuality = SKFilterQuality.High;
+            skPaint.FilterQuality = SKFilterQuality.Low;
             skPaint.Color = color.ToSkia();
 
             skCanvas.DrawText(line, position.X, position.Y, skPaint);
             return size;
         }
 
+        public override void DrawLine(Vector2 p1, Vector2 p2, Color color, float thickness)
+        {
+            PreparePaint(skPaint);
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+            skCanvas.DrawLine(p1.ToSkia(), p2.ToSkia(), skPaint);
+        }
+
         public override void DrawEllipse(RectangleF rect, Color color, float thickness)
         {
+            PreparePaint(skPaint);
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = true;
             skPaint.StrokeWidth = thickness;
@@ -129,14 +145,35 @@ namespace CrossX.Skia.Graphics
 
         public override void FillEllipse(RectangleF rect, Color color)
         {
+            PreparePaint(skPaint);
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = false;
             skCanvas.DrawOval(rect.ToSkia(), skPaint);
         }
 
+        public override void DrawArc(RectangleF rect, float angle, float sweep, Color color, bool close, float thickness)
+        {
+            PreparePaint(skPaint);
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = true;
+            skPaint.StrokeWidth = thickness;
+
+            skCanvas.DrawArc(rect.ToSkia(), angle, sweep, close, skPaint);
+        }
+
+        public override void FillArc(RectangleF rect, float angle, float sweep, Color color)
+        {
+            PreparePaint(skPaint);
+            skPaint.Color = color.ToSkia();
+            skPaint.IsStroke = false;
+
+            skCanvas.DrawArc(rect.ToSkia(), angle, sweep, true, skPaint);
+
+        }
 
         public override void FillRect(RectangleF rect, Color color)
         {
+            PreparePaint(skPaint);
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = false;
             skCanvas.DrawRect(rect.ToSkia(), skPaint);
@@ -144,6 +181,7 @@ namespace CrossX.Skia.Graphics
 
         public override void DrawRect(RectangleF rect, Color color, float thickness)
         {
+            PreparePaint(skPaint);
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = true;
             skPaint.StrokeWidth = thickness;
@@ -152,6 +190,7 @@ namespace CrossX.Skia.Graphics
 
         public override void FillRoundRect(RectangleF rect, Vector2 roundness, Color color)
         {
+            PreparePaint(skPaint);
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = false;
             skCanvas.DrawRoundRect(rect.ToSkia(), new SKSize(roundness.X, roundness.Y), skPaint);
@@ -159,6 +198,7 @@ namespace CrossX.Skia.Graphics
 
         public override void DrawRoundRect(RectangleF rect, Vector2 roundness, Color color, float thickness)
         {
+            PreparePaint(skPaint);
             skPaint.Color = color.ToSkia();
             skPaint.IsStroke = true;
             skPaint.StrokeWidth = thickness;
@@ -168,8 +208,32 @@ namespace CrossX.Skia.Graphics
         public override void DrawImage(Image image, RectangleF target, RectangleF source, float opacity)
         {
             var skiaImage = (SkiaImage)image;
+            PreparePaint(skPaint);
             skPaint.Color = new SKColor(255, 255, 255, (byte)(opacity * 255));
             skCanvas.DrawImage(skiaImage.SKImage, source.ToSkia(), target.ToSkia(), skPaint);
+        }
+
+        private void PreparePaint(SKPaint paint)
+        {
+            if(Effect is SkiaEffect eff)
+            {
+                paint.ImageFilter = eff.Filter;
+            }
+            else
+            {
+                paint.ImageFilter = null;
+            }
+
+            switch (BlendMode)
+            {
+                case BlendMode.AlphaBlend:
+                    paint.BlendMode = SKBlendMode.SrcOver;
+                    break;
+
+                case BlendMode.Add:
+                    paint.BlendMode = SKBlendMode.Plus;
+                    break;
+            }
         }
     }
 }
