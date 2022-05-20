@@ -18,7 +18,7 @@ CrossX comes with many built in layouts and controls to build and design apps qu
 ✔️Button
 ✔️IconButton
 ✔️ImageView 
-✔️Slider 
+✔️Slider
 ✔️ProgressBar
 ✔️ToggleButton 
 ✔️CheckBox
@@ -30,6 +30,7 @@ CrossX comes with many built in layouts and controls to build and design apps qu
 ✔️SplitLayout
 ✔️ToolTips
 
+🔻AppShell **- standard shell for mobile apps with main menu flying out from side**
 🔻ContextMenu
 🔻ScrollBar
 🔻ScrollView
@@ -38,9 +39,6 @@ CrossX comes with many built in layouts and controls to build and design apps qu
 🔻TextBox
 🔻Text
 🔻HtmlView
-
-
-
 
 ## MVVM Pattern
 The framework is strongly based on Model-View-ViewModel pattern. No view code by default (can be realised though with specialized control subclassing) and heavy use of bindings force you to think in Model->ViewModel->View direction in every aspect.
@@ -82,6 +80,7 @@ To improve developer experience, a small tool - XxSchemaGenerator (xxsgen) was c
 </FrameLayout>
 ```
 
+## Roadmap
 
 ## Support and Contributions
 If you think you have found a bug or have a feature request, use our [issue tracker](https://github.com/ebatianoSoftware/CrossX/issues). Before opening a new issue, please search to see if your problem has already been reported. Try to be as detailed as possible in your issue reports.

@@ -18,7 +18,6 @@ namespace CrossX.Framework.UI.Containers
     public class NavigationFrame: View, IViewParent
     {
         private ICommand attachedToFrameCommand;
-        private readonly Application application;
         private readonly IXxFileParser fileParser;
         private readonly IDispatcher dispatcher;
         private readonly IViewLocator viewLocator;
@@ -66,9 +65,8 @@ namespace CrossX.Framework.UI.Containers
         public NavigationTransform NavigateFromTransform { get; set; }
         
 
-        public NavigationFrame(IUIServices services, Application application, IXxFileParser fileParser, IDispatcher dispatcher, IViewLocator viewLocator) : base(services)
+        public NavigationFrame(IUIServices services, IXxFileParser fileParser, IDispatcher dispatcher, IViewLocator viewLocator) : base(services)
         {
-            this.application = application;
             this.fileParser = fileParser;
             this.dispatcher = dispatcher;
             this.viewLocator = viewLocator;

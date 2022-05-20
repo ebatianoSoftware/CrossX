@@ -92,7 +92,7 @@ namespace CrossX.Framework.UI.Global
             get => desktop_StartMode; set => SetProperty(ref desktop_StartMode, value);
         }
 
-        public bool Desktop_EnableMouse { get; set; }
+        public bool Desktop_EnableMouse { get; set; } = true;
 
         public bool Desktop_HasCaption { get; set; } = true;
 
@@ -182,7 +182,7 @@ namespace CrossX.Framework.UI.Global
         private bool isDirty;
         private IFocusable currentFocus;
 
-        public RectangleF ScreenBounds => new RectangleF(NativeWindow.Bounds.TopLeft, Size);
+        public RectangleF ScreenBounds => new RectangleF(NativeWindow?.Bounds.TopLeft ?? Vector2.Zero, Size);
 
         bool IViewParent.DisplayVisible => true;
 

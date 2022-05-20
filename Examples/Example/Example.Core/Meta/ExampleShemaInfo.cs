@@ -6,6 +6,5 @@ namespace Example.Core.Meta
     {
         public override string Namespace => "https://crossx.support/Schemas/CrossX.Example";
         public override string SchemaOutputFile => "crossx-example.xsd";
-
     }
 }

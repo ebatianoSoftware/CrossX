@@ -14,7 +14,8 @@ namespace Example.Windows
         static void Main()
         {
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-            XxRunner.Run(new App());
+            var host = new ApplicationHost();
+            host.Run(new App());
         }
 
         private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs args)

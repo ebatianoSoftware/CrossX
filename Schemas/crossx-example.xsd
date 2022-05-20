@@ -16,20 +16,6 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
-  <xsd:simpleType name="System.String-Bindable">
-    <xsd:union>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value="" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:pattern value=".*|\{.*\}" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:union>
-  </xsd:simpleType>
   <xsd:simpleType name="System.Boolean-Bindable">
     <xsd:union>
       <xsd:simpleType>
@@ -41,6 +27,20 @@
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
           <xsd:pattern value="|\{.*\}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="System.String-Bindable">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value=".*|\{.*\}" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:union>

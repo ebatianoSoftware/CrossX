@@ -24,6 +24,8 @@ namespace Example.Core.ViewModels
 
         public float SliderValue { get => sliderValue; set => SetProperty(ref sliderValue, value); }
 
+        public string TestCaption { get => testCaption; set => SetProperty(ref testCaption, value); }
+
         public ObservableCollection<ImageDescriptor> Items { get; } = new ObservableCollection<ImageDescriptor>();
 
         public bool ShowButton
@@ -54,13 +56,14 @@ namespace Example.Core.ViewModels
         private bool showTest = true;
         private float sliderValue = 0.2f;
         private int radioValue = 1;
+        private string testCaption;
         private readonly IObjectFactory objectFactory;
         private readonly ISystemDispatcher systemDispatcher;
         private readonly IDispatcher dispatcher;
 
         public ICommand AddButtonTestCommand { get; }
 
-        
+
 
         public MainWindowViewModel(
             IObjectFactory objectFactory,
@@ -124,7 +127,7 @@ namespace Example.Core.ViewModels
                        Image addThumb = null;
 
 
-                       if(Image.Image != null)
+                       if (Image.Image != null)
                        {
                            addThumb = Image.Image.Scale(0.1f);
                        }
@@ -142,7 +145,7 @@ namespace Example.Core.ViewModels
                                Items.Add(new ImageDescriptor(addThumb));
                            }
 
-                           if(Items.Count > 5)
+                           if (Items.Count > 5)
                            {
                                var oldImageSrc = Items[0].Image;
                                Items.RemoveAt(0);

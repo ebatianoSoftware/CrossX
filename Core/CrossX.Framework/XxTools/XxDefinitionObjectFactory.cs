@@ -63,7 +63,7 @@ namespace CrossX.Framework.XxTools
                 }
                 else
                 {
-                    if (prop.Key.PropertyType.IsAssignableFrom(prop.Value.GetType()))
+                    if (prop.Key.PropertyType.IsInstanceOfType(prop.Value))
                     {
                         prop.Key.SetValue(instance, prop.Value);
                     }

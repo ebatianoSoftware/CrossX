@@ -27,7 +27,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XxSchemaGenerator", "Xx\XxS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossX.Abstractions", "Core\CrossX.Abstractions\CrossX.Abstractions.csproj", "{CED1CA7E-5E02-4CC8-889D-70EA5170C425}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossX.Framework.UI.Extended", "Core\CrossX.Framework.UI.Extended\CrossX.Framework.UI.Extended.csproj", "{8DD25408-8A2D-4EB0-A845-DF840B004E26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossX.Framework.UI.Extended", "Core\CrossX.Framework.UI.Extended\CrossX.Framework.UI.Extended.csproj", "{8DD25408-8A2D-4EB0-A845-DF840B004E26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{294870DD-2591-4801-973E-9793228FEA76}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

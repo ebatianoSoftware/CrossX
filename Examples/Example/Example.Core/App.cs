@@ -1,18 +1,14 @@
-﻿using CrossX.Framework;
+﻿using CrossX.Abstractions.Windows;
 using CrossX.Framework.Core;
 using Example.Core.ViewModels;
-using System;
 
 namespace Example.Core
 {
     public class App : Application
     {
-        protected override void StartApp() => Load<MainWindowViewModel>();
-
-        protected override void Update(TimeSpan ellapsedTime, Size size)
+        protected override void StartApp()
         {
-            base.Update(ellapsedTime, size);
-            //RedrawService.RequestRedraw();
+            WindowsService.CreateWindow<MainWindowViewModel>(CreateWindowMode.MainWindow);
         }
     }
 }
