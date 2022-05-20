@@ -30,7 +30,6 @@ CrossX comes with many built in layouts and controls to build and design apps qu
 ✔️SplitLayout
 ✔️ToolTips
 
-🔻AppShell **- standard shell for mobile apps with main menu flying out from side**
 🔻ContextMenu
 🔻ScrollBar
 🔻ScrollView
@@ -81,6 +80,22 @@ To improve developer experience, a small tool - XxSchemaGenerator (xxsgen) was c
 ```
 
 ## Roadmap
+
+#### [Mobile] AppShell
+for better mobile apps experience - shell with flyout menu
+
+#### [Mobile] Android support
+#### [Mobile] Touch input
+#### [Mobile] iOS support
+
+#### [Desktop] MacOS support
+
+#### [Games][Desktop] GamePad controls navigation system
+#### [Games][Desktop] Universal Windows support with DirectX
+#### [Games][Desktop] Windows support width DirectX
+#### [Games][Desktop] MacOS support with Metal
+
+#### [Games][Mobile] Android support with OpenGL ES    
 
 ## Support and Contributions
 If you think you have found a bug or have a feature request, use our [issue tracker](https://github.com/ebatianoSoftware/CrossX/issues). Before opening a new issue, please search to see if your problem has already been reported. Try to be as detailed as possible in your issue reports.
