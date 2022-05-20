@@ -81,21 +81,18 @@ To improve developer experience, a small tool - XxSchemaGenerator (xxsgen) was c
 
 ## Roadmap
 
-#### [Mobile] AppShell
-for better mobile apps experience - shell with flyout menu
-
-#### [Mobile] Android support
-#### [Mobile] Touch input
-#### [Mobile] iOS support
-
-#### [Desktop] MacOS support
-
-#### [Games][Desktop] GamePad controls navigation system
-#### [Games][Desktop] Universal Windows support with DirectX
-#### [Games][Desktop] Windows support width DirectX
-#### [Games][Desktop] MacOS support with Metal
-
-#### [Games][Mobile] Android support with OpenGL ES    
+| Areas | Feature | Comment |
+|-|-|-|
+| Mobile | AppShell| better mobile apps experience - shell with flyout menu |
+| Mobile | Android support ||
+| Mobile | Touch input ||
+| Mobile | iOS support ||
+| Desktop | MacOS support ||
+| Games, Desktop | GamePad UI control | Navigationg thru menus with GamePad |
+| Games, Desktop | Universal Windows support | DirectX 11 |
+| Games, Desktop | Windows Desktop | DirectX 11/12 |
+| Games, Desktop | MacOS support | Metal |
+| Games, Mobile | Android support | OpenGL ES |
 
 ## Support and Contributions
 If you think you have found a bug or have a feature request, use our [issue tracker](https://github.com/ebatianoSoftware/CrossX/issues). Before opening a new issue, please search to see if your problem has already been reported. Try to be as detailed as possible in your issue reports.
