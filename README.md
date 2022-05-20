@@ -106,4 +106,4 @@ The CrossX project is under the MIT License. See the LICENSE.txt file for more d
 
 ## Examples
 
-![](Examples/Example/Screenshot.png)
+![](Examples/Example/Screenshot1.png)
